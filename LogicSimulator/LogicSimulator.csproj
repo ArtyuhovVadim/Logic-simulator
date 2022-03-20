@@ -15,4 +15,8 @@
     <Folder Include="Models\" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\LogicSimulator.Controls\LogicSimulator.Controls.csproj" />
+  </ItemGroup>
+
 </Project>
