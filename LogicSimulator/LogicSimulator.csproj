@@ -9,4 +9,10 @@
 	<StartupObject>LogicSimulator.Program</StartupObject>
   </PropertyGroup>
 
+  <ItemGroup>
+    <Folder Include="Infrastructure\Behaviors\" />
+    <Folder Include="Infrastructure\Services\" />
+    <Folder Include="Models\" />
+  </ItemGroup>
+
 </Project>
