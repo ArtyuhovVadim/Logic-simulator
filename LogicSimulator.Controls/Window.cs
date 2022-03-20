@@ -69,8 +69,8 @@ public class Window : System.Windows.Window
 
         if (WindowState == WindowState.Maximized)
             _border.Padding = new Thickness(
-                SystemParameters.WorkArea.Left + 6,
-                SystemParameters.WorkArea.Top + 6,
+                SystemParameters.WorkArea.Left + 7,
+                SystemParameters.WorkArea.Top + 7,
                 SystemParameters.PrimaryScreenWidth - SystemParameters.WorkArea.Right + 7,
                 SystemParameters.PrimaryScreenHeight - SystemParameters.WorkArea.Bottom + 7 );
         else

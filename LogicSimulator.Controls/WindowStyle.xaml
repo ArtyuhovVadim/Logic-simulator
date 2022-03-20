@@ -5,9 +5,9 @@
     <Style TargetType="{x:Type local:Window}">
         <Setter Property="MinWidth" Value="300" />
         <Setter Property="MinHeight" Value="300" />
-        <Setter Property="WindowStyle" Value="None" />
+        <Setter Property="WindowStyle" Value="SingleBorderWindow" />
         <Setter Property="ResizeMode" Value="CanResize" />
-        <Setter Property="AllowsTransparency" Value="True" />
+        <Setter Property="AllowsTransparency" Value="False" />
         <Setter Property="UseLayoutRounding" Value="True" />
         <Setter Property="SnapsToDevicePixels" Value="True" />
         <Setter Property="Background" Value="White" />
