@@ -3,8 +3,8 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:local="clr-namespace:LogicSimulator.Controls">
     <Style TargetType="{x:Type local:Window}">
-        <Setter Property="MinWidth" Value="300" />
-        <Setter Property="MinHeight" Value="300" />
+        <Setter Property="MinWidth" Value="400" />
+        <Setter Property="MinHeight" Value="400" />
         <Setter Property="WindowStyle" Value="SingleBorderWindow" />
         <Setter Property="ResizeMode" Value="CanResize" />
         <Setter Property="AllowsTransparency" Value="False" />
