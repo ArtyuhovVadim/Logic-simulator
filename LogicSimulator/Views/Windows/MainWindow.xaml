@@ -8,8 +8,7 @@
     Title="Logic-simulator"
     Width="1280"
     Height="720"
+    DataContext="{Binding Path=MainWindowViewModel, Source={StaticResource Locator}}"
     mc:Ignorable="d">
-    <Grid Background="AntiqueWhite">
-        <Button Width="120" Content="Test" />
-    </Grid>
+    <Grid Background="AntiqueWhite" />
 </c:Window>

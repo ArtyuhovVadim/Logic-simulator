@@ -1,4 +1,6 @@
 ﻿using System;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Hosting;
 
 namespace LogicSimulator;
 
@@ -11,4 +13,14 @@ public static class Program
         app.InitializeComponent();
         app.Run();
     }
+
+   public static IHostBuilder CreateHostBuilder(string[] args)
+   {
+       return Host.CreateDefaultBuilder(args)
+           .UseContentRoot(App.CurrentDirectory)
+           .ConfigureAppConfiguration((host, cfg) => cfg
+               .SetBasePath(App.CurrentDirectory)
+               .AddJsonFile("app-settings.json", true, true))
+           .ConfigureServices(App.ConfigureServices);
+   }
 }
