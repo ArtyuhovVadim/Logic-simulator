@@ -152,6 +152,14 @@
                     </Border>
 
                     <ControlTemplate.Triggers>
+                        <Trigger Property="IsActive" Value="True">
+                            <Setter TargetName="Grid" Property="Background" Value="#4E4E4E" />
+                            <Setter TargetName="Border" Property="BorderBrush" Value="#4E4E4E" />
+                        </Trigger>
+                        <Trigger Property="ResizeMode" Value="NoResize">
+                            <Setter TargetName="PART_MaximizeButton" Property="Visibility" Value="Hidden" />
+                            <Setter TargetName="PART_MinimizeButton" Property="Visibility" Value="Hidden" />
+                        </Trigger>
                         <Trigger Property="WindowState" Value="Maximized">
                             <Setter TargetName="Border" Property="BorderThickness" Value="0" />
                             <Setter TargetName="Grid" Property="Height" Value="22" />

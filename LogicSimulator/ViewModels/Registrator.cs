@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿using LogicSimulator.ViewModels.UserDialogViewModels;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace LogicSimulator.ViewModels;
 
@@ -8,6 +9,7 @@ public static class Registrator
     {
         services
             .AddSingleton<MainWindowViewModel>()
+            .AddSingleton<InfoDialogWindowViewModel>()
             ;
 
         return services;

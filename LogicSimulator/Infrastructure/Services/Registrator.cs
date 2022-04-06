@@ -6,8 +6,8 @@ public static class Registrator
 {
     public static IServiceCollection RegisterServices(this IServiceCollection services)
     {
-        //services
-        //    ;
+        services.AddSingleton<IUserDialogService, UserDialogService>()
+            ;
 
         return services;
     }

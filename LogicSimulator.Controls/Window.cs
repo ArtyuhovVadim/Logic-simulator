@@ -29,14 +29,14 @@ public class Window : System.Windows.Window
     public override void OnApplyTemplate()
     {
         base.OnApplyTemplate();
-
+        
         _minimizeButton = GetTemplateChild(MinimizeButtonName) as Button;
         _maximizeButton = GetTemplateChild(MaximizeButtonName) as Button;
         _closeButton = GetTemplateChild(CloseButtonName) as Button;
         _border = GetTemplateChild(BorderName) as Border;
 
         if (_minimizeButton is null || _maximizeButton is null || _closeButton is null || _border is null)
-            throw new ElementNotAvailableException($"Part element not available in {GetType()} template!");
+            throw new ElementNotAvailableException($"Part element is not available in {GetType()} template!");
 
         _minimizeButton.Click += OnMinimizeButtonClicked;
         _maximizeButton.Click += OnMaximizeButtonClicked;

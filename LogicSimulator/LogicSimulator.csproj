@@ -12,6 +12,7 @@
   <ItemGroup>
     <Folder Include="Infrastructure\Behaviors\" />
     <Folder Include="Models\" />
+    <Folder Include="ViewModels\UserDialogViewModels\" />
   </ItemGroup>
 
   <ItemGroup>
