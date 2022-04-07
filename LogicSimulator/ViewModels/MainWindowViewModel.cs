@@ -18,6 +18,7 @@ public class MainWindowViewModel : BindableBase
 
     public ICommand TestCommand => _testCommand ??= new LambdaCommand(_ =>
     {
-       _userDialogService.ShowInfoMessage("Some info123123123");
+       _userDialogService.ShowInfoMessage("Some info");
+       //_userDialogService.ShowErrorMessage("Some error");
     }, _ => true);
 }

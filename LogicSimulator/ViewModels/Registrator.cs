@@ -10,6 +10,7 @@ public static class Registrator
         services
             .AddSingleton<MainWindowViewModel>()
             .AddSingleton<InfoDialogWindowViewModel>()
+            .AddSingleton<ErrorDialogWindowViewModel>()
             ;
 
         return services;

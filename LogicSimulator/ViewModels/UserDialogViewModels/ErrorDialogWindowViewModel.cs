@@ -1,11 +1,10 @@
-﻿using System;
-using System.Windows.Input;
+﻿using System.Windows.Input;
 using LogicSimulator.Infrastructure.Commands;
 using LogicSimulator.ViewModels.UserDialogViewModels.Base;
 
 namespace LogicSimulator.ViewModels.UserDialogViewModels;
 
-public class InfoDialogWindowViewModel : BaseUserDialogViewModel
+public class ErrorDialogWindowViewModel : BaseUserDialogViewModel
 {
     #region OkButtonClickedCommand
 

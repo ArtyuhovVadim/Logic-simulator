@@ -2,5 +2,6 @@
     <ResourceDictionary.MergedDictionaries>
         <ResourceDictionary Source="/LogicSimulator.Controls;component/WindowStyle.xaml" />
         <ResourceDictionary Source="/LogicSimulator.Controls;component/ButtonStyle.xaml" />
+        <ResourceDictionary Source="/LogicSimulator.Controls;component/TextBoxStyle.xaml" />
     </ResourceDictionary.MergedDictionaries>
 </ResourceDictionary>
