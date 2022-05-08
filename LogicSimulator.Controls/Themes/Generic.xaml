@@ -1,7 +1,7 @@
 <ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation">
     <ResourceDictionary.MergedDictionaries>
-        <ResourceDictionary Source="/LogicSimulator.Controls;component/WindowStyle.xaml" />
-        <ResourceDictionary Source="/LogicSimulator.Controls;component/ButtonStyle.xaml" />
-        <ResourceDictionary Source="/LogicSimulator.Controls;component/TextBoxStyle.xaml" />
+        <ResourceDictionary Source="/LogicSimulator.Controls;component/Styles/WindowStyle.xaml" />
+        <ResourceDictionary Source="/LogicSimulator.Controls;component/Styles/ButtonStyle.xaml" />
+        <ResourceDictionary Source="/LogicSimulator.Controls;component/Styles/TextBoxStyle.xaml" />
     </ResourceDictionary.MergedDictionaries>
 </ResourceDictionary>

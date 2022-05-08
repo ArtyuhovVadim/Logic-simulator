@@ -11,7 +11,7 @@
     Height="720"
     DataContext="{Binding Path=MainWindowViewModel, Source={StaticResource Locator}}"
     mc:Ignorable="d">
-    <Grid Background="AntiqueWhite">
+    <Grid>
         <Button
             Width="120"
             Height="30"
