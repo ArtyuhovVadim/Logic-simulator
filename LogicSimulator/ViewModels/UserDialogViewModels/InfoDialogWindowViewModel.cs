@@ -1,5 +1,5 @@
-﻿using System;
-using System.Windows.Input;
+﻿using System.Windows.Input;
+using LogicSimulator.Infrastructure;
 using LogicSimulator.Infrastructure.Commands;
 using LogicSimulator.ViewModels.UserDialogViewModels.Base;
 
@@ -7,13 +7,13 @@ namespace LogicSimulator.ViewModels.UserDialogViewModels;
 
 public class InfoDialogWindowViewModel : BaseUserDialogViewModel
 {
-    #region OkButtonClickedCommand
+    #region ConfirmCommand
 
-    private ICommand _okButtonClickedCommand;
+    private ICommand _confirmCommand;
 
-    public ICommand OkButtonClickedCommand => _okButtonClickedCommand ??= new LambdaCommand(_ =>
+    public ICommand ConfirmCommand => _confirmCommand ??= new LambdaCommand(_ =>
     {
-        OnCompleted();
+        OnCompleted(UserDialogResult.Ok);
     }, _ => true);
 
     #endregion

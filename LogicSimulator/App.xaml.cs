@@ -2,8 +2,6 @@
 using System.IO;
 using System.Runtime.CompilerServices;
 using System.Windows;
-using LogicSimulator.Controls.Themes;
-using LogicSimulator.Controls.Themes.Dark;
 using LogicSimulator.Infrastructure.Services;
 using LogicSimulator.ViewModels;
 using Microsoft.Extensions.DependencyInjection;

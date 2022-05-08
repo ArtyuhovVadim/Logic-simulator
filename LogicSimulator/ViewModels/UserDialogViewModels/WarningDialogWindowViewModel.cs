@@ -5,7 +5,7 @@ using LogicSimulator.ViewModels.UserDialogViewModels.Base;
 
 namespace LogicSimulator.ViewModels.UserDialogViewModels;
 
-public class ErrorDialogWindowViewModel : BaseUserDialogViewModel
+public class WarningDialogWindowViewModel : BaseUserDialogViewModel
 {
     #region ConfirmCommand
 

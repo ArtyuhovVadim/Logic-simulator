@@ -1,12 +1,24 @@
 ﻿using System;
+using LogicSimulator.Infrastructure;
 using LogicSimulator.ViewModels.Base;
 
 namespace LogicSimulator.ViewModels.UserDialogViewModels.Base;
 
 public abstract class BaseUserDialogViewModel : BindableBase
 {
-    public event Action Completed;
+    public event Action<UserDialogResult> Completed;
     
+    #region Title
+
+    private string _title = string.Empty;
+    public string Title
+    {
+        get => _title;
+        set => Set(ref _title, value);
+    }
+
+    #endregion
+
     #region Message
 
     private string _message = string.Empty;
@@ -18,8 +30,8 @@ public abstract class BaseUserDialogViewModel : BindableBase
 
     #endregion
 
-    protected void OnCompleted()
+    protected void OnCompleted(UserDialogResult result)
     {
-        Completed?.Invoke();
+        Completed?.Invoke(result);
     }
 }

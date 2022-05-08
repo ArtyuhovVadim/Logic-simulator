@@ -11,6 +11,8 @@ public static class Registrator
             .AddSingleton<MainWindowViewModel>()
             .AddSingleton<InfoDialogWindowViewModel>()
             .AddSingleton<ErrorDialogWindowViewModel>()
+            .AddSingleton<WarningDialogWindowViewModel>()
+            .AddSingleton<QuestionDialogWindowViewModel>()
             ;
 
         return services;

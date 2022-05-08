@@ -5,7 +5,7 @@ using LogicSimulator.ViewModels.UserDialogViewModels.Base;
 
 namespace LogicSimulator.ViewModels.UserDialogViewModels;
 
-public class ErrorDialogWindowViewModel : BaseUserDialogViewModel
+public class QuestionDialogWindowViewModel : BaseUserDialogViewModel
 {
     #region ConfirmCommand
 
@@ -13,7 +13,18 @@ public class ErrorDialogWindowViewModel : BaseUserDialogViewModel
 
     public ICommand ConfirmCommand => _confirmCommand ??= new LambdaCommand(_ =>
     {
-        OnCompleted(UserDialogResult.Ok);
+        OnCompleted(UserDialogResult.Yes);
+    }, _ => true);
+
+    #endregion
+
+    #region RejectCommand
+
+    private ICommand _rejectCommand;
+
+    public ICommand RejectCommand => _rejectCommand ??= new LambdaCommand(_ =>
+    {
+        OnCompleted(UserDialogResult.No);
     }, _ => true);
 
     #endregion

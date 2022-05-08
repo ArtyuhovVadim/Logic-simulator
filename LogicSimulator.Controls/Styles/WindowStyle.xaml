@@ -46,6 +46,7 @@
                                 <TextBlock
                                     HorizontalAlignment="Center"
                                     VerticalAlignment="Center"
+                                    FontSize="12"
                                     Foreground="{DynamicResource {x:Static r:ResourceKeys.WindowTitleBrush}}"
                                     Text="{TemplateBinding Title}" />
 

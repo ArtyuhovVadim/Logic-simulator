@@ -5,9 +5,13 @@ namespace LogicSimulator.ViewModels;
 
 public class ViewModelLocator
 {
-    public MainWindowViewModel MainWindowViewModel => App.Host.Services.GetRequiredService<MainWindowViewModel>();
+    public static MainWindowViewModel MainWindowViewModel => App.Host.Services.GetRequiredService<MainWindowViewModel>();
 
-    public InfoDialogWindowViewModel InfoDialogWindowViewModel => App.Host.Services.GetRequiredService<InfoDialogWindowViewModel>();
+    public static InfoDialogWindowViewModel InfoDialogWindowViewModel => App.Host.Services.GetRequiredService<InfoDialogWindowViewModel>();
 
-    public ErrorDialogWindowViewModel ErrorDialogWindowViewModel => App.Host.Services.GetRequiredService<ErrorDialogWindowViewModel>();
+    public static ErrorDialogWindowViewModel ErrorDialogWindowViewModel => App.Host.Services.GetRequiredService<ErrorDialogWindowViewModel>();
+
+    public static WarningDialogWindowViewModel WarningDialogWindowViewModel => App.Host.Services.GetRequiredService<WarningDialogWindowViewModel>();
+
+    public static QuestionDialogWindowViewModel QuestionDialogWindowViewModel => App.Host.Services.GetRequiredService<QuestionDialogWindowViewModel>();
 }

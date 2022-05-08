@@ -87,7 +87,7 @@
 
     <!--#endregion-->
 
-    <!--#region-->
+    <!--#region TextBox style brushes-->
 
     <SolidColorBrush
         x:Key="{x:Static r:ResourceKeys.TextBoxBackground}"
@@ -113,6 +113,24 @@
         x:Key="{x:Static r:ResourceKeys.TextBoxSelectionBrush}"
         o:Freeze="True"
         Color="#B8B8B8" />
+
+    <!--#endregion-->
+
+    <!--#region TextBlock style brushes-->
+
+    <SolidColorBrush
+        x:Key="{x:Static r:ResourceKeys.TextBlockForeground}"
+        o:Freeze="True"
+        Color="White" />
+
+    <!--#endregion-->
+
+    <!--#region UserDialogWindow style brushes-->
+
+    <SolidColorBrush
+        x:Key="{x:Static r:ResourceKeys.UserDialogWindowBackground}"
+        o:Freeze="True"
+        Color="#404040" />
 
     <!--#endregion-->
 

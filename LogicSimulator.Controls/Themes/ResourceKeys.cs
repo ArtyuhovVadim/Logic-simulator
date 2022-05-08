@@ -57,6 +57,18 @@ public static class ResourceKeys
 
     #endregion
 
+    #region TextBlock style resource keys
+
+    public static readonly ComponentResourceKey TextBlockForeground = CreateInstance();
+
+    #endregion
+
+    #region UserDialogWindow style resource keys
+
+    public static readonly ComponentResourceKey UserDialogWindowBackground = CreateInstance();
+
+    #endregion
+
     private static ComponentResourceKey CreateInstance([CallerMemberName] string fieldName = null)
     {
         return new ComponentResourceKey(typeof(ResourceKeys), fieldName!);

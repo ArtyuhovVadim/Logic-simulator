@@ -2,7 +2,10 @@
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:r="clr-namespace:LogicSimulator.Controls.Themes">
-    <Style TargetType="{x:Type Button}">
+    <ResourceDictionary.MergedDictionaries>
+        <ResourceDictionary Source="ControlStyle.xaml" />
+    </ResourceDictionary.MergedDictionaries>
+    <Style BasedOn="{StaticResource BaseStyle}" TargetType="{x:Type Button}">
         <Setter Property="FocusVisualStyle" Value="{x:Null}" />
         <Setter Property="Background" Value="{DynamicResource {x:Static r:ResourceKeys.ButtonBackgroundBrush}}" />
         <Setter Property="BorderBrush" Value="{DynamicResource {x:Static r:ResourceKeys.ButtonBorderBrush}}" />

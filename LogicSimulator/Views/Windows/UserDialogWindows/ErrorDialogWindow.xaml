@@ -6,6 +6,8 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:fa5="http://schemas.fontawesome.com/icons/"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:r="clr-namespace:LogicSimulator.Controls.Themes;assembly=LogicSimulator.Controls"
+    Title="{Binding Path=Title}"
     Width="450"
     Height="250"
     MinWidth="100"
@@ -14,21 +16,21 @@
     ResizeMode="NoResize"
     ShowInTaskbar="False"
     mc:Ignorable="d">
-    <Grid Background="#404040">
+    <Grid Background="{DynamicResource {x:Static r:ResourceKeys.UserDialogWindowBackground}}">
         <Grid.RowDefinitions>
-            <RowDefinition Height="10" />
-            <RowDefinition Height="35" />
-            <RowDefinition Height="10" />
+            <RowDefinition Height="55" />
             <RowDefinition />
-            <RowDefinition Height="10" />
-            <RowDefinition Height="27" />
-            <RowDefinition Height="10" />
+            <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
-        <Grid Grid.Row="1" Margin="10,0">
+        <Grid Grid.Row="0" Margin="10">
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="50" />
+                <ColumnDefinition Width="Auto" />
                 <ColumnDefinition />
             </Grid.ColumnDefinitions>
+            <Ellipse
+                Grid.Column="0"
+                Margin="5"
+                Fill="White" />
             <fa5:ImageAwesome
                 Grid.Column="0"
                 HorizontalAlignment="Left"
@@ -37,13 +39,13 @@
                 Icon="Solid_ExclamationCircle" />
             <TextBlock
                 Grid.Column="1"
+                Margin="10,0,0,0"
                 VerticalAlignment="Center"
-                FontSize="22"
-                Foreground="White"
+                FontSize="18"
                 Text="Error" />
         </Grid>
         <TextBox
-            Grid.Row="3"
+            Grid.Row="1"
             Margin="10,0"
             HorizontalScrollBarVisibility="Hidden"
             IsReadOnly="True"
@@ -51,12 +53,12 @@
             TextWrapping="Wrap"
             VerticalScrollBarVisibility="Auto" />
         <Button
-            Grid.Row="5"
-            Width="50"
-            Margin="0,0,10,0"
+            Grid.Row="2"
+            Margin="10"
+            Padding="20,3"
             HorizontalAlignment="Right"
             VerticalAlignment="Stretch"
-            Command="{Binding Path=OkButtonClickedCommand}"
+            Command="{Binding Path=ConfirmCommand}"
             Content="OK"
             IsDefault="True" />
     </Grid>

@@ -1,10 +1,11 @@
-﻿<c:Window
-    x:Class="LogicSimulator.Views.Windows.UserDialogWindows.InfoDialogWindow"
+﻿<controls:Window
+    x:Class="LogicSimulator.Views.Windows.UserDialogWindows.WarningDialogWindow"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:c="clr-namespace:LogicSimulator.Controls;assembly=LogicSimulator.Controls"
+    xmlns:controls="clr-namespace:LogicSimulator.Controls;assembly=LogicSimulator.Controls"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:fa5="http://schemas.fontawesome.com/icons/"
+    xmlns:local="clr-namespace:LogicSimulator.Views.Windows.UserDialogWindows"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:r="clr-namespace:LogicSimulator.Controls.Themes;assembly=LogicSimulator.Controls"
     Title="{Binding Path=Title}"
@@ -12,7 +13,7 @@
     Height="250"
     MinWidth="100"
     MinHeight="100"
-    DataContext="{Binding Path=InfoDialogWindowViewModel, Source={StaticResource Locator}}"
+    DataContext="{Binding Path=WarningDialogWindowViewModel, Source={StaticResource Locator}}"
     ResizeMode="NoResize"
     ShowInTaskbar="False"
     mc:Ignorable="d">
@@ -27,22 +28,22 @@
                 <ColumnDefinition Width="Auto" />
                 <ColumnDefinition />
             </Grid.ColumnDefinitions>
-            <Ellipse
+            <Rectangle
                 Grid.Column="0"
-                Margin="5"
+                Margin="15,10,15,1"
                 Fill="White" />
             <fa5:ImageAwesome
                 Grid.Column="0"
                 HorizontalAlignment="Left"
                 VerticalAlignment="Center"
-                Foreground="#357CC5"
-                Icon="Solid_InfoCircle" />
+                Foreground="#EBC500"
+                Icon="Solid_ExclamationTriangle" />
             <TextBlock
                 Grid.Column="1"
                 Margin="10,0,0,0"
                 VerticalAlignment="Center"
                 FontSize="18"
-                Text="Info" />
+                Text="Warning" />
         </Grid>
         <TextBox
             Grid.Row="1"
@@ -62,4 +63,4 @@
             Content="OK"
             IsDefault="True" />
     </Grid>
-</c:Window>
+</controls:Window>
