@@ -5,7 +5,6 @@
     <Style TargetType="{x:Type local:Window}">
         <Setter Property="MinWidth" Value="400" />
         <Setter Property="MinHeight" Value="400" />
-        <Setter Property="WindowStyle" Value="SingleBorderWindow" />
         <Setter Property="ResizeMode" Value="CanResize" />
         <Setter Property="AllowsTransparency" Value="False" />
         <Setter Property="UseLayoutRounding" Value="True" />
@@ -24,7 +23,7 @@
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type local:Window}">
-                    <Border x:Name="PART_Border">
+                    <Border x:Name="RootBorder">
                         <DockPanel>
                             <Grid
                                 x:Name="Grid"
@@ -166,6 +165,7 @@
                             <Setter TargetName="MaximizeButtonData" Property="Data" Value="M0,3 H5 V8 H0 V3 M0,4 H5 M3,0 H8 V5 H7 M3,1 H8" />
                             <Setter TargetName="Icon" Property="Margin" Value="0" />
                             <Setter TargetName="ButtonsGrid" Property="Margin" Value="0" />
+                            <Setter TargetName="RootBorder" Property="Padding" Value="7" />
                         </Trigger>
                     </ControlTemplate.Triggers>
                 </ControlTemplate>
