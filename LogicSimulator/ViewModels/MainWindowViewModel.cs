@@ -4,4 +4,5 @@ namespace LogicSimulator.ViewModels;
 
 public class MainWindowViewModel : BindableBase
 {
+
 }

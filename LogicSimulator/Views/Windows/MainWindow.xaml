@@ -4,21 +4,11 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:c="clr-namespace:LogicSimulator.Controls;assembly=LogicSimulator.Controls"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-    xmlns:fa5="http://schemas.fontawesome.com/icons/"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     Title="Logic-simulator"
     Width="1280"
     Height="720"
     DataContext="{Binding Path=MainWindowViewModel, Source={StaticResource Locator}}"
     mc:Ignorable="d">
-    <Grid>
-        <Button
-            Width="120"
-            Height="30"
-            Command="{Binding Path=TestCommand}">
-            <Button.Content>
-                <fa5:ImageAwesome Foreground="Red" Icon="Solid_ExclamationCircle" />
-            </Button.Content>
-        </Button>
-    </Grid>
+    <DockPanel />
 </c:Window>

@@ -53,7 +53,7 @@
 
     <!--#endregion-->
 
-    <!--#region Window style brushes-->
+    <!--#region Button style brushes-->
 
     <SolidColorBrush
         x:Key="{x:Static r:ResourceKeys.ButtonBackgroundBrush}"

@@ -1,4 +1,7 @@
-﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+﻿<ResourceDictionary
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    x:Name="Dictionary1">
     <ResourceDictionary.MergedDictionaries>
         <ResourceDictionary Source="/LogicSimulator.Controls;component/Themes/Dark/DarkBrushes.xaml" />
         <ResourceDictionary Source="/LogicSimulator.Controls;component/Themes/Generic.xaml" />
