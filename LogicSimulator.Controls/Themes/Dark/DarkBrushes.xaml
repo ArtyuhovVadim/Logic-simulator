@@ -116,12 +116,71 @@
 
     <!--#endregion-->
 
-    <!--#region TextBlock style brushes-->
+    <!--#region Menu style brushes-->
 
     <SolidColorBrush
-        x:Key="{x:Static r:ResourceKeys.TextBlockForeground}"
+        x:Key="{x:Static r:ResourceKeys.MenuBackground}"
         o:Freeze="True"
-        Color="White" />
+        Color="#424242" />
+
+    <SolidColorBrush
+        x:Key="{x:Static r:ResourceKeys.MenuForeground}"
+        o:Freeze="True"
+        Color="#E5E5E5" />
+
+    <!--#endregion-->
+
+    <!--#region MenuItem style brushes-->
+
+    <SolidColorBrush
+        x:Key="{x:Static r:ResourceKeys.MenuStaticBackground}"
+        o:Freeze="True"
+        Color="#424242" />
+
+    <SolidColorBrush
+        x:Key="{x:Static r:ResourceKeys.MenuStaticBorder}"
+        o:Freeze="True"
+        Color="#222222" />
+
+    <SolidColorBrush
+        x:Key="{x:Static r:ResourceKeys.MenuStaticForeground}"
+        o:Freeze="True"
+        Color="#FFFFFF" />
+
+    <SolidColorBrush
+        x:Key="{x:Static r:ResourceKeys.MenuDisabledForeground}"
+        o:Freeze="True"
+        Color="#707070" />
+
+    <SolidColorBrush
+        x:Key="{x:Static r:ResourceKeys.MenuItemSelectedBackground}"
+        o:Freeze="True"
+        Color="#505050" />
+
+    <SolidColorBrush
+        x:Key="{x:Static r:ResourceKeys.MenuItemSelectedBorder}"
+        o:Freeze="True"
+        Color="#6283A2" />
+
+    <SolidColorBrush
+        x:Key="{x:Static r:ResourceKeys.MenuItemHighlightBackground}"
+        o:Freeze="True"
+        Color="#6283A2" />
+
+    <SolidColorBrush
+        x:Key="{x:Static r:ResourceKeys.MenuItemHighlightBorder}"
+        o:Freeze="True"
+        Color="Transparent" />
+
+    <SolidColorBrush
+        x:Key="{x:Static r:ResourceKeys.MenuItemHighlightDisabledBackground}"
+        o:Freeze="True"
+        Color="#0A000000" />
+
+    <SolidColorBrush
+        x:Key="{x:Static r:ResourceKeys.MenuItemHighlightDisabledBorder}"
+        o:Freeze="True"
+        Color="#21000000" />
 
     <!--#endregion-->
 

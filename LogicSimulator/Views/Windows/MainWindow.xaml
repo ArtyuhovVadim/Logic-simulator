@@ -9,6 +9,11 @@
     Width="1280"
     Height="720"
     DataContext="{Binding Path=MainWindowViewModel, Source={StaticResource Locator}}"
+    Topmost="True"
     mc:Ignorable="d">
-    <DockPanel />
+    <DockPanel>
+        <Menu Margin="0,1,0,0" DockPanel.Dock="Top" />
+        <StatusBar Background="#424242" DockPanel.Dock="Bottom" />
+        <Grid />
+    </DockPanel>
 </c:Window>

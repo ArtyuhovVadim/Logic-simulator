@@ -5,6 +5,5 @@
     <Style TargetType="{x:Type TextBlock}">
         <Setter Property="TextWrapping" Value="NoWrap" />
         <Setter Property="TextTrimming" Value="None" />
-        <Setter Property="Foreground" Value="{DynamicResource {x:Static r:ResourceKeys.TextBlockForeground}}" />
     </Style>
 </ResourceDictionary>

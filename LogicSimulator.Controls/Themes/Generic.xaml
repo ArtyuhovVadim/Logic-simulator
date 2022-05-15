@@ -5,5 +5,7 @@
         <ResourceDictionary Source="/LogicSimulator.Controls;component/Styles/WindowStyle.xaml" />
         <ResourceDictionary Source="/LogicSimulator.Controls;component/Styles/ButtonStyle.xaml" />
         <ResourceDictionary Source="/LogicSimulator.Controls;component/Styles/TextBoxStyle.xaml" />
+        <ResourceDictionary Source="/LogicSimulator.Controls;component/Styles/MenuStyle.xaml" />
+        <ResourceDictionary Source="/LogicSimulator.Controls;component/Styles/MenuItemStyle.xaml" />
     </ResourceDictionary.MergedDictionaries>
 </ResourceDictionary>

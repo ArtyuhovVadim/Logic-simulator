@@ -57,9 +57,35 @@ public static class ResourceKeys
 
     #endregion
 
-    #region TextBlock style resource keys
+    #region Menu style resource keys
 
-    public static readonly ComponentResourceKey TextBlockForeground = CreateInstance();
+    public static readonly ComponentResourceKey MenuBackground = CreateInstance();
+
+    public static readonly ComponentResourceKey MenuForeground = CreateInstance();
+
+    #endregion
+
+    #region MenuItem style resource keys
+
+    public static readonly ComponentResourceKey MenuStaticBackground = CreateInstance();
+
+    public static readonly ComponentResourceKey MenuStaticBorder = CreateInstance();
+
+    public static readonly ComponentResourceKey MenuStaticForeground = CreateInstance();
+
+    public static readonly ComponentResourceKey MenuDisabledForeground = CreateInstance();
+
+    public static readonly ComponentResourceKey MenuItemSelectedBackground = CreateInstance();
+
+    public static readonly ComponentResourceKey MenuItemSelectedBorder = CreateInstance();
+
+    public static readonly ComponentResourceKey MenuItemHighlightBackground = CreateInstance();
+
+    public static readonly ComponentResourceKey MenuItemHighlightBorder = CreateInstance();
+
+    public static readonly ComponentResourceKey MenuItemHighlightDisabledBackground = CreateInstance();
+
+    public static readonly ComponentResourceKey MenuItemHighlightDisabledBorder = CreateInstance();
 
     #endregion
 
