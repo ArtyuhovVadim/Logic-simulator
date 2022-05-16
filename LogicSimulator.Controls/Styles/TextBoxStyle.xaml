@@ -6,9 +6,9 @@
         <ResourceDictionary Source="ControlStyle.xaml" />
     </ResourceDictionary.MergedDictionaries>
     <Style BasedOn="{StaticResource BaseStyle}" TargetType="{x:Type TextBox}">
-        <Setter Property="Background" Value="{DynamicResource {x:Static r:ResourceKeys.TextBoxBackground}}" />
+        <Setter Property="Background" Value="{DynamicResource {x:Static r:ResourceKeys.TextBoxBackgroundBrush}}" />
         <Setter Property="BorderBrush" Value="{DynamicResource {x:Static r:ResourceKeys.TextBoxBorderBrush}}" />
-        <Setter Property="Foreground" Value="{DynamicResource {x:Static r:ResourceKeys.TextBoxForeground}}" />
+        <Setter Property="Foreground" Value="{DynamicResource {x:Static r:ResourceKeys.TextBoxForegroundBrush}}" />
         <Setter Property="BorderThickness" Value="1" />
         <Setter Property="KeyboardNavigation.TabNavigation" Value="None" />
         <Setter Property="HorizontalContentAlignment" Value="Left" />
@@ -39,7 +39,7 @@
                             <Setter TargetName="border" Property="Opacity" Value="0.6" />
                         </Trigger>
                         <Trigger Property="IsKeyboardFocused" Value="True">
-                            <Setter TargetName="border" Property="BorderBrush" Value="{DynamicResource {x:Static r:ResourceKeys.TextBoxMouseOverBorderBrush}}" />
+                            <Setter TargetName="border" Property="BorderBrush" Value="{DynamicResource {x:Static r:ResourceKeys.TextBoxFocusedBorderBrush}}" />
                         </Trigger>
                     </ControlTemplate.Triggers>
                 </ControlTemplate>

@@ -9,7 +9,7 @@ public static class ResourceKeys
 
     public static readonly ComponentResourceKey WindowBorderBrush = CreateInstance();
 
-    public static readonly ComponentResourceKey WindowBorderBrushFocused = CreateInstance();
+    public static readonly ComponentResourceKey WindowBorderFocusedBrush = CreateInstance();
 
     public static readonly ComponentResourceKey WindowCloseButtonBrush = CreateInstance();
 
@@ -45,13 +45,13 @@ public static class ResourceKeys
 
     #region TextBox style resource keys
 
-    public static readonly ComponentResourceKey TextBoxBackground = CreateInstance();
+    public static readonly ComponentResourceKey TextBoxBackgroundBrush = CreateInstance();
 
-    public static readonly ComponentResourceKey TextBoxForeground = CreateInstance();
+    public static readonly ComponentResourceKey TextBoxForegroundBrush = CreateInstance();
 
     public static readonly ComponentResourceKey TextBoxBorderBrush = CreateInstance();
 
-    public static readonly ComponentResourceKey TextBoxMouseOverBorderBrush = CreateInstance();
+    public static readonly ComponentResourceKey TextBoxFocusedBorderBrush = CreateInstance();
 
     public static readonly ComponentResourceKey TextBoxSelectionBrush = CreateInstance();
 
@@ -59,33 +59,33 @@ public static class ResourceKeys
 
     #region Menu style resource keys
 
-    public static readonly ComponentResourceKey MenuBackground = CreateInstance();
+    public static readonly ComponentResourceKey MenuBackgroundBrush = CreateInstance();
 
-    public static readonly ComponentResourceKey MenuForeground = CreateInstance();
+    public static readonly ComponentResourceKey MenuForegroundBrush = CreateInstance();
 
     #endregion
 
     #region MenuItem style resource keys
 
-    public static readonly ComponentResourceKey MenuStaticBackground = CreateInstance();
+    public static readonly ComponentResourceKey MenuItemBackgroundBrush = CreateInstance();
 
-    public static readonly ComponentResourceKey MenuStaticBorder = CreateInstance();
+    public static readonly ComponentResourceKey MenuItemBorderBrush = CreateInstance();
 
-    public static readonly ComponentResourceKey MenuStaticForeground = CreateInstance();
+    public static readonly ComponentResourceKey MenuItemForegroundBrush = CreateInstance();
 
-    public static readonly ComponentResourceKey MenuDisabledForeground = CreateInstance();
+    public static readonly ComponentResourceKey MenuItemDisabledForegroundBrush = CreateInstance();
 
-    public static readonly ComponentResourceKey MenuItemSelectedBackground = CreateInstance();
+    public static readonly ComponentResourceKey MenuItemSelectedBackgroundBrush = CreateInstance();
 
-    public static readonly ComponentResourceKey MenuItemSelectedBorder = CreateInstance();
+    public static readonly ComponentResourceKey MenuItemSelectedBorderBrush = CreateInstance();
 
-    public static readonly ComponentResourceKey MenuItemHighlightBackground = CreateInstance();
+    public static readonly ComponentResourceKey MenuItemHighlightBackgroundBrush = CreateInstance();
 
-    public static readonly ComponentResourceKey MenuItemHighlightBorder = CreateInstance();
+    public static readonly ComponentResourceKey MenuItemHighlightBorderBrush = CreateInstance();
 
-    public static readonly ComponentResourceKey MenuItemHighlightDisabledBackground = CreateInstance();
+    public static readonly ComponentResourceKey MenuItemHighlightDisabledBackgroundBrush = CreateInstance();
 
-    public static readonly ComponentResourceKey MenuItemHighlightDisabledBorder = CreateInstance();
+    public static readonly ComponentResourceKey MenuItemHighlightDisabledBorderBrush = CreateInstance();
 
     #endregion
 
