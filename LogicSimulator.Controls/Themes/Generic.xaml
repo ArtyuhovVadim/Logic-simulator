@@ -7,5 +7,6 @@
         <ResourceDictionary Source="/LogicSimulator.Controls;component/Styles/TextBoxStyle.xaml" />
         <ResourceDictionary Source="/LogicSimulator.Controls;component/Styles/MenuStyle.xaml" />
         <ResourceDictionary Source="/LogicSimulator.Controls;component/Styles/MenuItemStyle.xaml" />
+        <ResourceDictionary Source="/LogicSimulator.Controls;component/Styles/CheckBoxStyle.xaml" />
     </ResourceDictionary.MergedDictionaries>
 </ResourceDictionary>

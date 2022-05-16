@@ -38,7 +38,7 @@ public static class ResourceKeys
     public static readonly ComponentResourceKey ButtonMouseOverBackgroundBrush = CreateInstance();
 
     public static readonly ComponentResourceKey ButtonPressedBackgroundBrush = CreateInstance();
-    
+
     public static readonly ComponentResourceKey ButtonPressedBorderBrush = CreateInstance();
 
     #endregion
@@ -86,6 +86,22 @@ public static class ResourceKeys
     public static readonly ComponentResourceKey MenuItemHighlightDisabledBackground = CreateInstance();
 
     public static readonly ComponentResourceKey MenuItemHighlightDisabledBorder = CreateInstance();
+
+    #endregion
+
+    #region CheckBox style resource keys
+
+    public static readonly ComponentResourceKey CheckBoxForegroundBrush = CreateInstance();
+
+    public static readonly ComponentResourceKey CheckBoxBackgroundBrush = CreateInstance();
+
+    public static readonly ComponentResourceKey CheckBoxBorderBrush = CreateInstance();
+
+    public static readonly ComponentResourceKey CheckBoxGlyphBackgroundBrush = CreateInstance();
+
+    public static readonly ComponentResourceKey CheckBoxMouseOverBackground = CreateInstance();
+
+    public static readonly ComponentResourceKey CheckBoxFocusedBorderBrush = CreateInstance();
 
     #endregion
 

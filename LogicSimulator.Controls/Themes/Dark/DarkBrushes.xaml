@@ -184,6 +184,40 @@
 
     <!--#endregion-->
 
+    <!--#region CheckBox style brushes-->
+
+    <SolidColorBrush
+        x:Key="{x:Static r:ResourceKeys.CheckBoxBackgroundBrush}"
+        o:Freeze="True"
+        Color="#545454" />
+
+    <SolidColorBrush
+        x:Key="{x:Static r:ResourceKeys.CheckBoxBorderBrush}"
+        o:Freeze="True"
+        Color="#222222" />
+
+    <SolidColorBrush
+        x:Key="{x:Static r:ResourceKeys.CheckBoxFocusedBorderBrush}"
+        o:Freeze="True"
+        Color="#A2D2FD" />
+
+    <SolidColorBrush
+        x:Key="{x:Static r:ResourceKeys.CheckBoxForegroundBrush}"
+        o:Freeze="True"
+        Color="#E5E5E5" />
+
+    <SolidColorBrush
+        x:Key="{x:Static r:ResourceKeys.CheckBoxGlyphBackgroundBrush}"
+        o:Freeze="True"
+        Color="#DBDBDB" />
+
+    <SolidColorBrush
+        x:Key="{x:Static r:ResourceKeys.CheckBoxMouseOverBackground}"
+        o:Freeze="True"
+        Color="#5C5C5C" />
+
+    <!--#endregion-->
+
     <!--#region UserDialogWindow style brushes-->
 
     <SolidColorBrush
