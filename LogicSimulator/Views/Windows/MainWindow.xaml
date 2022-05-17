@@ -11,8 +11,14 @@
     DataContext="{Binding Path=MainWindowViewModel, Source={StaticResource Locator}}"
     mc:Ignorable="d">
     <DockPanel>
-        <Menu Margin="0,1,0,0" DockPanel.Dock="Top" />
-        <StatusBar Background="#424242" DockPanel.Dock="Bottom" />
+        <Menu Margin="0,1,0,0" DockPanel.Dock="Top">
+            <MenuItem Header="Файл">
+                <MenuItem Header="Новый"></MenuItem>
+            </MenuItem>
+        </Menu>
+        <StatusBar Background="#424242" DockPanel.Dock="Bottom">
+            <TextBlock Text="Статус" Foreground="White"></TextBlock>
+        </StatusBar>
         <DockingManager>
             <LayoutRoot>
                 <LayoutPanel>
@@ -21,6 +27,11 @@
                         <LayoutDocument Title="123" />
                         <LayoutDocument Title="123" />
                     </LayoutDocumentPane>
+                    <LayoutAnchorablePane>
+                        <LayoutAnchorable Title="asdas" />
+                        <LayoutAnchorable Title="asdas" />
+                        <LayoutAnchorable Title="asdas" />
+                    </LayoutAnchorablePane>
                 </LayoutPanel>
             </LayoutRoot>
         </DockingManager>
