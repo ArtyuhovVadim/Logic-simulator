@@ -8,5 +8,6 @@
         <ResourceDictionary Source="/LogicSimulator.Controls;component/Styles/MenuStyle.xaml" />
         <ResourceDictionary Source="/LogicSimulator.Controls;component/Styles/MenuItemStyle.xaml" />
         <ResourceDictionary Source="/LogicSimulator.Controls;component/Styles/CheckBoxStyle.xaml" />
+        <ResourceDictionary Source="/LogicSimulator.Controls;component/Styles/AvaloneDockStyle.xaml" />
     </ResourceDictionary.MergedDictionaries>
 </ResourceDictionary>
