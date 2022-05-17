@@ -16,7 +16,7 @@ namespace AvalonDock.Themes
 	public abstract class Theme : DependencyObject
 	{
 		/// <summary>Class constructor</summary>
-		public Theme()
+        protected Theme()
 		{
 		}
 
