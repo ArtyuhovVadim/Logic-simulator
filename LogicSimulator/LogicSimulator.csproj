@@ -22,6 +22,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\LogicSimulator.AvalonDock\LogicSimulator.AvalonDock.csproj" />
     <ProjectReference Include="..\LogicSimulator.Controls\LogicSimulator.Controls.csproj" />
   </ItemGroup>
 

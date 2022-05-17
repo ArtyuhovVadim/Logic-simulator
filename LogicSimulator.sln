@@ -5,7 +5,9 @@ VisualStudioVersion = 17.1.32210.238
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LogicSimulator", "LogicSimulator\LogicSimulator.csproj", "{11A15E2A-125E-4D3E-AD20-EECFEB66621A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LogicSimulator.Controls", "LogicSimulator.Controls\LogicSimulator.Controls.csproj", "{ADA81EFC-C2AC-4C8C-8AD2-ABA10FA7A9E8}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LogicSimulator.Controls", "LogicSimulator.Controls\LogicSimulator.Controls.csproj", "{ADA81EFC-C2AC-4C8C-8AD2-ABA10FA7A9E8}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LogicSimulator.AvalonDock", "LogicSimulator.AvalonDock\LogicSimulator.AvalonDock.csproj", "{153CBB5F-EA0F-437A-B926-397F6C21B442}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -25,12 +27,20 @@ Global
 		{11A15E2A-125E-4D3E-AD20-EECFEB66621A}.Release|x86.Build.0 = Release|x86
 		{ADA81EFC-C2AC-4C8C-8AD2-ABA10FA7A9E8}.Debug|x64.ActiveCfg = Debug|x64
 		{ADA81EFC-C2AC-4C8C-8AD2-ABA10FA7A9E8}.Debug|x64.Build.0 = Debug|x64
-		{ADA81EFC-C2AC-4C8C-8AD2-ABA10FA7A9E8}.Debug|x86.ActiveCfg = Debug|Any CPU
-		{ADA81EFC-C2AC-4C8C-8AD2-ABA10FA7A9E8}.Debug|x86.Build.0 = Debug|Any CPU
+		{ADA81EFC-C2AC-4C8C-8AD2-ABA10FA7A9E8}.Debug|x86.ActiveCfg = Debug|x86
+		{ADA81EFC-C2AC-4C8C-8AD2-ABA10FA7A9E8}.Debug|x86.Build.0 = Debug|x86
 		{ADA81EFC-C2AC-4C8C-8AD2-ABA10FA7A9E8}.Release|x64.ActiveCfg = Release|x64
 		{ADA81EFC-C2AC-4C8C-8AD2-ABA10FA7A9E8}.Release|x64.Build.0 = Release|x64
-		{ADA81EFC-C2AC-4C8C-8AD2-ABA10FA7A9E8}.Release|x86.ActiveCfg = Release|Any CPU
-		{ADA81EFC-C2AC-4C8C-8AD2-ABA10FA7A9E8}.Release|x86.Build.0 = Release|Any CPU
+		{ADA81EFC-C2AC-4C8C-8AD2-ABA10FA7A9E8}.Release|x86.ActiveCfg = Release|x86
+		{ADA81EFC-C2AC-4C8C-8AD2-ABA10FA7A9E8}.Release|x86.Build.0 = Release|x86
+		{153CBB5F-EA0F-437A-B926-397F6C21B442}.Debug|x64.ActiveCfg = Debug|x64
+		{153CBB5F-EA0F-437A-B926-397F6C21B442}.Debug|x64.Build.0 = Debug|x64
+		{153CBB5F-EA0F-437A-B926-397F6C21B442}.Debug|x86.ActiveCfg = Debug|x86
+		{153CBB5F-EA0F-437A-B926-397F6C21B442}.Debug|x86.Build.0 = Debug|x86
+		{153CBB5F-EA0F-437A-B926-397F6C21B442}.Release|x64.ActiveCfg = Release|x64
+		{153CBB5F-EA0F-437A-B926-397F6C21B442}.Release|x64.Build.0 = Release|x64
+		{153CBB5F-EA0F-437A-B926-397F6C21B442}.Release|x86.ActiveCfg = Release|x86
+		{153CBB5F-EA0F-437A-B926-397F6C21B442}.Release|x86.Build.0 = Release|x86
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
