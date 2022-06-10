@@ -72,12 +72,12 @@
     <SolidColorBrush
         x:Key="{x:Static r:AvalonDockResourceKeys.DocumentWellOverflowButtonHoveredGlyph}"
         o:Freeze="true"
-        Color="#007ACC" />
+        Color="#CCCCCC" />
     <!--  AccentColor  -->
     <SolidColorBrush
         x:Key="{x:Static r:AvalonDockResourceKeys.DocumentWellOverflowButtonPressedBackground}"
         o:Freeze="true"
-        Color="#007ACC" />
+        Color="#6A6A6A" />
     <SolidColorBrush
         x:Key="{x:Static r:AvalonDockResourceKeys.DocumentWellOverflowButtonPressedBorder}"
         o:Freeze="true"
@@ -224,7 +224,7 @@
     <SolidColorBrush
         x:Key="{x:Static r:AvalonDockResourceKeys.ToolWindowCaptionActiveBackground}"
         o:Freeze="true"
-        Color="#007ACC" />
+        Color="#6283A2" />
     <SolidColorBrush
         x:Key="{x:Static r:AvalonDockResourceKeys.ToolWindowCaptionActiveGrip}"
         o:Freeze="true"
@@ -236,7 +236,7 @@
     <SolidColorBrush
         x:Key="{x:Static r:AvalonDockResourceKeys.ToolWindowCaptionInactiveBackground}"
         o:Freeze="true"
-        Color="#2D2D30" />
+        Color="#4E4E4E" />
     <SolidColorBrush
         x:Key="{x:Static r:AvalonDockResourceKeys.ToolWindowCaptionInactiveGrip}"
         o:Freeze="true"
@@ -244,7 +244,7 @@
     <SolidColorBrush
         x:Key="{x:Static r:AvalonDockResourceKeys.ToolWindowCaptionInactiveText}"
         o:Freeze="true"
-        Color="#D0D0D0" />
+        Color="White" />
 
     <!--  Tool Window : Caption : Button  -->
     <SolidColorBrush
@@ -264,12 +264,12 @@
     <SolidColorBrush
         x:Key="{x:Static r:AvalonDockResourceKeys.ToolWindowCaptionButtonActiveHoveredGlyph}"
         o:Freeze="true"
-        Color="#FFFFFF" />
+        Color="#CCCCCC" />
     <!--  (AccentColor)  -->
     <SolidColorBrush
         x:Key="{x:Static r:AvalonDockResourceKeys.ToolWindowCaptionButtonActivePressedBackground}"
         o:Freeze="true"
-        Color="#0E6198" />
+        Color="#6A6A6A" />
     <!--  (AccentColor)  -->
     <SolidColorBrush
         x:Key="{x:Static r:AvalonDockResourceKeys.ToolWindowCaptionButtonActivePressedBorder}"
@@ -297,7 +297,7 @@
     <SolidColorBrush
         x:Key="{x:Static r:AvalonDockResourceKeys.ToolWindowCaptionButtonInactiveHoveredGlyph}"
         o:Freeze="true"
-        Color="#F1F1F1" />
+        Color="#CCCCCC" />
 
     <SolidColorBrush
         x:Key="{x:Static r:AvalonDockResourceKeys.ToolWindowCaptionButtonInactivePressedBackground}"
@@ -316,29 +316,29 @@
     <SolidColorBrush
         x:Key="{x:Static r:AvalonDockResourceKeys.ToolWindowTabSelectedActiveBackground}"
         o:Freeze="true"
-        Color="#252526" />
+        Color="#414141" />
     <!--  (AccentColor)  -->
     <SolidColorBrush
         x:Key="{x:Static r:AvalonDockResourceKeys.ToolWindowTabSelectedActiveText}"
         o:Freeze="true"
-        Color="#0097FB" />
+        Color="#FFFFFF" />
     <SolidColorBrush
         x:Key="{x:Static r:AvalonDockResourceKeys.ToolWindowTabSelectedInactiveBackground}"
         o:Freeze="true"
-        Color="#252526" />
+        Color="#404040" />
     <!--  (AccentColor)  -->
     <SolidColorBrush
         x:Key="{x:Static r:AvalonDockResourceKeys.ToolWindowTabSelectedInactiveText}"
         o:Freeze="true"
-        Color="#0097FB" />
+        Color="#FFFFFF" />
     <SolidColorBrush
         x:Key="{x:Static r:AvalonDockResourceKeys.ToolWindowTabUnselectedBackground}"
         o:Freeze="true"
-        Color="#2D2D30" />
+        Color="#353535" />
     <SolidColorBrush
         x:Key="{x:Static r:AvalonDockResourceKeys.ToolWindowTabUnselectedText}"
         o:Freeze="true"
-        Color="#D0D0D0" />
+        Color="#E5E5E5" />
     <SolidColorBrush
         x:Key="{x:Static r:AvalonDockResourceKeys.ToolWindowTabUnselectedHoveredBackground}"
         o:Freeze="true"
@@ -347,7 +347,7 @@
     <SolidColorBrush
         x:Key="{x:Static r:AvalonDockResourceKeys.ToolWindowTabUnselectedHoveredText}"
         o:Freeze="true"
-        Color="#55AAFF" />
+        Color="#FFFFFF" />
 
     <!--  Floating Document Window  -->
     <SolidColorBrush

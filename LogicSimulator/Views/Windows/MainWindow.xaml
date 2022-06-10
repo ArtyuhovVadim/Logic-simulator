@@ -12,7 +12,7 @@
     Topmost="False"
     mc:Ignorable="d">
     <DockPanel>
-        <Menu Margin="0,1,0,0" DockPanel.Dock="Top">
+        <Menu DockPanel.Dock="Top">
             <MenuItem Header="Файл">
                 <MenuItem Header="Новый" />
             </MenuItem>
@@ -25,24 +25,60 @@
                 <LayoutPanel>
                     <LayoutDocumentPane>
                         <LayoutDocument Title="Document 1">
-                            <Grid Background="Bisque" />
+                            <Grid Background="Bisque">
+                                <TextBlock
+                                    HorizontalAlignment="Center"
+                                    VerticalAlignment="Center"
+                                    FontSize="32"
+                                    Text="Document 1" />
+                            </Grid>
                         </LayoutDocument>
                         <LayoutDocument Title="Document 2">
-                            <Grid Background="Bisque" />
+                            <Grid Background="Bisque">
+                                <TextBlock
+                                    HorizontalAlignment="Center"
+                                    VerticalAlignment="Center"
+                                    FontSize="32"
+                                    Text="Document 2" />
+                            </Grid>
                         </LayoutDocument>
                         <LayoutDocument Title="Document 3">
-                            <Grid Background="Bisque" />
+                            <Grid Background="Bisque">
+                                <TextBlock
+                                    HorizontalAlignment="Center"
+                                    VerticalAlignment="Center"
+                                    FontSize="32"
+                                    Text="Document 3" />
+                            </Grid>
                         </LayoutDocument>
                     </LayoutDocumentPane>
                     <LayoutAnchorablePane>
                         <LayoutAnchorable Title="Tools 1">
-                            <Grid Background="Coral" />
+                            <Grid Background="Coral">
+                                <TextBlock
+                                    HorizontalAlignment="Center"
+                                    VerticalAlignment="Center"
+                                    FontSize="32"
+                                    Text="Tools 1" />
+                            </Grid>
                         </LayoutAnchorable>
                         <LayoutAnchorable Title="Tools 2">
-                            <Grid Background="Coral" />
+                            <Grid Background="Coral">
+                                <TextBlock
+                                    HorizontalAlignment="Center"
+                                    VerticalAlignment="Center"
+                                    FontSize="32"
+                                    Text="Tools 2" />
+                            </Grid>
                         </LayoutAnchorable>
                         <LayoutAnchorable Title="Tools 3">
-                            <Grid Background="Coral" />
+                            <Grid Background="Coral">
+                                <TextBlock
+                                    HorizontalAlignment="Center"
+                                    VerticalAlignment="Center"
+                                    FontSize="32"
+                                    Text="Tools 3" />
+                            </Grid>
                         </LayoutAnchorable>
                     </LayoutAnchorablePane>
                 </LayoutPanel>
