@@ -9,6 +9,7 @@
     Width="1280"
     Height="720"
     DataContext="{Binding Path=MainWindowViewModel, Source={StaticResource Locator}}"
+    Topmost="False"
     mc:Ignorable="d">
     <DockPanel>
         <Menu Margin="0,1,0,0" DockPanel.Dock="Top">
@@ -23,14 +24,26 @@
             <LayoutRoot>
                 <LayoutPanel>
                     <LayoutDocumentPane>
-                        <LayoutDocument Title="123" />
-                        <LayoutDocument Title="123" />
-                        <LayoutDocument Title="123" />
+                        <LayoutDocument Title="Document 1">
+                            <Grid Background="Bisque" />
+                        </LayoutDocument>
+                        <LayoutDocument Title="Document 2">
+                            <Grid Background="Bisque" />
+                        </LayoutDocument>
+                        <LayoutDocument Title="Document 3">
+                            <Grid Background="Bisque" />
+                        </LayoutDocument>
                     </LayoutDocumentPane>
                     <LayoutAnchorablePane>
-                        <LayoutAnchorable Title="asdas" />
-                        <LayoutAnchorable Title="asdas" />
-                        <LayoutAnchorable Title="asdas" />
+                        <LayoutAnchorable Title="Tools 1">
+                            <Grid Background="Coral" />
+                        </LayoutAnchorable>
+                        <LayoutAnchorable Title="Tools 2">
+                            <Grid Background="Coral" />
+                        </LayoutAnchorable>
+                        <LayoutAnchorable Title="Tools 3">
+                            <Grid Background="Coral" />
+                        </LayoutAnchorable>
                     </LayoutAnchorablePane>
                 </LayoutPanel>
             </LayoutRoot>

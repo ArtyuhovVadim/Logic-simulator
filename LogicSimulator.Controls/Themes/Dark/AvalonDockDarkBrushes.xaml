@@ -3,7 +3,7 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:o="http://schemas.microsoft.com/winfx/2006/xaml/presentation/options"
     xmlns:r="clr-namespace:LogicSimulator.Controls.Themes">
-    <!--#region AvaloneDock-->
+    <!--#region AvalonDock-->
 
     <!--  Accent Keys  -->
     <Color x:Key="{x:Static r:AvalonDockResourceKeys.ControlAccentColorKey}">#FF007ACC</Color>
@@ -17,7 +17,7 @@
     <SolidColorBrush
         x:Key="{x:Static r:AvalonDockResourceKeys.Background}"
         o:Freeze="true"
-        Color="#2D2D30" />
+        Color="Transparent" />
     <SolidColorBrush
         x:Key="{x:Static r:AvalonDockResourceKeys.PanelBorderBrush}"
         o:Freeze="true"
@@ -25,27 +25,27 @@
     <SolidColorBrush
         x:Key="{x:Static r:AvalonDockResourceKeys.TabBackground}"
         o:Freeze="true"
-        Color="#252526" />
+        Color="#404040" />
 
     <!--  Auto Hide : Tab  -->
     <SolidColorBrush
         x:Key="{x:Static r:AvalonDockResourceKeys.AutoHideTabDefaultBackground}"
         o:Freeze="true"
-        Color="#2D2D30" />
+        Color="#505050" />
     <SolidColorBrush
         x:Key="{x:Static r:AvalonDockResourceKeys.AutoHideTabDefaultBorder}"
         o:Freeze="true"
-        Color="#3F3F46" />
+        Color="#222222" />
     <SolidColorBrush
         x:Key="{x:Static r:AvalonDockResourceKeys.AutoHideTabDefaultText}"
         o:Freeze="true"
-        Color="#D0D0D0" />
+        Color="White" />
 
     <!--  Mouse Over Auto Hide Button for (collapsed) Auto Hidden Elements  -->
     <SolidColorBrush
         x:Key="{x:Static r:AvalonDockResourceKeys.AutoHideTabHoveredBackground}"
         o:Freeze="true"
-        Color="#2D2D30" />
+        Color="#5C5C5C" />
     <!--  AccentColor  -->
     <SolidColorBrush x:Key="{x:Static r:AvalonDockResourceKeys.AutoHideTabHoveredBorder}" Color="{DynamicResource {x:Static r:AvalonDockResourceKeys.ControlAccentColorKey}}" />
 
@@ -54,12 +54,12 @@
         x:Key="{x:Static r:AvalonDockResourceKeys.AutoHideTabHoveredText}"
         o:Freeze="true"
         Color="{DynamicResource {x:Static r:AvalonDockResourceKeys.ControlAccentColorKey}}" />
-
+    <!--  !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!1  -->
     <!--  Document Well : Overflow Button  -->
     <SolidColorBrush
         x:Key="{x:Static r:AvalonDockResourceKeys.DocumentWellOverflowButtonDefaultGlyph}"
         o:Freeze="true"
-        Color="#F1F1F1" />
+        Color="White" />
     <SolidColorBrush
         x:Key="{x:Static r:AvalonDockResourceKeys.DocumentWellOverflowButtonHoveredBackground}"
         o:Freeze="true"
@@ -92,20 +92,20 @@
     <SolidColorBrush
         x:Key="{x:Static r:AvalonDockResourceKeys.DocumentWellTabSelectedActiveBackground}"
         o:Freeze="true"
-        Color="#007ACC" />
+        Color="#5C5C5C" />
 
     <SolidColorBrush
         x:Key="{x:Static r:AvalonDockResourceKeys.DocumentWellTabSelectedActiveText}"
         o:Freeze="true"
-        Color="#F1F1F1" />
+        Color="White" />
     <SolidColorBrush
         x:Key="{x:Static r:AvalonDockResourceKeys.DocumentWellTabSelectedInactiveBackground}"
         o:Freeze="true"
-        Color="#3F3F46" />
+        Color="#5C5C5C" />
     <SolidColorBrush
         x:Key="{x:Static r:AvalonDockResourceKeys.DocumentWellTabSelectedInactiveText}"
         o:Freeze="true"
-        Color="#F1F1F1" />
+        Color="White" />
     <SolidColorBrush
         x:Key="{x:Static r:AvalonDockResourceKeys.DocumentWellTabUnselectedBackground}"
         o:Freeze="true"
@@ -113,16 +113,16 @@
     <SolidColorBrush
         x:Key="{x:Static r:AvalonDockResourceKeys.DocumentWellTabUnselectedText}"
         o:Freeze="true"
-        Color="#F1F1F1" />
+        Color="White" />
     <!--  AccentColor  -->
     <SolidColorBrush
         x:Key="{x:Static r:AvalonDockResourceKeys.DocumentWellTabUnselectedHoveredBackground}"
         o:Freeze="true"
-        Color="#1C97EA" />
+        Color="#545454" />
     <SolidColorBrush
         x:Key="{x:Static r:AvalonDockResourceKeys.DocumentWellTabUnselectedHoveredText}"
         o:Freeze="true"
-        Color="#FFFFFF" />
+        Color="White" />
 
     <!--  Document Well : Tab : X Button Foreground color for selected document  -->
     <SolidColorBrush
@@ -143,7 +143,7 @@
     <SolidColorBrush
         x:Key="{x:Static r:AvalonDockResourceKeys.DocumentWellTabButtonSelectedActiveHoveredGlyph}"
         o:Freeze="true"
-        Color="#FFFFFF" />
+        Color="DarkRed" />
     <!--  AccentColor  -->
     <SolidColorBrush
         x:Key="{x:Static r:AvalonDockResourceKeys.DocumentWellTabButtonSelectedActivePressedBackground}"
@@ -157,7 +157,7 @@
     <SolidColorBrush
         x:Key="{x:Static r:AvalonDockResourceKeys.DocumentWellTabButtonSelectedActivePressedGlyph}"
         o:Freeze="true"
-        Color="#FFFFFF" />
+        Color="Red" />
     <SolidColorBrush
         x:Key="{x:Static r:AvalonDockResourceKeys.DocumentWellTabButtonSelectedInactiveGlyph}"
         o:Freeze="true"
@@ -173,7 +173,7 @@
     <SolidColorBrush
         x:Key="{x:Static r:AvalonDockResourceKeys.DocumentWellTabButtonSelectedInactiveHoveredGlyph}"
         o:Freeze="true"
-        Color="#F1F1F1" />
+        Color="DarkRed" />
     <SolidColorBrush
         x:Key="{x:Static r:AvalonDockResourceKeys.DocumentWellTabButtonSelectedInactivePressedBackground}"
         o:Freeze="true"
@@ -185,7 +185,7 @@
     <SolidColorBrush
         x:Key="{x:Static r:AvalonDockResourceKeys.DocumentWellTabButtonSelectedInactivePressedGlyph}"
         o:Freeze="true"
-        Color="#F1F1F1" />
+        Color="Red" />
     <SolidColorBrush
         x:Key="{x:Static r:AvalonDockResourceKeys.DocumentWellTabButtonUnselectedTabHoveredGlyph}"
         o:Freeze="true"
@@ -203,7 +203,7 @@
     <SolidColorBrush
         x:Key="{x:Static r:AvalonDockResourceKeys.DocumentWellTabButtonUnselectedTabHoveredButtonHoveredGlyph}"
         o:Freeze="true"
-        Color="#FFFFFF" />
+        Color="DarkRed" />
     <!--  AccentColor  -->
     <SolidColorBrush
         x:Key="{x:Static r:AvalonDockResourceKeys.DocumentWellTabButtonUnselectedTabHoveredButtonPressedBackground}"
@@ -217,7 +217,7 @@
     <SolidColorBrush
         x:Key="{x:Static r:AvalonDockResourceKeys.DocumentWellTabButtonUnselectedTabHoveredButtonPressedGlyph}"
         o:Freeze="true"
-        Color="#FFFFFF" />
+        Color="Red" />
 
     <!--  Tool Window : Caption  -->
     <!--  Background of selected toolwindow (AccentColor)  -->

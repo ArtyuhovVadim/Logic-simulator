@@ -218,12 +218,12 @@
                                 x:Name="BD"
                                 Grid.ColumnSpan="2"
                                 BorderBrush="{DynamicResource {x:Static r:AvalonDockResourceKeys.DocumentWellTabSelectedActiveBackground}}"
-                                BorderThickness="0,0,0,2" />
+                                BorderThickness="0" />
                             <DocumentPaneTabPanel
                                 x:Name="HeaderPanel"
                                 Grid.Row="0"
                                 Grid.Column="0"
-                                Margin="0"
+                                Margin="-1,0,0,0"
                                 IsItemsHost="true"
                                 KeyboardNavigation.TabIndex="1" />
                             <DropDownButton
@@ -256,7 +256,7 @@
                             VerticalAlignment="Stretch"
                             Background="{TemplateBinding Background}"
                             BorderBrush="{DynamicResource {x:Static r:AvalonDockResourceKeys.PanelBorderBrush}}"
-                            BorderThickness="1,0,1,1"
+                            BorderThickness="0"
                             KeyboardNavigation.DirectionalNavigation="Contained"
                             KeyboardNavigation.TabIndex="2"
                             KeyboardNavigation.TabNavigation="Cycle">
@@ -312,7 +312,7 @@
                     <Setter Property="Foreground" Value="{DynamicResource {x:Static r:AvalonDockResourceKeys.DocumentWellTabUnselectedText}}" />
                     <Setter Property="BorderBrush" Value="Transparent" />
                     <Setter Property="ToolTip" Value="{Binding ToolTip}" />
-                    <Setter Property="Padding" Value="6,1" />
+                    <Setter Property="Padding" Value="0" />
                     <Setter Property="Margin" Value="0" />
                     <Setter Property="Template">
                         <Setter.Value>
@@ -320,9 +320,13 @@
                                 <Grid SnapsToDevicePixels="true">
                                     <Border
                                         x:Name="Bd"
+                                        Padding="0"
                                         Background="{TemplateBinding Background}"
-                                        BorderBrush="{Binding Background, RelativeSource={RelativeSource Self}}"
-                                        BorderThickness="0,0,0,2" />
+                                        BorderBrush="#222222"
+                                        BorderThickness="1,1,1,0"
+                                        CornerRadius="3 3 0 0"
+                                        SnapsToDevicePixels="True"
+                                        UseLayoutRounding="True" />
                                     <ContentPresenter
                                         x:Name="Content"
                                         HorizontalAlignment="{Binding HorizontalContentAlignment, RelativeSource={RelativeSource AncestorType={x:Type ItemsControl}}}"
@@ -360,15 +364,17 @@
                                             <Condition Binding="{Binding IsSelected}" Value="False" />
                                         </MultiDataTrigger.Conditions>
                                         <Setter TargetName="Bd" Property="BorderBrush" Value="Transparent" />
+                                        <Setter TargetName="Bd" Property="Background" Value="Transparent" />
                                     </MultiDataTrigger>
 
                                     <!--  Document Well : Tab / Unselected, hovered  -->
                                     <MultiTrigger>
                                         <MultiTrigger.Conditions>
-                                            <Condition Property="IsMouseOver" Value="true" />
-                                            <Condition Property="Selector.IsSelected" Value="false" />
+                                            <Condition Property="IsMouseOver" Value="True" />
+                                            <Condition Property="Selector.IsSelected" Value="False" />
                                         </MultiTrigger.Conditions>
                                         <Setter TargetName="Bd" Property="Background" Value="{DynamicResource {x:Static r:AvalonDockResourceKeys.DocumentWellTabUnselectedHoveredBackground}}" />
+                                        <Setter TargetName="Bd" Property="BorderBrush" Value="#222222" />
                                         <Setter Property="Foreground" Value="{DynamicResource {x:Static r:AvalonDockResourceKeys.DocumentWellTabUnselectedHoveredText}}" />
                                         <Setter Property="Panel.ZIndex" Value="0" />
                                     </MultiTrigger>
@@ -477,7 +483,7 @@
                                         Margin="0"
                                         Background="{TemplateBinding Background}"
                                         BorderBrush="{TemplateBinding Background}"
-                                        BorderThickness="1,0,1,1">
+                                        BorderThickness="0">
                                         <ContentPresenter
                                             x:Name="Content"
                                             Margin="6,1,6,3"
@@ -835,11 +841,12 @@
     <ControlTemplate x:Key="AvalonDockThemeVs2013AnchorTemplate" TargetType="{x:Type LayoutAnchorControl}">
         <Border
             x:Name="Bd"
-            Margin="0,0,12,0"
-            Padding="0,6,0,4"
+            Margin="0,2,2,2"
+            Padding="5,1"
             Background="{DynamicResource {x:Static r:AvalonDockResourceKeys.AutoHideTabDefaultBackground}}"
             BorderBrush="{DynamicResource {x:Static r:AvalonDockResourceKeys.AutoHideTabDefaultBorder}}"
-            BorderThickness="0,0,0,6"
+            BorderThickness="1"
+            CornerRadius="3"
             TextElement.Foreground="{DynamicResource {x:Static r:AvalonDockResourceKeys.AutoHideTabDefaultText}}"
             TextOptions.TextFormattingMode="Display">
             <ContentPresenter
@@ -848,7 +855,7 @@
                 ContentTemplateSelector="{Binding AnchorableHeaderTemplateSelector, Mode=OneWay, RelativeSource={RelativeSource AncestorType={x:Type DockingManager}, Mode=FindAncestor}}" />
         </Border>
         <ControlTemplate.Triggers>
-            <Trigger Property="Side" Value="Right">
+            <!--<Trigger Property="Side" Value="Right">
                 <Setter TargetName="Bd" Property="BorderThickness" Value="0,6,0,0" />
                 <Setter TargetName="Bd" Property="Padding" Value="0,3,0,7" />
             </Trigger>
@@ -856,12 +863,12 @@
             <Trigger Property="Side" Value="Top">
                 <Setter TargetName="Bd" Property="BorderThickness" Value="0,6,0,0" />
                 <Setter TargetName="Bd" Property="Padding" Value="0,3,0,7" />
-            </Trigger>
+            </Trigger>-->
 
             <Trigger Property="IsMouseOver" Value="True">
                 <Setter TargetName="Bd" Property="Background" Value="{DynamicResource {x:Static r:AvalonDockResourceKeys.AutoHideTabHoveredBackground}}" />
-                <Setter TargetName="Bd" Property="BorderBrush" Value="{DynamicResource {x:Static r:AvalonDockResourceKeys.AutoHideTabHoveredBorder}}" />
-                <Setter TargetName="Bd" Property="TextElement.Foreground" Value="{DynamicResource {x:Static r:AvalonDockResourceKeys.AutoHideTabHoveredText}}" />
+                <!--<Setter TargetName="Bd" Property="BorderBrush" Value="{DynamicResource {x:Static r:AvalonDockResourceKeys.AutoHideTabHoveredBorder}}" />-->
+                <!--<Setter TargetName="Bd" Property="TextElement.Foreground" Value="{DynamicResource {x:Static r:AvalonDockResourceKeys.AutoHideTabHoveredText}}" />-->
             </Trigger>
 
         </ControlTemplate.Triggers>
@@ -1440,20 +1447,18 @@
                         Style="{DynamicResource DropDownControlArea}">
                         <Border
                             x:Name="Header"
-                            Height="19"
-                            Margin="0,0,0,2"
-                            Padding="1,0"
+                            Margin="0"
+                            Padding="0"
                             Background="{TemplateBinding Background}"
-                            BorderBrush="{DynamicResource {x:Static r:AvalonDockResourceKeys.Background}}"
-                            BorderThickness="0,0,0,1">
-                            <Grid>
+                            BorderThickness="0">
+                            <Grid HorizontalAlignment="Center" VerticalAlignment="Center">
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition Width="*" />
                                     <ColumnDefinition Width="Auto" />
                                 </Grid.ColumnDefinitions>
                                 <Border Grid.ColumnSpan="2" Background="Transparent" />
                                 <ContentPresenter
-                                    Margin="4,0,4,1"
+                                    Margin="8,2.5"
                                     VerticalAlignment="Bottom"
                                     Content="{Binding Model, RelativeSource={RelativeSource TemplatedParent}}"
                                     ContentTemplate="{Binding DocumentHeaderTemplate, Mode=OneWay, RelativeSource={RelativeSource AncestorType={x:Type DockingManager}, Mode=FindAncestor}}"
@@ -1463,24 +1468,25 @@
                                 <Button
                                     x:Name="DocumentCloseButton"
                                     Grid.Column="1"
-                                    Width="15"
-                                    Height="15"
-                                    Margin="3,0"
+                                    Margin="0,0,3,0"
                                     HorizontalAlignment="Center"
-                                    VerticalAlignment="Bottom"
+                                    VerticalAlignment="Center"
                                     Command="{Binding Path=LayoutItem.CloseCommand, RelativeSource={RelativeSource TemplatedParent}}"
                                     Style="{StaticResource AvalonDockThemeVs2013ButtonStyle}"
                                     ToolTip="{x:Static avalonDockProperties:Resources.Document_Close}"
                                     Visibility="Hidden">
                                     <Path
                                         x:Name="PART_ImgPinClose"
-                                        Width="10"
-                                        Height="10"
-                                        Margin="1,0,0,1"
+                                        Width="8"
+                                        Height="8"
+                                        Margin="1.5"
+                                        HorizontalAlignment="Center"
                                         VerticalAlignment="Center"
                                         Data="{DynamicResource PinClose}"
                                         Fill="{DynamicResource {x:Static r:AvalonDockResourceKeys.ToolWindowCaptionActiveText}}"
-                                        Stretch="Uniform" />
+                                        SnapsToDevicePixels="True"
+                                        Stretch="Uniform"
+                                        UseLayoutRounding="True" />
                                 </Button>
                             </Grid>
                         </Border>
@@ -1527,36 +1533,17 @@
                             <Setter TargetName="PART_ImgPinClose" Property="Fill" Value="{DynamicResource {x:Static r:AvalonDockResourceKeys.DocumentWellTabButtonSelectedInactiveGlyph}}" />
                         </MultiDataTrigger>
 
-                        <!--  Document Well : Tab : Button / Selected, inactive, hovered  -->
-                        <MultiDataTrigger>
-                            <MultiDataTrigger.Conditions>
-                                <Condition Binding="{Binding IsLastFocusedDocument}" Value="true" />
-                                <Condition Binding="{Binding IsMouseOver, ElementName=DocumentCloseButton}" Value="True" />
-                            </MultiDataTrigger.Conditions>
-                            <Setter TargetName="Header" Property="BorderThickness" Value="0" />
-                            <Setter TargetName="Header" Property="Padding" Value="0" />
-                            <Setter TargetName="DocumentCloseButton" Property="Background" Value="{DynamicResource {x:Static r:AvalonDockResourceKeys.DocumentWellTabButtonSelectedInactiveHoveredBackground}}" />
-                            <Setter TargetName="DocumentCloseButton" Property="BorderBrush" Value="{DynamicResource {x:Static r:AvalonDockResourceKeys.DocumentWellTabButtonSelectedInactiveHoveredBorder}}" />
-                            <Setter TargetName="PART_ImgPinClose" Property="Fill" Value="{DynamicResource {x:Static r:AvalonDockResourceKeys.DocumentWellTabButtonSelectedInactiveHoveredGlyph}}" />
-                        </MultiDataTrigger>
-
                         <!--  Document Well : Tab : Button / Selected, inactive, pressed  -->
                         <MultiDataTrigger>
                             <MultiDataTrigger.Conditions>
                                 <Condition Binding="{Binding IsLastFocusedDocument}" Value="true" />
                                 <Condition Binding="{Binding IsMouseCaptured, ElementName=DocumentCloseButton}" Value="True" />
                             </MultiDataTrigger.Conditions>
-                            <Setter TargetName="Header" Property="BorderThickness" Value="0" />
-                            <Setter TargetName="Header" Property="Padding" Value="0" />
-                            <Setter TargetName="DocumentCloseButton" Property="Background" Value="{DynamicResource {x:Static r:AvalonDockResourceKeys.DocumentWellTabButtonSelectedInactivePressedBackground}}" />
-                            <Setter TargetName="DocumentCloseButton" Property="BorderBrush" Value="{DynamicResource {x:Static r:AvalonDockResourceKeys.DocumentWellTabButtonSelectedInactivePressedBorder}}" />
                             <Setter TargetName="PART_ImgPinClose" Property="Fill" Value="{DynamicResource {x:Static r:AvalonDockResourceKeys.DocumentWellTabButtonSelectedInactivePressedGlyph}}" />
                         </MultiDataTrigger>
 
                         <!--  Document Well : Tab : Button / Selected, active  -->
                         <DataTrigger Binding="{Binding IsActive}" Value="true">
-                            <Setter TargetName="Header" Property="BorderThickness" Value="0" />
-                            <Setter TargetName="Header" Property="Padding" Value="0" />
                             <Setter TargetName="PART_ImgPinClose" Property="Fill" Value="{DynamicResource {x:Static r:AvalonDockResourceKeys.DocumentWellTabButtonSelectedActiveGlyph}}" />
                         </DataTrigger>
 
@@ -1566,10 +1553,6 @@
                                 <Condition Binding="{Binding IsActive}" Value="true" />
                                 <Condition Binding="{Binding IsMouseOver, ElementName=DocumentCloseButton}" Value="True" />
                             </MultiDataTrigger.Conditions>
-                            <Setter TargetName="Header" Property="BorderThickness" Value="0" />
-                            <Setter TargetName="Header" Property="Padding" Value="0" />
-                            <Setter TargetName="DocumentCloseButton" Property="Background" Value="{DynamicResource {x:Static r:AvalonDockResourceKeys.DocumentWellTabButtonSelectedActiveHoveredBackground}}" />
-                            <Setter TargetName="DocumentCloseButton" Property="BorderBrush" Value="{DynamicResource {x:Static r:AvalonDockResourceKeys.DocumentWellTabButtonSelectedActiveHoveredBorder}}" />
                             <Setter TargetName="PART_ImgPinClose" Property="Fill" Value="{DynamicResource {x:Static r:AvalonDockResourceKeys.DocumentWellTabButtonSelectedActiveHoveredGlyph}}" />
                         </MultiDataTrigger>
 
@@ -1579,21 +1562,7 @@
                                 <Condition Binding="{Binding IsActive}" Value="true" />
                                 <Condition Binding="{Binding IsMouseCaptured, ElementName=DocumentCloseButton}" Value="True" />
                             </MultiDataTrigger.Conditions>
-                            <Setter TargetName="Header" Property="BorderThickness" Value="0" />
-                            <Setter TargetName="Header" Property="Padding" Value="0" />
-                            <Setter TargetName="DocumentCloseButton" Property="Background" Value="{DynamicResource {x:Static r:AvalonDockResourceKeys.DocumentWellTabButtonSelectedActivePressedBackground}}" />
-                            <Setter TargetName="DocumentCloseButton" Property="BorderBrush" Value="{DynamicResource {x:Static r:AvalonDockResourceKeys.DocumentWellTabButtonSelectedActivePressedBorder}}" />
                             <Setter TargetName="PART_ImgPinClose" Property="Fill" Value="{DynamicResource {x:Static r:AvalonDockResourceKeys.DocumentWellTabButtonSelectedActivePressedGlyph}}" />
-                        </MultiDataTrigger>
-
-                        <!--  Document Well : Tab : Button / Unselected, tab hovered  -->
-                        <MultiDataTrigger>
-                            <MultiDataTrigger.Conditions>
-                                <Condition Binding="{Binding IsActive}" Value="False" />
-                                <Condition Binding="{Binding IsLastFocusedDocument}" Value="False" />
-                                <Condition Binding="{Binding IsMouseOver, RelativeSource={RelativeSource TemplatedParent}}" Value="True" />
-                            </MultiDataTrigger.Conditions>
-                            <Setter TargetName="PART_ImgPinClose" Property="Fill" Value="{DynamicResource {x:Static r:AvalonDockResourceKeys.DocumentWellTabButtonUnselectedTabHoveredGlyph}}" />
                         </MultiDataTrigger>
 
                         <!--  Document Well : Tab : Button / Unselected, tab hovered, button hovered  -->
@@ -1604,8 +1573,6 @@
                                 <Condition Binding="{Binding IsMouseOver, RelativeSource={RelativeSource TemplatedParent}}" Value="True" />
                                 <Condition Binding="{Binding IsMouseOver, ElementName=DocumentCloseButton}" Value="True" />
                             </MultiDataTrigger.Conditions>
-                            <Setter TargetName="DocumentCloseButton" Property="Background" Value="{DynamicResource {x:Static r:AvalonDockResourceKeys.DocumentWellTabButtonUnselectedTabHoveredButtonHoveredBackground}}" />
-                            <Setter TargetName="DocumentCloseButton" Property="BorderBrush" Value="{DynamicResource {x:Static r:AvalonDockResourceKeys.DocumentWellTabButtonUnselectedTabHoveredButtonHoveredBorder}}" />
                             <Setter TargetName="PART_ImgPinClose" Property="Fill" Value="{DynamicResource {x:Static r:AvalonDockResourceKeys.DocumentWellTabButtonUnselectedTabHoveredButtonHoveredGlyph}}" />
                         </MultiDataTrigger>
 
@@ -1617,8 +1584,6 @@
                                 <Condition Binding="{Binding IsMouseOver, RelativeSource={RelativeSource TemplatedParent}}" Value="True" />
                                 <Condition Binding="{Binding IsMouseCaptured, ElementName=DocumentCloseButton}" Value="True" />
                             </MultiDataTrigger.Conditions>
-                            <Setter TargetName="DocumentCloseButton" Property="Background" Value="{DynamicResource {x:Static r:AvalonDockResourceKeys.DocumentWellTabButtonUnselectedTabHoveredButtonPressedBackground}}" />
-                            <Setter TargetName="DocumentCloseButton" Property="BorderBrush" Value="{DynamicResource {x:Static r:AvalonDockResourceKeys.DocumentWellTabButtonUnselectedTabHoveredButtonPressedBorder}}" />
                             <Setter TargetName="PART_ImgPinClose" Property="Fill" Value="{DynamicResource {x:Static r:AvalonDockResourceKeys.DocumentWellTabButtonUnselectedTabHoveredButtonPressedGlyph}}" />
                         </MultiDataTrigger>
 
@@ -1628,8 +1593,6 @@
                                 <Condition Binding="{Binding Path=IsActive}" Value="False" />
                                 <Condition Binding="{Binding Path=IsSelected}" Value="True" />
                             </MultiDataTrigger.Conditions>
-                            <Setter TargetName="Header" Property="BorderThickness" Value="0" />
-                            <Setter TargetName="Header" Property="Padding" Value="0" />
                             <Setter TargetName="PART_ImgPinClose" Property="Fill" Value="{DynamicResource {x:Static r:AvalonDockResourceKeys.DocumentWellTabButtonSelectedActiveGlyph}}" />
                         </MultiDataTrigger>
 
@@ -1640,10 +1603,6 @@
                                 <Condition Binding="{Binding Path=IsSelected}" Value="True" />
                                 <Condition Binding="{Binding IsMouseOver, ElementName=DocumentCloseButton}" Value="True" />
                             </MultiDataTrigger.Conditions>
-                            <Setter TargetName="Header" Property="BorderThickness" Value="0" />
-                            <Setter TargetName="Header" Property="Padding" Value="0" />
-                            <Setter TargetName="DocumentCloseButton" Property="Background" Value="{DynamicResource {x:Static r:AvalonDockResourceKeys.DocumentWellTabButtonSelectedInactiveHoveredBackground}}" />
-                            <Setter TargetName="DocumentCloseButton" Property="BorderBrush" Value="{DynamicResource {x:Static r:AvalonDockResourceKeys.DocumentWellTabButtonSelectedInactiveHoveredBorder}}" />
                             <Setter TargetName="PART_ImgPinClose" Property="Fill" Value="{DynamicResource {x:Static r:AvalonDockResourceKeys.DocumentWellTabButtonSelectedInactiveHoveredGlyph}}" />
                         </MultiDataTrigger>
 
@@ -1654,10 +1613,6 @@
                                 <Condition Binding="{Binding Path=IsSelected}" Value="True" />
                                 <Condition Binding="{Binding IsMouseCaptured, ElementName=DocumentCloseButton}" Value="True" />
                             </MultiDataTrigger.Conditions>
-                            <Setter TargetName="Header" Property="BorderThickness" Value="0" />
-                            <Setter TargetName="Header" Property="Padding" Value="0" />
-                            <Setter TargetName="DocumentCloseButton" Property="Background" Value="{DynamicResource {x:Static r:AvalonDockResourceKeys.DocumentWellTabButtonSelectedInactivePressedBackground}}" />
-                            <Setter TargetName="DocumentCloseButton" Property="BorderBrush" Value="{DynamicResource {x:Static r:AvalonDockResourceKeys.DocumentWellTabButtonSelectedInactivePressedBorder}}" />
                             <Setter TargetName="PART_ImgPinClose" Property="Fill" Value="{DynamicResource {x:Static r:AvalonDockResourceKeys.DocumentWellTabButtonSelectedInactivePressedGlyph}}" />
                         </MultiDataTrigger>
                     </ControlTemplate.Triggers>
@@ -1703,7 +1658,7 @@
                         x:Name="Bd"
                         Background="{TemplateBinding Background}"
                         BorderBrush="{DynamicResource {x:Static r:AvalonDockResourceKeys.PanelBorderBrush}}"
-                        BorderThickness="1,0,1,1">
+                        BorderThickness="0">
                         <Grid>
                             <Grid.RowDefinitions>
                                 <RowDefinition Height="Auto" />
@@ -1757,7 +1712,7 @@
                         </MultiDataTrigger>
 
                         <!--  Correct BorderThickness for all types of layouts LayoutAnchorableControls  -->
-                        <MultiDataTrigger>
+                        <!--<MultiDataTrigger>
                             <MultiDataTrigger.Conditions>
                                 <Condition Binding="{Binding RelativeSource={RelativeSource Self}, Path=Model.IsFloating}" Value="False" />
                             </MultiDataTrigger.Conditions>
@@ -1778,7 +1733,7 @@
                                 <Condition Binding="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type TabControl}}, Path=Items.Count}" Value="1" />
                             </MultiDataTrigger.Conditions>
                             <Setter TargetName="Bd" Property="BorderThickness" Value="0" />
-                        </MultiDataTrigger>
+                        </MultiDataTrigger>-->
                     </ControlTemplate.Triggers>
                 </ControlTemplate>
             </Setter.Value>
