@@ -40,8 +40,8 @@
                     Height="18"
                     Margin="2,0,2,0"
                     HorizontalAlignment="Center"
-                    Background="{DynamicResource {x:Static r:ResourceKeys.CheckMarkBackgroundBrushKey}}"
-                    BorderBrush="{DynamicResource {x:Static r:ResourceKeys.CheckMarkBorderBrushKey}}"
+                    Background="{DynamicResource {x:Static r:AvalonDockResourceKeys.CheckMarkBackgroundBrushKey}}"
+                    BorderBrush="{DynamicResource {x:Static r:AvalonDockResourceKeys.CheckMarkBorderBrushKey}}"
                     BorderThickness="2"
                     CornerRadius="0"
                     Visibility="Collapsed">
@@ -52,7 +52,7 @@
                         Height="11"
                         HorizontalAlignment="Center"
                         Data="{StaticResource Checkmark}"
-                        Fill="{DynamicResource {x:Static r:ResourceKeys.CheckMarkForegroundBrushKey}}"
+                        Fill="{DynamicResource {x:Static r:AvalonDockResourceKeys.CheckMarkForegroundBrushKey}}"
                         FlowDirection="LeftToRight" />
                 </Border>
 
@@ -96,10 +96,10 @@
                         <!--  Border 2  -->
                         <Border
                             x:Name="SubMenuBorder"
-                            Background="{DynamicResource {x:Static r:ResourceKeys.SubmenuItemBackgroundKey}}"
-                            BorderBrush="{DynamicResource {x:Static r:ResourceKeys.MenuSeparatorBorderBrushKey}}"
+                            Background="{DynamicResource {x:Static r:AvalonDockResourceKeys.SubmenuItemBackgroundKey}}"
+                            BorderBrush="{DynamicResource {x:Static r:AvalonDockResourceKeys.MenuSeparatorBorderBrushKey}}"
                             BorderThickness="1"
-                            Effect="{DynamicResource {x:Static r:ResourceKeys.DropShadowEffectKey}}"
+                            Effect="{DynamicResource {x:Static r:AvalonDockResourceKeys.DropShadowEffectKey}}"
                             SnapsToDevicePixels="True">
                             <Grid
                                 x:Name="SubMenu"
@@ -116,8 +116,8 @@
                             Margin="1,0,0,0"
                             HorizontalAlignment="Left"
                             VerticalAlignment="Top"
-                            Background="{DynamicResource {x:Static r:ResourceKeys.SubmenuItemBackgroundKey}}"
-                            BorderBrush="{DynamicResource {x:Static r:ResourceKeys.SubmenuItemBackgroundKey}}"
+                            Background="{DynamicResource {x:Static r:AvalonDockResourceKeys.SubmenuItemBackgroundKey}}"
+                            BorderBrush="{DynamicResource {x:Static r:AvalonDockResourceKeys.SubmenuItemBackgroundKey}}"
                             BorderThickness="1"
                             SnapsToDevicePixels="False" />
                     </Grid>
@@ -135,30 +135,30 @@
                 <Setter Property="DockPanel.Dock" Value="Top" />
                 <Setter Property="Padding" Value="10,3,0,3" />
                 <Setter TargetName="Border" Property="MinHeight" Value="22" />
-                <Setter TargetName="Border" Property="Background" Value="{DynamicResource {x:Static r:ResourceKeys.SubmenuItemBackgroundKey}}" />
+                <Setter TargetName="Border" Property="Background" Value="{DynamicResource {x:Static r:AvalonDockResourceKeys.SubmenuItemBackgroundKey}}" />
             </Trigger>
             <Trigger Property="Role" Value="SubmenuItem">
                 <Setter Property="DockPanel.Dock" Value="Top" />
                 <Setter Property="Padding" Value="10,3,0,3" />
                 <Setter TargetName="Border" Property="MinHeight" Value="22" />
                 <Setter TargetName="ArrowPanel" Property="Visibility" Value="Collapsed" />
-                <Setter TargetName="Border" Property="Background" Value="{DynamicResource {x:Static r:ResourceKeys.SubmenuItemBackgroundKey}}" />
+                <Setter TargetName="Border" Property="Background" Value="{DynamicResource {x:Static r:AvalonDockResourceKeys.SubmenuItemBackgroundKey}}" />
             </Trigger>
             <Trigger Property="IsHighlighted" Value="True">
                 <!--  Border Applies to item with sub-menu attached to it  -->
-                <Setter TargetName="Border" Property="Background" Value="{DynamicResource {x:Static r:ResourceKeys.ItemBackgroundHoverKey}}" />
+                <Setter TargetName="Border" Property="Background" Value="{DynamicResource {x:Static r:AvalonDockResourceKeys.ItemBackgroundHoverKey}}" />
             </Trigger>
             <MultiTrigger>
                 <MultiTrigger.Conditions>
                     <Condition Property="IsSubmenuOpen" Value="true" />
                     <Condition Property="Role" Value="TopLevelHeader" />
                 </MultiTrigger.Conditions>
-                <Setter TargetName="Border" Property="Background" Value="{DynamicResource {x:Static r:ResourceKeys.SubmenuItemBackgroundKey}}" />
-                <Setter TargetName="Border" Property="BorderBrush" Value="{DynamicResource {x:Static r:ResourceKeys.MenuSeparatorBorderBrushKey}}" />
+                <Setter TargetName="Border" Property="Background" Value="{DynamicResource {x:Static r:AvalonDockResourceKeys.SubmenuItemBackgroundKey}}" />
+                <Setter TargetName="Border" Property="BorderBrush" Value="{DynamicResource {x:Static r:AvalonDockResourceKeys.MenuSeparatorBorderBrushKey}}" />
                 <Setter TargetName="Border" Property="BorderThickness" Value="1,1,1,0" />
             </MultiTrigger>
             <Trigger Property="IsSubmenuOpen" Value="true">
-                <Setter TargetName="ArrowPanelPath" Property="Fill" Value="{DynamicResource {x:Static r:ResourceKeys.ItemBackgroundSelectedKey}}" />
+                <Setter TargetName="ArrowPanelPath" Property="Fill" Value="{DynamicResource {x:Static r:AvalonDockResourceKeys.ItemBackgroundSelectedKey}}" />
             </Trigger>
             <Trigger Property="IsSuspendingPopupAnimation" Value="true">
                 <Setter TargetName="SubMenuPopup" Property="PopupAnimation" Value="None" />
@@ -167,9 +167,9 @@
                 <Setter TargetName="Icon" Property="Visibility" Value="Collapsed" />
             </Trigger>
             <Trigger Property="IsEnabled" Value="False">
-                <Setter Property="Foreground" Value="{DynamicResource {x:Static r:ResourceKeys.ItemTextDisabledKey}}" />
-                <Setter TargetName="GlyphPanel" Property="Background" Value="{DynamicResource {x:Static r:ResourceKeys.DisabledSubMenuItemBackgroundBrushKey}}" />
-                <Setter TargetName="GlyphPanel" Property="BorderBrush" Value="{DynamicResource {x:Static r:ResourceKeys.DisabledSubMenuItemBorderBrushKey}}" />
+                <Setter Property="Foreground" Value="{DynamicResource {x:Static r:AvalonDockResourceKeys.ItemTextDisabledKey}}" />
+                <Setter TargetName="GlyphPanel" Property="Background" Value="{DynamicResource {x:Static r:AvalonDockResourceKeys.DisabledSubMenuItemBackgroundBrushKey}}" />
+                <Setter TargetName="GlyphPanel" Property="BorderBrush" Value="{DynamicResource {x:Static r:AvalonDockResourceKeys.DisabledSubMenuItemBorderBrushKey}}" />
             </Trigger>
         </ControlTemplate.Triggers>
     </ControlTemplate>
