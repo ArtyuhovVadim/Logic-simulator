@@ -2,6 +2,7 @@
 using System.ComponentModel;
 using System.Windows;
 using System.Windows.Media;
+using SharpDX;
 
 namespace LogicSimulator.Scene;
 
@@ -9,8 +10,8 @@ public class Viewport2D : FrameworkElement
 {
     #region Private fields
 
-    private readonly Renderer2D _renderer;
-    private readonly Dx11ImageSource _imageSource;
+    private Renderer2D _renderer;
+    private Dx11ImageSource _imageSource;
 
     private bool _isRendering;
 
@@ -26,7 +27,6 @@ public class Viewport2D : FrameworkElement
         SnapsToDevicePixels = true;
         UseLayoutRounding = true;
         ClipToBounds = true;
-
 
         _imageSource = new Dx11ImageSource();
         _renderer = new Renderer2D(_imageSource);
@@ -44,7 +44,7 @@ public class Viewport2D : FrameworkElement
     }
 
     public static readonly DependencyProperty SceneProperty =
-        DependencyProperty.Register(nameof(Scene), typeof(BaseScene2D), typeof(Viewport2D), new PropertyMetadata(default(BaseScene2D)));
+        DependencyProperty.Register(nameof(Scene), typeof(BaseScene2D), typeof(Viewport2D), new FrameworkPropertyMetadata(default(BaseScene2D), FrameworkPropertyMetadataOptions.AffectsRender));
 
     #endregion
 
@@ -68,6 +68,18 @@ public class Viewport2D : FrameworkElement
         _renderer.Resize(width, height, _imageSource);
 
         base.OnRenderSizeChanged(sizeInfo);
+    }
+
+    protected override void OnInitialized(EventArgs e)
+    {
+        base.OnInitialized(e);
+
+        //TODO: Костыль!
+        Window.GetWindow(this)!.Closing += (_, _) =>
+        {
+            Utilities.Dispose(ref _imageSource);
+            Utilities.Dispose(ref _renderer);
+        };
     }
 
     private void OnLoaded(object sender, RoutedEventArgs e)
@@ -97,6 +109,7 @@ public class Viewport2D : FrameworkElement
 
         _imageSource.IsFrontBufferAvailableChanged -= OnFrontBufferAvailableChanged;
         CompositionTarget.Rendering -= OnRenderScene;
+
         _isRendering = false;
     }
 
