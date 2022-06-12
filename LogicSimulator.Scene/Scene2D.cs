@@ -29,9 +29,11 @@ public class Scene2D : FrameworkElement
     private Texture2DDescription _texture2DDescription;
 
     private bool _isRendering;
-    private Window _rootWindow;
 
-    private ObjectRenderer _objectObjectRenderer;
+    private Window _rootWindow;
+    private bool _isRootWindowCloseEventHandled;
+
+    private ObjectRenderer _objectRenderer;
 
     static Scene2D()
     {
@@ -83,6 +85,12 @@ public class Scene2D : FrameworkElement
 
     private void OnLoaded(object sender, RoutedEventArgs e)
     {
+        if (!_isRootWindowCloseEventHandled && !IsInDesignMode)
+        {
+            RootWindow.Closed += OnRootWindowClosing;
+            _isRootWindowCloseEventHandled = true;
+        }
+
         if (!IsVisible) return;
 
         StartRenderScene();
@@ -93,7 +101,7 @@ public class Scene2D : FrameworkElement
         StopRenderScene();
     }
 
-    private void OnRootWindowClosing(object sender, CancelEventArgs e)
+    private void OnRootWindowClosing(object sender, EventArgs e)
     {
         Utilities.Dispose(ref _imageSource);
         Utilities.Dispose(ref _device);
@@ -101,15 +109,21 @@ public class Scene2D : FrameworkElement
         Utilities.Dispose(ref _renderTarget);
         Utilities.Dispose(ref _texture2D);
         Utilities.Dispose(ref _surface);
+        Utilities.Dispose(ref _objectRenderer);
+
+        foreach (var sceneObject in Objects)
+        {
+            sceneObject.Dispose();
+        }
     }
 
     private void StartRenderScene()
     {
         if (IsInDesignMode || _isRendering) return;
 
-        RootWindow.Closing += OnRootWindowClosing;
         _imageSource.IsFrontBufferAvailableChanged += OnFrontBufferAvailableChanged;
         CompositionTarget.Rendering += OnRenderScene;
+
         _isRendering = true;
     }
 
@@ -117,7 +131,6 @@ public class Scene2D : FrameworkElement
     {
         if (IsInDesignMode || !_isRendering) return;
 
-        RootWindow.Closing -= OnRootWindowClosing;
         _imageSource.IsFrontBufferAvailableChanged -= OnFrontBufferAvailableChanged;
         CompositionTarget.Rendering -= OnRenderScene;
 
@@ -132,7 +145,7 @@ public class Scene2D : FrameworkElement
 
         foreach (var sceneObject in Objects)
         {
-            sceneObject.Render(_objectObjectRenderer);
+            sceneObject.Render(_objectRenderer);
         }
 
         _renderTarget.EndDraw();
@@ -178,7 +191,7 @@ public class Scene2D : FrameworkElement
             AntialiasMode = AntialiasMode.Aliased
         };
 
-        _objectObjectRenderer = new ObjectRenderer(_renderTarget);
+        _objectRenderer = new ObjectRenderer(_renderTarget);
 
         _device.ImmediateContext.Rasterizer.SetViewport(0, 0, width, height);
 
@@ -197,6 +210,7 @@ public class Scene2D : FrameworkElement
         Utilities.Dispose(ref _texture2D);
         Utilities.Dispose(ref _surface);
         Utilities.Dispose(ref _renderTarget);
+        Utilities.Dispose(ref _objectRenderer);
 
         _texture2D = new Texture2D(_device, _texture2DDescription);
 
@@ -207,7 +221,7 @@ public class Scene2D : FrameworkElement
             AntialiasMode = lastAntialiasMode
         };
 
-        _objectObjectRenderer = new ObjectRenderer(_renderTarget);
+        _objectRenderer = new ObjectRenderer(_renderTarget);
 
         _device.ImmediateContext.Rasterizer.SetViewport(0, 0, width, height);
 

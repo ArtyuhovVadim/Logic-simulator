@@ -37,7 +37,15 @@
                             </Grid>
                         </LayoutDocument>
                         <LayoutDocument Title="Document 2">
-                            <s:Scene2D Objects="{Binding Path=Objects}" />
+                            <Grid>
+                                <s:Scene2D Objects="{Binding Path=Objects}" />
+                                <Button
+                                    Margin="10"
+                                    HorizontalAlignment="Right"
+                                    VerticalAlignment="Top"
+                                    Command="{Binding Path=TestCommand}"
+                                    Content="Очистить" />
+                            </Grid>
                         </LayoutDocument>
                         <LayoutDocument Title="Document 3">
                             <Grid Background="Bisque">
