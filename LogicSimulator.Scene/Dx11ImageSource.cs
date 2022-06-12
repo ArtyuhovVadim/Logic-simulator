@@ -103,9 +103,6 @@ public class Dx11ImageSource : D3DImage, IDisposable
         d3DDevice.ResetEx(ref presentParams);
     }
 
-    [DllImport("user32.dll", SetLastError = false)]
-    private static extern IntPtr GetDesktopWindow();
-
     private static PresentParameters GetPresentParameters()
     {
         var presentParams = new PresentParameters
@@ -141,4 +138,7 @@ public class Dx11ImageSource : D3DImage, IDisposable
     {
         return (texture.Description.OptionFlags & SharpDX.Direct3D11.ResourceOptionFlags.Shared) != 0;
     }
+
+    [DllImport("user32.dll", SetLastError = false)]
+    private static extern IntPtr GetDesktopWindow();
 }

@@ -4,6 +4,7 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:c="clr-namespace:LogicSimulator.Controls;assembly=LogicSimulator.Controls"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:k="clr-namespace:LogicSimulator.Scene.SceneObjects;assembly=LogicSimulator.Scene"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:s="clr-namespace:LogicSimulator.Scene;assembly=LogicSimulator.Scene"
     Title="Logic-simulator"
@@ -22,13 +23,7 @@
             <TextBlock Foreground="White" Text="Статус" />
         </StatusBar>
 
-        <s:Viewport2D>
-            <s:Viewport2D.Scene>
-                <s:TestScene />
-            </s:Viewport2D.Scene>
-        </s:Viewport2D>
-
-        <!--<DockingManager>
+        <DockingManager>
             <LayoutRoot>
                 <LayoutPanel>
                     <LayoutDocumentPane>
@@ -42,9 +37,7 @@
                             </Grid>
                         </LayoutDocument>
                         <LayoutDocument Title="Document 2">
-                            <Grid>
-
-                            </Grid>
+                            <s:Scene2D Objects="{Binding Path=Objects}" />
                         </LayoutDocument>
                         <LayoutDocument Title="Document 3">
                             <Grid Background="Bisque">
@@ -87,6 +80,6 @@
                     </LayoutAnchorablePane>
                 </LayoutPanel>
             </LayoutRoot>
-        </DockingManager>-->
+        </DockingManager>
     </DockPanel>
 </c:Window>
