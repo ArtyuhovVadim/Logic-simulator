@@ -1,4 +1,4 @@
-﻿namespace LogicSimulator.Views.Windows;
+﻿namespace LogicSimulator;
 
 public partial class MainWindow
 {
