@@ -1,273 +1,185 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.ComponentModel;
-using System.Diagnostics;
 using System.Windows;
+using System.Windows.Media;
+using SharpDX;
 using SharpDX.Direct2D1;
 using SharpDX.Direct3D;
 using SharpDX.Direct3D11;
 using SharpDX.DXGI;
+using PixelFormat = SharpDX.Direct2D1.PixelFormat;
 
-namespace LogicSimulator.Scene
+namespace LogicSimulator.Scene;
+
+public abstract class D2dControl : System.Windows.Controls.Image
 {
-    public abstract class D2dControl : System.Windows.Controls.Image
+    #region Private fields
+
+    private SharpDX.Direct3D11.Device _device;
+    private Texture2D _renderTarget;
+    private Dx11ImageSource _imageSource;
+    private RenderTarget _d2DRenderTarget;
+    private SharpDX.Direct2D1.Factory _d2DFactory;
+
+    private bool _isRendering;
+
+    #endregion
+
+    protected D2dControl()
     {
-        // - field -----------------------------------------------------------------------
+        Loaded += Window_Loaded;
+        Unloaded += Window_Closing;
 
-        private SharpDX.Direct3D11.Device device;
-        private Texture2D renderTarget;
-        private Dx11ImageSource d3DSurface;
-        private RenderTarget d2DRenderTarget;
-        private SharpDX.Direct2D1.Factory d2DFactory;
+        Stretch = Stretch.Fill;
+    }
 
-        private readonly Stopwatch renderTimer = new Stopwatch();
+    #region Private properties
 
-        protected ResourceCache resCache = new ResourceCache();
+    private bool IsInDesignMode => DesignerProperties.GetIsInDesignMode(this);
 
-        private long lastFrameTime = 0;
-        private long lastRenderTime = 0;
-        private int frameCount = 0;
-        private int frameCountHistTotal = 0;
-        private Queue<int> frameCountHist = new Queue<int>();
+    #endregion
 
-        // - property --------------------------------------------------------------------
+    public abstract void Render(RenderTarget target);
 
-        public static bool IsInDesignMode
+    protected override void OnRenderSizeChanged(SizeChangedInfo sizeInfo)
+    {
+        CreateAndBindTargets();
+        base.OnRenderSizeChanged(sizeInfo);
+    }
+
+    private void Window_Loaded(object sender, RoutedEventArgs e)
+    {
+        if (IsInDesignMode)
         {
-            get
-            {
-                var prop = DesignerProperties.IsInDesignModeProperty;
-                var isDesignMode = (bool)DependencyPropertyDescriptor.FromProperty(prop, typeof(FrameworkElement)).Metadata.DefaultValue;
-                return isDesignMode;
-            }
+            return;
         }
 
-        private static readonly DependencyPropertyKey FpsPropertyKey = DependencyProperty.RegisterReadOnly(
-            "Fps",
-            typeof(int),
-            typeof(D2dControl),
-            new FrameworkPropertyMetadata(0, FrameworkPropertyMetadataOptions.None)
-            );
+        StartD3D();
+        StartRendering();
+    }
 
-        public static readonly DependencyProperty FpsProperty = FpsPropertyKey.DependencyProperty;
-
-        public int Fps
+    private void Window_Closing(object sender, RoutedEventArgs e)
+    {
+        if (IsInDesignMode)
         {
-            get { return (int)GetValue(FpsProperty); }
-            protected set { SetValue(FpsPropertyKey, value); }
+            return;
         }
 
-        public static DependencyProperty RenderWaitProperty = DependencyProperty.Register(
-            "RenderWait",
-            typeof(int),
-            typeof(D2dControl),
-            new FrameworkPropertyMetadata(2, OnRenderWaitChanged)
-            );
+        StopRendering();
+        EndD3D();
+    }
 
-        public int RenderWait
+    private void OnRendering(object sender, EventArgs e)
+    {
+        if (!_isRendering)
         {
-            get { return (int)GetValue(RenderWaitProperty); }
-            set { SetValue(RenderWaitProperty, value); }
+            return;
         }
 
-        // - public methods --------------------------------------------------------------
+        PrepareAndCallRender();
+        _imageSource.InvalidateD3DImage();
+    }
 
-        protected D2dControl()
+    private void OnIsFrontBufferAvailableChanged(object sender, DependencyPropertyChangedEventArgs e)
+    {
+        if (_imageSource.IsFrontBufferAvailable) StartRendering();
+        else StopRendering();
+    }
+
+    private void StartD3D()
+    {
+        _device = new SharpDX.Direct3D11.Device(DriverType.Hardware, DeviceCreationFlags.BgraSupport);
+
+        _imageSource = new Dx11ImageSource();
+        _imageSource.IsFrontBufferAvailableChanged += OnIsFrontBufferAvailableChanged;
+
+        CreateAndBindTargets();
+
+        Source = _imageSource;
+    }
+
+    private void EndD3D()
+    {
+        _imageSource.IsFrontBufferAvailableChanged -= OnIsFrontBufferAvailableChanged;
+        Source = null;
+
+        Utilities.Dispose(ref _d2DRenderTarget);
+        Utilities.Dispose(ref _d2DFactory);
+        Utilities.Dispose(ref _imageSource);
+        Utilities.Dispose(ref _renderTarget);
+        Utilities.Dispose(ref _device);
+    }
+
+    private void CreateAndBindTargets()
+    {
+        if (_imageSource == null)
+            return;
+
+        _imageSource.SetRenderTarget(null);
+
+        Utilities.Dispose(ref _d2DRenderTarget);
+        Utilities.Dispose(ref _d2DFactory);
+        Utilities.Dispose(ref _renderTarget);
+
+        var width = Math.Max((int)ActualWidth, 100);
+        var height = Math.Max((int)ActualHeight, 100);
+
+        var renderDesc = new Texture2DDescription
         {
-            base.Loaded += Window_Loaded;
-            base.Unloaded += Window_Closing;
+            BindFlags = BindFlags.RenderTarget | BindFlags.ShaderResource,
+            Format = Format.B8G8R8A8_UNorm,
+            Width = width,
+            Height = height,
+            MipLevels = 1,
+            SampleDescription = new SampleDescription(1, 0),
+            Usage = ResourceUsage.Default,
+            OptionFlags = ResourceOptionFlags.Shared,
+            CpuAccessFlags = CpuAccessFlags.None,
+            ArraySize = 1
+        };
 
-            base.Stretch = System.Windows.Media.Stretch.Fill;
-        }
+        _renderTarget = new Texture2D(_device, renderDesc);
 
-        public abstract void Render(RenderTarget target);
+        var surface = _renderTarget.QueryInterface<Surface>();
 
-        // - event handler ---------------------------------------------------------------
+        _d2DFactory = new SharpDX.Direct2D1.Factory();
+        var rtp = new RenderTargetProperties(new PixelFormat(Format.Unknown, SharpDX.Direct2D1.AlphaMode.Premultiplied));
+        _d2DRenderTarget = new RenderTarget(_d2DFactory, surface, rtp);
 
-        private void Window_Loaded(object sender, RoutedEventArgs e)
-        {
-            if (D2dControl.IsInDesignMode)
-            {
-                return;
-            }
+        _imageSource.SetRenderTarget(_renderTarget);
 
-            StartD3D();
-            StartRendering();
-        }
+        _device.ImmediateContext.Rasterizer.SetViewport(0, 0, width, height, 0.0f, 1.0f);
+    }
 
-        private void Window_Closing(object sender, RoutedEventArgs e)
-        {
-            if (D2dControl.IsInDesignMode)
-            {
-                return;
-            }
+    private void StartRendering()
+    {
+        if (_isRendering)
+            return;
 
-            StopRendering();
-            EndD3D();
-        }
+        CompositionTarget.Rendering += OnRendering;
+        _isRendering = true;
+    }
 
-        private void OnRendering(object sender, EventArgs e)
-        {
-            if (!renderTimer.IsRunning)
-            {
-                return;
-            }
+    private void StopRendering()
+    {
+        if (!_isRendering)
+            return;
 
-            PrepareAndCallRender();
-            d3DSurface.InvalidateD3DImage();
+        CompositionTarget.Rendering -= OnRendering;
+        _isRendering = false;
+    }
 
-            lastRenderTime = renderTimer.ElapsedMilliseconds;
-        }
+    private void PrepareAndCallRender()
+    {
+        if (_device == null)
+            return;
 
-        protected override void OnRenderSizeChanged(SizeChangedInfo sizeInfo)
-        {
-            CreateAndBindTargets();
-            base.OnRenderSizeChanged(sizeInfo);
-        }
+        _d2DRenderTarget.BeginDraw();
 
-        private void OnIsFrontBufferAvailableChanged(object sender, DependencyPropertyChangedEventArgs e)
-        {
-            if (d3DSurface.IsFrontBufferAvailable)
-            {
-                StartRendering();
-            }
-            else
-            {
-                StopRendering();
-            }
-        }
+        Render(_d2DRenderTarget);
 
-        private static void OnRenderWaitChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
-        {
-            var control = (D2dControl)d;
-            control.d3DSurface.RenderWait = (int)e.NewValue;
-        }
+        _d2DRenderTarget.EndDraw();
 
-        // - private methods -------------------------------------------------------------
-
-        private void StartD3D()
-        {
-            device = new SharpDX.Direct3D11.Device(DriverType.Hardware, DeviceCreationFlags.BgraSupport);
-
-            d3DSurface = new Dx11ImageSource();
-            d3DSurface.IsFrontBufferAvailableChanged += OnIsFrontBufferAvailableChanged;
-
-            CreateAndBindTargets();
-
-            base.Source = d3DSurface;
-        }
-
-        private void EndD3D()
-        {
-            d3DSurface.IsFrontBufferAvailableChanged -= OnIsFrontBufferAvailableChanged;
-            base.Source = null;
-
-            Disposer.SafeDispose(ref d2DRenderTarget);
-            Disposer.SafeDispose(ref d2DFactory);
-            Disposer.SafeDispose(ref d3DSurface);
-            Disposer.SafeDispose(ref renderTarget);
-            Disposer.SafeDispose(ref device);
-        }
-
-        private void CreateAndBindTargets()
-        {
-            if (d3DSurface == null)
-            {
-                return;
-            }
-
-            d3DSurface.SetRenderTarget(null);
-
-            Disposer.SafeDispose(ref d2DRenderTarget);
-            Disposer.SafeDispose(ref d2DFactory);
-            Disposer.SafeDispose(ref renderTarget);
-
-            var width = Math.Max((int)ActualWidth, 100);
-            var height = Math.Max((int)ActualHeight, 100);
-
-            var renderDesc = new Texture2DDescription
-            {
-                BindFlags = BindFlags.RenderTarget | BindFlags.ShaderResource,
-                Format = Format.B8G8R8A8_UNorm,
-                Width = width,
-                Height = height,
-                MipLevels = 1,
-                SampleDescription = new SampleDescription(1, 0),
-                Usage = ResourceUsage.Default,
-                OptionFlags = ResourceOptionFlags.Shared,
-                CpuAccessFlags = CpuAccessFlags.None,
-                ArraySize = 1
-            };
-
-            renderTarget = new Texture2D(device, renderDesc);
-
-            var surface = renderTarget.QueryInterface<Surface>();
-
-            d2DFactory = new SharpDX.Direct2D1.Factory();
-            var rtp = new RenderTargetProperties(new PixelFormat(Format.Unknown, SharpDX.Direct2D1.AlphaMode.Premultiplied));
-            d2DRenderTarget = new RenderTarget(d2DFactory, surface, rtp);
-            resCache.RenderTarget = d2DRenderTarget;
-
-            d3DSurface.SetRenderTarget(renderTarget);
-
-            device.ImmediateContext.Rasterizer.SetViewport(0, 0, width, height, 0.0f, 1.0f);
-        }
-
-        private void StartRendering()
-        {
-            if (renderTimer.IsRunning)
-            {
-                return;
-            }
-
-            System.Windows.Media.CompositionTarget.Rendering += OnRendering;
-            renderTimer.Start();
-        }
-
-        private void StopRendering()
-        {
-            if (!renderTimer.IsRunning)
-            {
-                return;
-            }
-
-            System.Windows.Media.CompositionTarget.Rendering -= OnRendering;
-            renderTimer.Stop();
-        }
-
-        private void PrepareAndCallRender()
-        {
-            if (device == null)
-            {
-                return;
-            }
-
-            d2DRenderTarget.BeginDraw();
-            Render(d2DRenderTarget);
-            d2DRenderTarget.EndDraw();
-
-            CalcFps();
-
-            device.ImmediateContext.Flush();
-        }
-
-        private void CalcFps()
-        {
-            frameCount++;
-            if (renderTimer.ElapsedMilliseconds - lastFrameTime > 1000)
-            {
-                frameCountHist.Enqueue(frameCount);
-                frameCountHistTotal += frameCount;
-                if (frameCountHist.Count > 5)
-                {
-                    frameCountHistTotal -= frameCountHist.Dequeue();
-                }
-
-                Fps = frameCountHistTotal / frameCountHist.Count;
-
-                frameCount = 0;
-                lastFrameTime = renderTimer.ElapsedMilliseconds;
-            }
-        }
+        _device.ImmediateContext.Flush();
     }
 }
