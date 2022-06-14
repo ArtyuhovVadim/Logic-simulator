@@ -5,7 +5,7 @@
     xmlns:c="clr-namespace:LogicSimulator.Controls;assembly=LogicSimulator.Controls"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    xmlns:scene="clr-namespace:LogicSimulator.Scene;assembly=LogicSimulator.Scene"
+    xmlns:s="clr-namespace:LogicSimulator.Scene;assembly=LogicSimulator.Scene"
     Title="Logic-simulator"
     Width="1280"
     Height="720"
@@ -22,13 +22,7 @@
             <TextBlock Foreground="White" Text="Статус" />
         </StatusBar>
 
-        <Grid>
-            <scene:TestD2d x:Name="D2d" />
-            <TextBlock
-                Margin="10"
-                HorizontalAlignment="Left"
-                VerticalAlignment="Top"
-                Text="{Binding ElementName=D2d, Path=Fps}" />
-        </Grid>
+        <s:Scene2D />
+
     </DockPanel>
 </c:Window>
