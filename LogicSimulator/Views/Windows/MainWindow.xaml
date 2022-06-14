@@ -22,7 +22,19 @@
             <TextBlock Foreground="White" Text="Статус" />
         </StatusBar>
 
-        <s:Scene2D />
+        <TabControl>
+            <TabItem Header="11111" />
+            <TabItem Header="22222">
+                <Grid>
+                    <s:Scene2D x:Name="Scene" />
+                    <CheckBox
+                        Margin="10"
+                        HorizontalAlignment="Left"
+                        VerticalAlignment="Top"
+                        IsChecked="{Binding ElementName=Scene, Path=IsRendering}" />
+                </Grid>
+            </TabItem>
+        </TabControl>
 
     </DockPanel>
 </c:Window>
