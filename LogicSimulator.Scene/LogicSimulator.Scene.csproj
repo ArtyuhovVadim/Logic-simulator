@@ -17,4 +17,8 @@
     <PackageReference Include="SharpDX.Mathematics" Version="4.2.0" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="SceneObjects\Base\" />
+  </ItemGroup>
+
 </Project>

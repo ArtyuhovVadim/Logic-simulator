@@ -1,7 +1,9 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Windows;
 using System.Windows.Media;
+using LogicSimulator.Scene.SceneObjects.Base;
 using SharpDX;
 using SharpDX.Direct2D1;
 using SharpDX.Direct3D;
@@ -46,6 +48,19 @@ public class Scene2D : FrameworkElement
 
         scene2D._sceneRenderer.IsRendering = (bool)e.NewValue;
     }
+
+    #endregion
+
+    #region Objects
+
+    public IEnumerable<BaseSceneObject> Objects
+    {
+        get => (IEnumerable<BaseSceneObject>)GetValue(ObjectsProperty);
+        set => SetValue(ObjectsProperty, value);
+    }
+
+    public static readonly DependencyProperty ObjectsProperty =
+        DependencyProperty.Register(nameof(Objects), typeof(IEnumerable<BaseSceneObject>), typeof(Scene2D), new PropertyMetadata(default(IEnumerable<BaseSceneObject>)));
 
     #endregion
 

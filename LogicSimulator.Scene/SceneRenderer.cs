@@ -24,6 +24,8 @@ public class SceneRenderer : IDisposable
 
     private Dx11ImageSource _imageSource;
 
+    private ObjectRenderer _objectRenderer;
+
     public SceneRenderer(int pixelWidth, int pixelHeight) => StartDirect3D(pixelWidth, pixelHeight);
 
     public bool IsRendering { get; set; } = true;
@@ -38,9 +40,10 @@ public class SceneRenderer : IDisposable
 
         _renderTarget.Clear(new RawColor4(0.5f, 0.5f, 0.5f, 1));
 
-        using var brush = new SolidColorBrush(_renderTarget, new Color4(1, 0, 0, 1));
-
-        _renderTarget.DrawRectangle(new RawRectangleF(100, 100, 300, 400), brush, 1);
+        foreach (var sceneObject in scene.Objects)
+        {
+            sceneObject.Render(_objectRenderer);
+        }
 
         _renderTarget.EndDraw();
         _device.ImmediateContext.Flush();
@@ -112,6 +115,8 @@ public class SceneRenderer : IDisposable
         {
             AntialiasMode = AntialiasMode.Aliased
         };
+
+        _objectRenderer = new ObjectRenderer(_renderTarget);
 
         _imageSource.SetRenderTarget(_texture2D);
 

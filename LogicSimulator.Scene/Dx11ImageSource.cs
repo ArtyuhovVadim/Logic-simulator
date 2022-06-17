@@ -12,11 +12,7 @@ public class Dx11ImageSource : D3DImage, IDisposable
     private static Direct3DEx d3DContext;
     private static DeviceEx d3DDevice;
 
-    #region Private fields
-
     private Texture _texture;
-
-    #endregion
 
     public Dx11ImageSource()
     {
