@@ -5,16 +5,6 @@ using System.Windows;
 using System.Windows.Media;
 using LogicSimulator.Scene.SceneObjects.Base;
 using SharpDX;
-using SharpDX.Direct2D1;
-using SharpDX.Direct3D;
-using SharpDX.Direct3D11;
-using SharpDX.DXGI;
-using SharpDX.Mathematics.Interop;
-using AlphaMode = SharpDX.Direct2D1.AlphaMode;
-using Device = SharpDX.Direct3D11.Device;
-using Factory = SharpDX.Direct2D1.Factory;
-using PixelFormat = SharpDX.Direct2D1.PixelFormat;
-using SolidColorBrush = SharpDX.Direct2D1.SolidColorBrush;
 
 namespace LogicSimulator.Scene;
 

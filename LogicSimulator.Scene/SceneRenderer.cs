@@ -11,7 +11,6 @@ using AlphaMode = SharpDX.Direct2D1.AlphaMode;
 using Device = SharpDX.Direct3D11.Device;
 using Factory = SharpDX.Direct2D1.Factory;
 using PixelFormat = SharpDX.Direct2D1.PixelFormat;
-using SolidColorBrush = SharpDX.Direct2D1.SolidColorBrush;
 
 namespace LogicSimulator.Scene;
 
@@ -58,6 +57,8 @@ public class SceneRenderer : IDisposable
     public void Resize(int pixelWidth, int pixelHeight)
     {
         CreateAndBindTargets(pixelWidth, pixelHeight);
+        //TODO: Возможно стоит перенести вызов в другое место
+        ResourceDependentObject.RequireUpdateInAllResourceDependentObjects();
     }
 
     private void StartDirect3D(int pixelWidth, int pixelHeight)
