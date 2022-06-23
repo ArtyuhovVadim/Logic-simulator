@@ -53,16 +53,16 @@ public abstract class ResourceDependentObject : IDisposable
             return (T)newResource;
         }
 
-        if (_resources.TryGetValue(hash, out var res))
+        if (_resources.TryGetValue(hash, out var resourceValue))
         {
-            return (T)res;
+            return (T)resourceValue;
         }
 
-        var r = resource.Update(renderTarget, this);
+        resourceValue = resource.Update(renderTarget, this);
 
-        _resources[hash] = r;
+        _resources[hash] = resourceValue;
 
-        return (T)r;
+        return (T)resourceValue;
     }
 
     public void Dispose()

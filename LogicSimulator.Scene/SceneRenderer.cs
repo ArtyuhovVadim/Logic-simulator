@@ -24,6 +24,7 @@ public class SceneRenderer : IDisposable
     private Dx11ImageSource _imageSource;
 
     private ObjectRenderer _objectRenderer;
+    private ComponentRenderer _componentRenderer;
 
     public SceneRenderer(int pixelWidth, int pixelHeight) => StartDirect3D(pixelWidth, pixelHeight);
 
@@ -39,9 +40,20 @@ public class SceneRenderer : IDisposable
 
         _renderTarget.Clear(new RawColor4(0.5f, 0.5f, 0.5f, 1));
 
-        foreach (var sceneObject in scene.Objects)
+        if (scene.RenderingComponents is not null)
         {
-            sceneObject.Render(_objectRenderer);
+            foreach (var component in scene.RenderingComponents)
+            {
+                component.Render(_componentRenderer);
+            }
+        }
+
+        if (scene.Objects is not null)
+        {
+            foreach (var sceneObject in scene.Objects)
+            {
+                sceneObject.Render(_objectRenderer);
+            }
         }
 
         _renderTarget.EndDraw();
@@ -118,12 +130,13 @@ public class SceneRenderer : IDisposable
         };
 
         _objectRenderer = new ObjectRenderer(_renderTarget);
+        _componentRenderer = new ComponentRenderer(_renderTarget);
 
         _imageSource.SetRenderTarget(_texture2D);
 
         _device.ImmediateContext.Rasterizer.SetViewport(0, 0, pixelWidth, pixelHeight);
     }
 
-    private void OnIsFrontBufferAvailableChanged(object sender, DependencyPropertyChangedEventArgs e) => 
+    private void OnIsFrontBufferAvailableChanged(object sender, DependencyPropertyChangedEventArgs e) =>
         IsRendering = _imageSource.IsFrontBufferAvailable;
 }

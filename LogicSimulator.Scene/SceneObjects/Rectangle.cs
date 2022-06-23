@@ -42,8 +42,6 @@ public class Rectangle : BaseSceneObject
         }
     }
 
-    public float StrokeThickness { get; set; } = 1f;
-
     public Color4 FillColor
     {
         get => _fillColor;
@@ -64,13 +62,15 @@ public class Rectangle : BaseSceneObject
         }
     }
 
-    public static Resource FillBrushResource = Resource.Register<Rectangle, SolidColorBrush>(nameof(FillBrushResource), (target, o) =>
+    public float StrokeThickness { get; set; } = 1f;
+
+    public static readonly Resource FillBrushResource = Resource.Register<Rectangle, SolidColorBrush>(nameof(FillBrushResource), (target, o) =>
         new SolidColorBrush(target, ((Rectangle)o).FillColor));
 
-    public static Resource StrokeBrushResource = Resource.Register<Rectangle, SolidColorBrush>(nameof(StrokeBrushResource), (target, o) =>
+    public static readonly Resource StrokeBrushResource = Resource.Register<Rectangle, SolidColorBrush>(nameof(StrokeBrushResource), (target, o) =>
         new SolidColorBrush(target, ((Rectangle)o).StrokeColor));
 
-    public static Resource RectangleGeometryResource = Resource.Register<Rectangle, RectangleGeometry>(nameof(RectangleGeometryResource), (target, o) =>
+    public static readonly Resource RectangleGeometryResource = Resource.Register<Rectangle, RectangleGeometry>(nameof(RectangleGeometryResource), (target, o) =>
     {
         var rectangle = (Rectangle)o;
 
