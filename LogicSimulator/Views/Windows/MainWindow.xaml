@@ -27,7 +27,8 @@
             <s:Scene2D
                 x:Name="Scene"
                 Objects="{Binding Path=Objects}"
-                RenderingComponents="{Binding Path=RenderingComponents}" />
+                RenderingComponents="{Binding Path=RenderingComponents}"
+                Tools="{Binding Path=Tools}" />
 
             <CheckBox
                 Margin="10"

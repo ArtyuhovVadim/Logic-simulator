@@ -12,7 +12,7 @@ public class ComponentRenderer
 
     public void Render(GridRenderingComponent component)
     {
-        var strokeWidth = component.LineThickness / 1;
+        var strokeWidth = component.LineThickness / _renderTarget.Transform.M11;
 
         var rect = new RectangleF(0, 0, component.Width, component.Height);
 

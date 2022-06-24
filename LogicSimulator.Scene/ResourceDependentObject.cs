@@ -24,6 +24,16 @@ public abstract class ResourceDependentObject : IDisposable
         _requireUpdateResources.Add(hash);
     }
 
+    protected T GetCashedResourceValue<T>(Resource resource)
+    {
+        if (_resources.TryGetValue(resource.GetHashCode(), out var resourceValue))
+        {
+            return (T)resourceValue;
+        }
+
+        throw new ApplicationException("Resource not found!");
+    }
+
     public static void RequireUpdateInAllResourceDependentObjects()
     {
         foreach (var resourceDependentObject in AllResourceDependentObject)

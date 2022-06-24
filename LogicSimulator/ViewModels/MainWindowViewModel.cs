@@ -1,10 +1,13 @@
 ﻿using System;
 using System.Collections.ObjectModel;
+using System.Windows;
 using System.Windows.Input;
 using LogicSimulator.Infrastructure.Commands;
 using LogicSimulator.Scene.Components;
 using LogicSimulator.Scene.Components.Base;
 using LogicSimulator.Scene.SceneObjects.Base;
+using LogicSimulator.Scene.Tools;
+using LogicSimulator.Scene.Tools.Base;
 using LogicSimulator.ViewModels.Base;
 using SharpDX;
 using Rectangle = LogicSimulator.Scene.SceneObjects.Rectangle;
@@ -15,6 +18,8 @@ public class MainWindowViewModel : BindableBase
 {
     public MainWindowViewModel()
     {
+        return;
+
         var rand = new Random();
 
         for (var i = 0; i < 10; i++)
@@ -31,7 +36,10 @@ public class MainWindowViewModel : BindableBase
 
     #region Objects
 
-    private ObservableCollection<BaseSceneObject> _objects = new();
+    private ObservableCollection<BaseSceneObject> _objects = new()
+    {
+        new Rectangle { Location = new Vector2(100, 100), Width = 200, Height = 300 }
+    };
     public ObservableCollection<BaseSceneObject> Objects
     {
         get => _objects;
@@ -58,6 +66,20 @@ public class MainWindowViewModel : BindableBase
     {
         get => _renderingComponents;
         set => Set(ref _renderingComponents, value);
+    }
+
+    #endregion
+
+    #region Tools
+
+    private ObservableCollection<BaseTool> _tools = new()
+    {
+        new SelectionTool()
+    };
+    public ObservableCollection<BaseTool> Tools
+    {
+        get => _tools;
+        set => Set(ref _tools, value);
     }
 
     #endregion

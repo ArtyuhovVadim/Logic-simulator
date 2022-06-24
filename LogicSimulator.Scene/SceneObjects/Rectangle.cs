@@ -77,5 +77,11 @@ public class Rectangle : BaseSceneObject
         return new RectangleGeometry(target.Factory, new RectangleF(rectangle.Location.X, rectangle.Location.Y, rectangle.Width, rectangle.Height));
     });
 
+    public override bool IsIntersectsPoint(Vector2 pos, Matrix3x2 matrix, float tolerance = 0.25f)
+    {
+        var geometry = GetCashedResourceValue<RectangleGeometry>(RectangleGeometryResource);
+        return geometry.FillContainsPoint(pos, matrix, tolerance * matrix.M11);
+    }
+
     public override void Render(ObjectRenderer renderer) => renderer.Render(this);
 }

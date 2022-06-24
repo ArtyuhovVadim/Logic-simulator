@@ -1,4 +1,5 @@
-﻿using SharpDX.Direct2D1;
+﻿using SharpDX;
+using SharpDX.Direct2D1;
 using Rectangle = LogicSimulator.Scene.SceneObjects.Rectangle;
 
 namespace LogicSimulator.Scene;
@@ -17,5 +18,12 @@ public class ObjectRenderer
 
         _renderTarget.FillGeometry(geometry, fillBrush);
         _renderTarget.DrawGeometry(geometry, strokeBrush, rectangle.StrokeThickness);
+
+        if (rectangle.IsSelected)
+        {
+            var pos = new Vector2(rectangle.Width / 2, rectangle.Height / 2) + rectangle.Location;
+
+            _renderTarget.DrawEllipse(new Ellipse(pos, 20, 20), strokeBrush);
+        }
     }
 }

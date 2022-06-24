@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Windows;
 using System.Windows.Media;
+using LogicSimulator.Scene.ExtensionMethods;
 using SharpDX;
 using SharpDX.Direct2D1;
 using SharpDX.Direct3D;
@@ -26,9 +27,37 @@ public class SceneRenderer : IDisposable
     private ObjectRenderer _objectRenderer;
     private ComponentRenderer _componentRenderer;
 
-    public SceneRenderer(int pixelWidth, int pixelHeight) => StartDirect3D(pixelWidth, pixelHeight);
+    public SceneRenderer(double pixelWidth, double pixelHeight, float dpi) => StartDirect3D(pixelWidth, pixelHeight, dpi);
 
     public bool IsRendering { get; set; } = true;
+
+    public Matrix3x2 Transform => _renderTarget.Transform;
+
+    public float Scale
+    {
+        get => Transform.M11;
+        set => _renderTarget.Transform = _renderTarget.Transform with { M11 = value, M22 = value };
+    }
+
+    public Vector2 TranslationVector
+    {
+        get => new(_renderTarget.Transform.M31, _renderTarget.Transform.M32);
+        set => _renderTarget.Transform = _renderTarget.Transform with { M31 = value.X, M32 = value.Y };
+    }
+
+    public void RelativeScale(Vector2 pos, float delta)
+    {
+        var p = pos.Transform(Transform);
+
+        var newScaleCoefficient = 1 + delta / Scale;
+        var newScale = (float)Math.Round(Scale * newScaleCoefficient, 2);
+
+        if (newScale is < 0.5f or > 20f) return;
+
+        TranslationVector += p * ((1 - newScaleCoefficient) * Scale);
+
+        Scale = newScale;
+    }
 
     public void Dispose() => StopDirect3D();
 
@@ -66,21 +95,21 @@ public class SceneRenderer : IDisposable
         drawingContext.DrawImage(_imageSource, new Rect(renderSize));
     }
 
-    public void Resize(int pixelWidth, int pixelHeight)
+    public void Resize(double pixelWidth, double pixelHeight, float dpi)
     {
-        CreateAndBindTargets(pixelWidth, pixelHeight);
+        CreateAndBindTargets(pixelWidth, pixelHeight, dpi);
         //TODO: Возможно стоит перенести вызов в другое место
         ResourceDependentObject.RequireUpdateInAllResourceDependentObjects();
     }
 
-    private void StartDirect3D(int pixelWidth, int pixelHeight)
+    private void StartDirect3D(double pixelWidth, double pixelHeight, float dpi)
     {
         _device = new Device(DriverType.Hardware, DeviceCreationFlags.BgraSupport);
 
         _imageSource = new Dx11ImageSource();
         _imageSource.IsFrontBufferAvailableChanged += OnIsFrontBufferAvailableChanged;
 
-        CreateAndBindTargets(pixelWidth, pixelHeight);
+        CreateAndBindTargets(pixelWidth, pixelHeight, dpi);
     }
 
     private void StopDirect3D()
@@ -94,20 +123,26 @@ public class SceneRenderer : IDisposable
         Utilities.Dispose(ref _device);
     }
 
-    private void CreateAndBindTargets(int pixelWidth, int pixelHeight)
+    private void CreateAndBindTargets(double pixelWidth, double pixelHeight, float dpi)
     {
-        _imageSource.SetRenderTarget(null);
+        var transform = Matrix3x2.Identity;
+
+        if (_renderTarget is not null) transform = _renderTarget.Transform;
 
         Utilities.Dispose(ref _renderTarget);
         Utilities.Dispose(ref _factory);
         Utilities.Dispose(ref _texture2D);
 
+        _imageSource.SetRenderTarget(null);
+
+        var (width, height) = ((int)Math.Max(pixelWidth * dpi / 96f, 10), (int)Math.Max(pixelHeight * dpi / 96f, 10));
+
         var textureDescription = new Texture2DDescription
         {
             BindFlags = BindFlags.RenderTarget | BindFlags.ShaderResource,
             Format = Format.B8G8R8A8_UNorm,
-            Width = pixelWidth,
-            Height = pixelHeight,
+            Width = width,
+            Height = height,
             MipLevels = 1,
             SampleDescription = new SampleDescription(1, 0),
             Usage = ResourceUsage.Default,
@@ -126,7 +161,8 @@ public class SceneRenderer : IDisposable
 
         _renderTarget = new RenderTarget(_factory, surface, renderTargetProperties)
         {
-            AntialiasMode = AntialiasMode.Aliased
+            AntialiasMode = AntialiasMode.Aliased,
+            Transform = transform
         };
 
         _objectRenderer = new ObjectRenderer(_renderTarget);
@@ -134,7 +170,7 @@ public class SceneRenderer : IDisposable
 
         _imageSource.SetRenderTarget(_texture2D);
 
-        _device.ImmediateContext.Rasterizer.SetViewport(0, 0, pixelWidth, pixelHeight);
+        _device.ImmediateContext.Rasterizer.SetViewport(0, 0, width, height);
     }
 
     private void OnIsFrontBufferAvailableChanged(object sender, DependencyPropertyChangedEventArgs e) =>

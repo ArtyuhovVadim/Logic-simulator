@@ -20,6 +20,7 @@
   <ItemGroup>
     <Folder Include="Components\Base\" />
     <Folder Include="SceneObjects\Base\" />
+    <Folder Include="Tools\Base\" />
   </ItemGroup>
 
 </Project>
