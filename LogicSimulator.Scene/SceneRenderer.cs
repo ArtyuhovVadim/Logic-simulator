@@ -7,10 +7,12 @@ using SharpDX.Direct2D1;
 using SharpDX.Direct3D;
 using SharpDX.Direct3D11;
 using SharpDX.DXGI;
-using SharpDX.Mathematics.Interop;
 using AlphaMode = SharpDX.Direct2D1.AlphaMode;
 using Device = SharpDX.Direct3D11.Device;
 using Factory = SharpDX.Direct2D1.Factory;
+using GradientStop = SharpDX.Direct2D1.GradientStop;
+using GradientStopCollection = SharpDX.Direct2D1.GradientStopCollection;
+using LinearGradientBrush = SharpDX.Direct2D1.LinearGradientBrush;
 using PixelFormat = SharpDX.Direct2D1.PixelFormat;
 
 namespace LogicSimulator.Scene;
@@ -27,11 +29,21 @@ public class SceneRenderer : IDisposable
     private ObjectRenderer _objectRenderer;
     private ComponentRenderer _componentRenderer;
 
+    private GradientStopCollection _clearGradientStopCollection;
+    private LinearGradientBrush _clearGradientBrush;
+
+    private readonly Color4 _startClearColor = new(0.755f, 0.755f, 0.755f, 1f);
+    private readonly Color4 _endClearColor = new(0.887f, 0.887f, 0.887f, 1f);
+
     public SceneRenderer(double pixelWidth, double pixelHeight, float dpi) => StartDirect3D(pixelWidth, pixelHeight, dpi);
 
     public bool IsRendering { get; set; } = true;
 
-    public Matrix3x2 Transform => _renderTarget.Transform;
+    public Matrix3x2 Transform
+    {
+        get => _renderTarget.Transform;
+        private set => _renderTarget.Transform = value;
+    }
 
     public float Scale
     {
@@ -67,7 +79,7 @@ public class SceneRenderer : IDisposable
 
         _renderTarget.BeginDraw();
 
-        _renderTarget.Clear(new RawColor4(0.5f, 0.5f, 0.5f, 1));
+        GradientClear();
 
         if (scene.RenderingComponents is not null)
         {
@@ -165,12 +177,44 @@ public class SceneRenderer : IDisposable
             Transform = transform
         };
 
+        CreateClearResources(_startClearColor, _endClearColor);
+
         _objectRenderer = new ObjectRenderer(_renderTarget);
         _componentRenderer = new ComponentRenderer(_renderTarget);
 
         _imageSource.SetRenderTarget(_texture2D);
 
         _device.ImmediateContext.Rasterizer.SetViewport(0, 0, width, height);
+    }
+
+    private void GradientClear()
+    {
+        var tempTransform = Transform;
+        Transform = Matrix3x2.Identity;
+
+        _renderTarget.FillRectangle(new RectangleF(0, 0, _renderTarget.Size.Width, _renderTarget.Size.Height), _clearGradientBrush);
+
+        Transform = tempTransform;
+    }
+
+    private void CreateClearResources(Color4 startColor, Color4 endColor)
+    {
+        Utilities.Dispose(ref _clearGradientBrush);
+        Utilities.Dispose(ref _clearGradientStopCollection);
+
+        _clearGradientStopCollection = new GradientStopCollection(_renderTarget, new GradientStop[]
+        {
+            new() { Position = 0f, Color = startColor },
+            new() { Position = 1f, Color = endColor }
+        });
+
+        var properties = new LinearGradientBrushProperties
+        {
+            StartPoint = new Vector2(_renderTarget.Size.Width / 2, 0),
+            EndPoint = new Vector2(_renderTarget.Size.Width / 2, _renderTarget.Size.Height)
+        };
+
+        _clearGradientBrush = new LinearGradientBrush(_renderTarget, properties, _clearGradientStopCollection);
     }
 
     private void OnIsFrontBufferAvailableChanged(object sender, DependencyPropertyChangedEventArgs e) =>
