@@ -5,7 +5,7 @@ namespace LogicSimulator.Scene.Tools;
 
 public class SelectionTool : BaseTool
 {
-    public float Tolerance { get; set; } = 0.25f;
+    public float Tolerance { get; set; } = 5f;
 
     public override void MouseLeftButtonDown(Scene2D scene, Vector2 pos)
     {

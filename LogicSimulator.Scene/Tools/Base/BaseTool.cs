@@ -1,4 +1,5 @@
-﻿using SharpDX;
+﻿using System.Windows.Input;
+using SharpDX;
 
 namespace LogicSimulator.Scene.Tools.Base;
 
@@ -18,9 +19,9 @@ public abstract class BaseTool
         IsActive = false;
     }
 
-    public virtual void KeyDown(Scene2D scene) { }
+    public virtual void KeyDown(Scene2D scene, KeyEventArgs e) { }
 
-    public virtual void KeyUp(Scene2D scene) { }
+    public virtual void KeyUp(Scene2D scene, KeyEventArgs e) { }
 
     public virtual void MouseMove(Scene2D scene, Vector2 pos) { }
 

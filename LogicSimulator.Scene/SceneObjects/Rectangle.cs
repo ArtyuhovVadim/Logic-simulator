@@ -100,7 +100,9 @@ public class Rectangle : BaseSceneObject
     public override bool IsIntersectsPoint(Vector2 pos, Matrix3x2 matrix, float tolerance = 0.25f)
     {
         var geometry = GetCashedResourceValue<RectangleGeometry>(RectangleGeometryResource);
-        return geometry.FillContainsPoint(pos, matrix, tolerance * matrix.M11);
+
+        return IsFilled ? geometry.FillContainsPoint(pos, matrix, tolerance) :
+                            geometry.StrokeContainsPoint(pos, StrokeThickness, null, matrix, tolerance);
     }
 
     public override void Render(ObjectRenderer renderer) => renderer.Render(this);

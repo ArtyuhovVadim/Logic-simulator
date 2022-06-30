@@ -98,6 +98,7 @@ public class Scene2D : FrameworkElement
     {
         ClipToBounds = true;
         VisualEdgeMode = EdgeMode.Aliased;
+        Focusable = true;
 
         Loaded += OnLoaded;
         Unloaded += OnUnloaded;
@@ -169,31 +170,18 @@ public class Scene2D : FrameworkElement
         var pos = GetMousePosition();
 
         if (e.LeftButton == MouseButtonState.Pressed)
-        {
-            CaptureMouse();
             CurrentTool?.MouseLeftButtonDragged(this, pos);
-        }
         else if (e.RightButton == MouseButtonState.Pressed)
-        {
-            CaptureMouse();
             CurrentTool?.MouseRightButtonDragged(this, pos);
-        }
         else if (e.MiddleButton == MouseButtonState.Pressed)
-        {
-            CaptureMouse();
             CurrentTool?.MouseMiddleButtonDragged(this, pos);
-        }
         else
-        {
             CurrentTool?.MouseMove(this, pos);
-        }
     }
 
     protected override void OnMouseLeftButtonDown(MouseButtonEventArgs e)
     {
         base.OnMouseLeftButtonDown(e);
-
-        CaptureMouse();
 
         CurrentTool?.MouseLeftButtonDown(this, GetMousePosition());
     }
@@ -209,8 +197,6 @@ public class Scene2D : FrameworkElement
     {
         base.OnMouseRightButtonDown(e);
 
-        CaptureMouse();
-
         CurrentTool?.MouseRightButtonDown(this, GetMousePosition());
     }
 
@@ -221,11 +207,33 @@ public class Scene2D : FrameworkElement
         CurrentTool?.MouseRightButtonUp(this, GetMousePosition());
     }
 
+    protected override void OnMouseDown(MouseButtonEventArgs e)
+    {
+        base.OnMouseDown(e);
+
+        Mouse.Capture(this);
+        Keyboard.Focus(this);
+    }
+
     protected override void OnMouseUp(MouseButtonEventArgs e)
     {
         base.OnMouseUp(e);
 
         Mouse.Capture(null);
+    }
+
+    protected override void OnKeyDown(KeyEventArgs e)
+    {
+        base.OnKeyDown(e);
+
+        CurrentTool?.KeyDown(this, e);
+    }
+
+    protected override void OnKeyUp(KeyEventArgs e)
+    {
+        base.OnKeyUp(e);
+
+        CurrentTool?.KeyUp(this, e);
     }
 
     private void OnLoaded(object sender, RoutedEventArgs e)
