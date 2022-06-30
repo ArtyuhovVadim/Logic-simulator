@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Windows;
-using System.Windows.Controls;
 using System.Windows.Media;
 using LogicSimulator.Scene.ExtensionMethods;
 using SharpDX;
@@ -43,19 +42,23 @@ public class SceneRenderer : IDisposable
     public Matrix3x2 Transform
     {
         get => _renderTarget.Transform;
-        private set => _renderTarget.Transform = value;
+        private set
+        {
+            _renderTarget.Transform = value;
+            ResourceDependentObject.RequireRender();
+        }
     }
 
     public float Scale
     {
         get => Transform.M11;
-        set => _renderTarget.Transform = _renderTarget.Transform with { M11 = value, M22 = value };
+        set => Transform = Transform with { M11 = value, M22 = value };
     }
 
     public Vector2 TranslationVector
     {
         get => new(_renderTarget.Transform.M31, _renderTarget.Transform.M32);
-        set => _renderTarget.Transform = _renderTarget.Transform with { M31 = value.X, M32 = value.Y };
+        set => Transform = Transform with { M31 = value.X, M32 = value.Y };
     }
 
     public void RelativeScale(Vector2 pos, float delta)
@@ -76,12 +79,12 @@ public class SceneRenderer : IDisposable
 
     public void Render(Scene2D scene)
     {
-        if (!IsRendering) return;
+        if (!IsRendering || !ResourceDependentObject.IsRequireRender) return;
 
         _renderTarget.BeginDraw();
 
         GradientClear();
-        
+
         foreach (var component in scene.RenderingComponents)
         {
             component.Render(_componentRenderer);
@@ -95,6 +98,8 @@ public class SceneRenderer : IDisposable
         _renderTarget.EndDraw();
         _device.ImmediateContext.Flush();
         _imageSource.InvalidateD3DImage();
+
+        ResourceDependentObject.EndRender();
     }
 
     public void WpfRender(DrawingContext drawingContext, Size renderSize)

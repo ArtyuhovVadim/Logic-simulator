@@ -17,7 +17,7 @@ namespace LogicSimulator.Scene;
 public class Scene2D : FrameworkElement
 {
     private SceneRenderer _sceneRenderer;
-    private float dpi;
+    private float _dpi;
 
     #region IsRendering
 
@@ -128,7 +128,7 @@ public class Scene2D : FrameworkElement
 
     protected override void OnRenderSizeChanged(SizeChangedInfo sizeInfo)
     {
-        _sceneRenderer.Resize(RenderSize.Width, RenderSize.Height, dpi);
+        _sceneRenderer.Resize(RenderSize.Width, RenderSize.Height, _dpi);
 
         base.OnRenderSizeChanged(sizeInfo);
     }
@@ -137,9 +137,9 @@ public class Scene2D : FrameworkElement
     {
         base.OnInitialized(e);
 
-        dpi = (float)VisualTreeHelper.GetDpi(this).PixelsPerInchX;
+        _dpi = (float)VisualTreeHelper.GetDpi(this).PixelsPerInchX;
 
-        _sceneRenderer = new SceneRenderer(RenderSize.Width, RenderSize.Height, dpi);
+        _sceneRenderer = new SceneRenderer(RenderSize.Width, RenderSize.Height, _dpi);
 
         Window.GetWindow(this)!.Closed += (_, _) => Utilities.Dispose(ref _sceneRenderer);
 
@@ -150,11 +150,13 @@ public class Scene2D : FrameworkElement
     {
         base.OnMouseMove(e);
 
-        var pos = e.GetPosition(this).ToVector2().DpiCorrect(dpi);
+        var pos = e.GetPosition(this).ToVector2().DpiCorrect(_dpi);
 
         CurrentTool?.MouseMove(this, pos);
 
         if (e.RightButton == MouseButtonState.Released) return;
+
+        CaptureMouse();
 
         _sceneRenderer.TranslationVector = _rightButtonDownTranslate + pos - _lastRightButtonDownPos;
     }
@@ -163,7 +165,9 @@ public class Scene2D : FrameworkElement
     {
         base.OnMouseLeftButtonDown(e);
 
-        var pos = e.GetPosition(this).ToVector2().DpiCorrect(dpi);
+        CaptureMouse();
+
+        var pos = e.GetPosition(this).ToVector2().DpiCorrect(_dpi);
 
         CurrentTool?.MouseLeftButtonDown(this, pos);
     }
@@ -172,7 +176,9 @@ public class Scene2D : FrameworkElement
     {
         base.OnMouseLeftButtonUp(e);
 
-        var pos = e.GetPosition(this).ToVector2().DpiCorrect(dpi);
+        Mouse.Capture(null);
+
+        var pos = e.GetPosition(this).ToVector2().DpiCorrect(_dpi);
 
         CurrentTool?.MouseLeftButtonUp(this, pos);
     }
@@ -184,17 +190,26 @@ public class Scene2D : FrameworkElement
     {
         base.OnMouseRightButtonDown(e);
 
-        var pos = e.GetPosition(this).ToVector2().DpiCorrect(dpi);
+        CaptureMouse();
+
+        var pos = e.GetPosition(this).ToVector2().DpiCorrect(_dpi);
 
         _rightButtonDownTranslate = _sceneRenderer.TranslationVector;
         _lastRightButtonDownPos = pos;
+    }
+
+    protected override void OnMouseRightButtonUp(MouseButtonEventArgs e)
+    {
+        base.OnMouseRightButtonUp(e);
+
+        Mouse.Capture(null);
     }
 
     protected override void OnMouseWheel(MouseWheelEventArgs e)
     {
         base.OnMouseWheel(e);
 
-        var pos = e.GetPosition(this).ToVector2().DpiCorrect(dpi);
+        var pos = e.GetPosition(this).ToVector2().DpiCorrect(_dpi);
 
         var sign = Math.Sign(e.Delta);
         _sceneRenderer.RelativeScale(pos, 0.1f * sign);

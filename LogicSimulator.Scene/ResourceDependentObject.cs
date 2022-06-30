@@ -15,24 +15,7 @@ public abstract class ResourceDependentObject : IDisposable
 
     protected ResourceDependentObject() => AllResourceDependentObject.Add(this);
 
-    protected void RequireUpdate(Resource resource)
-    {
-        var hash = resource.GetHashCode();
-
-        if (_requireUpdateResources.Contains(hash)) return;
-
-        _requireUpdateResources.Add(hash);
-    }
-
-    protected T GetCashedResourceValue<T>(Resource resource)
-    {
-        if (_resources.TryGetValue(resource.GetHashCode(), out var resourceValue))
-        {
-            return (T)resourceValue;
-        }
-
-        throw new ApplicationException("Resource not found!");
-    }
+    public static bool IsRequireRender { get; private set; }
 
     public static void RequireUpdateInAllResourceDependentObjects()
     {
@@ -40,7 +23,13 @@ public abstract class ResourceDependentObject : IDisposable
         {
             resourceDependentObject._requireUpdateResources.AddRange(resourceDependentObject._resources.Keys);
         }
+
+        RequireRender();
     }
+
+    public static void RequireRender() => IsRequireRender = true;
+
+    public static void EndRender() => IsRequireRender = false;
 
     public T GetResourceValue<T>(Resource resource, RenderTarget renderTarget)
     {
@@ -73,6 +62,27 @@ public abstract class ResourceDependentObject : IDisposable
         _resources[hash] = resourceValue;
 
         return (T)resourceValue;
+    }
+
+    protected void RequireUpdate(Resource resource)
+    {
+        var hash = resource.GetHashCode();
+
+        if (_requireUpdateResources.Contains(hash)) return;
+
+        _requireUpdateResources.Add(hash);
+
+        RequireRender();
+    }
+
+    protected T GetCashedResourceValue<T>(Resource resource)
+    {
+        if (_resources.TryGetValue(resource.GetHashCode(), out var resourceValue))
+        {
+            return (T)resourceValue;
+        }
+
+        throw new ApplicationException("Resource not found!");
     }
 
     public void Dispose()

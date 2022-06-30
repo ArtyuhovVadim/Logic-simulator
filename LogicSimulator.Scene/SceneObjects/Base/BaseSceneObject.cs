@@ -4,7 +4,17 @@ namespace LogicSimulator.Scene.SceneObjects.Base;
 
 public abstract class BaseSceneObject : ResourceDependentObject
 {
-    public bool IsSelected { get; protected set; }
+    private bool _isSelected;
+
+    public bool IsSelected
+    {
+        get => _isSelected;
+        protected set
+        {
+            _isSelected = value;
+            RequireRender();
+        }
+    }
 
     public virtual void Select() => IsSelected = true;
 

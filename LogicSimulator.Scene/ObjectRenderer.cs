@@ -17,13 +17,13 @@ public class ObjectRenderer
         var geometry = rectangle.GetResourceValue<RectangleGeometry>(Rectangle.RectangleGeometryResource, _renderTarget);
 
         _renderTarget.FillGeometry(geometry, fillBrush);
-        _renderTarget.DrawGeometry(geometry, strokeBrush, rectangle.StrokeThickness);
+        _renderTarget.DrawGeometry(geometry, strokeBrush, rectangle.StrokeThickness / _renderTarget.Transform.M11);
 
         if (rectangle.IsSelected)
         {
             var pos = new Vector2(rectangle.Width / 2, rectangle.Height / 2) + rectangle.Location;
 
-            _renderTarget.DrawEllipse(new Ellipse(pos, 20, 20), strokeBrush);
+            _renderTarget.DrawEllipse(new Ellipse(pos, 20, 20), strokeBrush, 1f / _renderTarget.Transform.M11);
         }
     }
 }

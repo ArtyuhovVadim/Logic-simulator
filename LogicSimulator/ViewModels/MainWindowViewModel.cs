@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.ObjectModel;
-using System.Windows;
+using System.Linq;
 using System.Windows.Input;
 using LogicSimulator.Infrastructure.Commands;
 using LogicSimulator.Scene.Components;
@@ -90,7 +90,6 @@ public class MainWindowViewModel : BindableBase
 
     public ICommand TestCommand => _TestCommand ??= new LambdaCommand(_ =>
     {
-
     }, _ => true);
 
     #endregion
