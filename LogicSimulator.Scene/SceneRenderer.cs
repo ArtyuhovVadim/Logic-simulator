@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Media;
 using LogicSimulator.Scene.ExtensionMethods;
 using SharpDX;
@@ -80,21 +81,15 @@ public class SceneRenderer : IDisposable
         _renderTarget.BeginDraw();
 
         GradientClear();
-
-        if (scene.RenderingComponents is not null)
+        
+        foreach (var component in scene.RenderingComponents)
         {
-            foreach (var component in scene.RenderingComponents)
-            {
-                component.Render(_componentRenderer);
-            }
+            component.Render(_componentRenderer);
         }
 
-        if (scene.Objects is not null)
+        foreach (var sceneObject in scene.Objects)
         {
-            foreach (var sceneObject in scene.Objects)
-            {
-                sceneObject.Render(_objectRenderer);
-            }
+            sceneObject.Render(_objectRenderer);
         }
 
         _renderTarget.EndDraw();

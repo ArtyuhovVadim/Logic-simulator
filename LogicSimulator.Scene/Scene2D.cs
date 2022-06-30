@@ -48,7 +48,7 @@ public class Scene2D : FrameworkElement
     }
 
     public static readonly DependencyProperty ObjectsProperty =
-        DependencyProperty.Register(nameof(Objects), typeof(IEnumerable<BaseSceneObject>), typeof(Scene2D), new PropertyMetadata(default(IEnumerable<BaseSceneObject>)));
+        DependencyProperty.Register(nameof(Objects), typeof(IEnumerable<BaseSceneObject>), typeof(Scene2D), new PropertyMetadata(Enumerable.Empty<BaseSceneObject>()));
 
     #endregion
 
@@ -61,7 +61,7 @@ public class Scene2D : FrameworkElement
     }
 
     public static readonly DependencyProperty RenderingComponentsProperty =
-        DependencyProperty.Register(nameof(RenderingComponents), typeof(IEnumerable<BaseRenderingComponent>), typeof(Scene2D), new PropertyMetadata(default(IEnumerable<BaseRenderingComponent>)));
+        DependencyProperty.Register(nameof(RenderingComponents), typeof(IEnumerable<BaseRenderingComponent>), typeof(Scene2D), new PropertyMetadata(Enumerable.Empty<BaseRenderingComponent>()));
 
     #endregion
 
