@@ -61,14 +61,14 @@ public class SceneRenderer : IDisposable
         set => Transform = Transform with { M31 = value.X, M32 = value.Y };
     }
 
-    public void RelativeScale(Vector2 pos, float delta)
+    public void RelativeScale(Vector2 pos, float delta, float max = 20f, float min = 0.5f)
     {
         var p = pos.Transform(Transform);
 
         var newScaleCoefficient = 1 + delta / Scale;
         var newScale = (float)Math.Round(Scale * newScaleCoefficient, 2);
 
-        if (newScale is < 0.5f or > 20f) return;
+        if (newScale < min || newScale > max) return;
 
         TranslationVector += p * ((1 - newScaleCoefficient) * Scale);
 

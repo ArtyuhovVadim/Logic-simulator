@@ -13,4 +13,9 @@ public static class Vector2ExtensionMethods
     {
         return vector / (96f / dpi);
     }
+
+    public static System.Windows.Point ToPoint(this Vector2 vector)
+    {
+        return new System.Windows.Point(vector.X, vector.Y);
+    }
 }
