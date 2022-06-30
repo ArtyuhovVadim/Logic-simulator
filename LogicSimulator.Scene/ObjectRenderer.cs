@@ -12,11 +12,15 @@ public class ObjectRenderer
 
     public void Render(Rectangle rectangle)
     {
-        var fillBrush = rectangle.GetResourceValue<SolidColorBrush>(Rectangle.FillBrushResource, _renderTarget);
         var strokeBrush = rectangle.GetResourceValue<SolidColorBrush>(Rectangle.StrokeBrushResource, _renderTarget);
         var geometry = rectangle.GetResourceValue<RectangleGeometry>(Rectangle.RectangleGeometryResource, _renderTarget);
 
-        _renderTarget.FillGeometry(geometry, fillBrush);
+        if (rectangle.IsFilled)
+        {
+            var fillBrush = rectangle.GetResourceValue<SolidColorBrush>(Rectangle.FillBrushResource, _renderTarget);
+            _renderTarget.FillGeometry(geometry, fillBrush);
+        }
+
         _renderTarget.DrawGeometry(geometry, strokeBrush, rectangle.StrokeThickness / _renderTarget.Transform.M11);
 
         if (rectangle.IsSelected)

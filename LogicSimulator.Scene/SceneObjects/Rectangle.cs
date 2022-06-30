@@ -11,6 +11,8 @@ public class Rectangle : BaseSceneObject
     private Vector2 _location = Vector2.Zero;
     private float _width;
     private float _height;
+    private bool _isFilled = true;
+    private float _strokeThickness = 1f;
 
     public Vector2 Location
     {
@@ -62,7 +64,25 @@ public class Rectangle : BaseSceneObject
         }
     }
 
-    public float StrokeThickness { get; set; } = 1f;
+    public float StrokeThickness
+    {
+        get => _strokeThickness;
+        set
+        {
+            _strokeThickness = value;
+            RequireRender();
+        }
+    }
+
+    public bool IsFilled
+    {
+        get => _isFilled;
+        set
+        {
+            _isFilled = value;
+            RequireRender();
+        }
+    }
 
     public static readonly Resource FillBrushResource = Resource.Register<Rectangle, SolidColorBrush>(nameof(FillBrushResource), (target, o) =>
         new SolidColorBrush(target, ((Rectangle)o).FillColor));
