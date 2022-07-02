@@ -113,15 +113,9 @@ public class Scene2D : FrameworkElement
         if (Tools is null)
             throw new ApplicationException("There are no tools in the scene!");
 
-        var tools = Tools.OfType<T>().ToList();
+        var tool = Tools.FirstOrDefault(x => x.GetType() == typeof(T));
 
-        if (tools.Count != 1)
-            throw new ApplicationException($"{typeof(T)} more then one in tools collection!");
-
-        if (tools is null)
-            throw new ApplicationException($"{typeof(T)} not contained is tools collection!");
-
-        var tool = tools.First();
+        if (tool is null) return;
 
         if (CurrentTool is null)
         {

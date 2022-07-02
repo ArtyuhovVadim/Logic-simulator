@@ -38,7 +38,10 @@ public class MainWindowViewModel : BindableBase
 
     private ObservableCollection<BaseSceneObject> _objects = new()
     {
-        new Rectangle { Location = new Vector2(100, 100), Width = 200, Height = 300 }
+        new Rectangle { Location = new Vector2(100, 100), Width = 200, Height = 300 },
+        new Rectangle { Location = new Vector2(250, 250), Width = 200, Height = 300 },
+        new Rectangle { Location = new Vector2(300, 400), Width = 200, Height = 300 },
+        new Rectangle { Location = new Vector2(350, 250), Width = 200, Height = 300 },
     };
     public ObservableCollection<BaseSceneObject> Objects
     {
