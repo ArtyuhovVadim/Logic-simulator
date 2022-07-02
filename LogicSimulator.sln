@@ -3,13 +3,13 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.1.32210.238
 MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LogicSimulator", "LogicSimulator\LogicSimulator.csproj", "{2D37A497-749D-4636-804C-CD139E8316B6}"
+EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LogicSimulator.Controls", "LogicSimulator.Controls\LogicSimulator.Controls.csproj", "{ADA81EFC-C2AC-4C8C-8AD2-ABA10FA7A9E8}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LogicSimulator.AvalonDock", "LogicSimulator.AvalonDock\LogicSimulator.AvalonDock.csproj", "{153CBB5F-EA0F-437A-B926-397F6C21B442}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LogicSimulator.Scene", "LogicSimulator.Scene\LogicSimulator.Scene.csproj", "{61CF4324-89B3-4EE8-938C-C06626BEB605}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LogicSimulator", "LogicSimulator\LogicSimulator.csproj", "{2D37A497-749D-4636-804C-CD139E8316B6}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
