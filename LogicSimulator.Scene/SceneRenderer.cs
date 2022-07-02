@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Windows;
 using System.Windows.Media;
-using LogicSimulator.Scene.ExtensionMethods;
 using SharpDX;
 using SharpDX.Direct2D1;
 using SharpDX.Direct3D;
@@ -26,8 +25,7 @@ public class SceneRenderer : IDisposable
 
     private Dx11ImageSource _imageSource;
 
-    private ObjectRenderer _objectRenderer;
-    private ComponentRenderer _componentRenderer;
+    private Renderer _renderer;
 
     private GradientStopCollection _clearGradientStopCollection;
     private LinearGradientBrush _clearGradientBrush;
@@ -59,14 +57,22 @@ public class SceneRenderer : IDisposable
 
         GradientClear();
 
-        foreach (var component in scene.RenderingComponents)
+        foreach (var component in scene.Components)
         {
-            component.Render(_componentRenderer);
+            component.Render(_renderer);
         }
 
         foreach (var sceneObject in scene.Objects)
         {
-            sceneObject.Render(_objectRenderer);
+            sceneObject.Render(_renderer);
+        }
+
+        foreach (var sceneObject in scene.Objects)
+        {
+            if (sceneObject.IsSelected)
+            {
+                sceneObject.RenderSelection(_renderer);
+            }
         }
 
         _renderTarget.EndDraw();
@@ -84,7 +90,7 @@ public class SceneRenderer : IDisposable
     public void Resize(double pixelWidth, double pixelHeight, float dpi)
     {
         CreateAndBindTargets(pixelWidth, pixelHeight, dpi);
-        //TODO: Возможно стоит перенести вызов в другое место
+        
         ResourceDependentObject.RequireUpdateInAllResourceDependentObjects();
     }
 
@@ -118,6 +124,7 @@ public class SceneRenderer : IDisposable
         Utilities.Dispose(ref _renderTarget);
         Utilities.Dispose(ref _factory);
         Utilities.Dispose(ref _texture2D);
+        Utilities.Dispose(ref _renderer);
 
         _imageSource.SetRenderTarget(null);
 
@@ -153,8 +160,7 @@ public class SceneRenderer : IDisposable
 
         CreateClearResources(_startClearColor, _endClearColor);
 
-        _objectRenderer = new ObjectRenderer(_renderTarget);
-        _componentRenderer = new ComponentRenderer(_renderTarget);
+        _renderer = new Renderer(_renderTarget);
 
         _imageSource.SetRenderTarget(_texture2D);
 

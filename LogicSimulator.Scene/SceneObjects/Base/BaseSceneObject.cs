@@ -22,5 +22,7 @@ public abstract class BaseSceneObject : ResourceDependentObject
 
     public abstract bool IsIntersectsPoint(Vector2 pos, Matrix3x2 matrix, float tolerance = 0.25f);
 
-    public abstract void Render(ObjectRenderer renderer);
+    public abstract void Render(Renderer renderer);
+
+    public abstract void RenderSelection(Renderer renderer);
 }

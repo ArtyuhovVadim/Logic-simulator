@@ -6,6 +6,19 @@ namespace LogicSimulator.Scene.SceneObjects;
 
 public class Rectangle : BaseSceneObject
 {
+    public static readonly Resource FillBrushResource = Resource.Register<Rectangle, SolidColorBrush>(nameof(FillBrushResource), (target, o) =>
+        new SolidColorBrush(target, ((Rectangle)o).FillColor));
+
+    public static readonly Resource StrokeBrushResource = Resource.Register<Rectangle, SolidColorBrush>(nameof(StrokeBrushResource), (target, o) =>
+        new SolidColorBrush(target, ((Rectangle)o).StrokeColor));
+
+    public static readonly Resource RectangleGeometryResource = Resource.Register<Rectangle, RectangleGeometry>(nameof(RectangleGeometryResource), (target, o) =>
+    {
+        var rectangle = (Rectangle)o;
+
+        return new RectangleGeometry(target.Factory, new RectangleF(rectangle.Location.X, rectangle.Location.Y, rectangle.Width, rectangle.Height));
+    });
+
     private Color4 _fillColor = Color4.White;
     private Color4 _strokeColor = Color4.Black;
     private Vector2 _location = Vector2.Zero;
@@ -84,19 +97,6 @@ public class Rectangle : BaseSceneObject
         }
     }
 
-    public static readonly Resource FillBrushResource = Resource.Register<Rectangle, SolidColorBrush>(nameof(FillBrushResource), (target, o) =>
-        new SolidColorBrush(target, ((Rectangle)o).FillColor));
-
-    public static readonly Resource StrokeBrushResource = Resource.Register<Rectangle, SolidColorBrush>(nameof(StrokeBrushResource), (target, o) =>
-        new SolidColorBrush(target, ((Rectangle)o).StrokeColor));
-
-    public static readonly Resource RectangleGeometryResource = Resource.Register<Rectangle, RectangleGeometry>(nameof(RectangleGeometryResource), (target, o) =>
-    {
-        var rectangle = (Rectangle)o;
-
-        return new RectangleGeometry(target.Factory, new RectangleF(rectangle.Location.X, rectangle.Location.Y, rectangle.Width, rectangle.Height));
-    });
-
     public override bool IsIntersectsPoint(Vector2 pos, Matrix3x2 matrix, float tolerance = 0.25f)
     {
         var geometry = GetCashedResourceValue<RectangleGeometry>(RectangleGeometryResource);
@@ -105,5 +105,7 @@ public class Rectangle : BaseSceneObject
                             geometry.StrokeContainsPoint(pos, StrokeThickness, null, matrix, tolerance);
     }
 
-    public override void Render(ObjectRenderer renderer) => renderer.Render(this);
+    public override void Render(Renderer renderer) => renderer.Render(this);
+
+    public override void RenderSelection(Renderer renderer) => renderer.RenderSelection(this);
 }

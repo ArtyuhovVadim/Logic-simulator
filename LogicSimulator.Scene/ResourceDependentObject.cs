@@ -82,7 +82,7 @@ public abstract class ResourceDependentObject : IDisposable
             return (T)resourceValue;
         }
 
-        throw new ApplicationException("Resource not found!");
+        throw new ApplicationException($"Resource with hash ({resource.GetHashCode()}) not found!");
     }
 
     public void Dispose()

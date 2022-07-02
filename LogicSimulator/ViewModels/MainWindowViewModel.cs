@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.ObjectModel;
-using System.Linq;
 using System.Windows.Input;
 using LogicSimulator.Infrastructure.Commands;
 using LogicSimulator.Scene.Components;
@@ -51,11 +50,11 @@ public class MainWindowViewModel : BindableBase
 
     #endregion
 
-    #region RenderingComponents
+    #region Components
 
-    private ObservableCollection<BaseRenderingComponent> _renderingComponents = new()
+    private ObservableCollection<BaseComponent> _renderingComponents = new()
     {
-        new GridRenderingComponent
+        new GridComponent
         {
             Width = 3000,
             Height = 3000,
@@ -65,7 +64,7 @@ public class MainWindowViewModel : BindableBase
             BoldLineColor = new Color4(220f / 255f, 220f / 255f, 215f / 255f, 1f),
         }
     };
-    public ObservableCollection<BaseRenderingComponent> RenderingComponents
+    public ObservableCollection<BaseComponent> RenderingComponents
     {
         get => _renderingComponents;
         set => Set(ref _renderingComponents, value);

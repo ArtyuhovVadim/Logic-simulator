@@ -52,16 +52,16 @@ public class Scene2D : FrameworkElement
 
     #endregion
 
-    #region RenderingComponents
+    #region Components
 
-    public IEnumerable<BaseRenderingComponent> RenderingComponents
+    public IEnumerable<BaseComponent> Components
     {
-        get => (IEnumerable<BaseRenderingComponent>)GetValue(RenderingComponentsProperty);
-        set => SetValue(RenderingComponentsProperty, value);
+        get => (IEnumerable<BaseComponent>)GetValue(ComponentsProperty);
+        set => SetValue(ComponentsProperty, value);
     }
 
-    public static readonly DependencyProperty RenderingComponentsProperty =
-        DependencyProperty.Register(nameof(RenderingComponents), typeof(IEnumerable<BaseRenderingComponent>), typeof(Scene2D), new PropertyMetadata(Enumerable.Empty<BaseRenderingComponent>()));
+    public static readonly DependencyProperty ComponentsProperty =
+        DependencyProperty.Register(nameof(Components), typeof(IEnumerable<BaseComponent>), typeof(Scene2D), new PropertyMetadata(Enumerable.Empty<BaseComponent>()));
 
     #endregion
 
