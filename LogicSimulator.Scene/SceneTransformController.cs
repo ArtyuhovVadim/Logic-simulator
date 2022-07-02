@@ -8,7 +8,6 @@ namespace LogicSimulator.Scene;
 public class SceneTransformController
 {
     private readonly Scene2D _scene;
-    private readonly SceneRenderer _renderer;
 
     private Vector2 _lastMiddleButtonDownPosWithDpi;
     private System.Windows.Point _lastMiddleButtonDownPos;
@@ -22,10 +21,9 @@ public class SceneTransformController
 
     public float ScaleStep { get; set; } = 0.01f;
 
-    public SceneTransformController(Scene2D scene, SceneRenderer renderer)
+    public SceneTransformController(Scene2D scene)
     {
         _scene = scene;
-        _renderer = renderer;
 
         scene.MouseMove += OnSceneMouseMove;
         scene.MouseRightButtonDown += OnSceneMouseRightButtonDown;
@@ -34,7 +32,7 @@ public class SceneTransformController
 
     private void OnSceneMouseRightButtonDown(object sender, MouseButtonEventArgs e)
     {
-        _lastRightButtonDownSceneTranslate = _scene.TranslationVector;
+        _lastRightButtonDownSceneTranslate = _scene.Translation;
         _lastRightButtonDownPos = e.GetPosition(_scene).ToVector2().DpiCorrect(_scene.Dpi);
     }
 
@@ -56,11 +54,11 @@ public class SceneTransformController
         if (e.MiddleButton == MouseButtonState.Pressed)
         {
             SetCursorPos((int)_lastMiddleButtonDownPos.X, (int)_lastMiddleButtonDownPos.Y);
-            _renderer.RelativeScale(_lastMiddleButtonDownPosWithDpi, -ScaleStep * (pos.Y - _lastMiddleButtonDownPosWithDpi.Y), Max, Min);
+            _scene.RelativeScale(_lastMiddleButtonDownPosWithDpi, -ScaleStep * (pos.Y - _lastMiddleButtonDownPosWithDpi.Y), Max, Min);
         }
         else if (e.RightButton == MouseButtonState.Pressed)
         {
-            _scene.TranslationVector = _lastRightButtonDownSceneTranslate + pos - _lastRightButtonDownPos;
+            _scene.Translation = _lastRightButtonDownSceneTranslate + pos - _lastRightButtonDownPos;
         }
     }
 

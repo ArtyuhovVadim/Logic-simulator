@@ -82,16 +82,16 @@ public class Scene2D : FrameworkElement
 
     public Matrix3x2 Transform => _sceneRenderer.Transform;
 
-    public Vector2 TranslationVector
-    {
-        get => _sceneRenderer.TranslationVector;
-        set => _sceneRenderer.TranslationVector = value;
-    }
-
     public float Scale
     {
-        get => _sceneRenderer.Scale;
-        set => _sceneRenderer.Scale = value;
+        get => _sceneRenderer.Transform.M11;
+        set => _sceneRenderer.Transform = _sceneRenderer.Transform with { M11 = value, M22 = value };
+    }
+
+    public Vector2 Translation
+    {
+        get => new(_sceneRenderer.Transform.M31, _sceneRenderer.Transform.M32);
+        set => _sceneRenderer.Transform = _sceneRenderer.Transform with { M31 = value.X, M32 = value.Y };
     }
 
     public Scene2D()
@@ -136,6 +136,20 @@ public class Scene2D : FrameworkElement
         CurrentTool.Activate(this);
     }
 
+    public void RelativeScale(Vector2 pos, float delta, float max = 20f, float min = 0.5f)
+    {
+        var p = pos.Transform(_sceneRenderer.Transform);
+
+        var newScaleCoefficient = 1 + delta / Scale;
+        var newScale = (float)Math.Round(Scale * newScaleCoefficient, 2);
+
+        if (newScale < min || newScale > max) return;
+
+        Translation += p * ((1 - newScaleCoefficient) * Scale);
+
+        Scale = newScale;
+    }
+
     protected override void OnRender(DrawingContext drawingContext)
     {
         _sceneRenderer.WpfRender(drawingContext, RenderSize);
@@ -156,7 +170,7 @@ public class Scene2D : FrameworkElement
 
         _sceneRenderer = new SceneRenderer(RenderSize.Width, RenderSize.Height, Dpi);
 
-        _sceneTransformController = new SceneTransformController(this, _sceneRenderer);
+        _sceneTransformController = new SceneTransformController(this);
 
         Window.GetWindow(this)!.Closed += (_, _) => Utilities.Dispose(ref _sceneRenderer);
 

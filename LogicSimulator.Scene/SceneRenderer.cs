@@ -42,37 +42,11 @@ public class SceneRenderer : IDisposable
     public Matrix3x2 Transform
     {
         get => _renderTarget.Transform;
-        private set
+        set
         {
             _renderTarget.Transform = value;
             ResourceDependentObject.RequireRender();
         }
-    }
-
-    public float Scale
-    {
-        get => Transform.M11;
-        set => Transform = Transform with { M11 = value, M22 = value };
-    }
-
-    public Vector2 TranslationVector
-    {
-        get => new(_renderTarget.Transform.M31, _renderTarget.Transform.M32);
-        set => Transform = Transform with { M31 = value.X, M32 = value.Y };
-    }
-
-    public void RelativeScale(Vector2 pos, float delta, float max = 20f, float min = 0.5f)
-    {
-        var p = pos.Transform(Transform);
-
-        var newScaleCoefficient = 1 + delta / Scale;
-        var newScale = (float)Math.Round(Scale * newScaleCoefficient, 2);
-
-        if (newScale < min || newScale > max) return;
-
-        TranslationVector += p * ((1 - newScaleCoefficient) * Scale);
-
-        Scale = newScale;
     }
 
     public void Dispose() => StopDirect3D();
