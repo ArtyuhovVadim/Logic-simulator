@@ -27,6 +27,9 @@ public class Rectangle : BaseSceneObject
     private bool _isFilled = true;
     private float _strokeThickness = 1f;
 
+    private Vector2 _startDragPosition = Vector2.Zero;
+    private Vector2 _startDragLocation = Vector2.Zero;
+
     public Vector2 Location
     {
         get => _location;
@@ -95,6 +98,24 @@ public class Rectangle : BaseSceneObject
             _isFilled = value;
             RequireRender();
         }
+    }
+
+    public override void StartDrag(Vector2 pos)
+    {
+        IsDragging = true;
+
+        _startDragPosition = pos;
+        _startDragLocation = Location;
+    }
+
+    public override void Drag(Vector2 pos)
+    {
+        Location = _startDragLocation - _startDragPosition + pos;
+    }
+
+    public override void EndDrag()
+    {
+        IsDragging = false;
     }
 
     public override bool IsIntersectsPoint(Vector2 pos, Matrix3x2 matrix, float tolerance = 0.25f)

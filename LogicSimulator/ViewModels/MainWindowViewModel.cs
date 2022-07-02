@@ -76,7 +76,8 @@ public class MainWindowViewModel : BindableBase
 
     private ObservableCollection<BaseTool> _tools = new()
     {
-        new SelectionTool()
+        new SelectionTool(),
+        new DragTool()
     };
     public ObservableCollection<BaseTool> Tools
     {

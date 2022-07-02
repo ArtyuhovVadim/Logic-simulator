@@ -5,6 +5,17 @@ namespace LogicSimulator.Scene.SceneObjects.Base;
 public abstract class BaseSceneObject : ResourceDependentObject
 {
     private bool _isSelected;
+    private bool _isDragging;
+
+    public bool IsDragging
+    {
+        get => _isDragging;
+        protected set
+        {
+            _isDragging = value;
+            RequireRender();
+        }
+    }
 
     public bool IsSelected
     {
@@ -15,6 +26,12 @@ public abstract class BaseSceneObject : ResourceDependentObject
             RequireRender();
         }
     }
+
+    public abstract void StartDrag(Vector2 pos);
+
+    public abstract void Drag(Vector2 pos);
+
+    public abstract void EndDrag();
 
     public virtual void Select() => IsSelected = true;
 

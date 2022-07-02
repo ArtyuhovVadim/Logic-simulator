@@ -254,7 +254,7 @@ public class SceneRenderer : IDisposable
         switch (obj)
         {
             case BaseSceneObject baseSceneObject:
-                str += $" - IsSelected: {baseSceneObject.IsSelected}";
+                str += $" - IsSelected: {baseSceneObject.IsSelected} - IsDragging: {baseSceneObject.IsDragging}";
                 break;
             default:
                 break;

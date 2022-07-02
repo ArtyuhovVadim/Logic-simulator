@@ -13,9 +13,21 @@ public class SelectionTool : BaseTool
 
     public Key MultipleSelectionKey { get; set; } = Key.LeftShift;
 
+    public IEnumerable<BaseSceneObject> ObjectUnderCursor { private set; get; } = Enumerable.Empty<BaseSceneObject>();
+
+    public override void MouseLeftButtonDown(Scene2D scene, Vector2 pos)
+    {
+        ObjectUnderCursor = GetObjectsUnderCursor(scene, pos);
+    }
+
+    public override void MouseLeftButtonDragged(Scene2D scene, Vector2 pos)
+    {
+        scene.SwitchTool<DragTool>();
+    }
+
     public override void MouseLeftButtonUp(Scene2D scene, Vector2 pos)
     {
-        var objects = GetObjectsUnderCursor(scene, pos).ToList();
+        var objects = ObjectUnderCursor.ToList();
 
         var isMultipleSelectionKeyPressed = Keyboard.IsKeyDown(MultipleSelectionKey);
 

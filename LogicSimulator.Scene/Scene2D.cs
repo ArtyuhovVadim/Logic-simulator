@@ -108,6 +108,16 @@ public class Scene2D : FrameworkElement
 
     private bool IsInDesignMode => DesignerProperties.GetIsInDesignMode(this);
 
+    public T GetComponent<T>() where T : BaseComponent
+    {
+        return (T) Components.FirstOrDefault(x => x.GetType() == typeof(T));
+    }
+
+    public T GetTool<T>() where T : BaseTool
+    {
+        return (T)Tools.FirstOrDefault(x => x.GetType() == typeof(T));
+    }
+
     public void SwitchTool<T>() where T : BaseTool
     {
         if (Tools is null)
