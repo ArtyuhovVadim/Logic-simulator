@@ -1,18 +1,29 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Reflection;
 using System.Windows;
 using System.Windows.Media;
+using LogicSimulator.Scene.SceneObjects.Base;
 using SharpDX;
 using SharpDX.Direct2D1;
 using SharpDX.Direct3D;
 using SharpDX.Direct3D11;
+using SharpDX.DirectWrite;
 using SharpDX.DXGI;
+using SharpDX.Mathematics.Interop;
 using AlphaMode = SharpDX.Direct2D1.AlphaMode;
 using Device = SharpDX.Direct3D11.Device;
 using Factory = SharpDX.Direct2D1.Factory;
+using FontStretch = SharpDX.DirectWrite.FontStretch;
+using FontStyle = SharpDX.DirectWrite.FontStyle;
+using FontWeight = SharpDX.DirectWrite.FontWeight;
 using GradientStop = SharpDX.Direct2D1.GradientStop;
 using GradientStopCollection = SharpDX.Direct2D1.GradientStopCollection;
 using LinearGradientBrush = SharpDX.Direct2D1.LinearGradientBrush;
 using PixelFormat = SharpDX.Direct2D1.PixelFormat;
+using RectangleGeometry = SharpDX.Direct2D1.RectangleGeometry;
+using SolidColorBrush = SharpDX.Direct2D1.SolidColorBrush;
 
 namespace LogicSimulator.Scene;
 
@@ -75,6 +86,10 @@ public class SceneRenderer : IDisposable
             }
         }
 
+#if DEBUG
+        DebugRender();
+#endif
+
         _renderTarget.EndDraw();
         _device.ImmediateContext.Flush();
         _imageSource.InvalidateD3DImage();
@@ -90,7 +105,7 @@ public class SceneRenderer : IDisposable
     public void Resize(double pixelWidth, double pixelHeight, float dpi)
     {
         CreateAndBindTargets(pixelWidth, pixelHeight, dpi);
-        
+
         ResourceDependentObject.RequireUpdateInAllResourceDependentObjects();
     }
 
@@ -199,4 +214,88 @@ public class SceneRenderer : IDisposable
 
     private void OnIsFrontBufferAvailableChanged(object sender, DependencyPropertyChangedEventArgs e) =>
         IsRendering = _imageSource.IsFrontBufferAvailable;
+
+    private Dictionary<object, Dictionary<int, object>> GetAllResources()
+    {
+        var dict = new Dictionary<object, Dictionary<int, object>>();
+
+        var objects = typeof(ResourceDependentObject).GetField("AllResourceDependentObject", BindingFlags.Static | BindingFlags.NonPublic)?.GetValue(null) as List<ResourceDependentObject>;
+
+        foreach (var o in objects!)
+        {
+            var resources = typeof(ResourceDependentObject).GetField("_resources", BindingFlags.NonPublic | BindingFlags.Instance)?.GetValue(o) as Dictionary<int, object>;
+
+            dict.Add(o, resources);
+        }
+
+        return dict;
+    }
+
+    private object GetResValue(object res)
+    {
+        switch (res)
+        {
+            case SolidColorBrush brush:
+                return (Color4)brush.Color;
+            case RectangleGeometry rectangleGeometry:
+                var rect = rectangleGeometry.Rectangle;
+                return new RectangleF { Top = rect.Top, Right = rect.Right, Bottom = rect.Bottom, Left = rect.Left };
+            default:
+                return res;
+        }
+    }
+
+    private string GetObjString(object obj)
+    {
+        var str = string.Empty;
+
+        str += $"Type: {obj.GetType().Name}";
+
+        switch (obj)
+        {
+            case BaseSceneObject baseSceneObject:
+                str += $" - IsSelected: {baseSceneObject.IsSelected}";
+                break;
+            default:
+                break;
+        }
+
+        return str;
+    }
+
+    private void DebugRender()
+    {
+        var tmp = _renderTarget.Transform;
+
+        _renderTarget.Transform = Matrix3x2.Identity;
+
+        using var factory = new SharpDX.DirectWrite.Factory();
+        using var textFormat = new TextFormat(factory, "ISOCPEUR", FontWeight.Normal, FontStyle.Normal, FontStretch.Normal, 15);
+        using var brush = new SolidColorBrush(_renderTarget, Color4.Black);
+
+        var counter = 1;
+
+        foreach (var (obj, res) in GetAllResources())
+        {
+            _renderTarget.DrawText($"{GetObjString(obj)}", textFormat, new RectangleF(50, counter * 20, 1000, 1000), brush, DrawTextOptions.None);
+
+            counter++;
+
+            foreach (var (hash, resVal) in res)
+            {
+                _renderTarget.DrawText($"Hash: {hash} - Type: {resVal.GetType().Name} - Value: {GetResValue(resVal)}", textFormat, new RectangleF(70, counter * 20, 1000, 1000), brush, DrawTextOptions.None);
+
+                if (resVal is SolidColorBrush brush1)
+                {
+                    using var brush2 = new SolidColorBrush(_renderTarget, brush1.Color);
+
+                    _renderTarget.FillRectangle(new RectangleF(55, counter * 20 + 4, 12, 12), brush2);
+                }
+
+                counter++;
+            }
+        }
+
+        _renderTarget.Transform = tmp;
+    }
 }

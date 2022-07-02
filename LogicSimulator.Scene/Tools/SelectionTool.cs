@@ -28,15 +28,18 @@ public class SelectionTool : BaseTool
         }
         else if (objects.Count == 1)
         {
-            if (!isMultipleSelectionKeyPressed)
-            {
-                UnselectAllObjects(scene);
-            }
-
             var obj = objects.First();
 
             if (obj.IsSelected) obj.Unselect();
-            else obj.Select();
+            else
+            {
+                if (!isMultipleSelectionKeyPressed)
+                {
+                    UnselectAllObjects(scene);
+                }
+
+                obj.Select();
+            }
         }
         else
         {

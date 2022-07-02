@@ -37,8 +37,8 @@ public class MainWindowViewModel : BindableBase
 
     private ObservableCollection<BaseSceneObject> _objects = new()
     {
-        new Rectangle { Location = new Vector2(100, 100), Width = 200, Height = 300 },
-        new Rectangle { Location = new Vector2(250, 250), Width = 200, Height = 300 },
+        new Rectangle { Location = new Vector2(100, 100), Width = 200, Height = 300, FillColor = new Color4(1, 0, 0, 1) },
+        new Rectangle { Location = new Vector2(250, 250), Width = 200, Height = 300, FillColor = new Color4(0, 0, 1, 1) },
         new Rectangle { Location = new Vector2(300, 400), Width = 200, Height = 300 },
         new Rectangle { Location = new Vector2(350, 250), Width = 200, Height = 300 },
     };
