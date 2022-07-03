@@ -27,6 +27,7 @@ namespace AvalonDock.Controls
 	public class DropDownControlArea : ContentControl
 	{
 		#region ctors
+
 		/// <summary>
 		/// Static class constructor
 		/// </summary>
@@ -42,43 +43,8 @@ namespace AvalonDock.Controls
 			    PreviewMouseRightButtonUpEvent,
 			    new MouseButtonEventHandler((s, e) => (s as DropDownControlArea)?.PreviewMouseRightButtonUpCallback(e)));
 		}
+
 		#endregion ctors
-		
-		#region Properties
-
-		#region DropDownContextMenu
-
-		/// <summary><see cref="DropDownContextMenu"/> dependency property.</summary>
-		public static readonly DependencyProperty DropDownContextMenuProperty = DependencyProperty.Register(nameof(DropDownContextMenu), typeof(ContextMenu), typeof(DropDownControlArea),
-				new FrameworkPropertyMetadata(null));
-
-		/// <summary>Gets/sets the drop down menu to show up when user click on an anchorable menu pin.</summary>
-		[Bindable(true), Description("Gets/sets the drop down menu to show up when user click on an anchorable menu pin."), Category("Menu")]
-		public ContextMenu DropDownContextMenu
-		{
-			get => (ContextMenu)GetValue(DropDownContextMenuProperty);
-			set => SetValue(DropDownContextMenuProperty, value);
-		}
-
-		#endregion DropDownContextMenu
-
-		#region DropDownContextMenuDataContext
-
-		/// <summary><see cref="DropDownContextMenuDataContext"/> dependency property. </summary>
-		public static readonly DependencyProperty DropDownContextMenuDataContextProperty = DependencyProperty.Register(nameof(DropDownContextMenuDataContext), typeof(object), typeof(DropDownControlArea),
-				new FrameworkPropertyMetadata(null));
-
-		/// <summary>Gets/sets the DataContext to set for the DropDownContext menu property.</summary>
-		[Bindable(true), Description("Gets/sets the DataContext to set for the DropDownContext menu property."), Category("Menu")]
-		public object DropDownContextMenuDataContext
-		{
-			get => (object)GetValue(DropDownContextMenuDataContextProperty);
-			set => SetValue(DropDownContextMenuDataContextProperty, value);
-		}
-
-		#endregion DropDownContextMenuDataContext
-
-		#endregion Properties
 
 		#region Overrides
 
@@ -116,5 +82,41 @@ namespace AvalonDock.Controls
 		//}
 
 		#endregion Overrides
+
+		#region Properties
+
+		#region DropDownContextMenu
+
+		/// <summary><see cref="DropDownContextMenu"/> dependency property.</summary>
+		public static readonly DependencyProperty DropDownContextMenuProperty = DependencyProperty.Register(nameof(DropDownContextMenu), typeof(ContextMenu), typeof(DropDownControlArea),
+				new FrameworkPropertyMetadata(null));
+
+		/// <summary>Gets/sets the drop down menu to show up when user click on an anchorable menu pin.</summary>
+		[Bindable(true), Description("Gets/sets the drop down menu to show up when user click on an anchorable menu pin."), Category("Menu")]
+		public ContextMenu DropDownContextMenu
+		{
+			get => (ContextMenu)GetValue(DropDownContextMenuProperty);
+			set => SetValue(DropDownContextMenuProperty, value);
+		}
+
+		#endregion DropDownContextMenu
+
+		#region DropDownContextMenuDataContext
+
+		/// <summary><see cref="DropDownContextMenuDataContext"/> dependency property. </summary>
+		public static readonly DependencyProperty DropDownContextMenuDataContextProperty = DependencyProperty.Register(nameof(DropDownContextMenuDataContext), typeof(object), typeof(DropDownControlArea),
+				new FrameworkPropertyMetadata(null));
+
+		/// <summary>Gets/sets the DataContext to set for the DropDownContext menu property.</summary>
+		[Bindable(true), Description("Gets/sets the DataContext to set for the DropDownContext menu property."), Category("Menu")]
+		public object DropDownContextMenuDataContext
+		{
+			get => (object)GetValue(DropDownContextMenuDataContextProperty);
+			set => SetValue(DropDownContextMenuDataContextProperty, value);
+		}
+
+		#endregion DropDownContextMenuDataContext
+
+		#endregion Properties
 	}
 }

@@ -42,6 +42,7 @@ namespace AvalonDock
 	public class DockingManager : Control, IOverlayWindowHost//, ILogicalChildrenContainer
 	{
 		#region fields
+
 		// ShortCut to current AvalonDock theme if OnThemeChanged() is invoked with DictionaryTheme instance
 		// in e.OldValue and e.NewValue of the passed event
 		private ResourceDictionary currentThemeResourceDictionary;

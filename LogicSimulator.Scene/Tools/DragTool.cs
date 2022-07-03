@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using System.Windows;
 using LogicSimulator.Scene.Components;
 using LogicSimulator.Scene.ExtensionMethods;
 using LogicSimulator.Scene.SceneObjects.Base;
@@ -20,7 +19,7 @@ public class DragTool : BaseTool
     protected override void OnActivated(Scene2D scene)
     {
         _objectsUnderCursor = scene.GetTool<SelectionTool>().ObjectUnderCursor.ToList();
-        _snap = scene.GetComponent<GridComponent>().CellSize;
+        _snap = scene.GetComponent<GridRenderingComponent>().CellSize;
     }
 
     public override void MouseLeftButtonDragged(Scene2D scene, Vector2 pos)

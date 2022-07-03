@@ -25,8 +25,6 @@ namespace Microsoft.Windows.Shell
 	[SuppressMessage("Microsoft.Design", "CA1001:TypesThatOwnDisposableFieldsShouldBeDisposable")]
 	public class SystemParameters2 : INotifyPropertyChanged
 	{
-		private delegate void _SystemMetricUpdate(IntPtr wParam, IntPtr lParam);
-
 		[ThreadStatic]
 		private static readonly SystemParameters2 _threadLocalSingleton;
 
@@ -46,6 +44,209 @@ namespace Microsoft.Windows.Shell
 		private Rect _captionButtonLocation;
 
 		private readonly Dictionary<WM, List<_SystemMetricUpdate>> _UpdateTable;
+
+		/// <summary>
+		/// Private constructor.  The public way to access this class is through the static Current property.
+		/// </summary>
+		private SystemParameters2()
+		{
+			// This window gets used for calculations about standard caption button locations
+			// so it has WS_OVERLAPPEDWINDOW as a style to give it normal caption buttons.
+			// This window may be shown during calculations of caption bar information, so create it at a location that's likely offscreen.
+			_messageHwnd = new MessageWindow((CS)0, WS.OVERLAPPEDWINDOW | WS.DISABLED, (WS_EX)0, new Rect(-16000, -16000, 100, 100), "", _WndProc);
+			_messageHwnd.Dispatcher.ShutdownStarted += (sender, e) => Utility.SafeDispose(ref _messageHwnd);
+
+			// Fixup the default values of the DPs.
+			_InitializeIsGlassEnabled();
+			_InitializeGlassColor();
+			_InitializeCaptionHeight();
+			_InitializeWindowNonClientFrameThickness();
+			_InitializeWindowResizeBorderThickness();
+			_InitializeCaptionButtonLocation();
+			_InitializeSmallIconSize();
+			_InitializeHighContrast();
+			_InitializeThemeInfo();
+			// WindowCornerRadius isn't exposed by true system parameters, so it requires the theme to be initialized first.
+			_InitializeWindowCornerRadius();
+
+			_UpdateTable = new Dictionary<WM, List<_SystemMetricUpdate>>
+			{
+				{ WM.THEMECHANGED,
+					new List<_SystemMetricUpdate>
+					{
+						_UpdateThemeInfo,
+						_UpdateHighContrast,
+						_UpdateWindowCornerRadius,
+						_UpdateCaptionButtonLocation, } },
+				{ WM.SETTINGCHANGE,
+					new List<_SystemMetricUpdate>
+					{
+						_UpdateCaptionHeight,
+						_UpdateWindowResizeBorderThickness,
+						_UpdateSmallIconSize,
+						_UpdateHighContrast,
+						_UpdateWindowNonClientFrameThickness,
+						_UpdateCaptionButtonLocation, } },
+				{ WM.DWMNCRENDERINGCHANGED, new List<_SystemMetricUpdate> { _UpdateIsGlassEnabled } },
+				{ WM.DWMCOMPOSITIONCHANGED, new List<_SystemMetricUpdate> { _UpdateIsGlassEnabled } },
+				{ WM.DWMCOLORIZATIONCOLORCHANGED, new List<_SystemMetricUpdate> { _UpdateGlassColor } },
+			};
+		}
+
+		private delegate void _SystemMetricUpdate(IntPtr wParam, IntPtr lParam);
+
+		public static SystemParameters2 Current => _threadLocalSingleton ?? new SystemParameters2();
+
+		public bool IsGlassEnabled
+		{
+			// return _isGlassEnabled;
+			// It turns out there may be some lag between someone asking this
+			// and the window getting updated.  It's not too expensive, just always do the check.
+			get => NativeMethods.DwmIsCompositionEnabled();
+			private set
+			{
+				if (value == _isGlassEnabled) return;
+				_isGlassEnabled = value;
+				_NotifyPropertyChanged(nameof(IsGlassEnabled));
+			}
+		}
+
+		public Color WindowGlassColor
+		{
+			get => _glassColor;
+			private set
+			{
+				if (value == _glassColor) return;
+				_glassColor = value;
+				_NotifyPropertyChanged(nameof(WindowGlassColor));
+			}
+		}
+
+		public SolidColorBrush WindowGlassBrush
+		{
+			get => _glassColorBrush;
+			private set
+			{
+				Assert.IsNotNull(value);
+				Assert.IsTrue(value.IsFrozen);
+				if (_glassColorBrush != null && value.Color == _glassColorBrush.Color) return;
+				_glassColorBrush = value;
+				_NotifyPropertyChanged(nameof(WindowGlassBrush));
+			}
+		}
+
+		public Thickness WindowResizeBorderThickness
+		{
+			get => _windowResizeBorderThickness;
+			private set
+			{
+				if (value == _windowResizeBorderThickness) return;
+				_windowResizeBorderThickness = value;
+				_NotifyPropertyChanged(nameof(WindowResizeBorderThickness));
+			}
+		}
+
+		public Thickness WindowNonClientFrameThickness
+		{
+			get => _windowNonClientFrameThickness;
+			private set
+			{
+				if (value == _windowNonClientFrameThickness) return;
+				_windowNonClientFrameThickness = value;
+				_NotifyPropertyChanged(nameof(WindowNonClientFrameThickness));
+			}
+		}
+
+		public double WindowCaptionHeight
+		{
+			get => _captionHeight;
+			private set
+			{
+				if (value == _captionHeight) return;
+				_captionHeight = value;
+				_NotifyPropertyChanged(nameof(WindowCaptionHeight));
+			}
+		}
+
+		public Size SmallIconSize
+		{
+			get => new Size(_smallIconSize.Width, _smallIconSize.Height);
+			private set
+			{
+				if (value == _smallIconSize) return;
+				_smallIconSize = value;
+				_NotifyPropertyChanged(nameof(SmallIconSize));
+			}
+		}
+
+		[SuppressMessage("Microsoft.Naming", "CA1709:IdentifiersShouldBeCasedCorrectly", MessageId = "Ux")]
+		[SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", MessageId = "Ux")]
+		public string UxThemeName
+		{
+			get => _uxThemeName;
+			private set
+			{
+				if (value == _uxThemeName) return;
+				_uxThemeName = value;
+				_NotifyPropertyChanged(nameof(UxThemeName));
+			}
+		}
+
+		[SuppressMessage("Microsoft.Naming", "CA1709:IdentifiersShouldBeCasedCorrectly", MessageId = "Ux")]
+		[SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", MessageId = "Ux")]
+		public string UxThemeColor
+		{
+			get => _uxThemeColor;
+			private set
+			{
+				if (value == _uxThemeColor) return;
+				_uxThemeColor = value;
+				_NotifyPropertyChanged(nameof(UxThemeColor));
+			}
+		}
+
+		public bool HighContrast
+		{
+			get => _isHighContrast;
+			private set
+			{
+				if (value == _isHighContrast) return;
+				_isHighContrast = value;
+				_NotifyPropertyChanged(nameof(HighContrast));
+			}
+		}
+
+		public CornerRadius WindowCornerRadius
+		{
+			get => _windowCornerRadius;
+			private set
+			{
+				if (value == _windowCornerRadius) return;
+				_windowCornerRadius = value;
+				_NotifyPropertyChanged(nameof(WindowCornerRadius));
+			}
+		}
+
+		public Rect WindowCaptionButtonsLocation
+		{
+			get => _captionButtonLocation;
+			private set
+			{
+				if (value == _captionButtonLocation) return;
+				_captionButtonLocation = value;
+				_NotifyPropertyChanged(nameof(WindowCaptionButtonsLocation));
+			}
+		}
+
+		private IntPtr _WndProc(IntPtr hwnd, WM msg, IntPtr wParam, IntPtr lParam)
+		{
+			// Don't do this if called within the SystemParameters2 constructor
+			if (_UpdateTable == null) return NativeMethods.DefWindowProc(hwnd, msg, wParam, lParam);
+			if (!_UpdateTable.TryGetValue(msg, out var handlers)) return NativeMethods.DefWindowProc(hwnd, msg, wParam, lParam);
+			Assert.IsNotNull(handlers);
+			foreach (var handler in handlers) handler(wParam, lParam);
+			return NativeMethods.DefWindowProc(hwnd, msg, wParam, lParam);
+		}
 
 		#region Initialization and Update Methods
 
@@ -284,207 +485,6 @@ namespace Microsoft.Windows.Shell
 		}
 
 		#endregion Initialization and Update Methods
-
-		/// <summary>
-		/// Private constructor.  The public way to access this class is through the static Current property.
-		/// </summary>
-		private SystemParameters2()
-		{
-			// This window gets used for calculations about standard caption button locations
-			// so it has WS_OVERLAPPEDWINDOW as a style to give it normal caption buttons.
-			// This window may be shown during calculations of caption bar information, so create it at a location that's likely offscreen.
-			_messageHwnd = new MessageWindow((CS)0, WS.OVERLAPPEDWINDOW | WS.DISABLED, (WS_EX)0, new Rect(-16000, -16000, 100, 100), "", _WndProc);
-			_messageHwnd.Dispatcher.ShutdownStarted += (sender, e) => Utility.SafeDispose(ref _messageHwnd);
-
-			// Fixup the default values of the DPs.
-			_InitializeIsGlassEnabled();
-			_InitializeGlassColor();
-			_InitializeCaptionHeight();
-			_InitializeWindowNonClientFrameThickness();
-			_InitializeWindowResizeBorderThickness();
-			_InitializeCaptionButtonLocation();
-			_InitializeSmallIconSize();
-			_InitializeHighContrast();
-			_InitializeThemeInfo();
-			// WindowCornerRadius isn't exposed by true system parameters, so it requires the theme to be initialized first.
-			_InitializeWindowCornerRadius();
-
-			_UpdateTable = new Dictionary<WM, List<_SystemMetricUpdate>>
-			{
-				{ WM.THEMECHANGED,
-					new List<_SystemMetricUpdate>
-					{
-						_UpdateThemeInfo,
-						_UpdateHighContrast,
-						_UpdateWindowCornerRadius,
-						_UpdateCaptionButtonLocation, } },
-				{ WM.SETTINGCHANGE,
-					new List<_SystemMetricUpdate>
-					{
-						_UpdateCaptionHeight,
-						_UpdateWindowResizeBorderThickness,
-						_UpdateSmallIconSize,
-						_UpdateHighContrast,
-						_UpdateWindowNonClientFrameThickness,
-						_UpdateCaptionButtonLocation, } },
-				{ WM.DWMNCRENDERINGCHANGED, new List<_SystemMetricUpdate> { _UpdateIsGlassEnabled } },
-				{ WM.DWMCOMPOSITIONCHANGED, new List<_SystemMetricUpdate> { _UpdateIsGlassEnabled } },
-				{ WM.DWMCOLORIZATIONCOLORCHANGED, new List<_SystemMetricUpdate> { _UpdateGlassColor } },
-			};
-		}
-
-		public static SystemParameters2 Current => _threadLocalSingleton ?? new SystemParameters2();
-
-		private IntPtr _WndProc(IntPtr hwnd, WM msg, IntPtr wParam, IntPtr lParam)
-		{
-			// Don't do this if called within the SystemParameters2 constructor
-			if (_UpdateTable == null) return NativeMethods.DefWindowProc(hwnd, msg, wParam, lParam);
-			if (!_UpdateTable.TryGetValue(msg, out var handlers)) return NativeMethods.DefWindowProc(hwnd, msg, wParam, lParam);
-			Assert.IsNotNull(handlers);
-			foreach (var handler in handlers) handler(wParam, lParam);
-			return NativeMethods.DefWindowProc(hwnd, msg, wParam, lParam);
-		}
-
-		public bool IsGlassEnabled
-		{
-			// return _isGlassEnabled;
-			// It turns out there may be some lag between someone asking this
-			// and the window getting updated.  It's not too expensive, just always do the check.
-			get => NativeMethods.DwmIsCompositionEnabled();
-			private set
-			{
-				if (value == _isGlassEnabled) return;
-				_isGlassEnabled = value;
-				_NotifyPropertyChanged(nameof(IsGlassEnabled));
-			}
-		}
-
-		public Color WindowGlassColor
-		{
-			get => _glassColor;
-			private set
-			{
-				if (value == _glassColor) return;
-				_glassColor = value;
-				_NotifyPropertyChanged(nameof(WindowGlassColor));
-			}
-		}
-
-		public SolidColorBrush WindowGlassBrush
-		{
-			get => _glassColorBrush;
-			private set
-			{
-				Assert.IsNotNull(value);
-				Assert.IsTrue(value.IsFrozen);
-				if (_glassColorBrush != null && value.Color == _glassColorBrush.Color) return;
-				_glassColorBrush = value;
-				_NotifyPropertyChanged(nameof(WindowGlassBrush));
-			}
-		}
-
-		public Thickness WindowResizeBorderThickness
-		{
-			get => _windowResizeBorderThickness;
-			private set
-			{
-				if (value == _windowResizeBorderThickness) return;
-				_windowResizeBorderThickness = value;
-				_NotifyPropertyChanged(nameof(WindowResizeBorderThickness));
-			}
-		}
-
-		public Thickness WindowNonClientFrameThickness
-		{
-			get => _windowNonClientFrameThickness;
-			private set
-			{
-				if (value == _windowNonClientFrameThickness) return;
-				_windowNonClientFrameThickness = value;
-				_NotifyPropertyChanged(nameof(WindowNonClientFrameThickness));
-			}
-		}
-
-		public double WindowCaptionHeight
-		{
-			get => _captionHeight;
-			private set
-			{
-				if (value == _captionHeight) return;
-				_captionHeight = value;
-				_NotifyPropertyChanged(nameof(WindowCaptionHeight));
-			}
-		}
-
-		public Size SmallIconSize
-		{
-			get => new Size(_smallIconSize.Width, _smallIconSize.Height);
-			private set
-			{
-				if (value == _smallIconSize) return;
-				_smallIconSize = value;
-				_NotifyPropertyChanged(nameof(SmallIconSize));
-			}
-		}
-
-		[SuppressMessage("Microsoft.Naming", "CA1709:IdentifiersShouldBeCasedCorrectly", MessageId = "Ux")]
-		[SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", MessageId = "Ux")]
-		public string UxThemeName
-		{
-			get => _uxThemeName;
-			private set
-			{
-				if (value == _uxThemeName) return;
-				_uxThemeName = value;
-				_NotifyPropertyChanged(nameof(UxThemeName));
-			}
-		}
-
-		[SuppressMessage("Microsoft.Naming", "CA1709:IdentifiersShouldBeCasedCorrectly", MessageId = "Ux")]
-		[SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", MessageId = "Ux")]
-		public string UxThemeColor
-		{
-			get => _uxThemeColor;
-			private set
-			{
-				if (value == _uxThemeColor) return;
-				_uxThemeColor = value;
-				_NotifyPropertyChanged(nameof(UxThemeColor));
-			}
-		}
-
-		public bool HighContrast
-		{
-			get => _isHighContrast;
-			private set
-			{
-				if (value == _isHighContrast) return;
-				_isHighContrast = value;
-				_NotifyPropertyChanged(nameof(HighContrast));
-			}
-		}
-
-		public CornerRadius WindowCornerRadius
-		{
-			get => _windowCornerRadius;
-			private set
-			{
-				if (value == _windowCornerRadius) return;
-				_windowCornerRadius = value;
-				_NotifyPropertyChanged(nameof(WindowCornerRadius));
-			}
-		}
-
-		public Rect WindowCaptionButtonsLocation
-		{
-			get => _captionButtonLocation;
-			private set
-			{
-				if (value == _captionButtonLocation) return;
-				_captionButtonLocation = value;
-				_NotifyPropertyChanged(nameof(WindowCaptionButtonsLocation));
-			}
-		}
 
 		#region INotifyPropertyChanged Members
 

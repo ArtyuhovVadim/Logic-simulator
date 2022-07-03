@@ -27,45 +27,18 @@ namespace Microsoft.Windows.Shell
 
 	internal class WindowChromeWorker : DependencyObject
 	{
-		// Delegate signature used for Dispatcher.BeginInvoke.
-		private delegate void _Action();
+		public static readonly DependencyProperty WindowChromeWorkerProperty = DependencyProperty.RegisterAttached(nameof(WindowChromeWorker), typeof(WindowChromeWorker), typeof(WindowChromeWorker),
+			new PropertyMetadata(null, _OnChromeWorkerChanged));
 
-		#region fields
-
-		private const SWP _SwpFlags = SWP.FRAMECHANGED | SWP.NOSIZE | SWP.NOMOVE | SWP.NOZORDER | SWP.NOOWNERZORDER | SWP.NOACTIVATE;
-
-		private readonly List<HANDLE_MESSAGE> _messageTable;
-
-		/// <summary>The Window that's chrome is being modified.</summary>
-		private Window _window;
-
-		/// <summary>Underlying HWND for the _window.</summary>
-		private IntPtr _hwnd;
-
-		private HwndSource _hwndSource = null;
-		private bool _isHooked = false;
-
-		// These fields are for tracking workarounds for WPF 3.5SP1 behaviors.
-		private bool _isFixedUp = false;
-
-		private bool _isUserResizing = false;
-		private bool _hasUserMovedWindow = false;
-		private Point _windowPosAtStartOfUserMove = default;
-
-		// Field to track attempts to force off Device Bitmaps on Win7.
-		private int _blackGlassFixupAttemptCount;
-
-		/// <summary>Object that describes the current modifications being made to the chrome.</summary>
-		private WindowChrome _chromeInfo;
-
-		// Keep track of this so we can detect when we need to apply changes.  Tracking these separately
-		// as I've seen using just one cause things to get enough out of sync that occasionally the caption will redraw.
-		private WindowState _lastRoundingState;
-
-		private WindowState _lastMenuState;
-		private bool _isGlassEnabled;
-
-		#endregion fields
+		/// <summary>
+		/// Matrix of the HT values to return when responding to NC window messages.
+		/// </summary>
+		[SuppressMessage("Microsoft.Performance", "CA1814:PreferJaggedArraysOverMultidimensional", MessageId = "Member")]
+		private static readonly HT[,] _HitTestBorders = {
+			{ HT.TOPLEFT,    HT.TOP,     HT.TOPRIGHT    },
+			{ HT.LEFT,       HT.CLIENT,  HT.RIGHT       },
+			{ HT.BOTTOMLEFT, HT.BOTTOM,  HT.BOTTOMRIGHT },
+		};
 
 		public WindowChromeWorker()
 		{
@@ -94,6 +67,29 @@ namespace Microsoft.Windows.Shell
 			}
 		}
 
+		// Delegate signature used for Dispatcher.BeginInvoke.
+		private delegate void _Action();
+
+		// Windows tries hard to hide this state from applications.
+		// Generally you can tell that the window is in a docked position because the restore bounds from GetWindowPlacement
+		// don't match the current window location and it's not in a maximized or minimized state.
+		// Because this isn't doced or supported, it's also not incredibly consistent.  Sometimes some things get updated in
+		// different orders, so this isn't absolutely reliable.
+		private bool _IsWindowDocked
+		{
+			get
+			{
+				// We're only detecting this state to work around .Net 3.5 issues.
+				// This logic won't work correctly when those issues are fixed.
+				Assert.IsTrue(Utility.IsPresentationFrameworkVersionLessThan4);
+				if (_window.WindowState != WindowState.Normal) return false;
+				var adjustedOffset = _GetAdjustedWindowRect(new RECT { Bottom = 100, Right = 100 });
+				var windowTopLeft = new Point(_window.Left, _window.Top);
+				windowTopLeft -= (Vector)DpiHelper.DevicePixelsToLogical(new Point(adjustedOffset.Left, adjustedOffset.Top));
+				return _window.RestoreBounds.Location != windowTopLeft;
+			}
+		}
+
 		public void SetWindowChrome(WindowChrome newChrome)
 		{
 			VerifyAccess();
@@ -107,10 +103,21 @@ namespace Microsoft.Windows.Shell
 			_ApplyNewCustomChrome();
 		}
 
-		private void _OnChromePropertyChangedThatRequiresRepaint(object sender, EventArgs e) => _UpdateFrameState(true);
+		[SuppressMessage("Microsoft.Design", "CA1011:ConsiderPassingBaseTypesAsParameters")]
+		public static WindowChromeWorker GetWindowChromeWorker(Window window)
+		{
+			Verify.IsNotNull(window, nameof(window));
+			return (WindowChromeWorker)window.GetValue(WindowChromeWorkerProperty);
+		}
 
-		public static readonly DependencyProperty WindowChromeWorkerProperty = DependencyProperty.RegisterAttached(nameof(WindowChromeWorker), typeof(WindowChromeWorker), typeof(WindowChromeWorker),
-			new PropertyMetadata(null, _OnChromeWorkerChanged));
+		[SuppressMessage("Microsoft.Design", "CA1011:ConsiderPassingBaseTypesAsParameters")]
+		public static void SetWindowChromeWorker(Window window, WindowChromeWorker chrome)
+		{
+			Verify.IsNotNull(window, nameof(window));
+			window.SetValue(WindowChromeWorkerProperty, chrome);
+		}
+
+		private void _OnChromePropertyChangedThatRequiresRepaint(object sender, EventArgs e) => _UpdateFrameState(true);
 
 		private static void _OnChromeWorkerChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
 		{
@@ -173,20 +180,6 @@ namespace Microsoft.Windows.Shell
 			}
 			if (_chromeInfo != null) _chromeInfo.PropertyChangedThatRequiresRepaint -= _OnChromePropertyChangedThatRequiresRepaint;
 			_RestoreStandardChromeState(true);
-		}
-
-		[SuppressMessage("Microsoft.Design", "CA1011:ConsiderPassingBaseTypesAsParameters")]
-		public static WindowChromeWorker GetWindowChromeWorker(Window window)
-		{
-			Verify.IsNotNull(window, nameof(window));
-			return (WindowChromeWorker)window.GetValue(WindowChromeWorkerProperty);
-		}
-
-		[SuppressMessage("Microsoft.Design", "CA1011:ConsiderPassingBaseTypesAsParameters")]
-		public static void SetWindowChromeWorker(Window window, WindowChromeWorker chrome)
-		{
-			Verify.IsNotNull(window, nameof(window));
-			window.SetValue(WindowChromeWorkerProperty, chrome);
 		}
 
 		private void _OnWindowPropertyChangedThatRequiresTemplateFixup(object sender, EventArgs e)
@@ -347,249 +340,6 @@ namespace Microsoft.Windows.Shell
 			var exstyle = (WS_EX)NativeMethods.GetWindowLongPtr(_hwnd, GWL.EXSTYLE);
 			return NativeMethods.AdjustWindowRectEx(rcWindow, style, false, exstyle);
 		}
-
-		// Windows tries hard to hide this state from applications.
-		// Generally you can tell that the window is in a docked position because the restore bounds from GetWindowPlacement
-		// don't match the current window location and it's not in a maximized or minimized state.
-		// Because this isn't doced or supported, it's also not incredibly consistent.  Sometimes some things get updated in
-		// different orders, so this isn't absolutely reliable.
-		private bool _IsWindowDocked
-		{
-			get
-			{
-				// We're only detecting this state to work around .Net 3.5 issues.
-				// This logic won't work correctly when those issues are fixed.
-				Assert.IsTrue(Utility.IsPresentationFrameworkVersionLessThan4);
-				if (_window.WindowState != WindowState.Normal) return false;
-				var adjustedOffset = _GetAdjustedWindowRect(new RECT { Bottom = 100, Right = 100 });
-				var windowTopLeft = new Point(_window.Left, _window.Top);
-				windowTopLeft -= (Vector)DpiHelper.DevicePixelsToLogical(new Point(adjustedOffset.Left, adjustedOffset.Top));
-				return _window.RestoreBounds.Location != windowTopLeft;
-			}
-		}
-
-		#region WindowProc and Message Handlers
-
-		private IntPtr _WndProc(IntPtr hwnd, int msg, IntPtr wParam, IntPtr lParam, ref bool handled)
-		{
-			// Only expecting messages for our cached HWND.
-			Assert.AreEqual(hwnd, _hwnd);
-
-			var message = (WM)msg;
-			foreach (var handlePair in _messageTable)
-				if (handlePair.Key == message)
-					return handlePair.Value(message, wParam, lParam, out handled);
-			return IntPtr.Zero;
-		}
-
-		private IntPtr _HandleSetTextOrIcon(WM uMsg, IntPtr wParam, IntPtr lParam, out bool handled)
-		{
-			var modified = _ModifyStyle(WS.VISIBLE, 0);
-
-			// Setting the caption text and icon cause Windows to redraw the caption.
-			// Letting the default WndProc handle the message without the WS_VISIBLE
-			// style applied bypasses the redraw.
-			var lRet = NativeMethods.DefWindowProc(_hwnd, uMsg, wParam, lParam);
-
-			// Put back the style we removed.
-			if (modified) _ModifyStyle(0, WS.VISIBLE);
-			handled = true;
-			return lRet;
-		}
-
-		private IntPtr _HandleNCActivate(WM uMsg, IntPtr wParam, IntPtr lParam, out bool handled)
-		{
-			// Despite MSDN's documentation of lParam not being used,
-			// calling DefWindowProc with lParam set to -1 causes Windows not to draw over the caption.
-
-			// Directly call DefWindowProc with a custom parameter
-			// which bypasses any other handling of the message.
-			var lRet = NativeMethods.DefWindowProc(_hwnd, WM.NCACTIVATE, wParam, new IntPtr(-1));
-			handled = true;
-			return lRet;
-		}
-
-		private IntPtr _HandleNCCalcSize(WM uMsg, IntPtr wParam, IntPtr lParam, out bool handled)
-		{
-			// lParam is an [in, out] that can be either a RECT* (wParam == FALSE) or an NCCALCSIZE_PARAMS*.
-			// Since the first field of NCCALCSIZE_PARAMS is a RECT and is the only field we care about
-			// we can unconditionally treat it as a RECT.
-
-			// Since we always want the client size to equal the window size, we can unconditionally handle it
-			// without having to modify the parameters.
-			handled = true;
-			if (wParam != IntPtr.Zero)
-			{
-				var client = (RECT)Marshal.PtrToStructure(lParam, typeof(RECT));
-				client.Bottom++;
-				Marshal.StructureToPtr(client, lParam, false);
-				return IntPtr.Zero;
-			}
-			return new IntPtr((int)WVR.REDRAW);
-		}
-
-		private IntPtr _HandleNCHitTest(WM uMsg, IntPtr wParam, IntPtr lParam, out bool handled)
-		{
-			var lRet = IntPtr.Zero;
-			handled = false;
-
-			// Give DWM a chance at this first.
-			if (Utility.IsOSVistaOrNewer && _chromeInfo.GlassFrameThickness != default && _isGlassEnabled)
-			{
-				// If we're on Vista, give the DWM a chance to handle the message first.
-				handled = NativeMethods.DwmDefWindowProc(_hwnd, uMsg, wParam, lParam, out lRet);
-			}
-
-			// Handle letting the system know if we consider the mouse to be in our effective non-client area.
-			// If DWM already handled this by way of DwmDefWindowProc, then respect their call.
-			if (lRet != IntPtr.Zero) return lRet;
-			var mousePosScreen = new Point(Utility.GET_X_LPARAM(lParam), Utility.GET_Y_LPARAM(lParam));
-			var windowPosition = _GetWindowRect();
-			var ht = _HitTestNca(DpiHelper.DeviceRectToLogical(windowPosition), DpiHelper.DevicePixelsToLogical(mousePosScreen));
-			// Don't blindly respect HTCAPTION.
-			// We want UIElements in the caption area to be actionable so run through a hittest first.
-			if (ht != HT.CLIENT)
-			{
-				var mousePosWindow = mousePosScreen;
-				mousePosWindow.Offset(-windowPosition.X, -windowPosition.Y);
-				mousePosWindow = DpiHelper.DevicePixelsToLogical(mousePosWindow);
-				var inputElement = _window.InputHitTest(mousePosWindow);
-				if (inputElement != null && WindowChrome.GetIsHitTestVisibleInChrome(inputElement)) ht = HT.CLIENT;
-			}
-			handled = true;
-			lRet = new IntPtr((int)ht);
-			return lRet;
-		}
-
-		private IntPtr _HandleNCRButtonUp(WM uMsg, IntPtr wParam, IntPtr lParam, out bool handled)
-		{
-			// Emulate the system behavior of clicking the right mouse button over the caption area
-			// to bring up the system menu.
-			if (HT.CAPTION == (HT)wParam.ToInt32())
-			{
-				if (_window.ContextMenu != null)
-				{
-					_window.ContextMenu.Placement = PlacementMode.MousePoint;
-					_window.ContextMenu.IsOpen = true;
-				}
-				else if (WindowChrome.GetWindowChrome(_window).ShowSystemMenu)
-					SystemCommands.ShowSystemMenuPhysicalCoordinates(_window, new Point(Utility.GET_X_LPARAM(lParam), Utility.GET_Y_LPARAM(lParam)));
-			}
-			handled = false;
-			return IntPtr.Zero;
-		}
-
-		private IntPtr _HandleSize(WM uMsg, IntPtr wParam, IntPtr lParam, out bool handled)
-		{
-			const int SIZE_MAXIMIZED = 2;
-
-			// Force when maximized.
-			// We can tell what's happening right now, but the Window doesn't yet know it's
-			// maximized.  Not forcing this update will eventually cause the
-			// default caption to be drawn.
-			WindowState? state = null;
-			if (wParam.ToInt32() == SIZE_MAXIMIZED) state = WindowState.Maximized;
-			_UpdateSystemMenu(state);
-
-			// Still let the default WndProc handle this.
-			handled = false;
-			return IntPtr.Zero;
-		}
-
-		private IntPtr _HandleWindowPosChanged(WM uMsg, IntPtr wParam, IntPtr lParam, out bool handled)
-		{
-			// http://blogs.msdn.com/oldnewthing/archive/2008/01/15/7113860.aspx
-			// The WM_WINDOWPOSCHANGED message is sent at the end of the window
-			// state change process. It sort of combines the other state change
-			// notifications, WM_MOVE, WM_SIZE, and WM_SHOWWINDOW. But it doesn't
-			// suffer from the same limitations as WM_SHOWWINDOW, so you can
-			// reliably use it to react to the window being shown or hidden.
-
-			_UpdateSystemMenu(null);
-
-			if (!_isGlassEnabled)
-			{
-				Assert.IsNotDefault(lParam);
-				var wp = (WINDOWPOS)Marshal.PtrToStructure(lParam, typeof(WINDOWPOS));
-				_SetRoundingRegion(wp);
-			}
-
-			// Still want to pass this to DefWndProc
-			handled = false;
-			return IntPtr.Zero;
-		}
-
-		private IntPtr _HandleDwmCompositionChanged(WM uMsg, IntPtr wParam, IntPtr lParam, out bool handled)
-		{
-			_UpdateFrameState(false);
-			handled = false;
-			return IntPtr.Zero;
-		}
-
-		private IntPtr _HandleSettingChange(WM uMsg, IntPtr wParam, IntPtr lParam, out bool handled)
-		{
-			// There are several settings that can cause fixups for the template to become invalid when changed.
-			// These shouldn't be required on the v4 framework.
-			Assert.IsTrue(Utility.IsPresentationFrameworkVersionLessThan4);
-			_FixupFrameworkIssues();
-			handled = false;
-			return IntPtr.Zero;
-		}
-
-		private IntPtr _HandleEnterSizeMove(WM uMsg, IntPtr wParam, IntPtr lParam, out bool handled)
-		{
-			// This is only intercepted to deal with bugs in Window in .Net 3.5 and below.
-			Assert.IsTrue(Utility.IsPresentationFrameworkVersionLessThan4);
-
-			_isUserResizing = true;
-
-			// On Win7 if the user is dragging the window out of the maximized state then we don't want to use that location
-			// as a restore point.
-			Assert.Implies(_window.WindowState == WindowState.Maximized, Utility.IsOSWindows7OrNewer);
-			if (_window.WindowState != WindowState.Maximized)
-			{
-				// Check for the docked window case.  The window can still be restored when it's in this position so
-				// try to account for that and not update the start position.
-				if (!_IsWindowDocked)
-				{
-					_windowPosAtStartOfUserMove = new Point(_window.Left, _window.Top);
-				}
-				// Realistically we also don't want to update the start position when moving from one docked state to another (or to and from maximized),
-				// but it's tricky to detect and this is already a workaround for a bug that's fixed in newer versions of the framework.
-				// Not going to try to handle all cases.
-			}
-
-			handled = false;
-			return IntPtr.Zero;
-		}
-
-		private IntPtr _HandleExitSizeMove(WM uMsg, IntPtr wParam, IntPtr lParam, out bool handled)
-		{
-			// This is only intercepted to deal with bugs in Window in .Net 3.5 and below.
-			Assert.IsTrue(Utility.IsPresentationFrameworkVersionLessThan4);
-			_isUserResizing = false;
-			// On Win7 the user can change the Window's state by dragging the window to the top of the monitor.
-			// If they did that, then we need to try to update the restore bounds or else WPF will put the window at the maximized location (e.g. (-8,-8)).
-			if (_window.WindowState == WindowState.Maximized)
-			{
-				Assert.IsTrue(Utility.IsOSWindows7OrNewer);
-				_window.Top = _windowPosAtStartOfUserMove.Y;
-				_window.Left = _windowPosAtStartOfUserMove.X;
-			}
-			handled = false;
-			return IntPtr.Zero;
-		}
-
-		private IntPtr _HandleMove(WM uMsg, IntPtr wParam, IntPtr lParam, out bool handled)
-		{
-			// This is only intercepted to deal with bugs in Window in .Net 3.5 and below.
-			Assert.IsTrue(Utility.IsPresentationFrameworkVersionLessThan4);
-			if (_isUserResizing) _hasUserMovedWindow = true;
-			handled = false;
-			return IntPtr.Zero;
-		}
-
-		#endregion WindowProc and Message Handlers
 
 		/// <summary>Add and remove a native WindowStyle from the HWND.</summary>
 		/// <param name="removeStyle">The styles to be removed.  These can be bitwise combined.</param>
@@ -919,16 +669,6 @@ namespace Microsoft.Windows.Shell
 			}
 		}
 
-		/// <summary>
-		/// Matrix of the HT values to return when responding to NC window messages.
-		/// </summary>
-		[SuppressMessage("Microsoft.Performance", "CA1814:PreferJaggedArraysOverMultidimensional", MessageId = "Member")]
-		private static readonly HT[,] _HitTestBorders = {
-			{ HT.TOPLEFT,    HT.TOP,     HT.TOPRIGHT    },
-			{ HT.LEFT,       HT.CLIENT,  HT.RIGHT       },
-			{ HT.BOTTOMLEFT, HT.BOTTOM,  HT.BOTTOMRIGHT },
-		};
-
 		private HT _HitTestNca(Rect windowPosition, Point mousePosition)
 		{
 			// Determine if hit test is for resizing, default middle (1,1).
@@ -958,6 +698,266 @@ namespace Microsoft.Windows.Shell
 			if (ht == HT.TOP && !onResizeBorder) ht = HT.CAPTION;
 			return ht;
 		}
+
+		#region fields
+
+		private const SWP _SwpFlags = SWP.FRAMECHANGED | SWP.NOSIZE | SWP.NOMOVE | SWP.NOZORDER | SWP.NOOWNERZORDER | SWP.NOACTIVATE;
+
+		private readonly List<HANDLE_MESSAGE> _messageTable;
+
+		/// <summary>The Window that's chrome is being modified.</summary>
+		private Window _window;
+
+		/// <summary>Underlying HWND for the _window.</summary>
+		private IntPtr _hwnd;
+
+		private HwndSource _hwndSource = null;
+		private bool _isHooked = false;
+
+		// These fields are for tracking workarounds for WPF 3.5SP1 behaviors.
+		private bool _isFixedUp = false;
+
+		private bool _isUserResizing = false;
+		private bool _hasUserMovedWindow = false;
+		private Point _windowPosAtStartOfUserMove = default;
+
+		// Field to track attempts to force off Device Bitmaps on Win7.
+		private int _blackGlassFixupAttemptCount;
+
+		/// <summary>Object that describes the current modifications being made to the chrome.</summary>
+		private WindowChrome _chromeInfo;
+
+		// Keep track of this so we can detect when we need to apply changes.  Tracking these separately
+		// as I've seen using just one cause things to get enough out of sync that occasionally the caption will redraw.
+		private WindowState _lastRoundingState;
+
+		private WindowState _lastMenuState;
+		private bool _isGlassEnabled;
+
+		#endregion fields
+
+		#region WindowProc and Message Handlers
+
+		private IntPtr _WndProc(IntPtr hwnd, int msg, IntPtr wParam, IntPtr lParam, ref bool handled)
+		{
+			// Only expecting messages for our cached HWND.
+			Assert.AreEqual(hwnd, _hwnd);
+
+			var message = (WM)msg;
+			foreach (var handlePair in _messageTable)
+				if (handlePair.Key == message)
+					return handlePair.Value(message, wParam, lParam, out handled);
+			return IntPtr.Zero;
+		}
+
+		private IntPtr _HandleSetTextOrIcon(WM uMsg, IntPtr wParam, IntPtr lParam, out bool handled)
+		{
+			var modified = _ModifyStyle(WS.VISIBLE, 0);
+
+			// Setting the caption text and icon cause Windows to redraw the caption.
+			// Letting the default WndProc handle the message without the WS_VISIBLE
+			// style applied bypasses the redraw.
+			var lRet = NativeMethods.DefWindowProc(_hwnd, uMsg, wParam, lParam);
+
+			// Put back the style we removed.
+			if (modified) _ModifyStyle(0, WS.VISIBLE);
+			handled = true;
+			return lRet;
+		}
+
+		private IntPtr _HandleNCActivate(WM uMsg, IntPtr wParam, IntPtr lParam, out bool handled)
+		{
+			// Despite MSDN's documentation of lParam not being used,
+			// calling DefWindowProc with lParam set to -1 causes Windows not to draw over the caption.
+
+			// Directly call DefWindowProc with a custom parameter
+			// which bypasses any other handling of the message.
+			var lRet = NativeMethods.DefWindowProc(_hwnd, WM.NCACTIVATE, wParam, new IntPtr(-1));
+			handled = true;
+			return lRet;
+		}
+
+		private IntPtr _HandleNCCalcSize(WM uMsg, IntPtr wParam, IntPtr lParam, out bool handled)
+		{
+			// lParam is an [in, out] that can be either a RECT* (wParam == FALSE) or an NCCALCSIZE_PARAMS*.
+			// Since the first field of NCCALCSIZE_PARAMS is a RECT and is the only field we care about
+			// we can unconditionally treat it as a RECT.
+
+			// Since we always want the client size to equal the window size, we can unconditionally handle it
+			// without having to modify the parameters.
+			handled = true;
+			if (wParam != IntPtr.Zero)
+			{
+				var client = (RECT)Marshal.PtrToStructure(lParam, typeof(RECT));
+				client.Bottom++;
+				Marshal.StructureToPtr(client, lParam, false);
+				return IntPtr.Zero;
+			}
+			return new IntPtr((int)WVR.REDRAW);
+		}
+
+		private IntPtr _HandleNCHitTest(WM uMsg, IntPtr wParam, IntPtr lParam, out bool handled)
+		{
+			var lRet = IntPtr.Zero;
+			handled = false;
+
+			// Give DWM a chance at this first.
+			if (Utility.IsOSVistaOrNewer && _chromeInfo.GlassFrameThickness != default && _isGlassEnabled)
+			{
+				// If we're on Vista, give the DWM a chance to handle the message first.
+				handled = NativeMethods.DwmDefWindowProc(_hwnd, uMsg, wParam, lParam, out lRet);
+			}
+
+			// Handle letting the system know if we consider the mouse to be in our effective non-client area.
+			// If DWM already handled this by way of DwmDefWindowProc, then respect their call.
+			if (lRet != IntPtr.Zero) return lRet;
+			var mousePosScreen = new Point(Utility.GET_X_LPARAM(lParam), Utility.GET_Y_LPARAM(lParam));
+			var windowPosition = _GetWindowRect();
+			var ht = _HitTestNca(DpiHelper.DeviceRectToLogical(windowPosition), DpiHelper.DevicePixelsToLogical(mousePosScreen));
+			// Don't blindly respect HTCAPTION.
+			// We want UIElements in the caption area to be actionable so run through a hittest first.
+			if (ht != HT.CLIENT)
+			{
+				var mousePosWindow = mousePosScreen;
+				mousePosWindow.Offset(-windowPosition.X, -windowPosition.Y);
+				mousePosWindow = DpiHelper.DevicePixelsToLogical(mousePosWindow);
+				var inputElement = _window.InputHitTest(mousePosWindow);
+				if (inputElement != null && WindowChrome.GetIsHitTestVisibleInChrome(inputElement)) ht = HT.CLIENT;
+			}
+			handled = true;
+			lRet = new IntPtr((int)ht);
+			return lRet;
+		}
+
+		private IntPtr _HandleNCRButtonUp(WM uMsg, IntPtr wParam, IntPtr lParam, out bool handled)
+		{
+			// Emulate the system behavior of clicking the right mouse button over the caption area
+			// to bring up the system menu.
+			if (HT.CAPTION == (HT)wParam.ToInt32())
+			{
+				if (_window.ContextMenu != null)
+				{
+					_window.ContextMenu.Placement = PlacementMode.MousePoint;
+					_window.ContextMenu.IsOpen = true;
+				}
+				else if (WindowChrome.GetWindowChrome(_window).ShowSystemMenu)
+					SystemCommands.ShowSystemMenuPhysicalCoordinates(_window, new Point(Utility.GET_X_LPARAM(lParam), Utility.GET_Y_LPARAM(lParam)));
+			}
+			handled = false;
+			return IntPtr.Zero;
+		}
+
+		private IntPtr _HandleSize(WM uMsg, IntPtr wParam, IntPtr lParam, out bool handled)
+		{
+			const int SIZE_MAXIMIZED = 2;
+
+			// Force when maximized.
+			// We can tell what's happening right now, but the Window doesn't yet know it's
+			// maximized.  Not forcing this update will eventually cause the
+			// default caption to be drawn.
+			WindowState? state = null;
+			if (wParam.ToInt32() == SIZE_MAXIMIZED) state = WindowState.Maximized;
+			_UpdateSystemMenu(state);
+
+			// Still let the default WndProc handle this.
+			handled = false;
+			return IntPtr.Zero;
+		}
+
+		private IntPtr _HandleWindowPosChanged(WM uMsg, IntPtr wParam, IntPtr lParam, out bool handled)
+		{
+			// http://blogs.msdn.com/oldnewthing/archive/2008/01/15/7113860.aspx
+			// The WM_WINDOWPOSCHANGED message is sent at the end of the window
+			// state change process. It sort of combines the other state change
+			// notifications, WM_MOVE, WM_SIZE, and WM_SHOWWINDOW. But it doesn't
+			// suffer from the same limitations as WM_SHOWWINDOW, so you can
+			// reliably use it to react to the window being shown or hidden.
+
+			_UpdateSystemMenu(null);
+
+			if (!_isGlassEnabled)
+			{
+				Assert.IsNotDefault(lParam);
+				var wp = (WINDOWPOS)Marshal.PtrToStructure(lParam, typeof(WINDOWPOS));
+				_SetRoundingRegion(wp);
+			}
+
+			// Still want to pass this to DefWndProc
+			handled = false;
+			return IntPtr.Zero;
+		}
+
+		private IntPtr _HandleDwmCompositionChanged(WM uMsg, IntPtr wParam, IntPtr lParam, out bool handled)
+		{
+			_UpdateFrameState(false);
+			handled = false;
+			return IntPtr.Zero;
+		}
+
+		private IntPtr _HandleSettingChange(WM uMsg, IntPtr wParam, IntPtr lParam, out bool handled)
+		{
+			// There are several settings that can cause fixups for the template to become invalid when changed.
+			// These shouldn't be required on the v4 framework.
+			Assert.IsTrue(Utility.IsPresentationFrameworkVersionLessThan4);
+			_FixupFrameworkIssues();
+			handled = false;
+			return IntPtr.Zero;
+		}
+
+		private IntPtr _HandleEnterSizeMove(WM uMsg, IntPtr wParam, IntPtr lParam, out bool handled)
+		{
+			// This is only intercepted to deal with bugs in Window in .Net 3.5 and below.
+			Assert.IsTrue(Utility.IsPresentationFrameworkVersionLessThan4);
+
+			_isUserResizing = true;
+
+			// On Win7 if the user is dragging the window out of the maximized state then we don't want to use that location
+			// as a restore point.
+			Assert.Implies(_window.WindowState == WindowState.Maximized, Utility.IsOSWindows7OrNewer);
+			if (_window.WindowState != WindowState.Maximized)
+			{
+				// Check for the docked window case.  The window can still be restored when it's in this position so
+				// try to account for that and not update the start position.
+				if (!_IsWindowDocked)
+				{
+					_windowPosAtStartOfUserMove = new Point(_window.Left, _window.Top);
+				}
+				// Realistically we also don't want to update the start position when moving from one docked state to another (or to and from maximized),
+				// but it's tricky to detect and this is already a workaround for a bug that's fixed in newer versions of the framework.
+				// Not going to try to handle all cases.
+			}
+
+			handled = false;
+			return IntPtr.Zero;
+		}
+
+		private IntPtr _HandleExitSizeMove(WM uMsg, IntPtr wParam, IntPtr lParam, out bool handled)
+		{
+			// This is only intercepted to deal with bugs in Window in .Net 3.5 and below.
+			Assert.IsTrue(Utility.IsPresentationFrameworkVersionLessThan4);
+			_isUserResizing = false;
+			// On Win7 the user can change the Window's state by dragging the window to the top of the monitor.
+			// If they did that, then we need to try to update the restore bounds or else WPF will put the window at the maximized location (e.g. (-8,-8)).
+			if (_window.WindowState == WindowState.Maximized)
+			{
+				Assert.IsTrue(Utility.IsOSWindows7OrNewer);
+				_window.Top = _windowPosAtStartOfUserMove.Y;
+				_window.Left = _windowPosAtStartOfUserMove.X;
+			}
+			handled = false;
+			return IntPtr.Zero;
+		}
+
+		private IntPtr _HandleMove(WM uMsg, IntPtr wParam, IntPtr lParam, out bool handled)
+		{
+			// This is only intercepted to deal with bugs in Window in .Net 3.5 and below.
+			Assert.IsTrue(Utility.IsPresentationFrameworkVersionLessThan4);
+			if (_isUserResizing) _hasUserMovedWindow = true;
+			handled = false;
+			return IntPtr.Zero;
+		}
+
+		#endregion WindowProc and Message Handlers
 
 		#region Remove Custom Chrome Methods
 

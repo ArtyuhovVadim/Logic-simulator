@@ -17,15 +17,13 @@ public class MainWindowViewModel : BindableBase
 {
     public MainWindowViewModel()
     {
-        return;
-
         var rand = new Random();
 
-        for (var i = 0; i < 10; i++)
+        for (var i = 0; i < 100; i++)
         {
             Objects.Add(new Rectangle
             {
-                Location = new Vector2(rand.Next(0, 1500), rand.Next(0, 800)),
+                Location = new Vector2(rand.Next(0, 2500), rand.Next(0, 2500)),
                 Width = rand.Next(50, 300),
                 Height = rand.Next(50, 300),
                 FillColor = new Color4(rand.NextFloat(0, 1), rand.NextFloat(0, 1), rand.NextFloat(0, 1), rand.NextFloat(0, 1))
@@ -52,9 +50,9 @@ public class MainWindowViewModel : BindableBase
 
     #region Components
 
-    private ObservableCollection<BaseComponent> _renderingComponents = new()
+    private ObservableCollection<BaseRenderingComponent> _renderingComponents = new()
     {
-        new GridComponent
+        new GridRenderingComponent
         {
             Width = 3000,
             Height = 3000,
@@ -62,9 +60,11 @@ public class MainWindowViewModel : BindableBase
             Background = new Color4(1, 252f / 255f, 248f / 255f, 1f),
             LineColor = new Color4(240f / 255f, 240f / 255f, 235f / 255f, 1f),
             BoldLineColor = new Color4(220f / 255f, 220f / 255f, 215f / 255f, 1f),
-        }
+        },
+        new SceneObjectsRenderingComponent(),
+        new SelectionRenderingComponent()
     };
-    public ObservableCollection<BaseComponent> RenderingComponents
+    public ObservableCollection<BaseRenderingComponent> RenderingComponents
     {
         get => _renderingComponents;
         set => Set(ref _renderingComponents, value);
@@ -89,9 +89,9 @@ public class MainWindowViewModel : BindableBase
 
     #region TestCommand
 
-    private ICommand _TestCommand;
+    private ICommand _testCommand;
 
-    public ICommand TestCommand => _TestCommand ??= new LambdaCommand(_ =>
+    public ICommand TestCommand => _testCommand ??= new LambdaCommand(_ =>
     {
     }, _ => true);
 

@@ -32,6 +32,7 @@ namespace AvalonDock.Controls
 	public class NavigatorWindow : Window
 	{
 		#region fields
+
 		private ResourceDictionary currentThemeResourceDictionary; // = null
 
 		private const string PART_AnchorableListBox = "PART_AnchorableListBox";

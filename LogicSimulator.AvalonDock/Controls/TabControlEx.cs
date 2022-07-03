@@ -18,6 +18,14 @@ namespace AvalonDock.Controls
 	[TemplatePart(Name = "PART_ItemsHolder", Type = typeof(Panel))]
 	public class TabControlEx : TabControl
 	{
+		#region properties
+
+		/// <summary>Gets whether the control and its inheriting classes are virtualizing their items or not.</summary>
+		[Bindable(false), Description("Gets whether the control and its inheriting classes are virtualizing their items or not."), Category("Other")]
+		public bool IsVirtualiting => _IsVirtualizing;
+
+		#endregion properties
+
 		#region fields
 
 		private Panel ItemsHolderPanel = null;
@@ -50,14 +58,6 @@ namespace AvalonDock.Controls
 		}
 
 		#endregion constructors
-
-		#region properties
-
-		/// <summary>Gets whether the control and its inheriting classes are virtualizing their items or not.</summary>
-		[Bindable(false), Description("Gets whether the control and its inheriting classes are virtualizing their items or not."), Category("Other")]
-		public bool IsVirtualiting => _IsVirtualizing;
-
-		#endregion properties
 
 		#region methods
 

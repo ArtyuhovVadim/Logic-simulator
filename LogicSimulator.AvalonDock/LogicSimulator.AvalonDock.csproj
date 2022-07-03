@@ -1,29 +1,29 @@
 <Project Sdk="Microsoft.NET.Sdk.WindowsDesktop">
-	<PropertyGroup>
-		<RootNamespace>AvalonDock</RootNamespace>
-		<TargetFrameworks>net5.0-windows</TargetFrameworks>
-		<UseWPF>true</UseWPF>
-		<SignAssembly>true</SignAssembly>
-		<AssemblyOriginatorKeyFile>sn.snk</AssemblyOriginatorKeyFile>
-		<Version>4.70.1</Version>
-		<AssemblyVersion>4.70.1</AssemblyVersion>
-		<FileVersion>4.70.1</FileVersion>
-		<PackageVersion>4.70.1</PackageVersion>
-		<Company>Open Source</Company>
-		<Product>Dirkster.AvalonDock</Product>
-		<Copyright>2017-2022</Copyright>
-		<Description>This assembly implements a docking layout system for WPF.</Description>
-		<PackageProjectUrl>https://github.com/Dirkster99/AvalonDock</PackageProjectUrl>
-		<RepositoryUrl>https://github.com/Dirkster99/AvalonDock</RepositoryUrl>
-		<PackageId>Dirkster.AvalonDock</PackageId>
-		<Authors>https://github.com/Dirkster99/AvalonDock</Authors>
-		<PackageLicenseFile>LICENSE</PackageLicenseFile>
-		<Platforms>x64;x86</Platforms>
-		<LangVersion>latest</LangVersion>
-	</PropertyGroup>
+    <PropertyGroup>
+        <RootNamespace>AvalonDock</RootNamespace>
+        <TargetFrameworks>net5.0-windows</TargetFrameworks>
+        <UseWPF>true</UseWPF>
+        <SignAssembly>true</SignAssembly>
+        <AssemblyOriginatorKeyFile>sn.snk</AssemblyOriginatorKeyFile>
+        <Version>4.70.1</Version>
+        <AssemblyVersion>4.70.1</AssemblyVersion>
+        <FileVersion>4.70.1</FileVersion>
+        <PackageVersion>4.70.1</PackageVersion>
+        <Company>Open Source</Company>
+        <Product>Dirkster.AvalonDock</Product>
+        <Copyright>2017-2022</Copyright>
+        <Description>This assembly implements a docking layout system for WPF.</Description>
+        <PackageProjectUrl>https://github.com/Dirkster99/AvalonDock</PackageProjectUrl>
+        <RepositoryUrl>https://github.com/Dirkster99/AvalonDock</RepositoryUrl>
+        <PackageId>Dirkster.AvalonDock</PackageId>
+        <Authors>https://github.com/Dirkster99/AvalonDock</Authors>
+        <PackageLicenseFile>LICENSE</PackageLicenseFile>
+        <Platforms>x64;x86</Platforms>
+        <LangVersion>latest</LangVersion>
+    </PropertyGroup>
 
-	<ItemGroup>
-		<Resource Include="**\*.png" />
-	</ItemGroup>
+    <ItemGroup>
+        <Resource Include="**\*.png"/>
+    </ItemGroup>
 
 </Project>

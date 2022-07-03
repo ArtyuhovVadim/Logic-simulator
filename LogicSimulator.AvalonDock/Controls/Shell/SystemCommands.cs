@@ -17,12 +17,6 @@ namespace Microsoft.Windows.Shell
 
 	public static class SystemCommands
 	{
-		public static RoutedCommand CloseWindowCommand { get; }
-		public static RoutedCommand MaximizeWindowCommand { get; }
-		public static RoutedCommand MinimizeWindowCommand { get; }
-		public static RoutedCommand RestoreWindowCommand { get; }
-		public static RoutedCommand ShowSystemMenuCommand { get; }
-
 		static SystemCommands()
 		{
 			CloseWindowCommand = new RoutedCommand(nameof(CloseWindow), typeof(SystemCommands));
@@ -32,12 +26,11 @@ namespace Microsoft.Windows.Shell
 			ShowSystemMenuCommand = new RoutedCommand(nameof(ShowSystemMenu), typeof(SystemCommands));
 		}
 
-		private static void _PostSystemCommand(Window window, SC command)
-		{
-			var hWnd = new WindowInteropHelper(window).Handle;
-			if (hWnd == IntPtr.Zero || !NativeMethods.IsWindow(hWnd)) return;
-			NativeMethods.PostMessage(hWnd, WM.SYSCOMMAND, new IntPtr((int)command), IntPtr.Zero);
-		}
+		public static RoutedCommand CloseWindowCommand { get; }
+		public static RoutedCommand MaximizeWindowCommand { get; }
+		public static RoutedCommand MinimizeWindowCommand { get; }
+		public static RoutedCommand RestoreWindowCommand { get; }
+		public static RoutedCommand ShowSystemMenuCommand { get; }
 
 		public static void CloseWindow(Window window)
 		{
@@ -83,6 +76,13 @@ namespace Microsoft.Windows.Shell
 			var hMenu = NativeMethods.GetSystemMenu(hWnd, false);
 			var cmd = NativeMethods.TrackPopupMenuEx(hMenu, TPM_LEFTBUTTON | TPM_RETURNCMD, (int)physicalScreenLocation.X, (int)physicalScreenLocation.Y, hWnd, IntPtr.Zero);
 			if (cmd != 0) NativeMethods.PostMessage(hWnd, WM.SYSCOMMAND, new IntPtr(cmd), IntPtr.Zero);
+		}
+
+		private static void _PostSystemCommand(Window window, SC command)
+		{
+			var hWnd = new WindowInteropHelper(window).Handle;
+			if (hWnd == IntPtr.Zero || !NativeMethods.IsWindow(hWnd)) return;
+			NativeMethods.PostMessage(hWnd, WM.SYSCOMMAND, new IntPtr((int)command), IntPtr.Zero);
 		}
 	}
 }

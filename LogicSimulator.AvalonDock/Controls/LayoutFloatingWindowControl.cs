@@ -36,7 +36,16 @@ namespace AvalonDock.Controls
 	/// <seealso cref="ILayoutControl"/>
 	public abstract class LayoutFloatingWindowControl : Window, ILayoutControl
 	{
+		public virtual void EnableBindings()
+		{
+		}
+
+		public virtual void DisableBindings()
+		{
+		}
+
 		#region fields
+
 		private ResourceDictionary currentThemeResourceDictionary; // = null
 		private bool _isInternalChange; //false
 		private readonly ILayoutElement _model;
@@ -289,6 +298,7 @@ namespace AvalonDock.Controls
 		#endregion Properties
 
 		#region Internal Methods
+
 		/// <summary>Is Invoked when AvalonDock's WPF Theme changes via the <see cref="DockingManager.OnThemeChanged()"/> method.</summary>
 		/// <param name="oldTheme"></param>
 		internal virtual void UpdateThemeResources(Theme oldTheme = null)
@@ -674,27 +684,10 @@ namespace AvalonDock.Controls
 
 		#endregion Private Methods
 
-		public virtual void EnableBindings()
-		{
-		}
-
-		public virtual void DisableBindings()
-		{
-		}
-
 		#region Internal Classes
 
 		protected internal class FloatingWindowContentHost : HwndHost
 		{
-			#region fields
-
-			private readonly LayoutFloatingWindowControl _owner;
-			private HwndSource _wpfContentHost = null;
-			private Border _rootPresenter = null;
-			private DockingManager _manager = null;
-
-			#endregion fields
-
 			#region Constructors
 
 			public FloatingWindowContentHost(LayoutFloatingWindowControl owner)
@@ -705,6 +698,28 @@ namespace AvalonDock.Controls
 			}
 
 			#endregion Constructors
+
+			#region Methods
+
+			/// <summary>
+			/// Content_SizeChanged event handler.
+			/// </summary>
+			private void Content_SizeChanged(object sender, SizeChangedEventArgs e)
+			{
+				InvalidateMeasure();
+				InvalidateArrange();
+			}
+
+			#endregion Methods
+
+			#region fields
+
+			private readonly LayoutFloatingWindowControl _owner;
+			private HwndSource _wpfContentHost = null;
+			private Border _rootPresenter = null;
+			private DockingManager _manager = null;
+
+			#endregion fields
 
 			#region Properties
 
@@ -806,19 +821,6 @@ namespace AvalonDock.Controls
 			}
 
 			#endregion Overrides
-
-			#region Methods
-
-			/// <summary>
-			/// Content_SizeChanged event handler.
-			/// </summary>
-			private void Content_SizeChanged(object sender, SizeChangedEventArgs e)
-			{
-				InvalidateMeasure();
-				InvalidateArrange();
-			}
-
-			#endregion Methods
 		}
 
 		#endregion Internal Classes

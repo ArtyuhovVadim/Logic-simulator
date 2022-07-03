@@ -28,6 +28,19 @@ namespace AvalonDock.Controls
 	/// <seealso cref="AvalonDock.Controls.LayoutItem" />
 	public class LayoutAnchorableItem : LayoutItem
 	{
+		#region Private Methods
+
+		private void _anchorable_IsVisibleChanged(object sender, EventArgs e)
+		{
+			if (_anchorable?.Root == null || !_anchorableVisibilityReentrantFlag.CanEnter) return;
+			using (_anchorableVisibilityReentrantFlag.Enter())
+			{
+				Visibility = _anchorable.IsVisible ? Visibility.Visible : Visibility.Hidden;
+			}
+		}
+
+		#endregion Private Methods
+
 		#region fields
 
 		private LayoutAnchorable _anchorable;   // The content of this item
@@ -40,12 +53,14 @@ namespace AvalonDock.Controls
 		#endregion fields
 
 		#region Constructors
+
 		static LayoutAnchorableItem()
 		{
 			// #182: LayoutAnchorable initializes with CanClose == false. We therefore also override the metadata for LayoutAnchorableItem to match this.
 			// Only the default value will be overriden. PropertyChangedCallbacks, etc should be unaffected.
 			CanCloseProperty.OverrideMetadata(typeof(LayoutAnchorableItem), new FrameworkPropertyMetadata(false));
 		}
+
 		/// <summary>Class constructor</summary>
 		internal LayoutAnchorableItem()
 		{
@@ -285,18 +300,5 @@ namespace AvalonDock.Controls
 		}
 
 		#endregion Overrides
-
-		#region Private Methods
-
-		private void _anchorable_IsVisibleChanged(object sender, EventArgs e)
-		{
-			if (_anchorable?.Root == null || !_anchorableVisibilityReentrantFlag.CanEnter) return;
-			using (_anchorableVisibilityReentrantFlag.Enter())
-			{
-				Visibility = _anchorable.IsVisible ? Visibility.Visible : Visibility.Hidden;
-			}
-		}
-
-		#endregion Private Methods
 	}
 }

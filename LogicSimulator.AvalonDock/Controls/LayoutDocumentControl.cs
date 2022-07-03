@@ -35,6 +35,15 @@ namespace AvalonDock.Controls
 
 		#endregion Constructors
 
+		#region Private Methods
+
+		private void SetIsActive()
+		{
+			if (Model != null && !Model.IsActive) Model.IsActive = true;
+		}
+
+		#endregion Private Methods
+
 		#region Properties
 
 		#region Model
@@ -130,14 +139,5 @@ namespace AvalonDock.Controls
 		}
 
 		#endregion Overrides
-
-		#region Private Methods
-
-		private void SetIsActive()
-		{
-			if (Model != null && !Model.IsActive) Model.IsActive = true;
-		}
-
-		#endregion Private Methods
 	}
 }

@@ -22,6 +22,33 @@ namespace Microsoft.Windows.Shell
 
 	public class WindowChrome : Freezable
 	{
+		public static readonly DependencyProperty WindowChromeProperty = DependencyProperty.RegisterAttached("WindowChrome", typeof(WindowChrome), typeof(WindowChrome),
+			new PropertyMetadata(null, _OnChromeChanged));
+
+		public static readonly DependencyProperty CaptionHeightProperty = DependencyProperty.Register(nameof(CaptionHeight), typeof(double), typeof(WindowChrome),
+			new PropertyMetadata(0d, (d, e) => ((WindowChrome)d)._OnPropertyChangedThatRequiresRepaint()), value => (double)value >= 0d);
+
+		public static readonly DependencyProperty ResizeBorderThicknessProperty = DependencyProperty.Register(nameof(ResizeBorderThickness), typeof(Thickness), typeof(WindowChrome),
+			new PropertyMetadata(default(Thickness)), (value) => Utility.IsThicknessNonNegative((Thickness)value));
+
+		public static readonly DependencyProperty IsHitTestVisibleInChromeProperty = DependencyProperty.RegisterAttached(
+			"IsHitTestVisibleInChrome", typeof(bool), typeof(WindowChrome),
+			new FrameworkPropertyMetadata(false, FrameworkPropertyMetadataOptions.Inherits));
+
+		public static readonly DependencyProperty GlassFrameThicknessProperty = DependencyProperty.Register(nameof(GlassFrameThickness), typeof(Thickness), typeof(WindowChrome),
+			new PropertyMetadata(default(Thickness), (d, e) => ((WindowChrome)d)._OnPropertyChangedThatRequiresRepaint(), (d, o) => _CoerceGlassFrameThickness((Thickness)o)));
+
+		public static readonly DependencyProperty CornerRadiusProperty = DependencyProperty.Register(nameof(CornerRadius), typeof(CornerRadius), typeof(WindowChrome),
+			new PropertyMetadata(default(CornerRadius), (d, e) => ((WindowChrome)d)._OnPropertyChangedThatRequiresRepaint()), (value) => Utility.IsCornerRadiusValid((CornerRadius)value));
+
+		private static readonly List<_SystemParameterBoundProperty> _BoundProperties = new List<_SystemParameterBoundProperty>
+		{
+			new _SystemParameterBoundProperty { DependencyProperty = CornerRadiusProperty, SystemParameterPropertyName = "WindowCornerRadius" },
+			new _SystemParameterBoundProperty { DependencyProperty = CaptionHeightProperty, SystemParameterPropertyName = "WindowCaptionHeight" },
+			new _SystemParameterBoundProperty { DependencyProperty = ResizeBorderThicknessProperty, SystemParameterPropertyName = "WindowResizeBorderThickness" },
+			new _SystemParameterBoundProperty { DependencyProperty = GlassFrameThicknessProperty, SystemParameterPropertyName = "WindowNonClientFrameThickness" },
+		};
+
 		public WindowChrome()
 		{
 			// Effective default values for some of these properties are set to be bindings
@@ -46,19 +73,24 @@ namespace Microsoft.Windows.Shell
 
 		internal event EventHandler PropertyChangedThatRequiresRepaint;
 
+		// Named property available for fully extending the glass frame.
+		public static Thickness GlassFrameCompleteThickness => new Thickness(-1);
+
+		/// <inheritdoc />
+		protected override Freezable CreateInstanceCore()
+		{
+			return new WindowChrome();
+		}
+
+		private void _OnPropertyChangedThatRequiresRepaint() => PropertyChangedThatRequiresRepaint?.Invoke(this, EventArgs.Empty);
+
 		private struct _SystemParameterBoundProperty
 		{
 			public string SystemParameterPropertyName { get; set; }
 			public DependencyProperty DependencyProperty { get; set; }
 		}
 
-		// Named property available for fully extending the glass frame.
-		public static Thickness GlassFrameCompleteThickness => new Thickness(-1);
-
 		#region Attached Properties
-
-		public static readonly DependencyProperty WindowChromeProperty = DependencyProperty.RegisterAttached("WindowChrome", typeof(WindowChrome), typeof(WindowChrome),
-			new PropertyMetadata(null, _OnChromeChanged));
 
 		private static void _OnChromeChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
 		{
@@ -101,9 +133,6 @@ namespace Microsoft.Windows.Shell
 			window.SetValue(WindowChromeProperty, chrome);
 		}
 
-		public static readonly DependencyProperty IsHitTestVisibleInChromeProperty = DependencyProperty.RegisterAttached(
-			"IsHitTestVisibleInChrome", typeof(bool), typeof(WindowChrome),
-			new FrameworkPropertyMetadata(false, FrameworkPropertyMetadataOptions.Inherits));
 
 		[SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", MessageId = "0")]
 		[SuppressMessage("Microsoft.Design", "CA1011:ConsiderPassingBaseTypesAsParameters")]
@@ -129,9 +158,6 @@ namespace Microsoft.Windows.Shell
 
 		#region Dependency Properties
 
-		public static readonly DependencyProperty CaptionHeightProperty = DependencyProperty.Register(nameof(CaptionHeight), typeof(double), typeof(WindowChrome),
-			new PropertyMetadata(0d, (d, e) => ((WindowChrome)d)._OnPropertyChangedThatRequiresRepaint()), value => (double)value >= 0d);
-
 		/// <summary>The extent of the top of the window to treat as the caption.</summary>
 		public double CaptionHeight
 		{
@@ -139,8 +165,6 @@ namespace Microsoft.Windows.Shell
 			set => SetValue(CaptionHeightProperty, value);
 		}
 
-		public static readonly DependencyProperty ResizeBorderThicknessProperty = DependencyProperty.Register(nameof(ResizeBorderThickness), typeof(Thickness), typeof(WindowChrome),
-			new PropertyMetadata(default(Thickness)), (value) => Utility.IsThicknessNonNegative((Thickness)value));
 
 		public Thickness ResizeBorderThickness
 		{
@@ -148,8 +172,6 @@ namespace Microsoft.Windows.Shell
 			set => SetValue(ResizeBorderThicknessProperty, value);
 		}
 
-		public static readonly DependencyProperty GlassFrameThicknessProperty = DependencyProperty.Register(nameof(GlassFrameThickness), typeof(Thickness), typeof(WindowChrome),
-			new PropertyMetadata(default(Thickness), (d, e) => ((WindowChrome)d)._OnPropertyChangedThatRequiresRepaint(), (d, o) => _CoerceGlassFrameThickness((Thickness)o)));
 
 		private static object _CoerceGlassFrameThickness(Thickness thickness)
 		{
@@ -164,8 +186,6 @@ namespace Microsoft.Windows.Shell
 			set => SetValue(GlassFrameThicknessProperty, value);
 		}
 
-		public static readonly DependencyProperty CornerRadiusProperty = DependencyProperty.Register(nameof(CornerRadius), typeof(CornerRadius), typeof(WindowChrome),
-			new PropertyMetadata(default(CornerRadius), (d, e) => ((WindowChrome)d)._OnPropertyChangedThatRequiresRepaint()), (value) => Utility.IsCornerRadiusValid((CornerRadius)value));
 
 		public CornerRadius CornerRadius
 		{
@@ -177,21 +197,5 @@ namespace Microsoft.Windows.Shell
 		public bool ShowSystemMenu { get; set; }
 
 		#endregion Dependency Properties
-
-		/// <inheritdoc />
-		protected override Freezable CreateInstanceCore()
-		{
-			return new WindowChrome();
-		}
-
-		private static readonly List<_SystemParameterBoundProperty> _BoundProperties = new List<_SystemParameterBoundProperty>
-		{
-			new _SystemParameterBoundProperty { DependencyProperty = CornerRadiusProperty, SystemParameterPropertyName = "WindowCornerRadius" },
-			new _SystemParameterBoundProperty { DependencyProperty = CaptionHeightProperty, SystemParameterPropertyName = "WindowCaptionHeight" },
-			new _SystemParameterBoundProperty { DependencyProperty = ResizeBorderThicknessProperty, SystemParameterPropertyName = "WindowResizeBorderThickness" },
-			new _SystemParameterBoundProperty { DependencyProperty = GlassFrameThicknessProperty, SystemParameterPropertyName = "WindowNonClientFrameThickness" },
-		};
-
-		private void _OnPropertyChangedThatRequiresRepaint() => PropertyChangedThatRequiresRepaint?.Invoke(this, EventArgs.Empty);
 	}
 }

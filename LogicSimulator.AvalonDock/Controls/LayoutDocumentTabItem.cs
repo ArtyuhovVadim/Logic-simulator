@@ -27,6 +27,16 @@ namespace AvalonDock.Controls
 	/// <seealso cref="Control"/>
 	public class LayoutDocumentTabItem : ContentControl
 	{
+		#region Contructors
+
+		/// <summary>Static class constructor to register WPF style keys.</summary>
+		static LayoutDocumentTabItem()
+		{
+			DefaultStyleKeyProperty.OverrideMetadata(typeof(LayoutDocumentTabItem), new FrameworkPropertyMetadata(typeof(LayoutDocumentTabItem)));
+		}
+
+		#endregion Contructors
+
 		#region fields
 
 		private List<Rect> _otherTabsScreenArea = null;
@@ -38,16 +48,6 @@ namespace AvalonDock.Controls
 		private bool _allowDrag = false;
 
 		#endregion fields
-
-		#region Contructors
-
-		/// <summary>Static class constructor to register WPF style keys.</summary>
-		static LayoutDocumentTabItem()
-		{
-			DefaultStyleKeyProperty.OverrideMetadata(typeof(LayoutDocumentTabItem), new FrameworkPropertyMetadata(typeof(LayoutDocumentTabItem)));
-		}
-
-		#endregion Contructors
 
 		#region Properties
 

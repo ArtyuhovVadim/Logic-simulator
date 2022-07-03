@@ -46,6 +46,13 @@ namespace Standard
 			_source = source;
 		}
 
+		#region IDisposable Members
+
+		/// <inheritdoc />
+		public void Dispose() => _source = null;
+
+		#endregion IDisposable Members
+
 		private void _Validate()
 		{
 			if (_source == null) throw new ObjectDisposedException("this");
@@ -288,12 +295,5 @@ namespace Standard
 		}
 
 		#endregion IStream Members
-
-		#region IDisposable Members
-
-		/// <inheritdoc />
-		public void Dispose() => _source = null;
-
-		#endregion IDisposable Members
 	}
 }

@@ -1371,33 +1371,12 @@ namespace Standard
 
 	internal sealed class SafeDC : SafeHandleZeroOrMinusOneIsInvalid
 	{
-		private static class NativeMethods
-		{
-			[SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
-			[DllImport("user32.dll")]
-			public static extern int ReleaseDC(IntPtr hWnd, IntPtr hDC);
-
-			[SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
-			[DllImport("user32.dll")]
-			public static extern SafeDC GetDC(IntPtr hwnd);
-
-			// Weird legacy function, documentation is unclear about how to use it...
-			[SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
-			[DllImport("gdi32.dll", CharSet = CharSet.Unicode)]
-			public static extern SafeDC CreateDC([MarshalAs(UnmanagedType.LPWStr)] string lpszDriver, [MarshalAs(UnmanagedType.LPWStr)] string lpszDevice, IntPtr lpszOutput, IntPtr lpInitData);
-
-			[SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
-			[DllImport("gdi32.dll", CharSet = CharSet.Unicode, SetLastError = true)]
-			public static extern SafeDC CreateCompatibleDC(IntPtr hdc);
-
-			[SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
-			[DllImport("gdi32.dll")]
-			[return: MarshalAs(UnmanagedType.Bool)]
-			public static extern bool DeleteDC(IntPtr hdc);
-		}
-
 		private IntPtr? _hwnd;
 		private bool _created;
+
+		private SafeDC() : base(true)
+		{
+		}
 
 		public IntPtr Hwnd
 		{
@@ -1406,19 +1385,6 @@ namespace Standard
 				Assert.NullableIsNull(_hwnd);
 				_hwnd = value;
 			}
-		}
-
-		private SafeDC() : base(true)
-		{
-		}
-
-		/// <inheritdoc />
-		[ReliabilityContract(Consistency.WillNotCorruptState, Cer.MayFail)]
-		protected override bool ReleaseHandle()
-		{
-			if (_created) return NativeMethods.DeleteDC(handle);
-			if (!_hwnd.HasValue || _hwnd.Value == IntPtr.Zero) return true;
-			return NativeMethods.ReleaseDC(_hwnd.Value, handle) == 1;
 		}
 
 		[SuppressMessage("Microsoft.Usage", "CA2201:DoNotRaiseReservedExceptionTypes"), SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
@@ -1488,6 +1454,40 @@ namespace Standard
 			// This won't actually get released by the class, but it allows an IntPtr to be converted for signatures.
 			return new SafeDC { handle = hdc, _created = false, _hwnd = IntPtr.Zero };
 		}
+
+		/// <inheritdoc />
+		[ReliabilityContract(Consistency.WillNotCorruptState, Cer.MayFail)]
+		protected override bool ReleaseHandle()
+		{
+			if (_created) return NativeMethods.DeleteDC(handle);
+			if (!_hwnd.HasValue || _hwnd.Value == IntPtr.Zero) return true;
+			return NativeMethods.ReleaseDC(_hwnd.Value, handle) == 1;
+		}
+
+		private static class NativeMethods
+		{
+			[SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
+			[DllImport("user32.dll")]
+			public static extern int ReleaseDC(IntPtr hWnd, IntPtr hDC);
+
+			[SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
+			[DllImport("user32.dll")]
+			public static extern SafeDC GetDC(IntPtr hwnd);
+
+			// Weird legacy function, documentation is unclear about how to use it...
+			[SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
+			[DllImport("gdi32.dll", CharSet = CharSet.Unicode)]
+			public static extern SafeDC CreateDC([MarshalAs(UnmanagedType.LPWStr)] string lpszDriver, [MarshalAs(UnmanagedType.LPWStr)] string lpszDevice, IntPtr lpszOutput, IntPtr lpInitData);
+
+			[SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
+			[DllImport("gdi32.dll", CharSet = CharSet.Unicode, SetLastError = true)]
+			public static extern SafeDC CreateCompatibleDC(IntPtr hdc);
+
+			[SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
+			[DllImport("gdi32.dll")]
+			[return: MarshalAs(UnmanagedType.Bool)]
+			public static extern bool DeleteDC(IntPtr hdc);
+		}
 	}
 
 	internal sealed class SafeHBITMAP : SafeHandleZeroOrMinusOneIsInvalid
@@ -1507,14 +1507,6 @@ namespace Standard
 		{
 		}
 
-		/// <inheritdoc />
-		[ReliabilityContract(Consistency.WillNotCorruptState, Cer.MayFail)]
-		protected override bool ReleaseHandle()
-		{
-			var s = NativeMethods.GdiplusShutdown(this.handle);
-			return s == Status.Ok;
-		}
-
 		[SuppressMessage("Microsoft.Reliability", "CA2000:Dispose objects before losing scope")]
 		[SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
 		[SuppressMessage("Microsoft.Usage", "CA2201:DoNotRaiseReservedExceptionTypes")]
@@ -1529,6 +1521,14 @@ namespace Standard
 			}
 			safeHandle.Dispose();
 			throw new Exception("Unable to initialize GDI+");
+		}
+
+		/// <inheritdoc />
+		[ReliabilityContract(Consistency.WillNotCorruptState, Cer.MayFail)]
+		protected override bool ReleaseHandle()
+		{
+			var s = NativeMethods.GdiplusShutdown(this.handle);
+			return s == Status.Ok;
 		}
 	}
 
@@ -1787,12 +1787,6 @@ namespace Standard
 	[StructLayout(LayoutKind.Explicit)]
 	internal class PROPVARIANT : IDisposable
 	{
-		private static class NativeMethods
-		{
-			[DllImport("ole32.dll")]
-			internal static extern HRESULT PropVariantClear(PROPVARIANT pvar);
-		}
-
 		[SuppressMessage("Microsoft.Performance", "CA1823:AvoidUnusedPrivateFields")]
 		[FieldOffset(0)]
 		private ushort vt;
@@ -1840,6 +1834,12 @@ namespace Standard
 		{
 			var hr = NativeMethods.PropVariantClear(this);
 			Assert.IsTrue(hr.Succeeded);
+		}
+
+		private static class NativeMethods
+		{
+			[DllImport("ole32.dll")]
+			internal static extern HRESULT PropVariantClear(PROPVARIANT pvar);
 		}
 
 		#region IDisposable Pattern
@@ -2340,27 +2340,12 @@ namespace Standard
 	// Some native methods are shimmed through public versions that handle converting failures into thrown exceptions.
 	internal static class NativeMethods
 	{
-		[SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
-		[DllImport("user32.dll", EntryPoint = "AdjustWindowRectEx", SetLastError = true)]
-		[return: MarshalAs(UnmanagedType.Bool)]
-		private static extern bool _AdjustWindowRectEx(ref RECT lpRect, WS dwStyle, [MarshalAs(UnmanagedType.Bool)] bool bMenu, WS_EX dwExStyle);
-
 		public static RECT AdjustWindowRectEx(RECT lpRect, WS dwStyle, bool bMenu, WS_EX dwExStyle)
 		{
 			// Native version modifies the parameter in place.
 			if (!_AdjustWindowRectEx(ref lpRect, dwStyle, bMenu, dwExStyle)) HRESULT.ThrowLastError();
 			return lpRect;
 		}
-
-		[SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
-		[DllImport("user32.dll", EntryPoint = "ChangeWindowMessageFilter", SetLastError = true)]
-		[return: MarshalAs(UnmanagedType.Bool)]
-		private static extern bool _ChangeWindowMessageFilter(WM message, MSGFLT dwFlag);
-
-		[SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
-		[DllImport("user32.dll", EntryPoint = "ChangeWindowMessageFilterEx", SetLastError = true)]
-		[return: MarshalAs(UnmanagedType.Bool)]
-		private static extern bool _ChangeWindowMessageFilterEx(IntPtr hwnd, WM message, MSGFLT action, [In, Out, Optional] ref CHANGEFILTERSTRUCT pChangeFilterStruct);
 
 		// Note that processes at or below SECURITY_MANDATORY_LOW_RID are not allowed to change the message filter.
 		// If those processes call this function, it will fail and generate the extended error code, ERROR_ACCESS_DENIED.
@@ -2399,10 +2384,6 @@ namespace Standard
 		public static extern CombineRgnResult CombineRgn(IntPtr hrgnDest, IntPtr hrgnSrc1, IntPtr hrgnSrc2, RGN fnCombineMode);
 
 		[SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
-		[DllImport("shell32.dll", EntryPoint = "CommandLineToArgvW", CharSet = CharSet.Unicode)]
-		private static extern IntPtr _CommandLineToArgvW([MarshalAs(UnmanagedType.LPWStr)] string cmdLine, out int numArgs);
-
-		[SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
 		public static string[] CommandLineToArgvW(string cmdLine)
 		{
 			var argv = IntPtr.Zero;
@@ -2427,14 +2408,6 @@ namespace Standard
 		}
 
 		[SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
-		[DllImport("gdi32.dll", EntryPoint = "CreateDIBSection", SetLastError = true)]
-		private static extern SafeHBITMAP _CreateDIBSection(SafeDC hdc, [In] ref BITMAPINFO bitmapInfo, int iUsage, [Out] out IntPtr ppvBits, IntPtr hSection, int dwOffset);
-
-		[SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
-		[DllImport("gdi32.dll", EntryPoint = "CreateDIBSection", SetLastError = true)]
-		private static extern SafeHBITMAP _CreateDIBSectionIntPtr(IntPtr hdc, [In] ref BITMAPINFO bitmapInfo, int iUsage, [Out] out IntPtr ppvBits, IntPtr hSection, int dwOffset);
-
-		[SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
 		public static SafeHBITMAP CreateDIBSection(SafeDC hdc, ref BITMAPINFO bitmapInfo, out IntPtr ppvBits, IntPtr hSection, int dwOffset)
 		{
 			const int DIB_RGB_COLORS = 0;
@@ -2448,10 +2421,6 @@ namespace Standard
 		}
 
 		[SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
-		[DllImport("gdi32.dll", EntryPoint = "CreateRoundRectRgn", SetLastError = true)]
-		private static extern IntPtr _CreateRoundRectRgn(int nLeftRect, int nTopRect, int nRightRect, int nBottomRect, int nWidthEllipse, int nHeightEllipse);
-
-		[SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
 		public static IntPtr CreateRoundRectRgn(int nLeftRect, int nTopRect, int nRightRect, int nBottomRect, int nWidthEllipse, int nHeightEllipse)
 		{
 			var ret = _CreateRoundRectRgn(nLeftRect, nTopRect, nRightRect, nBottomRect, nWidthEllipse, nHeightEllipse);
@@ -2460,20 +2429,12 @@ namespace Standard
 		}
 
 		[SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
-		[DllImport("gdi32.dll", EntryPoint = "CreateRectRgn", SetLastError = true)]
-		private static extern IntPtr _CreateRectRgn(int nLeftRect, int nTopRect, int nRightRect, int nBottomRect);
-
-		[SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
 		public static IntPtr CreateRectRgn(int nLeftRect, int nTopRect, int nRightRect, int nBottomRect)
 		{
 			var ret = _CreateRectRgn(nLeftRect, nTopRect, nRightRect, nBottomRect);
 			if (ret == IntPtr.Zero) throw new Win32Exception();
 			return ret;
 		}
-
-		[SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
-		[DllImport("gdi32.dll", EntryPoint = "CreateRectRgnIndirect", SetLastError = true)]
-		private static extern IntPtr _CreateRectRgnIndirect([In] ref RECT lprc);
 
 		[SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
 		public static IntPtr CreateRectRgnIndirect(RECT lprc)
@@ -2486,22 +2447,6 @@ namespace Standard
 		[SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
 		[DllImport("gdi32.dll")]
 		public static extern IntPtr CreateSolidBrush(int crColor);
-
-		[SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
-		[DllImport("user32.dll", SetLastError = true, CharSet = CharSet.Unicode, EntryPoint = "CreateWindowExW")]
-		private static extern IntPtr _CreateWindowEx(
-			WS_EX dwExStyle,
-			[MarshalAs(UnmanagedType.LPWStr)] string lpClassName,
-			[MarshalAs(UnmanagedType.LPWStr)] string lpWindowName,
-			WS dwStyle,
-			int x,
-			int y,
-			int nWidth,
-			int nHeight,
-			IntPtr hWndParent,
-			IntPtr hMenu,
-			IntPtr hInstance,
-			IntPtr lpParam);
 
 		[SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
 		public static IntPtr CreateWindowEx(
@@ -2551,15 +2496,6 @@ namespace Standard
 		[DllImport("dwmapi.dll", PreserveSig = false)]
 		public static extern void DwmExtendFrameIntoClientArea(IntPtr hwnd, ref MARGINS pMarInset);
 
-		[SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
-		[DllImport("dwmapi.dll", EntryPoint = "DwmIsCompositionEnabled", PreserveSig = false)]
-		[return: MarshalAs(UnmanagedType.Bool)]
-		private static extern bool _DwmIsCompositionEnabled();
-
-		[SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
-		[DllImport("dwmapi.dll", EntryPoint = "DwmGetColorizationColor", PreserveSig = true)]
-		private static extern HRESULT _DwmGetColorizationColor(out uint pcrColorization, [Out, MarshalAs(UnmanagedType.Bool)] out bool pfOpaqueBlend);
-
 		public static bool DwmGetColorizationColor(out uint pcrColorization, out bool pfOpaqueBlend)
 		{
 			// Make this call safe to make on downlevel OSes...
@@ -2598,10 +2534,6 @@ namespace Standard
 		public static extern bool DwmDefWindowProc(IntPtr hwnd, WM msg, IntPtr wParam, IntPtr lParam, out IntPtr plResult);
 
 		[SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
-		[DllImport("dwmapi.dll", EntryPoint = "DwmSetWindowAttribute")]
-		private static extern void _DwmSetWindowAttribute(IntPtr hwnd, DWMWA dwAttribute, ref int pvAttribute, int cbAttribute);
-
-		[SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
 		public static void DwmSetWindowAttributeFlip3DPolicy(IntPtr hwnd, DWMFLIP3D flip3dPolicy)
 		{
 			Assert.IsTrue(Utility.IsOSVistaOrNewer);
@@ -2618,21 +2550,12 @@ namespace Standard
 		}
 
 		[SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
-		[DllImport("user32.dll", EntryPoint = "EnableMenuItem")]
-		private static extern int _EnableMenuItem(IntPtr hMenu, SC uIDEnableItem, MF uEnable);
-
-		[SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
 		public static MF EnableMenuItem(IntPtr hMenu, SC uIDEnableItem, MF uEnable)
 		{
 			// Returns the previous state of the menu item, or -1 if the menu item does not exist.
 			var iRet = _EnableMenuItem(hMenu, uIDEnableItem, uEnable);
 			return (MF)iRet;
 		}
-
-		[SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
-		[DllImport("user32.dll", EntryPoint = "RemoveMenu", SetLastError = true)]
-		[return: MarshalAs(UnmanagedType.Bool)]
-		private static extern bool _RemoveMenu(IntPtr hMenu, uint uPosition, uint uFlags);
 
 		[SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
 		public static void RemoveMenu(IntPtr hMenu, SC uPosition, MF uFlags)
@@ -2642,11 +2565,6 @@ namespace Standard
 				throw new Win32Exception();
 			}
 		}
-
-		[SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
-		[DllImport("user32.dll", EntryPoint = "DrawMenuBar", SetLastError = true)]
-		[return: MarshalAs(UnmanagedType.Bool)]
-		private static extern bool _DrawMenuBar(IntPtr hWnd);
 
 		[SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
 		public static void DrawMenuBar(IntPtr hWnd)
@@ -2672,25 +2590,11 @@ namespace Standard
 		public static extern bool FindNextFileW(SafeFindHandle hndFindFile, [In, Out, MarshalAs(UnmanagedType.LPStruct)] WIN32_FIND_DATAW lpFindFileData);
 
 		[SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
-		[DllImport("user32.dll", EntryPoint = "GetClientRect", SetLastError = true)]
-		[return: MarshalAs(UnmanagedType.Bool)]
-		private static extern bool _GetClientRect(IntPtr hwnd, [Out] out RECT lpRect);
-
-		[SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
 		public static RECT GetClientRect(IntPtr hwnd)
 		{
 			if (!_GetClientRect(hwnd, out var rc)) HRESULT.ThrowLastError();
 			return rc;
 		}
-
-		[DllImport("uxtheme.dll", EntryPoint = "GetCurrentThemeName", CharSet = CharSet.Unicode)]
-		private static extern HRESULT _GetCurrentThemeName(
-			StringBuilder pszThemeFileName,
-			int dwMaxNameChars,
-			StringBuilder pszColorBuff,
-			int cchMaxColorChars,
-			StringBuilder pszSizeBuff,
-			int cchMaxSizeChars);
 
 		public static void GetCurrentThemeName(out string themeFileName, out string color, out string size)
 		{
@@ -2725,10 +2629,6 @@ namespace Standard
 		public static extern int GetDeviceCaps(SafeDC hdc, DeviceCap nIndex);
 
 		[SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
-		[DllImport("kernel32.dll", EntryPoint = "GetModuleFileName", CharSet = CharSet.Unicode, SetLastError = true)]
-		private static extern int _GetModuleFileName(IntPtr hModule, StringBuilder lpFilename, int nSize);
-
-		[SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
 		public static string GetModuleFileName(IntPtr hModule)
 		{
 			var buffer = new StringBuilder((int)Win32Value.MAX_PATH);
@@ -2750,9 +2650,6 @@ namespace Standard
 			}
 		}
 
-		[DllImport("kernel32.dll", EntryPoint = "GetModuleHandleW", CharSet = CharSet.Unicode, SetLastError = true)]
-		private static extern IntPtr _GetModuleHandle([MarshalAs(UnmanagedType.LPWStr)] string lpModuleName);
-
 		public static IntPtr GetModuleHandle(string lpModuleName)
 		{
 			var retPtr = _GetModuleHandle(lpModuleName);
@@ -2761,20 +2658,12 @@ namespace Standard
 		}
 
 		[SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
-		[DllImport("user32.dll", EntryPoint = "GetMonitorInfo", SetLastError = true)]
-		[return: MarshalAs(UnmanagedType.Bool)]
-		private static extern bool _GetMonitorInfo(IntPtr hMonitor, [In, Out] MONITORINFO lpmi);
-
-		[SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
 		public static MONITORINFO GetMonitorInfo(IntPtr hMonitor)
 		{
 			var mi = new MONITORINFO();
 			if (!_GetMonitorInfo(hMonitor, mi)) throw new Win32Exception();
 			return mi;
 		}
-
-		[DllImport("gdi32.dll", EntryPoint = "GetStockObject", SetLastError = true)]
-		private static extern IntPtr _GetStockObject(StockObject fnObject);
 
 		public static IntPtr GetStockObject(StockObject fnObject)
 		{
@@ -2824,21 +2713,6 @@ namespace Standard
 		[DllImport("uxtheme.dll", PreserveSig = false)]
 		public static extern void SetWindowThemeAttribute([In] IntPtr hwnd, [In] WINDOWTHEMEATTRIBUTETYPE eAttribute, [In] ref WTA_OPTIONS pvAttribute, [In] uint cbAttribute);
 
-		[SuppressMessage("Microsoft.Interoperability", "CA1400:PInvokeEntryPointsShouldExist")]
-		[SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
-		[DllImport("user32.dll", EntryPoint = "GetWindowLong", SetLastError = true)]
-		private static extern int GetWindowLongPtr32(IntPtr hWnd, GWL nIndex);
-
-		[SuppressMessage("Microsoft.Interoperability", "CA1400:PInvokeEntryPointsShouldExist")]
-		[SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
-		[DllImport("user32.dll", EntryPoint = "GetWindowLongPtr", SetLastError = true)]
-		private static extern IntPtr GetWindowLongPtr64(IntPtr hWnd, GWL nIndex);
-
-		[SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
-		[DllImport("user32.dll", SetLastError = true)]
-		[return: MarshalAs(UnmanagedType.Bool)]
-		private static extern bool GetWindowPlacement(IntPtr hwnd, WINDOWPLACEMENT lpwndpl);
-
 		[SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
 		public static WINDOWPLACEMENT GetWindowPlacement(IntPtr hwnd)
 		{
@@ -2846,11 +2720,6 @@ namespace Standard
 			if (GetWindowPlacement(hwnd, wndpl)) return wndpl;
 			throw new Win32Exception();
 		}
-
-		[SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
-		[DllImport("user32.dll", EntryPoint = "GetWindowRect", SetLastError = true)]
-		[return: MarshalAs(UnmanagedType.Bool)]
-		private static extern bool _GetWindowRect(IntPtr hWnd, out RECT lpRect);
 
 		public static RECT GetWindowRect(IntPtr hwnd)
 		{
@@ -2892,27 +2761,14 @@ namespace Standard
 		public static extern bool IsWindowVisible(IntPtr hwnd);
 
 		[SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
-		[DllImport("kernel32.dll", EntryPoint = "LocalFree", SetLastError = true)]
-		private static extern IntPtr _LocalFree(IntPtr hMem);
-
-		[SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
 		[DllImport("user32.dll")]
 		public static extern IntPtr MonitorFromWindow(IntPtr hwnd, uint dwFlags);
-
-		[SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
-		[DllImport("user32.dll", EntryPoint = "PostMessage", SetLastError = true)]
-		[return: MarshalAs(UnmanagedType.Bool)]
-		private static extern bool _PostMessage(IntPtr hWnd, WM Msg, IntPtr wParam, IntPtr lParam);
 
 		[SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
 		public static void PostMessage(IntPtr hWnd, WM Msg, IntPtr wParam, IntPtr lParam)
 		{
 			if (!_PostMessage(hWnd, Msg, wParam, lParam)) throw new Win32Exception();
 		}
-
-		[SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
-		[DllImport("user32.dll", SetLastError = true, EntryPoint = "RegisterClassExW")]
-		private static extern short _RegisterClassEx([In] ref WNDCLASSEX lpwcx);
 
 		// Note that this will throw HRESULT_FROM_WIN32(ERROR_CLASS_ALREADY_EXISTS) on duplicate registration.
 		// If needed, consider adding a Try* version of this function that returns the error code since that
@@ -2926,20 +2782,12 @@ namespace Standard
 		}
 
 		[SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
-		[DllImport("user32.dll", EntryPoint = "RegisterWindowMessage", SetLastError = true, CharSet = CharSet.Unicode)]
-		private static extern uint _RegisterWindowMessage([MarshalAs(UnmanagedType.LPWStr)] string lpString);
-
-		[SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
 		public static WM RegisterWindowMessage(string lpString)
 		{
 			var iRet = _RegisterWindowMessage(lpString);
 			if (iRet == 0) HRESULT.ThrowLastError();
 			return (WM)iRet;
 		}
-
-		[SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
-		[DllImport("user32.dll", EntryPoint = "SetActiveWindow", SetLastError = true)]
-		private static extern IntPtr _SetActiveWindow(IntPtr hWnd);
 
 		[SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
 		public static IntPtr SetActiveWindow(IntPtr hwnd)
@@ -2958,24 +2806,9 @@ namespace Standard
 			return new IntPtr(SetClassLongPtr32(hwnd, nIndex, dwNewLong.ToInt32()));
 		}
 
-		[SuppressMessage("Microsoft.Interoperability", "CA1400:PInvokeEntryPointsShouldExist")]
-		[SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
-		[DllImport("user32.dll", EntryPoint = "SetClassLong", SetLastError = true)]
-		private static extern int SetClassLongPtr32(IntPtr hWnd, GCLP nIndex, int dwNewLong);
-
-		[SuppressMessage("Microsoft.Interoperability", "CA1400:PInvokeEntryPointsShouldExist")]
-		[SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
-		[DllImport("user32.dll", EntryPoint = "SetClassLongPtr", SetLastError = true)]
-		private static extern IntPtr SetClassLongPtr64(IntPtr hWnd, GCLP nIndex, IntPtr dwNewLong);
-
 		[SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
 		[DllImport("kernel32.dll", SetLastError = true)]
 		public static extern ErrorModes SetErrorMode(ErrorModes newMode);
-
-		[SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
-		[DllImport("kernel32.dll", SetLastError = true, EntryPoint = "SetProcessWorkingSetSize")]
-		[return: MarshalAs(UnmanagedType.Bool)]
-		private static extern bool _SetProcessWorkingSetSize(IntPtr hProcess, IntPtr dwMinimiumWorkingSetSize, IntPtr dwMaximumWorkingSetSize);
 
 		[SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
 		public static void SetProcessWorkingSetSize(IntPtr hProcess, int dwMinimumWorkingSetSize, int dwMaximumWorkingSetSize)
@@ -2988,30 +2821,11 @@ namespace Standard
 		public static IntPtr SetWindowLongPtr(IntPtr hwnd, GWL nIndex, IntPtr dwNewLong)
 			=> IntPtr.Size == 8 ? SetWindowLongPtr64(hwnd, nIndex, dwNewLong) : new IntPtr(SetWindowLongPtr32(hwnd, nIndex, dwNewLong.ToInt32()));
 
-		[SuppressMessage("Microsoft.Interoperability", "CA1400:PInvokeEntryPointsShouldExist")]
-		[SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
-		[DllImport("user32.dll", EntryPoint = "SetWindowLong", SetLastError = true)]
-		private static extern int SetWindowLongPtr32(IntPtr hWnd, GWL nIndex, int dwNewLong);
-
-		[SuppressMessage("Microsoft.Interoperability", "CA1400:PInvokeEntryPointsShouldExist")]
-		[SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
-		[DllImport("user32.dll", EntryPoint = "SetWindowLongPtr", SetLastError = true)]
-		private static extern IntPtr SetWindowLongPtr64(IntPtr hWnd, GWL nIndex, IntPtr dwNewLong);
-
-		[SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
-		[DllImport("user32.dll", EntryPoint = "SetWindowRgn", SetLastError = true)]
-		private static extern int _SetWindowRgn(IntPtr hWnd, IntPtr hRgn, [MarshalAs(UnmanagedType.Bool)] bool bRedraw);
-
 		[SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
 		public static void SetWindowRgn(IntPtr hWnd, IntPtr hRgn, bool bRedraw)
 		{
 			if (_SetWindowRgn(hWnd, hRgn, bRedraw) == 0) throw new Win32Exception();
 		}
-
-		[SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
-		[DllImport("user32.dll", EntryPoint = "SetWindowPos", SetLastError = true)]
-		[return: MarshalAs(UnmanagedType.Bool)]
-		private static extern bool _SetWindowPos(IntPtr hWnd, IntPtr hWndInsertAfter, int x, int y, int cx, int cy, SWP uFlags);
 
 		[SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
 		public static bool SetWindowPos(IntPtr hWnd, IntPtr hWndInsertAfter, int x, int y, int cx, int cy, SWP uFlags)
@@ -3024,23 +2838,6 @@ namespace Standard
 		[DllImport("user32.dll")]
 		[return: MarshalAs(UnmanagedType.Bool)]
 		public static extern bool ShowWindow(IntPtr hwnd, SW nCmdShow);
-
-		[SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
-		[DllImport("user32.dll", EntryPoint = "SystemParametersInfoW", SetLastError = true)]
-		[return: MarshalAs(UnmanagedType.Bool)]
-		private static extern bool _SystemParametersInfo_String(SPI uiAction, int uiParam, [MarshalAs(UnmanagedType.LPWStr)] string pvParam, SPIF fWinIni);
-
-		/// <summary>Overload of SystemParametersInfo for getting and setting NONCLIENTMETRICS.</summary>
-		[SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
-		[DllImport("user32.dll", EntryPoint = "SystemParametersInfoW", SetLastError = true, CharSet = CharSet.Unicode)]
-		[return: MarshalAs(UnmanagedType.Bool)]
-		private static extern bool _SystemParametersInfo_NONCLIENTMETRICS(SPI uiAction, int uiParam, [In, Out] ref NONCLIENTMETRICS pvParam, SPIF fWinIni);
-
-		/// <summary>Overload of SystemParametersInfo for getting and setting HIGHCONTRAST.</summary>
-		[SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
-		[DllImport("user32.dll", EntryPoint = "SystemParametersInfoW", SetLastError = true, CharSet = CharSet.Unicode)]
-		[return: MarshalAs(UnmanagedType.Bool)]
-		private static extern bool _SystemParametersInfo_HIGHCONTRAST(SPI uiAction, int uiParam, [In, Out] ref HIGHCONTRAST pvParam, SPIF fWinIni);
 
 		[SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
 		public static void SystemParametersInfo(SPI uiAction, int uiParam, string pvParam, SPIF fWinIni)
@@ -3070,20 +2867,12 @@ namespace Standard
 		public static extern uint TrackPopupMenuEx(IntPtr hmenu, uint fuFlags, int x, int y, IntPtr hwnd, IntPtr lptpm);
 
 		[SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
-		[DllImport("gdi32.dll", EntryPoint = "SelectObject", SetLastError = true)]
-		private static extern IntPtr _SelectObject(SafeDC hdc, IntPtr hgdiobj);
-
-		[SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
 		public static IntPtr SelectObject(SafeDC hdc, IntPtr hgdiobj)
 		{
 			var ret = _SelectObject(hdc, hgdiobj);
 			if (ret == IntPtr.Zero) HRESULT.ThrowLastError();
 			return ret;
 		}
-
-		[SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
-		[DllImport("gdi32.dll", EntryPoint = "SelectObject", SetLastError = true)]
-		private static extern IntPtr _SelectObjectSafeHBITMAP(SafeDC hdc, SafeHBITMAP hgdiobj);
 
 		[SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
 		public static IntPtr SelectObject(SafeDC hdc, SafeHBITMAP hgdiobj)
@@ -3102,16 +2891,6 @@ namespace Standard
 		public static extern IntPtr SendMessage(IntPtr hWnd, WM Msg, IntPtr wParam, IntPtr lParam);
 
 		[SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
-		[DllImport("user32.dll", EntryPoint = "UnregisterClass", SetLastError = true)]
-		[return: MarshalAs(UnmanagedType.Bool)]
-		private static extern bool _UnregisterClassAtom(IntPtr lpClassName, IntPtr hInstance);
-
-		[SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
-		[DllImport("user32.dll", EntryPoint = "UnregisterClass", CharSet = CharSet.Unicode, SetLastError = true)]
-		[return: MarshalAs(UnmanagedType.Bool)]
-		private static extern bool _UnregisterClassName(string lpClassName, IntPtr hInstance);
-
-		[SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
 		public static void UnregisterClass(short atom, IntPtr hinstance)
 		{
 			if (!_UnregisterClassAtom(new IntPtr(atom), hinstance)) HRESULT.ThrowLastError();
@@ -3121,6 +2900,249 @@ namespace Standard
 		{
 			if (!_UnregisterClassName(lpClassName, hInstance)) HRESULT.ThrowLastError();
 		}
+
+		[SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
+		public static void UpdateLayeredWindow(
+			IntPtr hwnd,
+			SafeDC hdcDst,
+			ref POINT pptDst,
+			ref SIZE psize,
+			SafeDC hdcSrc,
+			ref POINT pptSrc,
+			int crKey,
+			ref BLENDFUNCTION pblend,
+			ULW dwFlags)
+		{
+			if (!_UpdateLayeredWindow(hwnd, hdcDst, ref pptDst, ref psize, hdcSrc, ref pptSrc, crKey, ref pblend, dwFlags)) HRESULT.ThrowLastError();
+		}
+
+		[SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
+		public static void UpdateLayeredWindow(IntPtr hwnd, int crKey, ref BLENDFUNCTION pblend, ULW dwFlags)
+		{
+			if (!_UpdateLayeredWindowIntPtr(hwnd, IntPtr.Zero, IntPtr.Zero, IntPtr.Zero, IntPtr.Zero, IntPtr.Zero, crKey, ref pblend, dwFlags))
+				HRESULT.ThrowLastError();
+		}
+
+		[SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
+		[DllImport("user32.dll", EntryPoint = "AdjustWindowRectEx", SetLastError = true)]
+		[return: MarshalAs(UnmanagedType.Bool)]
+		private static extern bool _AdjustWindowRectEx(ref RECT lpRect, WS dwStyle, [MarshalAs(UnmanagedType.Bool)] bool bMenu, WS_EX dwExStyle);
+
+		[SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
+		[DllImport("user32.dll", EntryPoint = "ChangeWindowMessageFilter", SetLastError = true)]
+		[return: MarshalAs(UnmanagedType.Bool)]
+		private static extern bool _ChangeWindowMessageFilter(WM message, MSGFLT dwFlag);
+
+		[SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
+		[DllImport("user32.dll", EntryPoint = "ChangeWindowMessageFilterEx", SetLastError = true)]
+		[return: MarshalAs(UnmanagedType.Bool)]
+		private static extern bool _ChangeWindowMessageFilterEx(IntPtr hwnd, WM message, MSGFLT action, [In, Out, Optional] ref CHANGEFILTERSTRUCT pChangeFilterStruct);
+
+		[SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
+		[DllImport("shell32.dll", EntryPoint = "CommandLineToArgvW", CharSet = CharSet.Unicode)]
+		private static extern IntPtr _CommandLineToArgvW([MarshalAs(UnmanagedType.LPWStr)] string cmdLine, out int numArgs);
+
+		[SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
+		[DllImport("gdi32.dll", EntryPoint = "CreateDIBSection", SetLastError = true)]
+		private static extern SafeHBITMAP _CreateDIBSection(SafeDC hdc, [In] ref BITMAPINFO bitmapInfo, int iUsage, [Out] out IntPtr ppvBits, IntPtr hSection, int dwOffset);
+
+		[SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
+		[DllImport("gdi32.dll", EntryPoint = "CreateDIBSection", SetLastError = true)]
+		private static extern SafeHBITMAP _CreateDIBSectionIntPtr(IntPtr hdc, [In] ref BITMAPINFO bitmapInfo, int iUsage, [Out] out IntPtr ppvBits, IntPtr hSection, int dwOffset);
+
+		[SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
+		[DllImport("gdi32.dll", EntryPoint = "CreateRoundRectRgn", SetLastError = true)]
+		private static extern IntPtr _CreateRoundRectRgn(int nLeftRect, int nTopRect, int nRightRect, int nBottomRect, int nWidthEllipse, int nHeightEllipse);
+
+		[SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
+		[DllImport("gdi32.dll", EntryPoint = "CreateRectRgn", SetLastError = true)]
+		private static extern IntPtr _CreateRectRgn(int nLeftRect, int nTopRect, int nRightRect, int nBottomRect);
+
+		[SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
+		[DllImport("gdi32.dll", EntryPoint = "CreateRectRgnIndirect", SetLastError = true)]
+		private static extern IntPtr _CreateRectRgnIndirect([In] ref RECT lprc);
+
+		[SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
+		[DllImport("user32.dll", SetLastError = true, CharSet = CharSet.Unicode, EntryPoint = "CreateWindowExW")]
+		private static extern IntPtr _CreateWindowEx(
+			WS_EX dwExStyle,
+			[MarshalAs(UnmanagedType.LPWStr)] string lpClassName,
+			[MarshalAs(UnmanagedType.LPWStr)] string lpWindowName,
+			WS dwStyle,
+			int x,
+			int y,
+			int nWidth,
+			int nHeight,
+			IntPtr hWndParent,
+			IntPtr hMenu,
+			IntPtr hInstance,
+			IntPtr lpParam);
+
+		[SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
+		[DllImport("dwmapi.dll", EntryPoint = "DwmIsCompositionEnabled", PreserveSig = false)]
+		[return: MarshalAs(UnmanagedType.Bool)]
+		private static extern bool _DwmIsCompositionEnabled();
+
+		[SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
+		[DllImport("dwmapi.dll", EntryPoint = "DwmGetColorizationColor", PreserveSig = true)]
+		private static extern HRESULT _DwmGetColorizationColor(out uint pcrColorization, [Out, MarshalAs(UnmanagedType.Bool)] out bool pfOpaqueBlend);
+
+		[SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
+		[DllImport("dwmapi.dll", EntryPoint = "DwmSetWindowAttribute")]
+		private static extern void _DwmSetWindowAttribute(IntPtr hwnd, DWMWA dwAttribute, ref int pvAttribute, int cbAttribute);
+
+		[SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
+		[DllImport("user32.dll", EntryPoint = "EnableMenuItem")]
+		private static extern int _EnableMenuItem(IntPtr hMenu, SC uIDEnableItem, MF uEnable);
+
+		[SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
+		[DllImport("user32.dll", EntryPoint = "RemoveMenu", SetLastError = true)]
+		[return: MarshalAs(UnmanagedType.Bool)]
+		private static extern bool _RemoveMenu(IntPtr hMenu, uint uPosition, uint uFlags);
+
+		[SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
+		[DllImport("user32.dll", EntryPoint = "DrawMenuBar", SetLastError = true)]
+		[return: MarshalAs(UnmanagedType.Bool)]
+		private static extern bool _DrawMenuBar(IntPtr hWnd);
+
+		[SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
+		[DllImport("user32.dll", EntryPoint = "GetClientRect", SetLastError = true)]
+		[return: MarshalAs(UnmanagedType.Bool)]
+		private static extern bool _GetClientRect(IntPtr hwnd, [Out] out RECT lpRect);
+
+		[DllImport("uxtheme.dll", EntryPoint = "GetCurrentThemeName", CharSet = CharSet.Unicode)]
+		private static extern HRESULT _GetCurrentThemeName(
+			StringBuilder pszThemeFileName,
+			int dwMaxNameChars,
+			StringBuilder pszColorBuff,
+			int cchMaxColorChars,
+			StringBuilder pszSizeBuff,
+			int cchMaxSizeChars);
+
+		[SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
+		[DllImport("kernel32.dll", EntryPoint = "GetModuleFileName", CharSet = CharSet.Unicode, SetLastError = true)]
+		private static extern int _GetModuleFileName(IntPtr hModule, StringBuilder lpFilename, int nSize);
+
+		[DllImport("kernel32.dll", EntryPoint = "GetModuleHandleW", CharSet = CharSet.Unicode, SetLastError = true)]
+		private static extern IntPtr _GetModuleHandle([MarshalAs(UnmanagedType.LPWStr)] string lpModuleName);
+
+		[SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
+		[DllImport("user32.dll", EntryPoint = "GetMonitorInfo", SetLastError = true)]
+		[return: MarshalAs(UnmanagedType.Bool)]
+		private static extern bool _GetMonitorInfo(IntPtr hMonitor, [In, Out] MONITORINFO lpmi);
+
+		[DllImport("gdi32.dll", EntryPoint = "GetStockObject", SetLastError = true)]
+		private static extern IntPtr _GetStockObject(StockObject fnObject);
+
+		[SuppressMessage("Microsoft.Interoperability", "CA1400:PInvokeEntryPointsShouldExist")]
+		[SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
+		[DllImport("user32.dll", EntryPoint = "GetWindowLong", SetLastError = true)]
+		private static extern int GetWindowLongPtr32(IntPtr hWnd, GWL nIndex);
+
+		[SuppressMessage("Microsoft.Interoperability", "CA1400:PInvokeEntryPointsShouldExist")]
+		[SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
+		[DllImport("user32.dll", EntryPoint = "GetWindowLongPtr", SetLastError = true)]
+		private static extern IntPtr GetWindowLongPtr64(IntPtr hWnd, GWL nIndex);
+
+		[SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
+		[DllImport("user32.dll", SetLastError = true)]
+		[return: MarshalAs(UnmanagedType.Bool)]
+		private static extern bool GetWindowPlacement(IntPtr hwnd, WINDOWPLACEMENT lpwndpl);
+
+		[SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
+		[DllImport("user32.dll", EntryPoint = "GetWindowRect", SetLastError = true)]
+		[return: MarshalAs(UnmanagedType.Bool)]
+		private static extern bool _GetWindowRect(IntPtr hWnd, out RECT lpRect);
+
+		[SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
+		[DllImport("kernel32.dll", EntryPoint = "LocalFree", SetLastError = true)]
+		private static extern IntPtr _LocalFree(IntPtr hMem);
+
+		[SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
+		[DllImport("user32.dll", EntryPoint = "PostMessage", SetLastError = true)]
+		[return: MarshalAs(UnmanagedType.Bool)]
+		private static extern bool _PostMessage(IntPtr hWnd, WM Msg, IntPtr wParam, IntPtr lParam);
+
+		[SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
+		[DllImport("user32.dll", SetLastError = true, EntryPoint = "RegisterClassExW")]
+		private static extern short _RegisterClassEx([In] ref WNDCLASSEX lpwcx);
+
+		[SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
+		[DllImport("user32.dll", EntryPoint = "RegisterWindowMessage", SetLastError = true, CharSet = CharSet.Unicode)]
+		private static extern uint _RegisterWindowMessage([MarshalAs(UnmanagedType.LPWStr)] string lpString);
+
+		[SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
+		[DllImport("user32.dll", EntryPoint = "SetActiveWindow", SetLastError = true)]
+		private static extern IntPtr _SetActiveWindow(IntPtr hWnd);
+
+		[SuppressMessage("Microsoft.Interoperability", "CA1400:PInvokeEntryPointsShouldExist")]
+		[SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
+		[DllImport("user32.dll", EntryPoint = "SetClassLong", SetLastError = true)]
+		private static extern int SetClassLongPtr32(IntPtr hWnd, GCLP nIndex, int dwNewLong);
+
+		[SuppressMessage("Microsoft.Interoperability", "CA1400:PInvokeEntryPointsShouldExist")]
+		[SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
+		[DllImport("user32.dll", EntryPoint = "SetClassLongPtr", SetLastError = true)]
+		private static extern IntPtr SetClassLongPtr64(IntPtr hWnd, GCLP nIndex, IntPtr dwNewLong);
+
+		[SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
+		[DllImport("kernel32.dll", SetLastError = true, EntryPoint = "SetProcessWorkingSetSize")]
+		[return: MarshalAs(UnmanagedType.Bool)]
+		private static extern bool _SetProcessWorkingSetSize(IntPtr hProcess, IntPtr dwMinimiumWorkingSetSize, IntPtr dwMaximumWorkingSetSize);
+
+		[SuppressMessage("Microsoft.Interoperability", "CA1400:PInvokeEntryPointsShouldExist")]
+		[SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
+		[DllImport("user32.dll", EntryPoint = "SetWindowLong", SetLastError = true)]
+		private static extern int SetWindowLongPtr32(IntPtr hWnd, GWL nIndex, int dwNewLong);
+
+		[SuppressMessage("Microsoft.Interoperability", "CA1400:PInvokeEntryPointsShouldExist")]
+		[SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
+		[DllImport("user32.dll", EntryPoint = "SetWindowLongPtr", SetLastError = true)]
+		private static extern IntPtr SetWindowLongPtr64(IntPtr hWnd, GWL nIndex, IntPtr dwNewLong);
+
+		[SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
+		[DllImport("user32.dll", EntryPoint = "SetWindowRgn", SetLastError = true)]
+		private static extern int _SetWindowRgn(IntPtr hWnd, IntPtr hRgn, [MarshalAs(UnmanagedType.Bool)] bool bRedraw);
+
+		[SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
+		[DllImport("user32.dll", EntryPoint = "SetWindowPos", SetLastError = true)]
+		[return: MarshalAs(UnmanagedType.Bool)]
+		private static extern bool _SetWindowPos(IntPtr hWnd, IntPtr hWndInsertAfter, int x, int y, int cx, int cy, SWP uFlags);
+
+		[SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
+		[DllImport("user32.dll", EntryPoint = "SystemParametersInfoW", SetLastError = true)]
+		[return: MarshalAs(UnmanagedType.Bool)]
+		private static extern bool _SystemParametersInfo_String(SPI uiAction, int uiParam, [MarshalAs(UnmanagedType.LPWStr)] string pvParam, SPIF fWinIni);
+
+		/// <summary>Overload of SystemParametersInfo for getting and setting NONCLIENTMETRICS.</summary>
+		[SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
+		[DllImport("user32.dll", EntryPoint = "SystemParametersInfoW", SetLastError = true, CharSet = CharSet.Unicode)]
+		[return: MarshalAs(UnmanagedType.Bool)]
+		private static extern bool _SystemParametersInfo_NONCLIENTMETRICS(SPI uiAction, int uiParam, [In, Out] ref NONCLIENTMETRICS pvParam, SPIF fWinIni);
+
+		/// <summary>Overload of SystemParametersInfo for getting and setting HIGHCONTRAST.</summary>
+		[SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
+		[DllImport("user32.dll", EntryPoint = "SystemParametersInfoW", SetLastError = true, CharSet = CharSet.Unicode)]
+		[return: MarshalAs(UnmanagedType.Bool)]
+		private static extern bool _SystemParametersInfo_HIGHCONTRAST(SPI uiAction, int uiParam, [In, Out] ref HIGHCONTRAST pvParam, SPIF fWinIni);
+
+		[SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
+		[DllImport("gdi32.dll", EntryPoint = "SelectObject", SetLastError = true)]
+		private static extern IntPtr _SelectObject(SafeDC hdc, IntPtr hgdiobj);
+
+		[SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
+		[DllImport("gdi32.dll", EntryPoint = "SelectObject", SetLastError = true)]
+		private static extern IntPtr _SelectObjectSafeHBITMAP(SafeDC hdc, SafeHBITMAP hgdiobj);
+
+		[SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
+		[DllImport("user32.dll", EntryPoint = "UnregisterClass", SetLastError = true)]
+		[return: MarshalAs(UnmanagedType.Bool)]
+		private static extern bool _UnregisterClassAtom(IntPtr lpClassName, IntPtr hInstance);
+
+		[SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
+		[DllImport("user32.dll", EntryPoint = "UnregisterClass", CharSet = CharSet.Unicode, SetLastError = true)]
+		[return: MarshalAs(UnmanagedType.Bool)]
+		private static extern bool _UnregisterClassName(string lpClassName, IntPtr hInstance);
 
 		[SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
 		[DllImport("user32.dll", SetLastError = true, EntryPoint = "UpdateLayeredWindow")]
@@ -3149,28 +3171,6 @@ namespace Standard
 			int crKey,
 			ref BLENDFUNCTION pblend,
 			ULW dwFlags);
-
-		[SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
-		public static void UpdateLayeredWindow(
-			IntPtr hwnd,
-			SafeDC hdcDst,
-			ref POINT pptDst,
-			ref SIZE psize,
-			SafeDC hdcSrc,
-			ref POINT pptSrc,
-			int crKey,
-			ref BLENDFUNCTION pblend,
-			ULW dwFlags)
-		{
-			if (!_UpdateLayeredWindow(hwnd, hdcDst, ref pptDst, ref psize, hdcSrc, ref pptSrc, crKey, ref pblend, dwFlags)) HRESULT.ThrowLastError();
-		}
-
-		[SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
-		public static void UpdateLayeredWindow(IntPtr hwnd, int crKey, ref BLENDFUNCTION pblend, ULW dwFlags)
-		{
-			if (!_UpdateLayeredWindowIntPtr(hwnd, IntPtr.Zero, IntPtr.Zero, IntPtr.Zero, IntPtr.Zero, IntPtr.Zero, crKey, ref pblend, dwFlags))
-				HRESULT.ThrowLastError();
-		}
 
 		#region Win7 declarations
 

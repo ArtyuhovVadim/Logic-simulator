@@ -25,14 +25,6 @@ namespace AvalonDock.Controls
 	/// <seealso cref="Control"/>
 	public class LayoutAnchorableTabItem : Control
 	{
-		#region fields
-
-		private bool _isMouseDown = false;
-		private static LayoutAnchorableTabItem _draggingItem = null;
-		private static bool _cancelMouseLeave = false;
-
-		#endregion fields
-
 		#region Constructors
 
 		static LayoutAnchorableTabItem()
@@ -41,6 +33,14 @@ namespace AvalonDock.Controls
 		}
 
 		#endregion Constructors
+
+		#region fields
+
+		private bool _isMouseDown = false;
+		private static LayoutAnchorableTabItem _draggingItem = null;
+		private static bool _cancelMouseLeave = false;
+
+		#endregion fields
 
 		#region Properties
 

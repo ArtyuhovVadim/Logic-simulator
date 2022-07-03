@@ -4,16 +4,16 @@ using SharpDX.Direct2D1;
 
 namespace LogicSimulator.Scene.Components;
 
-public class GridComponent : BaseComponent
+public class GridRenderingComponent : BaseRenderingComponent
 {
-    public static readonly Resource BackgroundBrushResource = Resource.Register<GridComponent, SolidColorBrush>(nameof(BackgroundBrushResource),
-        (target, o) => new SolidColorBrush(target, ((GridComponent)o).Background));
+    public static readonly Resource BackgroundBrushResource = Resource.Register<GridRenderingComponent, SolidColorBrush>(nameof(BackgroundBrushResource),
+        (target, o) => new SolidColorBrush(target, ((GridRenderingComponent)o).Background));
 
-    public static readonly Resource LineBrushResource = Resource.Register<GridComponent, SolidColorBrush>(nameof(LineBrushResource),
-        (target, o) => new SolidColorBrush(target, ((GridComponent)o).LineColor));
+    public static readonly Resource LineBrushResource = Resource.Register<GridRenderingComponent, SolidColorBrush>(nameof(LineBrushResource),
+        (target, o) => new SolidColorBrush(target, ((GridRenderingComponent)o).LineColor));
 
-    public static readonly Resource BoldLineBrushResource = Resource.Register<GridComponent, SolidColorBrush>(nameof(BoldLineBrushResource),
-        (target, o) => new SolidColorBrush(target, ((GridComponent)o).BoldLineColor));
+    public static readonly Resource BoldLineBrushResource = Resource.Register<GridRenderingComponent, SolidColorBrush>(nameof(BoldLineBrushResource),
+        (target, o) => new SolidColorBrush(target, ((GridRenderingComponent)o).BoldLineColor));
 
     private Color4 _boldLineColor = Color4.Black;
     private Color4 _lineColor = Color4.Black;
@@ -59,5 +59,5 @@ public class GridComponent : BaseComponent
 
     public int BoldLineStep { get; set; } = 10;
 
-    public override void Render(Renderer renderer) => renderer.Render(this);
+    public override void Render(Scene2D scene, Renderer renderer) => renderer.Render(scene, this);
 }

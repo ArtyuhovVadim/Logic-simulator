@@ -43,21 +43,6 @@ namespace AvalonDock.Controls
 	/// <seeslso cref="LayoutAnchorableFloatingWindowControl"/>).
 	internal class DragService
 	{
-		#region fields
-
-		private DockingManager _manager;
-		private LayoutFloatingWindowControl _floatingWindow;
-
-		// A list of hosts that can display an overlaywindow and offer a drop target (docking position)
-		private List<IOverlayWindowHost> _overlayWindowHosts = new List<IOverlayWindowHost>();
-
-		private IOverlayWindowHost _currentHost;
-		private IOverlayWindow _currentWindow;
-		private List<IDropArea> _currentWindowAreas = new List<IDropArea>();
-		private IDropTarget _currentDropTarget;
-
-		#endregion fields
-
 		#region Constructors
 
 		/// <summary>
@@ -74,6 +59,46 @@ namespace AvalonDock.Controls
 		}
 
 		#endregion Constructors
+
+		#region Private Methods
+
+		/// <summary>
+		/// Adds <see cref="IOverlayWindowHost"/>s into a private collection of possible
+		/// drop target hosts that can show a drop target button to drop a dragged
+		/// <see cref="LayoutAnchorableFloatingWindowControl"/> or
+		/// <see cref="LayoutDocumentFloatingWindowControl"/> into it.
+		/// </summary>
+		private void GetOverlayWindowHosts()
+		{
+			if (_manager.Layout.RootPanel.CanDock)
+			{
+				// Add LayoutFloatingWindowControls as drop target hosts
+				// 1) Don't drop a floating window on to itself
+				// 2) Use this Drop target if its visible
+				_overlayWindowHosts.AddRange(_manager.GetFloatingWindowsByZOrder().OfType<LayoutAnchorableFloatingWindowControl>().Where(fw => fw != _floatingWindow && fw.IsVisible));
+				_overlayWindowHosts.AddRange(_manager.GetFloatingWindowsByZOrder().OfType<LayoutDocumentFloatingWindowControl>().Where(fw => fw != _floatingWindow && fw.IsVisible));
+
+				// Add dockingManager itself as a drop target host
+				_overlayWindowHosts.Add(_manager);
+			}
+		}
+
+		#endregion Private Methods
+
+		#region fields
+
+		private DockingManager _manager;
+		private LayoutFloatingWindowControl _floatingWindow;
+
+		// A list of hosts that can display an overlaywindow and offer a drop target (docking position)
+		private List<IOverlayWindowHost> _overlayWindowHosts = new List<IOverlayWindowHost>();
+
+		private IOverlayWindowHost _currentHost;
+		private IOverlayWindow _currentWindow;
+		private List<IDropArea> _currentWindowAreas = new List<IDropArea>();
+		private IDropTarget _currentDropTarget;
+
+		#endregion fields
 
 		#region Internal Methods
 
@@ -243,30 +268,5 @@ namespace AvalonDock.Controls
 		}
 
 		#endregion Internal Methods
-
-		#region Private Methods
-
-		/// <summary>
-		/// Adds <see cref="IOverlayWindowHost"/>s into a private collection of possible
-		/// drop target hosts that can show a drop target button to drop a dragged
-		/// <see cref="LayoutAnchorableFloatingWindowControl"/> or
-		/// <see cref="LayoutDocumentFloatingWindowControl"/> into it.
-		/// </summary>
-		private void GetOverlayWindowHosts()
-		{
-			if (_manager.Layout.RootPanel.CanDock)
-			{
-				// Add LayoutFloatingWindowControls as drop target hosts
-				// 1) Don't drop a floating window on to itself
-				// 2) Use this Drop target if its visible
-				_overlayWindowHosts.AddRange(_manager.GetFloatingWindowsByZOrder().OfType<LayoutAnchorableFloatingWindowControl>().Where(fw => fw != _floatingWindow && fw.IsVisible));
-				_overlayWindowHosts.AddRange(_manager.GetFloatingWindowsByZOrder().OfType<LayoutDocumentFloatingWindowControl>().Where(fw => fw != _floatingWindow && fw.IsVisible));
-
-				// Add dockingManager itself as a drop target host
-				_overlayWindowHosts.Add(_manager);
-			}
-		}
-
-		#endregion Private Methods
 	}
 }

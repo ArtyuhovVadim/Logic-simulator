@@ -29,6 +29,32 @@ namespace AvalonDock.Commands
 	/// <seealso cref="System.Windows.Input.ICommand" />
 	internal class RelayCommand<T> : ICommand
 	{
+		#region Public Events
+
+		/// <summary>
+		/// Occurs when changes occur that affect whether the command should execute.
+		/// </summary>
+		public event EventHandler CanExecuteChanged
+		{
+			add
+			{
+				if (_canExecute != null)
+				{
+					CommandManager.RequerySuggested += value;
+				}
+			}
+
+			remove
+			{
+				if (_canExecute != null)
+				{
+					CommandManager.RequerySuggested -= value;
+				}
+			}
+		}
+
+		#endregion Public Events
+
 		#region Private Fields
 
 		/// <summary>
@@ -81,32 +107,6 @@ namespace AvalonDock.Commands
 		}
 
 		#endregion Public Constructors
-
-		#region Public Events
-
-		/// <summary>
-		/// Occurs when changes occur that affect whether the command should execute.
-		/// </summary>
-		public event EventHandler CanExecuteChanged
-		{
-			add
-			{
-				if (_canExecute != null)
-				{
-					CommandManager.RequerySuggested += value;
-				}
-			}
-
-			remove
-			{
-				if (_canExecute != null)
-				{
-					CommandManager.RequerySuggested -= value;
-				}
-			}
-		}
-
-		#endregion Public Events
 
 		#region Public Methods
 

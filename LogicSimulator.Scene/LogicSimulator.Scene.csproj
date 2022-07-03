@@ -1,25 +1,25 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
-  <PropertyGroup>
-    <TargetFramework>net5.0-windows</TargetFramework>
-    <Nullable>disable</Nullable>
-    <UseWPF>true</UseWPF>
-    <Platforms>x64;x86</Platforms>
-    <LangVersion>latest</LangVersion>
-  </PropertyGroup>
+    <PropertyGroup>
+        <TargetFramework>net5.0-windows</TargetFramework>
+        <Nullable>disable</Nullable>
+        <UseWPF>true</UseWPF>
+        <Platforms>x64;x86</Platforms>
+        <LangVersion>latest</LangVersion>
+    </PropertyGroup>
 
-  <ItemGroup>
-    <PackageReference Include="SharpDX" Version="4.2.0" />
-    <PackageReference Include="SharpDX.Direct2D1" Version="4.2.0" />
-    <PackageReference Include="SharpDX.Direct3D11" Version="4.2.0" />
-    <PackageReference Include="SharpDX.Direct3D9" Version="4.2.0" />
-    <PackageReference Include="SharpDX.DXGI" Version="4.2.0" />
-    <PackageReference Include="SharpDX.Mathematics" Version="4.2.0" />
-  </ItemGroup>
+    <ItemGroup>
+        <PackageReference Include="SharpDX" Version="4.2.0"/>
+        <PackageReference Include="SharpDX.Direct2D1" Version="4.2.0"/>
+        <PackageReference Include="SharpDX.Direct3D11" Version="4.2.0"/>
+        <PackageReference Include="SharpDX.Direct3D9" Version="4.2.0"/>
+        <PackageReference Include="SharpDX.DXGI" Version="4.2.0"/>
+        <PackageReference Include="SharpDX.Mathematics" Version="4.2.0"/>
+    </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="SceneObjects\Base\" />
-    <Folder Include="Tools\Base\" />
-  </ItemGroup>
+    <ItemGroup>
+        <Folder Include="SceneObjects\Base\"/>
+        <Folder Include="Tools\Base\"/>
+    </ItemGroup>
 
 </Project>

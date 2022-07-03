@@ -7,23 +7,24 @@ namespace LogicSimulator.Scene;
 
 public class Renderer : ResourceDependentObject
 {
-    public static readonly Resource SelectionBrushResource = Resource.Register<Renderer, SolidColorBrush>(nameof(SelectionBrushResource), (target, o) =>
-        new SolidColorBrush(target, ((Renderer)o).SelectionColor));
+    public static readonly Resource SelectionBrushResource = Resource.Register<Renderer, SolidColorBrush>(nameof(SelectionBrushResource),
+        (target, o) => new SolidColorBrush(target, ((Renderer) o).SelectionColor));
 
-    public static readonly Resource SelectionStyleResource = Resource.Register<Renderer, StrokeStyle>(nameof(SelectionStyleResource), (target, _) =>
-    {
-        var properties = new StrokeStyleProperties()
+    public static readonly Resource SelectionStyleResource = Resource.Register<Renderer, StrokeStyle>(nameof(SelectionStyleResource),
+        (target, _) =>
         {
-            DashStyle = DashStyle.Custom,
-            DashCap = CapStyle.Flat
-        };
+            var properties = new StrokeStyleProperties
+            {
+                DashStyle = DashStyle.Custom,
+                DashCap = CapStyle.Flat
+            };
 
-        return new StrokeStyle(target.Factory, properties, new[] { 2f, 2f });
-    });
-
-    private readonly RenderTarget _renderTarget;
+            return new StrokeStyle(target.Factory, properties, new[] {2f, 2f});
+        });
 
     private Color4 _selectionColor = new(0, 1, 0, 1);
+
+    private readonly RenderTarget _renderTarget;
 
     public Renderer(RenderTarget renderTarget) => _renderTarget = renderTarget;
 
@@ -37,7 +38,7 @@ public class Renderer : ResourceDependentObject
         }
     }
 
-    public void Render(Rectangle rectangle)
+    public void Render(Scene2D scene, Rectangle rectangle)
     {
         var strokeBrush = rectangle.GetResourceValue<SolidColorBrush>(Rectangle.StrokeBrushResource, _renderTarget);
         var geometry = rectangle.GetResourceValue<RectangleGeometry>(Rectangle.RectangleGeometryResource, _renderTarget);
@@ -48,18 +49,27 @@ public class Renderer : ResourceDependentObject
             _renderTarget.FillGeometry(geometry, fillBrush);
         }
 
-        _renderTarget.DrawGeometry(geometry, strokeBrush, rectangle.StrokeThickness / _renderTarget.Transform.M11);
+        _renderTarget.DrawGeometry(geometry, strokeBrush, rectangle.StrokeThickness / scene.Scale);
     }
 
-    public void Render(GridComponent component)
+    public void RenderSelection(Scene2D scene, Rectangle rectangle)
     {
-        var strokeWidth = component.LineThickness / _renderTarget.Transform.M11;
+        var geometry = rectangle.GetResourceValue<RectangleGeometry>(Rectangle.RectangleGeometryResource, _renderTarget);
+        var brush = GetResourceValue<SolidColorBrush>(SelectionBrushResource, _renderTarget);
+        var style = GetResourceValue<StrokeStyle>(SelectionStyleResource, _renderTarget);
+
+        _renderTarget.DrawGeometry(geometry, brush, 1f / scene.Scale, style);
+    }
+
+    public void Render(Scene2D scene, GridRenderingComponent component)
+    {
+        var strokeWidth = component.LineThickness / scene.Scale;
 
         var rect = new RectangleF(0, 0, component.Width, component.Height);
 
-        var backgroundBrush = component.GetResourceValue<SolidColorBrush>(GridComponent.BackgroundBrushResource, _renderTarget);
-        var lineBrush = component.GetResourceValue<SolidColorBrush>(GridComponent.LineBrushResource, _renderTarget);
-        var boldLineBrush = component.GetResourceValue<SolidColorBrush>(GridComponent.BoldLineBrushResource, _renderTarget);
+        var backgroundBrush = component.GetResourceValue<SolidColorBrush>(GridRenderingComponent.BackgroundBrushResource, _renderTarget);
+        var lineBrush = component.GetResourceValue<SolidColorBrush>(GridRenderingComponent.LineBrushResource, _renderTarget);
+        var boldLineBrush = component.GetResourceValue<SolidColorBrush>(GridRenderingComponent.BoldLineBrushResource, _renderTarget);
 
         _renderTarget.FillRectangle(rect, backgroundBrush);
 
@@ -84,12 +94,22 @@ public class Renderer : ResourceDependentObject
         }
     }
 
-    public void RenderSelection(Rectangle rectangle)
+    public void Render(Scene2D scene, SceneObjectsRenderingComponent component)
     {
-        var geometry = rectangle.GetResourceValue<RectangleGeometry>(Rectangle.RectangleGeometryResource, _renderTarget);
-        var brush = GetResourceValue<SolidColorBrush>(SelectionBrushResource, _renderTarget);
-        var style = GetResourceValue<StrokeStyle>(SelectionStyleResource, _renderTarget);
+        foreach (var sceneObject in scene.Objects)
+        {
+            sceneObject.Render(scene, this);
+        }
+    }
 
-        _renderTarget.DrawGeometry(geometry, brush, 1f / _renderTarget.Transform.M11, style);
+    public void Render(Scene2D scene, SelectionRenderingComponent component)
+    {
+        foreach (var sceneObject in scene.Objects)
+        {
+            if (sceneObject.IsSelected)
+            {
+                sceneObject.RenderSelection(scene, this);
+            }
+        }
     }
 }

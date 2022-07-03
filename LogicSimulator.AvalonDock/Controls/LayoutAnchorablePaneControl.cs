@@ -32,6 +32,25 @@ namespace AvalonDock.Controls
 
 		#endregion fields
 
+		#region Properties
+
+		/// <summary>Gets the layout model of this control.</summary>
+		[Bindable(false), Description("Gets the layout model of this control."), Category("Other")]
+		public ILayoutElement Model => _model;
+
+		#endregion Properties
+
+		#region Private Methods
+
+		private void OnSizeChanged(object sender, SizeChangedEventArgs e)
+		{
+			var modelWithActualSize = _model as ILayoutPositionableElementWithActualSize;
+			modelWithActualSize.ActualWidth = ActualWidth;
+			modelWithActualSize.ActualHeight = ActualHeight;
+		}
+
+		#endregion Private Methods
+
 		#region Constructors
 
 		/// <summary>Static class constructor to register WPF style keys.</summary>
@@ -55,14 +74,6 @@ namespace AvalonDock.Controls
 		}
 
 		#endregion Constructors
-
-		#region Properties
-
-		/// <summary>Gets the layout model of this control.</summary>
-		[Bindable(false), Description("Gets the layout model of this control."), Category("Other")]
-		public ILayoutElement Model => _model;
-
-		#endregion Properties
 
 		#region Overrides
 
@@ -105,16 +116,5 @@ namespace AvalonDock.Controls
 		}
 
 		#endregion Overrides
-
-		#region Private Methods
-
-		private void OnSizeChanged(object sender, SizeChangedEventArgs e)
-		{
-			var modelWithActualSize = _model as ILayoutPositionableElementWithActualSize;
-			modelWithActualSize.ActualWidth = ActualWidth;
-			modelWithActualSize.ActualHeight = ActualHeight;
-		}
-
-		#endregion Private Methods
 	}
 }

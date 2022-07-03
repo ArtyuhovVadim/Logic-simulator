@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
@@ -23,7 +24,7 @@ public class Scene2D : FrameworkElement
 
     public bool IsRendering
     {
-        get => (bool)GetValue(IsRenderingProperty);
+        get => (bool) GetValue(IsRenderingProperty);
         set => SetValue(IsRenderingProperty, value);
     }
 
@@ -34,7 +35,7 @@ public class Scene2D : FrameworkElement
     {
         if (d is not Scene2D scene2D) return;
 
-        scene2D._sceneRenderer.IsRendering = (bool)e.NewValue;
+        scene2D._sceneRenderer.IsRendering = (bool) e.NewValue;
     }
 
     #endregion
@@ -43,25 +44,27 @@ public class Scene2D : FrameworkElement
 
     public IEnumerable<BaseSceneObject> Objects
     {
-        get => (IEnumerable<BaseSceneObject>)GetValue(ObjectsProperty);
+        get => (IEnumerable<BaseSceneObject>) GetValue(ObjectsProperty);
         set => SetValue(ObjectsProperty, value);
     }
 
     public static readonly DependencyProperty ObjectsProperty =
-        DependencyProperty.Register(nameof(Objects), typeof(IEnumerable<BaseSceneObject>), typeof(Scene2D), new PropertyMetadata(Enumerable.Empty<BaseSceneObject>()));
+        DependencyProperty.Register(nameof(Objects), typeof(IEnumerable<BaseSceneObject>), typeof(Scene2D),
+            new PropertyMetadata(Enumerable.Empty<BaseSceneObject>()));
 
     #endregion
 
     #region Components
 
-    public IEnumerable<BaseComponent> Components
+    public IEnumerable<BaseRenderingComponent> Components
     {
-        get => (IEnumerable<BaseComponent>)GetValue(ComponentsProperty);
+        get => (IEnumerable<BaseRenderingComponent>) GetValue(ComponentsProperty);
         set => SetValue(ComponentsProperty, value);
     }
 
     public static readonly DependencyProperty ComponentsProperty =
-        DependencyProperty.Register(nameof(Components), typeof(IEnumerable<BaseComponent>), typeof(Scene2D), new PropertyMetadata(Enumerable.Empty<BaseComponent>()));
+        DependencyProperty.Register(nameof(Components), typeof(IEnumerable<BaseRenderingComponent>), typeof(Scene2D),
+            new PropertyMetadata(Enumerable.Empty<BaseRenderingComponent>()));
 
     #endregion
 
@@ -69,7 +72,7 @@ public class Scene2D : FrameworkElement
 
     public IEnumerable<BaseTool> Tools
     {
-        get => (IEnumerable<BaseTool>)GetValue(ToolsProperty);
+        get => (IEnumerable<BaseTool>) GetValue(ToolsProperty);
         set => SetValue(ToolsProperty, value);
     }
 
@@ -85,13 +88,13 @@ public class Scene2D : FrameworkElement
     public float Scale
     {
         get => _sceneRenderer.Transform.M11;
-        set => _sceneRenderer.Transform = _sceneRenderer.Transform with { M11 = value, M22 = value };
+        set => _sceneRenderer.Transform = _sceneRenderer.Transform with {M11 = value, M22 = value};
     }
 
     public Vector2 Translation
     {
         get => new(_sceneRenderer.Transform.M31, _sceneRenderer.Transform.M32);
-        set => _sceneRenderer.Transform = _sceneRenderer.Transform with { M31 = value.X, M32 = value.Y };
+        set => _sceneRenderer.Transform = _sceneRenderer.Transform with {M31 = value.X, M32 = value.Y};
     }
 
     public Scene2D()
@@ -108,14 +111,14 @@ public class Scene2D : FrameworkElement
 
     private bool IsInDesignMode => DesignerProperties.GetIsInDesignMode(this);
 
-    public T GetComponent<T>() where T : BaseComponent
+    public T GetComponent<T>() where T : BaseRenderingComponent
     {
         return (T) Components.FirstOrDefault(x => x.GetType() == typeof(T));
     }
 
     public T GetTool<T>() where T : BaseTool
     {
-        return (T)Tools.FirstOrDefault(x => x.GetType() == typeof(T));
+        return (T) Tools.FirstOrDefault(x => x.GetType() == typeof(T));
     }
 
     public void SwitchTool<T>() where T : BaseTool
@@ -145,7 +148,7 @@ public class Scene2D : FrameworkElement
         var p = pos.Transform(_sceneRenderer.Transform);
 
         var newScaleCoefficient = 1 + delta / Scale;
-        var newScale = (float)Math.Round(Scale * newScaleCoefficient, 2);
+        var newScale = (float) Math.Round(Scale * newScaleCoefficient, 2);
 
         if (newScale < min || newScale > max) return;
 
@@ -170,7 +173,7 @@ public class Scene2D : FrameworkElement
     {
         base.OnInitialized(e);
 
-        Dpi = (float)VisualTreeHelper.GetDpi(this).PixelsPerInchX;
+        Dpi = (float) VisualTreeHelper.GetDpi(this).PixelsPerInchX;
 
         _sceneRenderer = new SceneRenderer(RenderSize.Width, RenderSize.Height, Dpi);
 
