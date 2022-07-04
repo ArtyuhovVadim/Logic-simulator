@@ -22,7 +22,14 @@ public class SelectionTool : BaseTool
 
     public override void MouseLeftButtonDragged(Scene2D scene, Vector2 pos)
     {
-        scene.SwitchTool<DragTool>();
+        if (ObjectUnderCursor.Any())
+        {
+            scene.SwitchTool<DragTool>();
+        }
+        else
+        {
+            scene.SwitchTool<RectangleSelectionTool>();
+        }
     }
 
     public override void MouseLeftButtonUp(Scene2D scene, Vector2 pos)

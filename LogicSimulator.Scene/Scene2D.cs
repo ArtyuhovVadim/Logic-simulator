@@ -12,6 +12,7 @@ using LogicSimulator.Scene.SceneObjects.Base;
 using LogicSimulator.Scene.Tools;
 using LogicSimulator.Scene.Tools.Base;
 using SharpDX;
+using SharpDX.Direct2D1;
 
 namespace LogicSimulator.Scene;
 
@@ -83,6 +84,8 @@ public class Scene2D : FrameworkElement
 
     public float Dpi { get; private set; }
 
+    internal RenderTarget RenderTarget => _sceneRenderer.RenderTarget;
+    
     public Matrix3x2 Transform => _sceneRenderer.Transform;
 
     public float Scale
@@ -255,6 +258,13 @@ public class Scene2D : FrameworkElement
         base.OnKeyUp(e);
 
         CurrentTool?.KeyUp(this, e);
+    }
+
+    protected override void OnLostKeyboardFocus(KeyboardFocusChangedEventArgs e)
+    {
+        base.OnLostKeyboardFocus(e);
+
+        SwitchTool<SelectionTool>();
     }
 
     private void OnLoaded(object sender, RoutedEventArgs e)

@@ -62,7 +62,8 @@ public class MainWindowViewModel : BindableBase
             BoldLineColor = new Color4(220f / 255f, 220f / 255f, 215f / 255f, 1f),
         },
         new SceneObjectsRenderingComponent(),
-        new SelectionRenderingComponent()
+        new SelectionRenderingComponent(),
+        new RectangleSelectionRenderingComponent()
     };
     public ObservableCollection<BaseRenderingComponent> RenderingComponents
     {
@@ -77,7 +78,8 @@ public class MainWindowViewModel : BindableBase
     private ObservableCollection<BaseTool> _tools = new()
     {
         new SelectionTool(),
-        new DragTool()
+        new DragTool(),
+        new RectangleSelectionTool()
     };
     public ObservableCollection<BaseTool> Tools
     {

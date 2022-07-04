@@ -126,6 +126,13 @@ public class Rectangle : BaseSceneObject
         return IsFilled ? geometry.FillContainsPoint(pos, matrix, tolerance) : geometry.StrokeContainsPoint(pos, StrokeThickness, null, matrix, tolerance);
     }
 
+    public override GeometryRelation CompareWithRectangle(RectangleGeometry rectGeometry, Matrix3x2 matrix, float tolerance = 0.25f)
+    {
+        var geometry = GetCashedResourceValue<RectangleGeometry>(RectangleGeometryResource);
+
+        return geometry.Compare(rectGeometry, matrix, tolerance);
+    }
+
     public override void Render(Scene2D scene, Renderer renderer) => renderer.Render(scene, this);
 
     public override void RenderSelection(Scene2D scene, Renderer renderer) => renderer.RenderSelection(scene, this);

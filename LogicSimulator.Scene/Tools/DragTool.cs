@@ -53,9 +53,12 @@ public class DragTool : BaseTool
 
     public override void MouseLeftButtonUp(Scene2D scene, Vector2 pos)
     {
-        EndDragObjects();
-
         scene.SwitchTool<SelectionTool>();
+    }
+
+    protected override void OnDeactivated(Scene2D scene)
+    {
+        EndDragObjects();
     }
 
     private void StartDragObject(BaseSceneObject sceneObject, Vector2 pos)

@@ -5,6 +5,8 @@ namespace LogicSimulator.Scene.Tools.Base;
 
 public abstract class BaseTool
 {
+    public bool CanSwitch { get; protected set; } = true;
+    
     public bool IsActive { get; private set; }
 
     public void Activate(Scene2D scene)

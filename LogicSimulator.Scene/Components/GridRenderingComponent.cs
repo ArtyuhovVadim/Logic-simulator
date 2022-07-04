@@ -59,5 +59,11 @@ public class GridRenderingComponent : BaseRenderingComponent
 
     public int BoldLineStep { get; set; } = 10;
 
-    public override void Render(Scene2D scene, Renderer renderer) => renderer.Render(scene, this);
+    public override void Render(Scene2D scene, Renderer renderer)
+    {
+        if (IsVisible)
+        {
+            renderer.Render(scene, this);
+        }
+    }
 }

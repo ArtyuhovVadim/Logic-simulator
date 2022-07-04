@@ -1,6 +1,8 @@
 ﻿using LogicSimulator.Scene.Components;
+using LogicSimulator.Scene.Tools;
 using SharpDX;
 using SharpDX.Direct2D1;
+using SharpDX.Mathematics.Interop;
 using Rectangle = LogicSimulator.Scene.SceneObjects.Rectangle;
 
 namespace LogicSimulator.Scene;
@@ -111,5 +113,17 @@ public class Renderer : ResourceDependentObject
                 sceneObject.RenderSelection(scene, this);
             }
         }
+    }
+
+    public void Render(Scene2D scene, RectangleSelectionRenderingComponent component)
+    {
+        var brush = component.GetResourceValue<SolidColorBrush>(
+            component.IsSecant ? RectangleSelectionRenderingComponent.SecantBrushResource : RectangleSelectionRenderingComponent.NormalBrushResource,
+            _renderTarget);
+
+        var location = component.StartPosition;
+        var size = component.EndPosition - component.StartPosition;
+
+        _renderTarget.DrawRectangle(new RectangleF {Location = location, Width = size.X, Height = size.Y}, brush, 1f / scene.Scale);
     }
 }

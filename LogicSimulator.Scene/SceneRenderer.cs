@@ -5,7 +5,9 @@ using SharpDX;
 using SharpDX.Direct2D1;
 using SharpDX.Direct3D;
 using SharpDX.Direct3D11;
+using SharpDX.DirectWrite;
 using SharpDX.DXGI;
+using SharpDX.Mathematics.Interop;
 using AlphaMode = SharpDX.Direct2D1.AlphaMode;
 using Device = SharpDX.Direct3D11.Device;
 using Factory = SharpDX.Direct2D1.Factory;
@@ -13,6 +15,7 @@ using GradientStop = SharpDX.Direct2D1.GradientStop;
 using GradientStopCollection = SharpDX.Direct2D1.GradientStopCollection;
 using LinearGradientBrush = SharpDX.Direct2D1.LinearGradientBrush;
 using PixelFormat = SharpDX.Direct2D1.PixelFormat;
+using SolidColorBrush = SharpDX.Direct2D1.SolidColorBrush;
 
 namespace LogicSimulator.Scene;
 
@@ -20,9 +23,9 @@ public class SceneRenderer : IDisposable
 {
     private Device _device;
     private Texture2D _texture2D;
-    private RenderTarget _renderTarget;
     private Factory _factory;
-
+    private RenderTarget _renderTarget;
+    
     private Dx11ImageSource _imageSource;
 
     private Renderer _renderer;
@@ -35,14 +38,20 @@ public class SceneRenderer : IDisposable
 
     public SceneRenderer(double pixelWidth, double pixelHeight, float dpi) => StartDirect3D(pixelWidth, pixelHeight, dpi);
 
+    public RenderTarget RenderTarget
+    {
+        get => _renderTarget;
+        private set => _renderTarget = value;
+    }
+
     public bool IsRendering { get; set; } = true;
 
     public Matrix3x2 Transform
     {
-        get => _renderTarget.Transform;
+        get => RenderTarget.Transform;
         set
         {
-            _renderTarget.Transform = value;
+            RenderTarget.Transform = value;
             ResourceDependentObject.RequireRender();
         }
     }
@@ -53,7 +62,7 @@ public class SceneRenderer : IDisposable
     {
         if (!IsRendering || !ResourceDependentObject.IsRequireRender) return;
 
-        _renderTarget.BeginDraw();
+        RenderTarget.BeginDraw();
 
         GradientClear();
 
@@ -62,7 +71,13 @@ public class SceneRenderer : IDisposable
             component.Render(scene, _renderer);
         }
 
-        _renderTarget.EndDraw();
+        using var factory = new SharpDX.DirectWrite.Factory();
+        using var textFormat = new TextFormat(factory, "ISOCPEUR", 14);
+        using var brush = new SolidColorBrush(RenderTarget, Color4.Black);
+
+        RenderTarget.DrawText(scene.CurrentTool.GetType().Name, textFormat, new RawRectangleF(50, 50, 200, 200), brush);
+
+        RenderTarget.EndDraw();
         _device.ImmediateContext.Flush();
         _imageSource.InvalidateD3DImage();
 
@@ -106,7 +121,7 @@ public class SceneRenderer : IDisposable
     {
         var transform = Matrix3x2.Identity;
 
-        if (_renderTarget is not null) transform = _renderTarget.Transform;
+        if (RenderTarget is not null) transform = RenderTarget.Transform;
 
         Utilities.Dispose(ref _renderTarget);
         Utilities.Dispose(ref _factory);
@@ -138,7 +153,7 @@ public class SceneRenderer : IDisposable
 
         var renderTargetProperties = new RenderTargetProperties(new PixelFormat(Format.B8G8R8A8_UNorm, AlphaMode.Premultiplied));
 
-        _renderTarget = new RenderTarget(_factory, surface, renderTargetProperties)
+        RenderTarget = new RenderTarget(_factory, surface, renderTargetProperties)
         {
             AntialiasMode = AntialiasMode.Aliased,
             Transform = transform
@@ -146,7 +161,7 @@ public class SceneRenderer : IDisposable
 
         CreateClearResources(_startClearColor, _endClearColor);
 
-        _renderer = new Renderer(_renderTarget);
+        _renderer = new Renderer(RenderTarget);
 
         _imageSource.SetRenderTarget(_texture2D);
 
@@ -158,7 +173,7 @@ public class SceneRenderer : IDisposable
         var tempTransform = Transform;
         Transform = Matrix3x2.Identity;
 
-        _renderTarget.FillRectangle(new RectangleF(0, 0, _renderTarget.Size.Width, _renderTarget.Size.Height), _clearGradientBrush);
+        RenderTarget.FillRectangle(new RectangleF(0, 0, RenderTarget.Size.Width, RenderTarget.Size.Height), _clearGradientBrush);
 
         Transform = tempTransform;
     }
@@ -168,7 +183,7 @@ public class SceneRenderer : IDisposable
         Utilities.Dispose(ref _clearGradientBrush);
         Utilities.Dispose(ref _clearGradientStopCollection);
 
-        _clearGradientStopCollection = new GradientStopCollection(_renderTarget, new GradientStop[]
+        _clearGradientStopCollection = new GradientStopCollection(RenderTarget, new GradientStop[]
         {
             new() {Position = 0f, Color = startColor},
             new() {Position = 1f, Color = endColor}
@@ -176,11 +191,11 @@ public class SceneRenderer : IDisposable
 
         var properties = new LinearGradientBrushProperties
         {
-            StartPoint = new Vector2(_renderTarget.Size.Width / 2, 0),
-            EndPoint = new Vector2(_renderTarget.Size.Width / 2, _renderTarget.Size.Height)
+            StartPoint = new Vector2(RenderTarget.Size.Width / 2, 0),
+            EndPoint = new Vector2(RenderTarget.Size.Width / 2, RenderTarget.Size.Height)
         };
 
-        _clearGradientBrush = new LinearGradientBrush(_renderTarget, properties, _clearGradientStopCollection);
+        _clearGradientBrush = new LinearGradientBrush(RenderTarget, properties, _clearGradientStopCollection);
     }
 
     private void OnIsFrontBufferAvailableChanged(object sender, DependencyPropertyChangedEventArgs e) =>
