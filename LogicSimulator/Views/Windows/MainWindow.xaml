@@ -26,8 +26,8 @@
         <Grid>
             <s:Scene2D
                 x:Name="Scene"
-                Objects="{Binding Path=Objects}"
                 Components="{Binding Path=RenderingComponents}"
+                Objects="{Binding Path=Objects}"
                 Tools="{Binding Path=Tools}" />
 
             <CheckBox
@@ -41,6 +41,10 @@
                 VerticalAlignment="Top"
                 Command="{Binding Path=TestCommand}"
                 Content="Test" />
+            <TextBox
+                Width="120"
+                HorizontalAlignment="Center"
+                VerticalAlignment="Top" />
         </Grid>
 
     </DockPanel>

@@ -11,7 +11,7 @@ public class RectangleSelectionTool : BaseTool
 {
     private bool _isStartPositionInit;
 
-    private RectangleSelectionRenderingComponent _component;
+    private SelectionRectangleRenderingComponent _component;
 
     public Vector2 StartPosition { get; private set; }
     public Vector2 EndPosition { get; private set; }
@@ -22,7 +22,7 @@ public class RectangleSelectionTool : BaseTool
 
     protected override void OnActivated(Scene2D scene)
     {
-        _component = scene.GetComponent<RectangleSelectionRenderingComponent>();
+        _component = scene.GetComponent<SelectionRectangleRenderingComponent>();
     }
 
     public override void MouseLeftButtonDragged(Scene2D scene, Vector2 pos)

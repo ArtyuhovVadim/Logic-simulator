@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
@@ -84,6 +83,7 @@ public class Scene2D : FrameworkElement
 
     public float Dpi { get; private set; }
 
+    //TODO: Костыль!
     internal RenderTarget RenderTarget => _sceneRenderer.RenderTarget;
     
     public Matrix3x2 Transform => _sceneRenderer.Transform;

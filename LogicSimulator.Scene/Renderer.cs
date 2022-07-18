@@ -1,8 +1,10 @@
-﻿using LogicSimulator.Scene.Components;
-using LogicSimulator.Scene.Tools;
+﻿using System.Linq;
+using LogicSimulator.Scene.Components;
+using LogicSimulator.Scene.ExtensionMethods;
+using LogicSimulator.Scene.SceneObjects;
+using LogicSimulator.Scene.SceneObjects.Base;
 using SharpDX;
 using SharpDX.Direct2D1;
-using SharpDX.Mathematics.Interop;
 using Rectangle = LogicSimulator.Scene.SceneObjects.Rectangle;
 
 namespace LogicSimulator.Scene;
@@ -104,6 +106,7 @@ public class Renderer : ResourceDependentObject
         }
     }
 
+    //TODO: Ввести SelectionGeometry или что-то подобное
     public void Render(Scene2D scene, SelectionRenderingComponent component)
     {
         foreach (var sceneObject in scene.Objects)
@@ -115,10 +118,28 @@ public class Renderer : ResourceDependentObject
         }
     }
 
-    public void Render(Scene2D scene, RectangleSelectionRenderingComponent component)
+    public void Render(Scene2D scene, NodeRenderingComponent component)
+    {
+        var strokeColor = component.GetResourceValue<SolidColorBrush>(NodeRenderingComponent.StrokeBrushResource, _renderTarget);
+        var selectedColor = component.GetResourceValue<SolidColorBrush>(NodeRenderingComponent.SelectBrushResource, _renderTarget);
+        var unselectedColor = component.GetResourceValue<SolidColorBrush>(NodeRenderingComponent.UnselectBrushResource, _renderTarget);
+
+        var size = Node.NodeSize / scene.Scale;
+
+        foreach (var sceneObject in scene.Objects.OfType<EditableSceneObject>().Where(x => x.IsSelected))
+        {
+            foreach (var node in sceneObject.Nodes)
+            {
+                _renderTarget.FillRectangle(node.Location.RectangleRelativePointAsCenter(size), node.IsSelected ? selectedColor : unselectedColor);
+                _renderTarget.DrawRectangle(node.Location.RectangleRelativePointAsCenter(size), strokeColor, 1f / scene.Scale);
+            }
+        }
+    }
+
+    public void Render(Scene2D scene, SelectionRectangleRenderingComponent component)
     {
         var brush = component.GetResourceValue<SolidColorBrush>(
-            component.IsSecant ? RectangleSelectionRenderingComponent.SecantBrushResource : RectangleSelectionRenderingComponent.NormalBrushResource,
+            component.IsSecant ? SelectionRectangleRenderingComponent.SecantBrushResource : SelectionRectangleRenderingComponent.NormalBrushResource,
             _renderTarget);
 
         var location = component.StartPosition;

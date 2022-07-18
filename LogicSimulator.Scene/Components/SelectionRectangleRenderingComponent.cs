@@ -4,15 +4,15 @@ using SharpDX.Direct2D1;
 
 namespace LogicSimulator.Scene.Components;
 
-public class RectangleSelectionRenderingComponent : BaseRenderingComponent
+public class SelectionRectangleRenderingComponent : BaseRenderingComponent
 {
     public static readonly Resource SecantBrushResource =
-        Resource.Register<RectangleSelectionRenderingComponent, SolidColorBrush>(nameof(SecantBrushResource),
-            (target, o) => new SolidColorBrush(target, ((RectangleSelectionRenderingComponent) o).SecantColor));
+        Resource.Register<SelectionRectangleRenderingComponent, SolidColorBrush>(nameof(SecantBrushResource),
+            (target, o) => new SolidColorBrush(target, ((SelectionRectangleRenderingComponent) o).SecantColor));
 
     public static readonly Resource NormalBrushResource =
-        Resource.Register<RectangleSelectionRenderingComponent, SolidColorBrush>(nameof(NormalBrushResource),
-            (target, o) => new SolidColorBrush(target, ((RectangleSelectionRenderingComponent) o).NormalColor));
+        Resource.Register<SelectionRectangleRenderingComponent, SolidColorBrush>(nameof(NormalBrushResource),
+            (target, o) => new SolidColorBrush(target, ((SelectionRectangleRenderingComponent) o).NormalColor));
 
     private Vector2 _startPosition;
     private Vector2 _endPosition;
@@ -20,7 +20,7 @@ public class RectangleSelectionRenderingComponent : BaseRenderingComponent
     private Color4 _secantColor = new(0.39f, 0.78f, 0.39f, 1f);
     private Color4 _normalColor = new(0.49f, 0.68f, 1f, 1f);
 
-    public RectangleSelectionRenderingComponent()
+    public SelectionRectangleRenderingComponent()
     {
         IsVisible = false;
     }

@@ -15,22 +15,6 @@ namespace LogicSimulator.ViewModels;
 
 public class MainWindowViewModel : BindableBase
 {
-    public MainWindowViewModel()
-    {
-        var rand = new Random();
-
-        for (var i = 0; i < 100; i++)
-        {
-            Objects.Add(new Rectangle
-            {
-                Location = new Vector2(rand.Next(0, 2500), rand.Next(0, 2500)),
-                Width = rand.Next(50, 300),
-                Height = rand.Next(50, 300),
-                FillColor = new Color4(rand.NextFloat(0, 1), rand.NextFloat(0, 1), rand.NextFloat(0, 1), rand.NextFloat(0, 1))
-            });
-        }
-    }
-
     #region Objects
 
     private ObservableCollection<BaseSceneObject> _objects = new()
@@ -63,7 +47,8 @@ public class MainWindowViewModel : BindableBase
         },
         new SceneObjectsRenderingComponent(),
         new SelectionRenderingComponent(),
-        new RectangleSelectionRenderingComponent()
+        new SelectionRectangleRenderingComponent(),
+        new NodeRenderingComponent()
     };
     public ObservableCollection<BaseRenderingComponent> RenderingComponents
     {
@@ -79,7 +64,8 @@ public class MainWindowViewModel : BindableBase
     {
         new SelectionTool(),
         new DragTool(),
-        new RectangleSelectionTool()
+        new RectangleSelectionTool(),
+        new NodeDragTool()
     };
     public ObservableCollection<BaseTool> Tools
     {

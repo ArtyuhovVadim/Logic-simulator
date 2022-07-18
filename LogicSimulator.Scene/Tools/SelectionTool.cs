@@ -1,6 +1,8 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Windows.Input;
+using LogicSimulator.Scene.ExtensionMethods;
+using LogicSimulator.Scene.SceneObjects;
 using LogicSimulator.Scene.SceneObjects.Base;
 using LogicSimulator.Scene.Tools.Base;
 using SharpDX;
@@ -15,8 +17,19 @@ public class SelectionTool : BaseTool
 
     public IEnumerable<BaseSceneObject> ObjectUnderCursor { private set; get; } = Enumerable.Empty<BaseSceneObject>();
 
+    public Node NodeUnderCursor { private set; get; }
+
     public override void MouseLeftButtonDown(Scene2D scene, Vector2 pos)
     {
+        var node = GetNodeUnderCursor(scene, pos.Transform(scene.Transform));
+
+        if (node is not null)
+        {
+            node.Select();
+            NodeUnderCursor = node;
+            scene.SwitchTool<NodeDragTool>();
+        }
+
         ObjectUnderCursor = GetObjectsUnderCursor(scene, pos);
     }
 
@@ -94,6 +107,12 @@ public class SelectionTool : BaseTool
 
     private IEnumerable<BaseSceneObject> GetObjectsUnderCursor(Scene2D scene, Vector2 pos) =>
         scene.Objects.Where(obj => obj.IsIntersectsPoint(pos, scene.Transform, SelectionTolerance)).Reverse();
+
+    private Node GetNodeUnderCursor(Scene2D scene, Vector2 pos) => scene.Objects
+        .OfType<EditableSceneObject>()
+        .Where(obj => obj.IsSelected)
+        .SelectMany(sceneObject => sceneObject.Nodes)
+        .FirstOrDefault(node => pos.IsInRectangle(node.Location.RectangleRelativePointAsCenter(Node.NodeSize / scene.Scale)));
 
     private void UnselectAllObjects(Scene2D scene)
     {
