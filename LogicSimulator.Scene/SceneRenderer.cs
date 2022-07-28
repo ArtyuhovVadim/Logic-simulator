@@ -75,7 +75,7 @@ public class SceneRenderer : IDisposable
         using var textFormat = new TextFormat(factory, "ISOCPEUR", 14);
         using var brush = new SolidColorBrush(RenderTarget, Color4.Black);
 
-        RenderTarget.DrawText(scene.CurrentTool.GetType().Name, textFormat, new RawRectangleF(50, 50, 200, 200), brush);
+        //RenderTarget.DrawText(scene.CurrentTool.GetType().Name, textFormat, new RawRectangleF(50, 50, 200, 200), brush);
 
         RenderTarget.EndDraw();
         _device.ImmediateContext.Flush();
@@ -198,6 +198,6 @@ public class SceneRenderer : IDisposable
         _clearGradientBrush = new LinearGradientBrush(RenderTarget, properties, _clearGradientStopCollection);
     }
 
-    private void OnIsFrontBufferAvailableChanged(object sender, DependencyPropertyChangedEventArgs e) =>
+    private void OnIsFrontBufferAvailableChanged(object sender, DependencyPropertyChangedEventArgs e) => 
         IsRendering = _imageSource.IsFrontBufferAvailable;
 }

@@ -11,9 +11,9 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\LogicSimulator.AvalonDock\LogicSimulator.AvalonDock.csproj"/>
-        <ProjectReference Include="..\LogicSimulator.Controls\LogicSimulator.Controls.csproj"/>
-        <ProjectReference Include="..\LogicSimulator.Scene\LogicSimulator.Scene.csproj"/>
+        <ProjectReference Include="..\LogicSimulator.AvalonDock\LogicSimulator.AvalonDock.csproj" />
+        <ProjectReference Include="..\LogicSimulator.Controls\LogicSimulator.Controls.csproj" />
+        <ProjectReference Include="..\LogicSimulator.Scene\LogicSimulator.Scene.csproj" />
     </ItemGroup>
 
     <ItemGroup>
@@ -23,17 +23,18 @@
     </ItemGroup>
 
     <ItemGroup>
-        <Folder Include="Infrastructure\Converters\"/>
-        <Folder Include="Models\"/>
-        <Folder Include="ViewModels\Base\"/>
-        <Folder Include="ViewModels\UserDialogViewModels\Base\"/>
-        <Folder Include="Models\"/>
+        <Folder Include="Infrastructure\Converters\" />
+        <Folder Include="Models\" />
+        <Folder Include="ViewModels\Base\" />
+        <Folder Include="ViewModels\UserDialogViewModels\Base\" />
+        <Folder Include="Models\" />
     </ItemGroup>
 
     <ItemGroup>
-        <PackageReference Include="FontAwesome5" Version="2.1.11"/>
-        <PackageReference Include="Microsoft.Extensions.Hosting" Version="6.0.1"/>
-        <PackageReference Include="Microsoft.Extensions.Hosting.Abstractions" Version="6.0.0"/>
+        <PackageReference Include="Extended.Wpf.Toolkit" Version="4.3.0" />
+        <PackageReference Include="FontAwesome5" Version="2.1.11" />
+        <PackageReference Include="Microsoft.Extensions.Hosting" Version="6.0.1" />
+        <PackageReference Include="Microsoft.Extensions.Hosting.Abstractions" Version="6.0.0" />
     </ItemGroup>
 
 </Project>

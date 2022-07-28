@@ -20,11 +20,13 @@ public class Scene2D : FrameworkElement
     private SceneRenderer _sceneRenderer;
     private SceneTransformController _sceneTransformController;
 
+    private bool _isLeftMouseButtonPressedOnScene;
+
     #region IsRendering
 
     public bool IsRendering
     {
-        get => (bool) GetValue(IsRenderingProperty);
+        get => (bool)GetValue(IsRenderingProperty);
         set => SetValue(IsRenderingProperty, value);
     }
 
@@ -35,7 +37,7 @@ public class Scene2D : FrameworkElement
     {
         if (d is not Scene2D scene2D) return;
 
-        scene2D._sceneRenderer.IsRendering = (bool) e.NewValue;
+        scene2D._sceneRenderer.IsRendering = (bool)e.NewValue;
     }
 
     #endregion
@@ -44,7 +46,7 @@ public class Scene2D : FrameworkElement
 
     public IEnumerable<BaseSceneObject> Objects
     {
-        get => (IEnumerable<BaseSceneObject>) GetValue(ObjectsProperty);
+        get => (IEnumerable<BaseSceneObject>)GetValue(ObjectsProperty);
         set => SetValue(ObjectsProperty, value);
     }
 
@@ -58,7 +60,7 @@ public class Scene2D : FrameworkElement
 
     public IEnumerable<BaseRenderingComponent> Components
     {
-        get => (IEnumerable<BaseRenderingComponent>) GetValue(ComponentsProperty);
+        get => (IEnumerable<BaseRenderingComponent>)GetValue(ComponentsProperty);
         set => SetValue(ComponentsProperty, value);
     }
 
@@ -72,12 +74,20 @@ public class Scene2D : FrameworkElement
 
     public IEnumerable<BaseTool> Tools
     {
-        get => (IEnumerable<BaseTool>) GetValue(ToolsProperty);
+        get => (IEnumerable<BaseTool>)GetValue(ToolsProperty);
         set => SetValue(ToolsProperty, value);
     }
 
     public static readonly DependencyProperty ToolsProperty =
-        DependencyProperty.Register(nameof(Tools), typeof(IEnumerable<BaseTool>), typeof(Scene2D), new PropertyMetadata(default(IEnumerable<BaseTool>)));
+        DependencyProperty.Register(nameof(Tools), typeof(IEnumerable<BaseTool>), typeof(Scene2D),
+            new PropertyMetadata(Enumerable.Empty<BaseTool>(), OnToolsChanged));
+
+    private static void OnToolsChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+    {
+        if (d is not Scene2D scene) return;
+
+        scene.CurrentTool = ((IEnumerable<BaseTool>)e.NewValue).First();
+    }
 
     #endregion
 
@@ -85,19 +95,19 @@ public class Scene2D : FrameworkElement
 
     //TODO: Костыль!
     internal RenderTarget RenderTarget => _sceneRenderer.RenderTarget;
-    
+
     public Matrix3x2 Transform => _sceneRenderer.Transform;
 
     public float Scale
     {
         get => _sceneRenderer.Transform.M11;
-        set => _sceneRenderer.Transform = _sceneRenderer.Transform with {M11 = value, M22 = value};
+        set => _sceneRenderer.Transform = _sceneRenderer.Transform with { M11 = value, M22 = value };
     }
 
     public Vector2 Translation
     {
         get => new(_sceneRenderer.Transform.M31, _sceneRenderer.Transform.M32);
-        set => _sceneRenderer.Transform = _sceneRenderer.Transform with {M31 = value.X, M32 = value.Y};
+        set => _sceneRenderer.Transform = _sceneRenderer.Transform with { M31 = value.X, M32 = value.Y };
     }
 
     public Scene2D()
@@ -116,12 +126,12 @@ public class Scene2D : FrameworkElement
 
     public T GetComponent<T>() where T : BaseRenderingComponent
     {
-        return (T) Components.FirstOrDefault(x => x.GetType() == typeof(T));
+        return (T)Components.FirstOrDefault(x => x.GetType() == typeof(T));
     }
 
     public T GetTool<T>() where T : BaseTool
     {
-        return (T) Tools.FirstOrDefault(x => x.GetType() == typeof(T));
+        return (T)Tools.FirstOrDefault(x => x.GetType() == typeof(T));
     }
 
     public void SwitchTool<T>() where T : BaseTool
@@ -151,7 +161,7 @@ public class Scene2D : FrameworkElement
         var p = pos.Transform(_sceneRenderer.Transform);
 
         var newScaleCoefficient = 1 + delta / Scale;
-        var newScale = (float) Math.Round(Scale * newScaleCoefficient, 2);
+        var newScale = (float)Math.Round(Scale * newScaleCoefficient, 2);
 
         if (newScale < min || newScale > max) return;
 
@@ -176,15 +186,11 @@ public class Scene2D : FrameworkElement
     {
         base.OnInitialized(e);
 
-        Dpi = (float) VisualTreeHelper.GetDpi(this).PixelsPerInchX;
+        Dpi = (float)VisualTreeHelper.GetDpi(this).PixelsPerInchX;
 
         _sceneRenderer = new SceneRenderer(RenderSize.Width, RenderSize.Height, Dpi);
 
         _sceneTransformController = new SceneTransformController(this);
-
-        Window.GetWindow(this)!.Closed += (_, _) => Utilities.Dispose(ref _sceneRenderer);
-
-        SwitchTool<SelectionTool>();
     }
 
     protected override void OnMouseMove(MouseEventArgs e)
@@ -193,11 +199,11 @@ public class Scene2D : FrameworkElement
 
         var pos = GetMousePosition();
 
-        if (e.LeftButton == MouseButtonState.Pressed)
+        if (e.LeftButton == MouseButtonState.Pressed && _isLeftMouseButtonPressedOnScene)
             CurrentTool?.MouseLeftButtonDragged(this, pos);
-        else if (e.RightButton == MouseButtonState.Pressed)
+        else if (e.RightButton == MouseButtonState.Pressed && _isLeftMouseButtonPressedOnScene)
             CurrentTool?.MouseRightButtonDragged(this, pos);
-        else if (e.MiddleButton == MouseButtonState.Pressed)
+        else if (e.MiddleButton == MouseButtonState.Pressed && _isLeftMouseButtonPressedOnScene)
             CurrentTool?.MouseMiddleButtonDragged(this, pos);
         else
             CurrentTool?.MouseMove(this, pos);
@@ -207,6 +213,8 @@ public class Scene2D : FrameworkElement
     {
         base.OnMouseLeftButtonDown(e);
 
+        _isLeftMouseButtonPressedOnScene = true;
+
         CurrentTool?.MouseLeftButtonDown(this, GetMousePosition());
     }
 
@@ -214,7 +222,12 @@ public class Scene2D : FrameworkElement
     {
         base.OnMouseLeftButtonUp(e);
 
-        CurrentTool?.MouseLeftButtonUp(this, GetMousePosition());
+        if (_isLeftMouseButtonPressedOnScene)
+            CurrentTool?.MouseLeftButtonUp(this, GetMousePosition());
+
+        _isLeftMouseButtonPressedOnScene = false;
+
+        Mouse.Capture(null);
     }
 
     protected override void OnMouseRightButtonDown(MouseButtonEventArgs e)
@@ -229,6 +242,8 @@ public class Scene2D : FrameworkElement
         base.OnMouseRightButtonUp(e);
 
         CurrentTool?.MouseRightButtonUp(this, GetMousePosition());
+
+        Mouse.Capture(null);
     }
 
     protected override void OnMouseDown(MouseButtonEventArgs e)
@@ -237,13 +252,6 @@ public class Scene2D : FrameworkElement
 
         Mouse.Capture(this);
         Keyboard.Focus(this);
-    }
-
-    protected override void OnMouseUp(MouseButtonEventArgs e)
-    {
-        base.OnMouseUp(e);
-
-        Mouse.Capture(null);
     }
 
     protected override void OnKeyDown(KeyEventArgs e)
