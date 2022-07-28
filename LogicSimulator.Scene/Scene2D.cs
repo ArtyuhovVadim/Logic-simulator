@@ -91,18 +91,51 @@ public class Scene2D : FrameworkElement
 
     #endregion
 
+    #region Scale
+
+    public float Scale
+    {
+        get => (float)GetValue(ScaleProperty);
+        set => SetValue(ScaleProperty, value);
+    }
+
+    public static readonly DependencyProperty ScaleProperty =
+        DependencyProperty.Register(nameof(Scale), typeof(float), typeof(Scene2D), new PropertyMetadata(1f, OnScaleChanged));
+
+    private static void OnScaleChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+    {
+        if (d is not Scene2D scene) return;
+
+        var newValue = (float)e.NewValue;
+        var render = scene._sceneRenderer;
+
+        render.Transform = render.Transform with { M11 = newValue, M22 = newValue };
+    }
+
+    #endregion
+
+    #region MousePosition
+
+    private static readonly DependencyPropertyKey MousePositionPropertyKey
+        = DependencyProperty.RegisterReadOnly(nameof(MousePosition), typeof(Vector2), typeof(Scene2D), new PropertyMetadata(Vector2.Zero));
+
+    public static readonly DependencyProperty MousePositionProperty
+        = MousePositionPropertyKey.DependencyProperty;
+
+    public Vector2 MousePosition
+    {
+        get => (Vector2)GetValue(MousePositionProperty);
+        private set => SetValue(MousePositionPropertyKey, value);
+    }
+
+    #endregion
+
     public float Dpi { get; private set; }
 
     //TODO: Костыль!
     internal RenderTarget RenderTarget => _sceneRenderer.RenderTarget;
 
     public Matrix3x2 Transform => _sceneRenderer.Transform;
-
-    public float Scale
-    {
-        get => _sceneRenderer.Transform.M11;
-        set => _sceneRenderer.Transform = _sceneRenderer.Transform with { M11 = value, M22 = value };
-    }
 
     public Vector2 Translation
     {
@@ -199,6 +232,8 @@ public class Scene2D : FrameworkElement
 
         var pos = GetMousePosition();
 
+        MousePosition = pos.Transform(Transform);
+
         if (e.LeftButton == MouseButtonState.Pressed && _isLeftMouseButtonPressedOnScene)
             CurrentTool?.MouseLeftButtonDragged(this, pos);
         else if (e.RightButton == MouseButtonState.Pressed && _isLeftMouseButtonPressedOnScene)
@@ -252,6 +287,16 @@ public class Scene2D : FrameworkElement
 
         Mouse.Capture(this);
         Keyboard.Focus(this);
+    }
+
+    protected override void OnMouseUp(MouseButtonEventArgs e)
+    {
+        base.OnMouseUp(e);
+
+        if (e.ChangedButton == MouseButton.Middle)
+        {
+            Mouse.Capture(null);
+        }
     }
 
     protected override void OnKeyDown(KeyEventArgs e)
