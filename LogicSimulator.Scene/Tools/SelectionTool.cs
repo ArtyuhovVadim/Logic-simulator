@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Windows.Input;
 using LogicSimulator.Scene.ExtensionMethods;
@@ -11,6 +12,8 @@ namespace LogicSimulator.Scene.Tools;
 
 public class SelectionTool : BaseTool
 {
+    public event Action SelectionChanged;
+
     public float SelectionTolerance { get; set; } = 5f;
 
     public Key MultipleSelectionKey { get; set; } = Key.LeftShift;
@@ -56,6 +59,7 @@ public class SelectionTool : BaseTool
             if (!isMultipleSelectionKeyPressed)
             {
                 UnselectAllObjects(scene);
+                SelectionChanged?.Invoke();
             }
         }
         else if (objects.Count == 1)
@@ -72,6 +76,8 @@ public class SelectionTool : BaseTool
 
                 obj.Select();
             }
+
+            SelectionChanged?.Invoke();
         }
         else
         {
@@ -102,6 +108,8 @@ public class SelectionTool : BaseTool
                 objects[selectedObjectIndex].Unselect();
                 objects[nextSelectedObjectIndex].Select();
             }
+
+            SelectionChanged?.Invoke();
         }
     }
 

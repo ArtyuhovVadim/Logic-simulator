@@ -6,6 +6,7 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:s="clr-namespace:LogicSimulator.Scene;assembly=LogicSimulator.Scene"
+    xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
     Title="Logic-simulator"
     Width="1280"
     Height="720"
@@ -27,7 +28,10 @@
                 <LayoutPanel Orientation="Horizontal">
                     <LayoutDocumentPaneGroup>
                         <LayoutDocumentPane x:Name="LayoutDocumentPane">
-                            <LayoutDocument Title="Test scene" CanClose="False">
+                            <LayoutDocument
+                                Title="Test scene"
+                                CanClose="False"
+                                CanFloat="False">
                                 <s:Scene2D
                                     x:Name="Scene"
                                     Components="{Binding Path=RenderingComponents}"
@@ -38,7 +42,9 @@
                     </LayoutDocumentPaneGroup>
                     <LayoutAnchorablePaneGroup DockWidth="300">
                         <LayoutAnchorablePane>
-                            <LayoutAnchorable Title="Properties" CanClose="False" />
+                            <LayoutAnchorable Title="Properties" CanClose="False">
+                                <xctk:PropertyGrid SelectedObject="{Binding Path=SelectedObjects[0]}" />
+                            </LayoutAnchorable>
                         </LayoutAnchorablePane>
                     </LayoutAnchorablePaneGroup>
                 </LayoutPanel>

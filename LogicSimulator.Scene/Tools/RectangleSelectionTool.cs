@@ -1,4 +1,5 @@
-﻿using System.Windows.Input;
+﻿using System;
+using System.Windows.Input;
 using LogicSimulator.Scene.Components;
 using LogicSimulator.Scene.ExtensionMethods;
 using LogicSimulator.Scene.Tools.Base;
@@ -10,8 +11,11 @@ namespace LogicSimulator.Scene.Tools;
 public class RectangleSelectionTool : BaseTool
 {
     private bool _isStartPositionInit;
+    private bool _isSelectionChanged;
 
     private SelectionRectangleRenderingComponent _component;
+
+    public event Action SelectionChanged;
 
     public Vector2 StartPosition { get; private set; }
     public Vector2 EndPosition { get; private set; }
@@ -58,6 +62,7 @@ public class RectangleSelectionTool : BaseTool
             if (!isManySelectionKeyDown)
             {
                 sceneObject.Unselect();
+                _isSelectionChanged = true;
             }
 
             var compareResult = sceneObject.CompareWithRectangle(selectionGeometry, Matrix3x2.Identity);
@@ -70,9 +75,13 @@ public class RectangleSelectionTool : BaseTool
                 case true when compareResult is GeometryRelation.IsContained or GeometryRelation.Overlap:
                 case false when compareResult is GeometryRelation.IsContained:
                     sceneObject.Select();
+                    _isSelectionChanged = true;
                     break;
             }
         }
+
+        if(_isSelectionChanged)
+            SelectionChanged?.Invoke();
 
         scene.SwitchTool<SelectionTool>();
     }

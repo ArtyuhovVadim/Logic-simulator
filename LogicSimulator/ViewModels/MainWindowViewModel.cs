@@ -1,4 +1,5 @@
 ﻿using System.Collections.ObjectModel;
+using System.Linq;
 using System.Windows.Input;
 using LogicSimulator.Infrastructure.Commands;
 using LogicSimulator.Scene.Components;
@@ -14,6 +15,26 @@ namespace LogicSimulator.ViewModels;
 
 public class MainWindowViewModel : BindableBase
 {
+    public MainWindowViewModel()
+    {
+        var selectionTool = _tools.OfType<SelectionTool>().First();
+        var rectangleSelectionTool = _tools.OfType<RectangleSelectionTool>().First();
+
+        selectionTool.SelectionChanged += OnSelectionChanged;
+        rectangleSelectionTool.SelectionChanged += OnSelectionChanged;
+    }
+
+    #region SelectedObjects
+
+    private ObservableCollection<BaseSceneObject> _selectedObjects = new();
+    public ObservableCollection<BaseSceneObject> SelectedObjects
+    {
+        get => _selectedObjects;
+        private set => Set(ref _selectedObjects, value);
+    }
+
+    #endregion
+
     #region Objects
 
     private ObservableCollection<BaseSceneObject> _objects = new()
@@ -83,4 +104,14 @@ public class MainWindowViewModel : BindableBase
     }, _ => true);
 
     #endregion
+
+    private void OnSelectionChanged()
+    {
+        SelectedObjects.Clear();
+
+        foreach (var obj in Objects.Where(x => x.IsSelected))
+        {
+            SelectedObjects.Add(obj);
+        }
+    }
 }
