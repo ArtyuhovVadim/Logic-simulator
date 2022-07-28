@@ -32,6 +32,7 @@ public class Renderer : ResourceDependentObject
 
     public Renderer(RenderTarget renderTarget) => _renderTarget = renderTarget;
 
+    //TODO: Перенести в SelectionRenderingComponent
     public Color4 SelectionColor
     {
         get => _selectionColor;
@@ -64,7 +65,7 @@ public class Renderer : ResourceDependentObject
 
         _renderTarget.DrawGeometry(geometry, brush, 1f / scene.Scale, style);
     }
-
+    
     public void Render(Scene2D scene, GridRenderingComponent component)
     {
         var strokeWidth = component.LineThickness / scene.Scale;
@@ -130,8 +131,10 @@ public class Renderer : ResourceDependentObject
         {
             foreach (var node in sceneObject.Nodes)
             {
-                _renderTarget.FillRectangle(node.Location.RectangleRelativePointAsCenter(size), node.IsSelected ? selectedColor : unselectedColor);
-                _renderTarget.DrawRectangle(node.Location.RectangleRelativePointAsCenter(size), strokeColor, 1f / scene.Scale);
+                var rect = node.Location.RectangleRelativePointAsCenter(size);
+
+                _renderTarget.FillRectangle(rect, node.IsSelected ? selectedColor : unselectedColor);
+                _renderTarget.DrawRectangle(rect, strokeColor, 1f / scene.Scale);
             }
         }
     }

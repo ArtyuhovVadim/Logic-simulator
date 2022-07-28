@@ -29,23 +29,6 @@
                 Components="{Binding Path=RenderingComponents}"
                 Objects="{Binding Path=Objects}"
                 Tools="{Binding Path=Tools}" />
-
-            <CheckBox
-                Margin="10"
-                HorizontalAlignment="Left"
-                VerticalAlignment="Top"
-                IsChecked="{Binding ElementName=Scene, Path=IsRendering}" />
-            <Button
-                Margin="10"
-                HorizontalAlignment="Right"
-                VerticalAlignment="Top"
-                Command="{Binding Path=TestCommand}"
-                Content="Test" />
-            <TextBox
-                Width="120"
-                HorizontalAlignment="Center"
-                VerticalAlignment="Top" />
         </Grid>
-
     </DockPanel>
 </c:Window>
