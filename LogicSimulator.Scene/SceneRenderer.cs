@@ -5,9 +5,7 @@ using SharpDX;
 using SharpDX.Direct2D1;
 using SharpDX.Direct3D;
 using SharpDX.Direct3D11;
-using SharpDX.DirectWrite;
 using SharpDX.DXGI;
-using SharpDX.Mathematics.Interop;
 using AlphaMode = SharpDX.Direct2D1.AlphaMode;
 using Device = SharpDX.Direct3D11.Device;
 using Factory = SharpDX.Direct2D1.Factory;
@@ -15,7 +13,6 @@ using GradientStop = SharpDX.Direct2D1.GradientStop;
 using GradientStopCollection = SharpDX.Direct2D1.GradientStopCollection;
 using LinearGradientBrush = SharpDX.Direct2D1.LinearGradientBrush;
 using PixelFormat = SharpDX.Direct2D1.PixelFormat;
-using SolidColorBrush = SharpDX.Direct2D1.SolidColorBrush;
 
 namespace LogicSimulator.Scene;
 
@@ -71,12 +68,6 @@ public class SceneRenderer : IDisposable
             component.Render(scene, _renderer);
         }
 
-        using var factory = new SharpDX.DirectWrite.Factory();
-        using var textFormat = new TextFormat(factory, "ISOCPEUR", 14);
-        using var brush = new SolidColorBrush(RenderTarget, Color4.Black);
-
-        //RenderTarget.DrawText(scene.CurrentTool.GetType().Name, textFormat, new RawRectangleF(50, 50, 200, 200), brush);
-
         RenderTarget.EndDraw();
         _device.ImmediateContext.Flush();
         _imageSource.InvalidateD3DImage();
@@ -115,6 +106,7 @@ public class SceneRenderer : IDisposable
         Utilities.Dispose(ref _imageSource);
         Utilities.Dispose(ref _texture2D);
         Utilities.Dispose(ref _device);
+        Utilities.Dispose(ref _renderer);
     }
 
     private void CreateAndBindTargets(double pixelWidth, double pixelHeight, float dpi)
@@ -122,10 +114,11 @@ public class SceneRenderer : IDisposable
         var transform = Matrix3x2.Identity;
 
         if (RenderTarget is not null) transform = RenderTarget.Transform;
-
+        
         Utilities.Dispose(ref _renderTarget);
         Utilities.Dispose(ref _factory);
         Utilities.Dispose(ref _texture2D);
+        Utilities.Dispose(ref _renderer);
 
         _imageSource.SetRenderTarget(null);
 
