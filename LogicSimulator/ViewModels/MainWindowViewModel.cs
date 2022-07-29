@@ -2,6 +2,8 @@
 using System.Linq;
 using System.Windows.Input;
 using LogicSimulator.Infrastructure.Commands;
+using LogicSimulator.Infrastructure.Services;
+using LogicSimulator.Models;
 using LogicSimulator.Scene.Components;
 using LogicSimulator.Scene.Components.Base;
 using LogicSimulator.Scene.SceneObjects.Base;
@@ -15,8 +17,14 @@ namespace LogicSimulator.ViewModels;
 
 public class MainWindowViewModel : BindableBase
 {
-    public MainWindowViewModel()
+    private readonly ISchemeFileService _schemeFileService;
+
+    private Scheme _scheme;
+
+    public MainWindowViewModel(ISchemeFileService schemeFileService)
     {
+        _schemeFileService = schemeFileService;
+
         var selectionTool = _tools.OfType<SelectionTool>().First();
         var rectangleSelectionTool = _tools.OfType<RectangleSelectionTool>().First();
 
@@ -37,13 +45,7 @@ public class MainWindowViewModel : BindableBase
 
     #region Objects
 
-    private ObservableCollection<BaseSceneObject> _objects = new()
-    {
-        new Rectangle { Location = new Vector2(100, 100), Width = 200, Height = 300, FillColor = new Color4(1, 0, 0, 1) },
-        new Rectangle { Location = new Vector2(250, 250), Width = 200, Height = 300, FillColor = new Color4(0, 0, 1, 1) },
-        new Rectangle { Location = new Vector2(300, 400), Width = 200, Height = 300 },
-        new Rectangle { Location = new Vector2(350, 250), Width = 200, Height = 300 },
-    };
+    private ObservableCollection<BaseSceneObject> _objects = new();
     public ObservableCollection<BaseSceneObject> Objects
     {
         get => _objects;
@@ -95,12 +97,40 @@ public class MainWindowViewModel : BindableBase
 
     #endregion
 
+    #region LoadExampleCommand
+
+    private ICommand _loadExampleCommand;
+
+    public ICommand LoadExampleCommand => _loadExampleCommand ??= new LambdaCommand(_ =>
+    {
+        _scheme = _schemeFileService.ReadFromFile("Data/Example.lss");
+
+        Objects.Clear();
+
+        foreach (var o in _scheme.Objects)
+            Objects.Add(o);
+    }, _ => true);
+
+    #endregion
+
+    #region SaveExampleCommand
+
+    private ICommand _saveExampleCommand;
+
+    public ICommand SaveExampleCommand => _saveExampleCommand ??= new LambdaCommand(_ =>
+    {
+        _schemeFileService.SaveToFile("Data/Example.lss", _scheme);
+    }, _ => true);
+
+    #endregion
+
     #region TestCommand
 
     private ICommand _testCommand;
 
     public ICommand TestCommand => _testCommand ??= new LambdaCommand(_ =>
     {
+
     }, _ => true);
 
     #endregion

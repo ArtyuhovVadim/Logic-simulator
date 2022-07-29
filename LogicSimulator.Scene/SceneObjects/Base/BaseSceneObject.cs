@@ -1,5 +1,6 @@
 ﻿using SharpDX;
 using SharpDX.Direct2D1;
+using YamlDotNet.Serialization;
 
 namespace LogicSimulator.Scene.SceneObjects.Base;
 
@@ -8,6 +9,7 @@ public abstract class BaseSceneObject : ResourceDependentObject
     private bool _isSelected;
     private bool _isDragging;
 
+    [YamlIgnore]
     public bool IsDragging
     {
         get => _isDragging;
@@ -18,6 +20,7 @@ public abstract class BaseSceneObject : ResourceDependentObject
         }
     }
 
+    [YamlIgnore]
     public bool IsSelected
     {
         get => _isSelected;

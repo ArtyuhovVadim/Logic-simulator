@@ -20,6 +20,9 @@
         <None Update="app-settings.json">
             <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
         </None>
+        <None Update="Data\Example.lss">
+          <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        </None>
     </ItemGroup>
 
     <ItemGroup>
@@ -35,6 +38,7 @@
         <PackageReference Include="FontAwesome5" Version="2.1.11" />
         <PackageReference Include="Microsoft.Extensions.Hosting" Version="6.0.1" />
         <PackageReference Include="Microsoft.Extensions.Hosting.Abstractions" Version="6.0.0" />
+        <PackageReference Include="YamlDotNet" Version="12.0.0" />
     </ItemGroup>
 
 </Project>
