@@ -26,6 +26,7 @@
                 <MenuItem Command="{Binding Path=SaveExampleCommand}" Header="Сохранить пример" />
                 <Separator />
                 <MenuItem Header="Выход" />
+                <MenuItem Header="Test" Command="{Binding Path=TestCommand}" />
             </MenuItem>
         </Menu>
 

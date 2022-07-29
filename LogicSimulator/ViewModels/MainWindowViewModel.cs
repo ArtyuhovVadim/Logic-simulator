@@ -11,7 +11,6 @@ using LogicSimulator.Scene.Tools;
 using LogicSimulator.Scene.Tools.Base;
 using LogicSimulator.ViewModels.Base;
 using SharpDX;
-using Rectangle = LogicSimulator.Scene.SceneObjects.Rectangle;
 
 namespace LogicSimulator.ViewModels;
 

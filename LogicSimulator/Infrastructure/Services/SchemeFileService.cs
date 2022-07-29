@@ -2,6 +2,8 @@
 using System.Text;
 using LogicSimulator.Infrastructure.YamlConverters;
 using LogicSimulator.Models;
+using LogicSimulator.Scene.SceneObjects;
+using YamlDotNet.Core;
 using YamlDotNet.Serialization;
 
 namespace LogicSimulator.Infrastructure.Services;
@@ -22,11 +24,13 @@ public class SchemeFileService : ISchemeFileService
         _serializer = new SerializerBuilder()
             .WithTypeConverter(vector2Converter)
             .WithTypeConverter(color4Converter)
+            .WithTagMapping(new TagName("!Rectangle"), typeof(Rectangle))
             .Build();
 
         _deserializer = new DeserializerBuilder()
             .WithTypeConverter(vector2Converter)
             .WithTypeConverter(color4Converter)
+            .WithTagMapping(new TagName("!Rectangle"), typeof(Rectangle))
             .Build();
 
         _fileWriteStreamOptions = new FileStreamOptions { Access = FileAccess.Write, Mode = FileMode.Create };
@@ -38,7 +42,7 @@ public class SchemeFileService : ISchemeFileService
         using var streamWriter = new StreamWriter(path, Encoding.Default, _fileWriteStreamOptions);
 
         var serializedScheme = _serializer.Serialize(scheme);
-        
+
         streamWriter.Write(serializedScheme);
     }
 
