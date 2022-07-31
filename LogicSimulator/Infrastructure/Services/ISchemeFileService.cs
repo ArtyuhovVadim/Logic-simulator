@@ -4,7 +4,7 @@ namespace LogicSimulator.Infrastructure.Services;
 
 public interface ISchemeFileService
 {
-    void SaveToFile(string path, Scheme scheme);
+    bool SaveToFile(string path, Scheme scheme);
 
-    Scheme ReadFromFile(string path);
+    bool ReadFromFile(string path, out Scheme scheme);
 }

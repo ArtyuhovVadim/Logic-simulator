@@ -116,6 +116,15 @@
 
     <!--#endregion-->
 
+    <!--#region TextBox style brushes-->
+
+    <SolidColorBrush
+        x:Key="{x:Static r:ResourceKeys.TextBlockForegroundBrush}"
+        o:Freeze="True"
+        Color="White" />
+
+    <!--#endregion-->
+
     <!--#region Menu style brushes-->
 
     <SolidColorBrush

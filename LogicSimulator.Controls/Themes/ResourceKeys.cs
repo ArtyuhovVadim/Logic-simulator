@@ -57,6 +57,12 @@ public static class ResourceKeys
 
     #endregion
 
+    #region TextBox style resource keys
+
+    public static readonly ComponentResourceKey TextBlockForegroundBrush = CreateInstance();
+
+    #endregion
+
     #region Menu style resource keys
 
     public static readonly ComponentResourceKey MenuBackgroundBrush = CreateInstance();
@@ -109,7 +115,7 @@ public static class ResourceKeys
 
     public static readonly ComponentResourceKey UserDialogWindowBackground = CreateInstance();
 
-	#endregion
+    #endregion
 
     private static ComponentResourceKey CreateInstance([CallerMemberName] string fieldName = null)
     {

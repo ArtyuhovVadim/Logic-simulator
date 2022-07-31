@@ -17,12 +17,14 @@ namespace LogicSimulator.ViewModels;
 public class MainWindowViewModel : BindableBase
 {
     private readonly ISchemeFileService _schemeFileService;
+    private readonly IUserDialogService _userDialogService;
 
     private Scheme _scheme;
 
-    public MainWindowViewModel(ISchemeFileService schemeFileService)
+    public MainWindowViewModel(ISchemeFileService schemeFileService, IUserDialogService userDialogService)
     {
         _schemeFileService = schemeFileService;
+        _userDialogService = userDialogService;
 
         var selectionTool = _tools.OfType<SelectionTool>().First();
         var rectangleSelectionTool = _tools.OfType<RectangleSelectionTool>().First();
@@ -102,7 +104,13 @@ public class MainWindowViewModel : BindableBase
 
     public ICommand LoadExampleCommand => _loadExampleCommand ??= new LambdaCommand(_ =>
     {
-        _scheme = _schemeFileService.ReadFromFile("Data/Example.lss");
+        var path = "Data/Example.lss";
+
+        if (!_schemeFileService.ReadFromFile(path, out _scheme))
+        {
+            _userDialogService.ShowErrorMessage("Ошибка загрузки файла", $"Не удалось загрузить файл:{path}");
+            return;
+        }
 
         Objects.Clear();
 
@@ -118,7 +126,13 @@ public class MainWindowViewModel : BindableBase
 
     public ICommand SaveExampleCommand => _saveExampleCommand ??= new LambdaCommand(_ =>
     {
-        _schemeFileService.SaveToFile("Data/Example.lss", _scheme);
+        var path = "Data/Example.lss";
+
+        if (!_schemeFileService.SaveToFile("Data/Example.lss", _scheme))
+        {
+            _userDialogService.ShowErrorMessage("Ошибка сохранения файла", $"Не удалось сохранить файл: {path}");
+        }
+
     }, _ => true);
 
     #endregion

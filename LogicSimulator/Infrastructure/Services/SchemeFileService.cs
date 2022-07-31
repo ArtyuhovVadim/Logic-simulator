@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
 using System.Text;
 using LogicSimulator.Infrastructure.YamlConverters;
 using LogicSimulator.Models;
@@ -37,21 +38,46 @@ public class SchemeFileService : ISchemeFileService
         _fileReadStreamOptions = new FileStreamOptions { Access = FileAccess.Read, Mode = FileMode.Open };
     }
 
-    public void SaveToFile(string path, Scheme scheme)
+    public bool SaveToFile(string path, Scheme scheme)
     {
-        using var streamWriter = new StreamWriter(path, Encoding.Default, _fileWriteStreamOptions);
+        try
+        {
+            using var streamWriter = new StreamWriter(path, Encoding.Default, _fileWriteStreamOptions);
 
-        var serializedScheme = _serializer.Serialize(scheme);
+            var serializedScheme = _serializer.Serialize(scheme);
 
-        streamWriter.Write(serializedScheme);
+            streamWriter.Write(serializedScheme);
+
+            return true;
+        }
+        catch
+        {
+            return false;
+        }
     }
 
-    public Scheme ReadFromFile(string path)
+    public bool ReadFromFile(string path, out Scheme scheme)
     {
-        using var streamReader = new StreamReader(path, Encoding.Default, false, _fileReadStreamOptions);
+        scheme = null;
 
-        var serializedScheme = streamReader.ReadToEnd();
+        if (!File.Exists(path))
+        {
+            return false;
+        }
 
-        return _deserializer.Deserialize<Scheme>(serializedScheme);
+        try
+        {
+            using var streamReader = new StreamReader(path, Encoding.Default, false, _fileReadStreamOptions);
+
+            var serializedScheme = streamReader.ReadToEnd();
+
+            scheme = _deserializer.Deserialize<Scheme>(serializedScheme);
+
+            return true;
+        }
+        catch
+        {
+            return false;
+        }
     }
 }
