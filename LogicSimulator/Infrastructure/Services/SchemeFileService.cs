@@ -26,12 +26,14 @@ public class SchemeFileService : ISchemeFileService
             .WithTypeConverter(vector2Converter)
             .WithTypeConverter(color4Converter)
             .WithTagMapping(new TagName("!Rectangle"), typeof(Rectangle))
+            .WithTagMapping(new TagName("!Ellipse"), typeof(Ellipse))
             .Build();
 
         _deserializer = new DeserializerBuilder()
             .WithTypeConverter(vector2Converter)
             .WithTypeConverter(color4Converter)
             .WithTagMapping(new TagName("!Rectangle"), typeof(Rectangle))
+            .WithTagMapping(new TagName("!Ellipse"), typeof(Ellipse))
             .Build();
 
         _fileWriteStreamOptions = new FileStreamOptions { Access = FileAccess.Write, Mode = FileMode.Create };

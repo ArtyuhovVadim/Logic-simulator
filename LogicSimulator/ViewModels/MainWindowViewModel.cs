@@ -6,6 +6,7 @@ using LogicSimulator.Infrastructure.Services;
 using LogicSimulator.Models;
 using LogicSimulator.Scene.Components;
 using LogicSimulator.Scene.Components.Base;
+using LogicSimulator.Scene.SceneObjects;
 using LogicSimulator.Scene.SceneObjects.Base;
 using LogicSimulator.Scene.Tools;
 using LogicSimulator.Scene.Tools.Base;

@@ -5,6 +5,7 @@ using LogicSimulator.Scene.SceneObjects;
 using LogicSimulator.Scene.SceneObjects.Base;
 using SharpDX;
 using SharpDX.Direct2D1;
+using Ellipse = LogicSimulator.Scene.SceneObjects.Ellipse;
 using Rectangle = LogicSimulator.Scene.SceneObjects.Rectangle;
 
 namespace LogicSimulator.Scene;
@@ -12,7 +13,7 @@ namespace LogicSimulator.Scene;
 public class Renderer : ResourceDependentObject
 {
     public static readonly Resource SelectionBrushResource = Resource.Register<Renderer, SolidColorBrush>(nameof(SelectionBrushResource),
-        (target, o) => new SolidColorBrush(target, ((Renderer) o).SelectionColor));
+        (target, o) => new SolidColorBrush(target, ((Renderer)o).SelectionColor));
 
     public static readonly Resource SelectionStyleResource = Resource.Register<Renderer, StrokeStyle>(nameof(SelectionStyleResource),
         (target, _) =>
@@ -23,7 +24,7 @@ public class Renderer : ResourceDependentObject
                 DashCap = CapStyle.Flat
             };
 
-            return new StrokeStyle(target.Factory, properties, new[] {2f, 2f});
+            return new StrokeStyle(target.Factory, properties, new[] { 2f, 2f });
         });
 
     private Color4 _selectionColor = new(0, 1, 0, 1);
@@ -57,6 +58,20 @@ public class Renderer : ResourceDependentObject
         _renderTarget.DrawGeometry(geometry, strokeBrush, rectangle.StrokeThickness / scene.Scale);
     }
 
+    public void Render(Scene2D scene, Ellipse ellipse)
+    {
+        var strokeBrush = ellipse.GetResourceValue<SolidColorBrush>(Ellipse.StrokeBrushResource, _renderTarget);
+        var geometry = ellipse.GetResourceValue<EllipseGeometry>(Ellipse.EllipseGeometryResource, _renderTarget);
+
+        if (ellipse.IsFilled)
+        {
+            var fillBrush = ellipse.GetResourceValue<SolidColorBrush>(Ellipse.FillBrushResource, _renderTarget);
+            _renderTarget.FillGeometry(geometry, fillBrush);
+        }
+
+        _renderTarget.DrawGeometry(geometry, strokeBrush, ellipse.StrokeThickness / scene.Scale);
+    }
+
     public void RenderSelection(Scene2D scene, Rectangle rectangle)
     {
         var geometry = rectangle.GetResourceValue<RectangleGeometry>(Rectangle.RectangleGeometryResource, _renderTarget);
@@ -65,7 +80,18 @@ public class Renderer : ResourceDependentObject
 
         _renderTarget.DrawGeometry(geometry, brush, 1f / scene.Scale, style);
     }
-    
+
+    public void RenderSelection(Scene2D scene, Ellipse ellipse)
+    {
+        var geometry = ellipse.GetResourceValue<EllipseGeometry>(Ellipse.EllipseGeometryResource, _renderTarget);
+        var brush = GetResourceValue<SolidColorBrush>(SelectionBrushResource, _renderTarget);
+        var style = GetResourceValue<StrokeStyle>(SelectionStyleResource, _renderTarget);
+
+        _renderTarget.DrawGeometry(geometry, brush, 1f / scene.Scale, style);
+        _renderTarget.DrawLine(ellipse.Center, ellipse.Center + new Vector2(ellipse.RadiusX, 0), brush, 1f / scene.Scale, style);
+        _renderTarget.DrawLine(ellipse.Center, ellipse.Center + new Vector2(0, -ellipse.RadiusY), brush, 1f / scene.Scale, style);
+    }
+
     public void Render(Scene2D scene, GridRenderingComponent component)
     {
         var strokeWidth = component.LineThickness / scene.Scale;
@@ -148,6 +174,6 @@ public class Renderer : ResourceDependentObject
         var location = component.StartPosition;
         var size = component.EndPosition - component.StartPosition;
 
-        _renderTarget.DrawRectangle(new RectangleF {Location = location, Width = size.X, Height = size.Y}, brush, 1f / scene.Scale);
+        _renderTarget.DrawRectangle(new RectangleF { Location = location, Width = size.X, Height = size.Y }, brush, 1f / scene.Scale);
     }
 }

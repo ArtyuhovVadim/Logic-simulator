@@ -24,4 +24,27 @@ Objects:
   StrokeColor: [0, 0, 0, 1]
   StrokeThickness: 1
   IsFilled: true
-
+- !Ellipse
+  Center: [125, 500]
+  RadiusX: 100
+  RadiusY: 100
+  FillColor: [1, 1, 1, 1]
+  StrokeColor: [0, 0, 0, 1]
+  StrokeThickness: 3
+  IsFilled: true
+- !Ellipse
+  Center: [625, 500]
+  RadiusX: 100
+  RadiusY: 100
+  FillColor: [1, 1, 1, 1]
+  StrokeColor: [0, 0, 0, 1]
+  StrokeThickness: 3
+  IsFilled: true
+- !Ellipse
+  Center: [375, 500]
+  RadiusX: 100
+  RadiusY: 100
+  FillColor: [1, 1, 1, 1]
+  StrokeColor: [0, 0, 0, 1]
+  StrokeThickness: 3
+  IsFilled: true

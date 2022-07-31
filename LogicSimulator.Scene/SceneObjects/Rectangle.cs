@@ -7,18 +7,17 @@ namespace LogicSimulator.Scene.SceneObjects;
 public class Rectangle : EditableSceneObject
 {
     public static readonly Resource FillBrushResource = Resource.Register<Rectangle, SolidColorBrush>(nameof(FillBrushResource), (target, o) =>
-        new SolidColorBrush(target, ((Rectangle) o).FillColor));
+        new SolidColorBrush(target, ((Rectangle)o).FillColor));
 
     public static readonly Resource StrokeBrushResource = Resource.Register<Rectangle, SolidColorBrush>(nameof(StrokeBrushResource), (target, o) =>
-        new SolidColorBrush(target, ((Rectangle) o).StrokeColor));
+        new SolidColorBrush(target, ((Rectangle)o).StrokeColor));
 
-    public static readonly Resource RectangleGeometryResource = Resource.Register<Rectangle, RectangleGeometry>(nameof(RectangleGeometryResource),
-        (target, o) =>
-        {
-            var rectangle = (Rectangle) o;
+    public static readonly Resource RectangleGeometryResource = Resource.Register<Rectangle, RectangleGeometry>(nameof(RectangleGeometryResource), (target, o) =>
+    {
+        var rectangle = (Rectangle)o;
 
-            return new RectangleGeometry(target.Factory, new RectangleF(rectangle.Location.X, rectangle.Location.Y, rectangle.Width, rectangle.Height));
-        });
+        return new RectangleGeometry(target.Factory, new RectangleF(rectangle.Location.X, rectangle.Location.Y, rectangle.Width, rectangle.Height));
+    });
 
     private Color4 _fillColor = Color4.White;
     private Color4 _strokeColor = Color4.Black;
@@ -156,7 +155,8 @@ public class Rectangle : EditableSceneObject
     {
         var geometry = GetCashedResourceValue<RectangleGeometry>(RectangleGeometryResource);
 
-        return IsFilled ? geometry.FillContainsPoint(pos, matrix, tolerance) : geometry.StrokeContainsPoint(pos, StrokeThickness, null, matrix, tolerance);
+        return IsFilled ? geometry.FillContainsPoint(pos, matrix, tolerance) :
+                            geometry.StrokeContainsPoint(pos, StrokeThickness, null, matrix, tolerance);
     }
 
     public override GeometryRelation CompareWithRectangle(RectangleGeometry rectGeometry, Matrix3x2 matrix, float tolerance = 0.25f)
