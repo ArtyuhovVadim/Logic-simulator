@@ -1,6 +1,6 @@
 ﻿using LogicSimulator.Models;
 
-namespace LogicSimulator.Infrastructure.Services;
+namespace LogicSimulator.Infrastructure.Services.Interfaces;
 
 public interface ISchemeFileService
 {

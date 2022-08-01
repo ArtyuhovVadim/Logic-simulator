@@ -1,7 +1,7 @@
 ﻿using LogicSimulator.ViewModels.UserDialogViewModels;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace LogicSimulator.ViewModels;
+namespace LogicSimulator.ViewModels.Infrastructure;
 
 public static class Registrator
 {
@@ -9,6 +9,7 @@ public static class Registrator
     {
         services
             .AddSingleton<MainWindowViewModel>()
+            .AddTransient<SchemeSceneViewModel>()
             .AddSingleton<InfoDialogWindowViewModel>()
             .AddSingleton<ErrorDialogWindowViewModel>()
             .AddSingleton<WarningDialogWindowViewModel>()

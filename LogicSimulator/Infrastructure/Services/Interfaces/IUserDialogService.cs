@@ -1,4 +1,4 @@
-﻿namespace LogicSimulator.Infrastructure.Services;
+﻿namespace LogicSimulator.Infrastructure.Services.Interfaces;
 
 public interface IUserDialogService
 {

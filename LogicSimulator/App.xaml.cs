@@ -8,7 +8,7 @@ using LogicSimulator.Controls.Themes;
 using LogicSimulator.Controls.Themes.Dark;
 using LogicSimulator.Controls.Themes.Light;
 using LogicSimulator.Infrastructure.Services;
-using LogicSimulator.ViewModels;
+using LogicSimulator.ViewModels.Infrastructure;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 

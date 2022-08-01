@@ -1,5 +1,6 @@
 ﻿using System.Media;
 using System.Windows;
+using LogicSimulator.Infrastructure.Services.Interfaces;
 using LogicSimulator.ViewModels.UserDialogViewModels;
 using LogicSimulator.Views.Windows.UserDialogWindows;
 

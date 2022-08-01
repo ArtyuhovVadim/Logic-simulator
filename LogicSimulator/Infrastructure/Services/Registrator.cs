@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿using LogicSimulator.Infrastructure.Services.Interfaces;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace LogicSimulator.Infrastructure.Services;
 

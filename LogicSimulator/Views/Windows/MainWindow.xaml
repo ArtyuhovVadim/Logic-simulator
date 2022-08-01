@@ -5,9 +5,10 @@
     xmlns:c="clr-namespace:LogicSimulator.Controls;assembly=LogicSimulator.Controls"
     xmlns:con="clr-namespace:LogicSimulator.Infrastructure.Converters"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:infrastructure="clr-namespace:LogicSimulator.Infrastructure"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    xmlns:s="clr-namespace:LogicSimulator.Scene;assembly=LogicSimulator.Scene"
-    xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
+    xmlns:viewModels="clr-namespace:LogicSimulator.ViewModels"
+    xmlns:views="clr-namespace:LogicSimulator.Views"
     Title="Logic-simulator"
     Width="1280"
     Height="720"
@@ -26,7 +27,7 @@
                 <MenuItem Command="{Binding Path=SaveExampleCommand}" Header="Сохранить пример" />
                 <Separator />
                 <MenuItem Header="Выход" />
-                <MenuItem Header="Test" Command="{Binding Path=TestCommand}" />
+                <MenuItem Command="{Binding Path=TestCommand}" Header="Test" />
             </MenuItem>
         </Menu>
 
@@ -38,30 +39,30 @@
             <TextBlock Foreground="White" Text="{Binding Path=MousePosition, ElementName=Scene, StringFormat='Позиция курсора: {0}', Converter={StaticResource Vector2Converter}}" />
         </StatusBar>
 
-        <DockingManager>
+        <DockingManager DocumentsSource="{Binding Path=SchemeViewModels}">
+            <DockingManager.LayoutItemTemplateSelector>
+                <infrastructure:PanesTemplateSelector>
+                    <infrastructure:PanesTemplateSelector.SchemeViewTemplate>
+                        <DataTemplate DataType="{x:Type viewModels:SchemeViewModel}">
+                            <views:SchemeSceneView />
+                        </DataTemplate>
+                    </infrastructure:PanesTemplateSelector.SchemeViewTemplate>
+                </infrastructure:PanesTemplateSelector>
+            </DockingManager.LayoutItemTemplateSelector>
+            <DockingManager.LayoutItemContainerStyleSelector>
+                <infrastructure:PanesStyleSelector>
+                    <infrastructure:PanesStyleSelector.SchemeViewStyle>
+                        <Style TargetType="{x:Type LayoutDocumentItem}">
+                            <Setter Property="Title" Value="{Binding Model.Name}" />
+                            <Setter Property="CanClose" Value="False" />
+                        </Style>
+                    </infrastructure:PanesStyleSelector.SchemeViewStyle>
+                </infrastructure:PanesStyleSelector>
+            </DockingManager.LayoutItemContainerStyleSelector>
+
             <LayoutRoot>
-                <LayoutPanel Orientation="Horizontal">
-                    <LayoutDocumentPaneGroup>
-                        <LayoutDocumentPane x:Name="LayoutDocumentPane">
-                            <LayoutDocument
-                                Title="Test scene"
-                                CanClose="False"
-                                CanFloat="False">
-                                <s:Scene2D
-                                    x:Name="Scene"
-                                    Components="{Binding Path=RenderingComponents}"
-                                    Objects="{Binding Path=Objects}"
-                                    Tools="{Binding Path=Tools}" />
-                            </LayoutDocument>
-                        </LayoutDocumentPane>
-                    </LayoutDocumentPaneGroup>
-                    <LayoutAnchorablePaneGroup DockWidth="300">
-                        <LayoutAnchorablePane>
-                            <LayoutAnchorable Title="Properties" CanClose="False">
-                                <xctk:PropertyGrid SelectedObject="{Binding Path=SelectedObjects[0]}" />
-                            </LayoutAnchorable>
-                        </LayoutAnchorablePane>
-                    </LayoutAnchorablePaneGroup>
+                <LayoutPanel>
+                    <LayoutDocumentPane />
                 </LayoutPanel>
             </LayoutRoot>
         </DockingManager>

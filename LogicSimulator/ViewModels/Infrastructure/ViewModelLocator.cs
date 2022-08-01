@@ -1,11 +1,13 @@
 ﻿using LogicSimulator.ViewModels.UserDialogViewModels;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace LogicSimulator.ViewModels;
+namespace LogicSimulator.ViewModels.Infrastructure;
 
 public class ViewModelLocator
 {
     public static MainWindowViewModel MainWindowViewModel => App.Host.Services.GetRequiredService<MainWindowViewModel>();
+
+    public static SchemeSceneViewModel SchemeSceneViewModel => App.Host.Services.GetRequiredService<SchemeSceneViewModel>();
 
     public static InfoDialogWindowViewModel InfoDialogWindowViewModel => App.Host.Services.GetRequiredService<InfoDialogWindowViewModel>();
 
