@@ -150,12 +150,8 @@
     <None Include="SurfaceQueue.inl" />
   </ItemGroup>
   <ItemGroup>
-    <Reference Include="PresentationCore">
-      <HintPath>..\..\..\..\..\Program Files\dotnet\packs\Microsoft.WindowsDesktop.App.Ref\6.0.7\ref\net6.0\PresentationCore.dll</HintPath>
-    </Reference>
-    <Reference Include="WindowsBase">
-      <HintPath>..\..\..\..\..\Program Files\dotnet\packs\Microsoft.WindowsDesktop.App.Ref\6.0.7\ref\net6.0\WindowsBase.dll</HintPath>
-    </Reference>
+    <Reference Include="PresentationCore, Version=6.0.2.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35" />
+    <Reference Include="WindowsBase, Version=6.0.2.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
