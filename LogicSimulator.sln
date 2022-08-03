@@ -3,13 +3,15 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.1.32210.238
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LogicSimulator", "LogicSimulator\LogicSimulator.csproj", "{2D37A497-749D-4636-804C-CD139E8316B6}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LogicSimulator", "LogicSimulator\LogicSimulator.csproj", "{2D37A497-749D-4636-804C-CD139E8316B6}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LogicSimulator.Controls", "LogicSimulator.Controls\LogicSimulator.Controls.csproj", "{ADA81EFC-C2AC-4C8C-8AD2-ABA10FA7A9E8}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LogicSimulator.AvalonDock", "LogicSimulator.AvalonDock\LogicSimulator.AvalonDock.csproj", "{153CBB5F-EA0F-437A-B926-397F6C21B442}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LogicSimulator.Scene", "LogicSimulator.Scene\LogicSimulator.Scene.csproj", "{61CF4324-89B3-4EE8-938C-C06626BEB605}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LogicSimulator.Scene", "LogicSimulator.Scene\LogicSimulator.Scene.csproj", "{61CF4324-89B3-4EE8-938C-C06626BEB605}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Microsoft.Wpf.Interop.DirectX", "Microsoft.Wpf.Interop.DirectX\Microsoft.Wpf.Interop.DirectX.vcxproj", "{0DFED4DE-C1BF-4041-B08A-BA3A84C28EF6}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -19,6 +21,14 @@ Global
 		Release|x86 = Release|x86
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{2D37A497-749D-4636-804C-CD139E8316B6}.Debug|x64.ActiveCfg = Debug|x64
+		{2D37A497-749D-4636-804C-CD139E8316B6}.Debug|x64.Build.0 = Debug|x64
+		{2D37A497-749D-4636-804C-CD139E8316B6}.Debug|x86.ActiveCfg = Debug|x86
+		{2D37A497-749D-4636-804C-CD139E8316B6}.Debug|x86.Build.0 = Debug|x86
+		{2D37A497-749D-4636-804C-CD139E8316B6}.Release|x64.ActiveCfg = Release|x64
+		{2D37A497-749D-4636-804C-CD139E8316B6}.Release|x64.Build.0 = Release|x64
+		{2D37A497-749D-4636-804C-CD139E8316B6}.Release|x86.ActiveCfg = Release|x86
+		{2D37A497-749D-4636-804C-CD139E8316B6}.Release|x86.Build.0 = Release|x86
 		{ADA81EFC-C2AC-4C8C-8AD2-ABA10FA7A9E8}.Debug|x64.ActiveCfg = Debug|x64
 		{ADA81EFC-C2AC-4C8C-8AD2-ABA10FA7A9E8}.Debug|x64.Build.0 = Debug|x64
 		{ADA81EFC-C2AC-4C8C-8AD2-ABA10FA7A9E8}.Debug|x86.ActiveCfg = Debug|x86
@@ -43,14 +53,14 @@ Global
 		{61CF4324-89B3-4EE8-938C-C06626BEB605}.Release|x64.Build.0 = Release|x64
 		{61CF4324-89B3-4EE8-938C-C06626BEB605}.Release|x86.ActiveCfg = Release|x86
 		{61CF4324-89B3-4EE8-938C-C06626BEB605}.Release|x86.Build.0 = Release|x86
-		{2D37A497-749D-4636-804C-CD139E8316B6}.Debug|x64.ActiveCfg = Debug|x64
-		{2D37A497-749D-4636-804C-CD139E8316B6}.Debug|x64.Build.0 = Debug|x64
-		{2D37A497-749D-4636-804C-CD139E8316B6}.Debug|x86.ActiveCfg = Debug|x86
-		{2D37A497-749D-4636-804C-CD139E8316B6}.Debug|x86.Build.0 = Debug|x86
-		{2D37A497-749D-4636-804C-CD139E8316B6}.Release|x64.ActiveCfg = Release|x64
-		{2D37A497-749D-4636-804C-CD139E8316B6}.Release|x64.Build.0 = Release|x64
-		{2D37A497-749D-4636-804C-CD139E8316B6}.Release|x86.ActiveCfg = Release|x86
-		{2D37A497-749D-4636-804C-CD139E8316B6}.Release|x86.Build.0 = Release|x86
+		{0DFED4DE-C1BF-4041-B08A-BA3A84C28EF6}.Debug|x64.ActiveCfg = Debug|x64
+		{0DFED4DE-C1BF-4041-B08A-BA3A84C28EF6}.Debug|x64.Build.0 = Debug|x64
+		{0DFED4DE-C1BF-4041-B08A-BA3A84C28EF6}.Debug|x86.ActiveCfg = Debug|Win32
+		{0DFED4DE-C1BF-4041-B08A-BA3A84C28EF6}.Debug|x86.Build.0 = Debug|Win32
+		{0DFED4DE-C1BF-4041-B08A-BA3A84C28EF6}.Release|x64.ActiveCfg = Release|x64
+		{0DFED4DE-C1BF-4041-B08A-BA3A84C28EF6}.Release|x64.Build.0 = Release|x64
+		{0DFED4DE-C1BF-4041-B08A-BA3A84C28EF6}.Release|x86.ActiveCfg = Release|Win32
+		{0DFED4DE-C1BF-4041-B08A-BA3A84C28EF6}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

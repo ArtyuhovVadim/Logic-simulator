@@ -23,4 +23,8 @@
         <Folder Include="Tools\Base\" />
     </ItemGroup>
 
+    <ItemGroup>
+      <ProjectReference Include="..\Microsoft.Wpf.Interop.DirectX\Microsoft.Wpf.Interop.DirectX.vcxproj" />
+    </ItemGroup>
+
 </Project>

@@ -1,0 +1,23 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClCompile Include="AssemblyInfo.cpp" />
+    <ClCompile Include="D3D11Image.cpp" />
+    <ClCompile Include="Stdafx.cpp" />
+    <ClCompile Include="SurfaceDevice9.cpp" />
+    <ClCompile Include="SurfaceDevice10.cpp" />
+    <ClCompile Include="SurfaceDevice11.cpp" />
+    <ClCompile Include="SurfaceQueue.cpp" />
+    <ClCompile Include="SurfaceQueueInteropHelper.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="D3D11Image.h" />
+    <ClInclude Include="Stdafx.h" />
+    <ClInclude Include="SurfaceQueue.h" />
+    <ClInclude Include="SurfaceQueueImpl.h" />
+    <ClInclude Include="SurfaceQueueInteropHelper.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="SurfaceQueue.inl" />
+  </ItemGroup>
+</Project>
