@@ -7,29 +7,11 @@ namespace LogicSimulator.Scene;
 
 public abstract class ResourceDependentObject : IDisposable
 {
-    private static readonly List<ResourceDependentObject> AllResourceDependentObject = new();
+    internal event Action RequestedRender;
 
     private readonly Dictionary<int, object> _resources = new();
 
     private readonly List<int> _requireUpdateResources = new();
-
-    protected ResourceDependentObject() => AllResourceDependentObject.Add(this);
-
-    public static bool IsRequireRender { get; private set; }
-
-    public static void RequireUpdateInAllResourceDependentObjects()
-    {
-        foreach (var resourceDependentObject in AllResourceDependentObject)
-        {
-            resourceDependentObject._requireUpdateResources.AddRange(resourceDependentObject._resources.Keys);
-        }
-
-        RequireRender();
-    }
-
-    public static void RequireRender() => IsRequireRender = true;
-
-    public static void EndRender() => IsRequireRender = false;
 
     public T GetResourceValue<T>(Resource resource, RenderTarget renderTarget)
     {
@@ -64,6 +46,11 @@ public abstract class ResourceDependentObject : IDisposable
         return (T)resourceValue;
     }
 
+    protected void RequestRender()
+    {
+        RequestedRender?.Invoke();
+    }
+
     protected void RequireUpdate(Resource resource)
     {
         var hash = resource.GetHashCode();
@@ -71,8 +58,6 @@ public abstract class ResourceDependentObject : IDisposable
         if (_requireUpdateResources.Contains(hash)) return;
 
         _requireUpdateResources.Add(hash);
-
-        RequireRender();
     }
 
     protected T GetCashedResourceValue<T>(Resource resource)
@@ -94,7 +79,5 @@ public abstract class ResourceDependentObject : IDisposable
                 Utilities.Dispose(ref o);
             }
         }
-
-        AllResourceDependentObject.Remove(this);
     }
 }

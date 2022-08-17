@@ -8,7 +8,6 @@ using SharpDX.Direct2D1;
 using AlphaMode = SharpDX.Direct2D1.AlphaMode;
 using Factory1 = SharpDX.Direct2D1.Factory1;
 using FeatureLevel = SharpDX.Direct2D1.FeatureLevel;
-using Matrix = SharpDX.Matrix;
 
 namespace LogicSimulator.Scene;
 
@@ -73,13 +72,11 @@ public class SceneRenderer : IDisposable
 
     public void Resize(Size size)
     {
-        ResourceDependentObject.RequireUpdateInAllResourceDependentObjects();
         SetImageSourcePixelSize(size);
     }
 
     public void RequestRender()
     {
-        ResourceDependentObject.RequireRender();
         _imageSource.RequestRender();
     }
 
@@ -90,18 +87,16 @@ public class SceneRenderer : IDisposable
             InitializeResources(resourceHandle);
         }
 
-        RenderTarget.BeginDraw();
+        _renderTarget.BeginDraw();
 
-        RenderTarget.Clear(new Color4(0.6f, 0.6f, 0.6f, 1));
+        _renderTarget.Clear(new Color4(0.6f, 0.6f, 0.6f, 1));
 
         foreach (var component in _scene.Components)
         {
             component.Render(_scene, _renderer);
         }
 
-        RenderTarget.EndDraw();
-
-        ResourceDependentObject.EndRender();
+        _renderTarget.EndDraw();
     }
 
     private void OnIsFrontBufferAvailableChanged(object sender, DependencyPropertyChangedEventArgs e)

@@ -125,8 +125,8 @@ public class Scene2D : FrameworkElement
     public Scene2D()
     {
         ClipToBounds = true;
-        VisualEdgeMode = EdgeMode.Aliased;
         Focusable = true;
+        VisualEdgeMode = EdgeMode.Aliased;
 
         _sceneTransformController = new SceneTransformController(this);
 
