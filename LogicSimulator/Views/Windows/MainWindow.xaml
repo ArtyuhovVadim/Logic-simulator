@@ -7,6 +7,7 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:infrastructure="clr-namespace:LogicSimulator.Infrastructure"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:scene="clr-namespace:LogicSimulator.Scene;assembly=LogicSimulator.Scene"
     xmlns:viewModels="clr-namespace:LogicSimulator.ViewModels"
     xmlns:views="clr-namespace:LogicSimulator.Views"
     Title="Logic-simulator"
@@ -39,7 +40,24 @@
             <TextBlock Foreground="White" Text="{Binding Path=MousePosition, ElementName=Scene, StringFormat='Позиция курсора: {0}', Converter={StaticResource Vector2Converter}}" />
         </StatusBar>
 
-        <DockingManager DocumentsSource="{Binding Path=SchemeViewModels}">
+        <!--<scene:Scene2DTest />-->
+        <!--<scene:Scene2D />-->
+
+        <DockingManager>
+            <LayoutRoot>
+                <LayoutPanel>
+                    <LayoutDocumentPane>
+                        <LayoutDocument Title="Test"/>
+
+                        <LayoutDocument Title="Scene">
+                            <scene:Scene2DTest />
+                        </LayoutDocument>
+                    </LayoutDocumentPane>
+                </LayoutPanel>
+            </LayoutRoot>
+        </DockingManager>
+
+        <!--<DockingManager DocumentsSource="{Binding Path=SchemeViewModels}">
             <DockingManager.LayoutItemTemplateSelector>
                 <infrastructure:PanesTemplateSelector>
                     <infrastructure:PanesTemplateSelector.SchemeViewTemplate>
@@ -65,6 +83,6 @@
                     <LayoutDocumentPane />
                 </LayoutPanel>
             </LayoutRoot>
-        </DockingManager>
+        </DockingManager>-->
     </DockPanel>
 </c:Window>

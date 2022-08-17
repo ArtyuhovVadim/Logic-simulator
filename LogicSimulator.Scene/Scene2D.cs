@@ -189,6 +189,7 @@ public class Scene2D : FrameworkElement
         CurrentTool.Activate(this);
     }
 
+    //TODO: Перенести в SceneTransformController
     public void RelativeScale(Vector2 pos, float delta, float max = 20f, float min = 0.5f)
     {
         var p = pos.Transform(_sceneRenderer.Transform);
@@ -210,9 +211,13 @@ public class Scene2D : FrameworkElement
 
     protected override void OnRenderSizeChanged(SizeChangedInfo sizeInfo)
     {
+        //CompositionTarget.Rendering -= OnRendering;
+
         _sceneRenderer.Resize(RenderSize.Width, RenderSize.Height, Dpi);
 
         base.OnRenderSizeChanged(sizeInfo);
+
+        //CompositionTarget.Rendering += OnRendering;
     }
 
     protected override void OnInitialized(EventArgs e)
