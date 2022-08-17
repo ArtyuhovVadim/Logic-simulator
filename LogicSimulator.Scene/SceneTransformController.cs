@@ -1,4 +1,5 @@
-﻿using System.Runtime.InteropServices;
+﻿using System;
+using System.Runtime.InteropServices;
 using System.Windows.Input;
 using LogicSimulator.Scene.ExtensionMethods;
 using SharpDX;
@@ -54,12 +55,26 @@ public class SceneTransformController
         if (e.MiddleButton == MouseButtonState.Pressed)
         {
             SetCursorPos((int)_lastMiddleButtonDownPos.X, (int)_lastMiddleButtonDownPos.Y);
-            _scene.RelativeScale(_lastMiddleButtonDownPosWithDpi, -ScaleStep * (pos.Y - _lastMiddleButtonDownPosWithDpi.Y), Max, Min);
+            RelativeScale(_lastMiddleButtonDownPosWithDpi, -ScaleStep * (pos.Y - _lastMiddleButtonDownPosWithDpi.Y), Max, Min);
         }
         else if (e.RightButton == MouseButtonState.Pressed)
         {
             _scene.Translation = _lastRightButtonDownSceneTranslate + pos - _lastRightButtonDownPos;
         }
+    }
+
+    private void RelativeScale(Vector2 pos, float delta, float max = 20f, float min = 0.5f)
+    {
+        var p = pos.Transform(_scene.Transform);
+
+        var newScaleCoefficient = 1 + delta / _scene.Scale;
+        var newScale = (float)Math.Round(_scene.Scale * newScaleCoefficient, 2);
+
+        if (newScale < min || newScale > max) return;
+
+        _scene.Translation += p * ((1 - newScaleCoefficient) * _scene.Scale);
+
+        _scene.Scale = newScale;
     }
 
     //TODO: Перенести

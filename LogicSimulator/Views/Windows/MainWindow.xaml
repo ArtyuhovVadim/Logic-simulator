@@ -47,10 +47,13 @@
             <LayoutRoot>
                 <LayoutPanel>
                     <LayoutDocumentPane>
-                        <LayoutDocument Title="Test"/>
+                        <LayoutDocument Title="Test" />
 
                         <LayoutDocument Title="Scene">
-                            <scene:Scene2DTest />
+                            <scene:Scene2D
+                                Components="{Binding Path=Components}"
+                                Objects="{Binding Path=Objects}"
+                                Tools="{Binding Path=Tools}" />
                         </LayoutDocument>
                     </LayoutDocumentPane>
                 </LayoutPanel>

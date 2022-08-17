@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Linq;
 using System.Windows;
 using System.Windows.Input;
@@ -21,26 +20,6 @@ public class Scene2D : FrameworkElement
     private SceneTransformController _sceneTransformController;
 
     private bool _isLeftMouseButtonPressedOnScene;
-
-    #region IsRendering
-
-    public bool IsRendering
-    {
-        get => (bool)GetValue(IsRenderingProperty);
-        set => SetValue(IsRenderingProperty, value);
-    }
-
-    public static readonly DependencyProperty IsRenderingProperty =
-        DependencyProperty.Register(nameof(IsRendering), typeof(bool), typeof(Scene2D), new PropertyMetadata(true, IsRenderingChanged));
-
-    private static void IsRenderingChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
-    {
-        if (d is not Scene2D scene2D) return;
-
-        scene2D._sceneRenderer.IsRendering = (bool)e.NewValue;
-    }
-
-    #endregion
 
     #region Objects
 
@@ -130,7 +109,7 @@ public class Scene2D : FrameworkElement
 
     #endregion
 
-    public float Dpi { get; private set; }
+    public float Dpi => (float)VisualTreeHelper.GetDpi(this).PixelsPerInchX;
 
     //TODO: Костыль!
     internal RenderTarget RenderTarget => _sceneRenderer.RenderTarget;
@@ -149,13 +128,12 @@ public class Scene2D : FrameworkElement
         VisualEdgeMode = EdgeMode.Aliased;
         Focusable = true;
 
+        _sceneTransformController = new SceneTransformController(this);
+
         Loaded += OnLoaded;
-        Unloaded += OnUnloaded;
     }
 
     public BaseTool CurrentTool { get; private set; }
-
-    private bool IsInDesignMode => DesignerProperties.GetIsInDesignMode(this);
 
     public T GetComponent<T>() where T : BaseRenderingComponent
     {
@@ -189,21 +167,6 @@ public class Scene2D : FrameworkElement
         CurrentTool.Activate(this);
     }
 
-    //TODO: Перенести в SceneTransformController
-    public void RelativeScale(Vector2 pos, float delta, float max = 20f, float min = 0.5f)
-    {
-        var p = pos.Transform(_sceneRenderer.Transform);
-
-        var newScaleCoefficient = 1 + delta / Scale;
-        var newScale = (float)Math.Round(Scale * newScaleCoefficient, 2);
-
-        if (newScale < min || newScale > max) return;
-
-        Translation += p * ((1 - newScaleCoefficient) * Scale);
-
-        Scale = newScale;
-    }
-
     protected override void OnRender(DrawingContext drawingContext)
     {
         _sceneRenderer.WpfRender(drawingContext, RenderSize);
@@ -211,24 +174,7 @@ public class Scene2D : FrameworkElement
 
     protected override void OnRenderSizeChanged(SizeChangedInfo sizeInfo)
     {
-        //CompositionTarget.Rendering -= OnRendering;
-
-        _sceneRenderer.Resize(RenderSize.Width, RenderSize.Height, Dpi);
-
-        base.OnRenderSizeChanged(sizeInfo);
-
-        //CompositionTarget.Rendering += OnRendering;
-    }
-
-    protected override void OnInitialized(EventArgs e)
-    {
-        base.OnInitialized(e);
-
-        Dpi = (float)VisualTreeHelper.GetDpi(this).PixelsPerInchX;
-
-        _sceneRenderer = new SceneRenderer(RenderSize.Width, RenderSize.Height, Dpi);
-
-        _sceneTransformController = new SceneTransformController(this);
+        _sceneRenderer.Resize(RenderSize);
     }
 
     protected override void OnMouseMove(MouseEventArgs e)
@@ -327,19 +273,8 @@ public class Scene2D : FrameworkElement
 
     private void OnLoaded(object sender, RoutedEventArgs e)
     {
-        if (IsInDesignMode || !IsVisible) return;
-
-        CompositionTarget.Rendering += OnRendering;
+        _sceneRenderer ??= new SceneRenderer(this);
     }
-
-    private void OnUnloaded(object sender, RoutedEventArgs e)
-    {
-        if (IsInDesignMode) return;
-
-        CompositionTarget.Rendering -= OnRendering;
-    }
-
-    private void OnRendering(object sender, EventArgs e) => _sceneRenderer.Render(this);
 
     private Vector2 GetMousePosition() => Mouse.GetPosition(this).ToVector2().DpiCorrect(Dpi);
 }

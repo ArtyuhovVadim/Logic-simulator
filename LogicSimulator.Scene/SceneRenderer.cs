@@ -1,47 +1,52 @@
 ﻿using System;
 using System.Windows;
+using System.Windows.Interop;
 using System.Windows.Media;
+using Microsoft.Wpf.Interop.DirectX;
 using SharpDX;
 using SharpDX.Direct2D1;
-using SharpDX.Direct3D;
-using SharpDX.Direct3D11;
-using SharpDX.DXGI;
 using AlphaMode = SharpDX.Direct2D1.AlphaMode;
-using Device = SharpDX.Direct3D11.Device;
-using Factory = SharpDX.Direct2D1.Factory;
-using GradientStop = SharpDX.Direct2D1.GradientStop;
-using GradientStopCollection = SharpDX.Direct2D1.GradientStopCollection;
-using LinearGradientBrush = SharpDX.Direct2D1.LinearGradientBrush;
-using PixelFormat = SharpDX.Direct2D1.PixelFormat;
+using Factory1 = SharpDX.Direct2D1.Factory1;
+using FeatureLevel = SharpDX.Direct2D1.FeatureLevel;
+using Matrix = SharpDX.Matrix;
 
 namespace LogicSimulator.Scene;
 
 public class SceneRenderer : IDisposable
 {
-    private Device _device;
-    private Texture2D _texture2D;
-    private Factory _factory;
+    private readonly Scene2D _scene;
+    private D3D11Image _imageSource;
+
+    private Factory1 _factory;
     private RenderTarget _renderTarget;
-    
-    private Dx11ImageSource _imageSource;
+
+    private bool _isInitialized;
 
     private Renderer _renderer;
 
-    private GradientStopCollection _clearGradientStopCollection;
-    private LinearGradientBrush _clearGradientBrush;
-
-    private readonly Color4 _startClearColor = new(0.755f, 0.755f, 0.755f, 1f);
-    private readonly Color4 _endClearColor = new(0.887f, 0.887f, 0.887f, 1f);
-
-    public SceneRenderer(double pixelWidth, double pixelHeight, float dpi) => StartDirect3D(pixelWidth, pixelHeight, dpi);
-
-    public RenderTarget RenderTarget
+    public SceneRenderer(Scene2D scene)
     {
-        get => _renderTarget;
-        private set => _renderTarget = value;
+        _scene = scene;
+
+        var window = Window.GetWindow(scene);
+
+        if (window is null)
+            throw new ApplicationException("Not find root window for Scene2D!");
+
+        var handle = new WindowInteropHelper(window).Handle;
+
+        _imageSource = new D3D11Image
+        {
+            OnRender = OnRender,
+            WindowOwner = handle
+        };
+
+        SetImageSourcePixelSize(scene.RenderSize);
+
+        _imageSource.IsFrontBufferAvailableChanged += OnIsFrontBufferAvailableChanged;
     }
 
-    public bool IsRendering { get; set; } = true;
+    public RenderTarget RenderTarget => _renderTarget;
 
     public Matrix3x2 Transform
     {
@@ -49,148 +54,114 @@ public class SceneRenderer : IDisposable
         set
         {
             RenderTarget.Transform = value;
-            ResourceDependentObject.RequireRender();
+            RequestRender();
         }
     }
 
-    public void Dispose() => StopDirect3D();
-
-    public void Render(Scene2D scene)
+    public void Dispose()
     {
-        if (!IsRendering || !ResourceDependentObject.IsRequireRender) return;
+        Utilities.Dispose(ref _imageSource);
+        Utilities.Dispose(ref _factory);
+        Utilities.Dispose(ref _renderTarget);
+        Utilities.Dispose(ref _renderer);
+    }
+
+    public void WpfRender(DrawingContext drawingContext, Size size)
+    {
+        drawingContext.DrawImage(_imageSource, new Rect(size));
+    }
+
+    public void Resize(Size size)
+    {
+        ResourceDependentObject.RequireUpdateInAllResourceDependentObjects();
+        SetImageSourcePixelSize(size);
+    }
+
+    public void RequestRender()
+    {
+        ResourceDependentObject.RequireRender();
+        _imageSource.RequestRender();
+    }
+
+    private void OnRender(IntPtr resourceHandle, bool isNewSurface)
+    {
+        if (!_isInitialized || isNewSurface)
+        {
+            InitializeResources(resourceHandle);
+        }
 
         RenderTarget.BeginDraw();
 
-        GradientClear();
+        RenderTarget.Clear(new Color4(0.6f, 0.6f, 0.6f, 1));
 
-        foreach (var component in scene.Components)
+        foreach (var component in _scene.Components)
         {
-            component.Render(scene, _renderer);
+            component.Render(_scene, _renderer);
         }
 
         RenderTarget.EndDraw();
-        _device.ImmediateContext.Flush();
-        _imageSource.InvalidateD3DImage();
 
         ResourceDependentObject.EndRender();
     }
 
-    public void WpfRender(DrawingContext drawingContext, Size renderSize)
+    private void OnIsFrontBufferAvailableChanged(object sender, DependencyPropertyChangedEventArgs e)
     {
-        drawingContext.DrawImage(_imageSource, new Rect(renderSize));
-    }
-
-    public void Resize(double pixelWidth, double pixelHeight, float dpi)
-    {
-        CreateAndBindTargets(pixelWidth, pixelHeight, dpi);
-
-        ResourceDependentObject.RequireUpdateInAllResourceDependentObjects();
-    }
-
-    private void StartDirect3D(double pixelWidth, double pixelHeight, float dpi)
-    {
-        _device = new Device(DriverType.Hardware, DeviceCreationFlags.BgraSupport);
-
-        _imageSource = new Dx11ImageSource();
-        _imageSource.IsFrontBufferAvailableChanged += OnIsFrontBufferAvailableChanged;
-
-        CreateAndBindTargets(pixelWidth, pixelHeight, dpi);
-    }
-
-    private void StopDirect3D()
-    {
-        _imageSource.IsFrontBufferAvailableChanged -= OnIsFrontBufferAvailableChanged;
-
-        Utilities.Dispose(ref _renderTarget);
-        Utilities.Dispose(ref _factory);
-        Utilities.Dispose(ref _imageSource);
-        Utilities.Dispose(ref _texture2D);
-        Utilities.Dispose(ref _device);
-        Utilities.Dispose(ref _renderer);
-    }
-
-    private void CreateAndBindTargets(double pixelWidth, double pixelHeight, float dpi)
-    {
-        var transform = Matrix3x2.Identity;
-
-        if (RenderTarget is not null) transform = RenderTarget.Transform;
-        
-        Utilities.Dispose(ref _renderTarget);
-        Utilities.Dispose(ref _factory);
-        Utilities.Dispose(ref _texture2D);
-        Utilities.Dispose(ref _renderer);
-
-        _imageSource.SetRenderTarget(null);
-
-        var (width, height) = ((int) Math.Max(pixelWidth * dpi / 96f, 10), (int) Math.Max(pixelHeight * dpi / 96f, 10));
-
-        var textureDescription = new Texture2DDescription
+        if (!_imageSource.IsFrontBufferAvailable)
         {
-            BindFlags = BindFlags.RenderTarget | BindFlags.ShaderResource,
-            Format = Format.B8G8R8A8_UNorm,
-            Width = width,
-            Height = height,
-            MipLevels = 1,
-            SampleDescription = new SampleDescription(1, 0),
-            Usage = ResourceUsage.Default,
-            OptionFlags = ResourceOptionFlags.Shared,
-            CpuAccessFlags = CpuAccessFlags.None,
-            ArraySize = 1
+            _isInitialized = false;
+        }
+        else
+        {
+            _imageSource.RequestRender();
+        }
+    }
+
+    private void InitializeResources(IntPtr resourceHandle)
+    {
+        var tempTransform = Matrix3x2.Identity;
+
+        if(_renderTarget is not null) 
+            tempTransform = _renderTarget.Transform;
+
+        Utilities.Dispose(ref _factory);
+        Utilities.Dispose(ref _renderTarget);
+        Utilities.Dispose(ref _renderer);
+
+        using var comObject = new ComObject(resourceHandle);
+        using var resource = comObject.QueryInterface<SharpDX.DXGI.Resource>();
+        using var texture = resource.QueryInterface<SharpDX.Direct3D11.Texture2D>();
+        using var surface = texture.QueryInterface<SharpDX.DXGI.Surface1>();
+
+        var properties = new RenderTargetProperties
+        {
+            DpiX = 96,
+            DpiY = 96,
+            MinLevel = FeatureLevel.Level_DEFAULT,
+            PixelFormat =
+                new SharpDX.Direct2D1.PixelFormat(SharpDX.DXGI.Format.B8G8R8A8_UNorm, AlphaMode.Premultiplied),
+            Type = RenderTargetType.Default,
+            Usage = RenderTargetUsage.None
         };
 
-        _factory = new Factory();
+        _factory = new Factory1();
 
-        _texture2D = new Texture2D(_device, textureDescription);
-
-        var surface = _texture2D.QueryInterface<Surface>();
-
-        var renderTargetProperties = new RenderTargetProperties(new PixelFormat(Format.B8G8R8A8_UNorm, AlphaMode.Premultiplied));
-
-        RenderTarget = new RenderTarget(_factory, surface, renderTargetProperties)
+        _renderTarget = new RenderTarget(_factory, surface, properties)
         {
             AntialiasMode = AntialiasMode.Aliased,
-            Transform = transform
+            Transform = tempTransform
         };
 
-        CreateClearResources(_startClearColor, _endClearColor);
+        _renderer = new Renderer(_renderTarget);
 
-        _renderer = new Renderer(RenderTarget);
-
-        _imageSource.SetRenderTarget(_texture2D);
-
-        _device.ImmediateContext.Rasterizer.SetViewport(0, 0, width, height);
+        _isInitialized = true;
     }
 
-    private void GradientClear()
+    private void SetImageSourcePixelSize(Size size)
     {
-        var tempTransform = Transform;
-        Transform = Matrix3x2.Identity;
+        var dpi = _scene.Dpi;
 
-        RenderTarget.FillRectangle(new RectangleF(0, 0, RenderTarget.Size.Width, RenderTarget.Size.Height), _clearGradientBrush);
+        var (width, height) = ((int)Math.Max(size.Width * dpi / 96f, 10), (int)Math.Max(size.Height * dpi / 96f, 10));
 
-        Transform = tempTransform;
+        _imageSource.SetPixelSize(width, height);
     }
-
-    private void CreateClearResources(Color4 startColor, Color4 endColor)
-    {
-        Utilities.Dispose(ref _clearGradientBrush);
-        Utilities.Dispose(ref _clearGradientStopCollection);
-
-        _clearGradientStopCollection = new GradientStopCollection(RenderTarget, new GradientStop[]
-        {
-            new() {Position = 0f, Color = startColor},
-            new() {Position = 1f, Color = endColor}
-        });
-
-        var properties = new LinearGradientBrushProperties
-        {
-            StartPoint = new Vector2(RenderTarget.Size.Width / 2, 0),
-            EndPoint = new Vector2(RenderTarget.Size.Width / 2, RenderTarget.Size.Height)
-        };
-
-        _clearGradientBrush = new LinearGradientBrush(RenderTarget, properties, _clearGradientStopCollection);
-    }
-
-    private void OnIsFrontBufferAvailableChanged(object sender, DependencyPropertyChangedEventArgs e) => 
-        IsRendering = _imageSource.IsFrontBufferAvailable;
 }
