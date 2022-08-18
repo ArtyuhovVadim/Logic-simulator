@@ -86,8 +86,6 @@ public class SceneRenderer : IDisposable
 
         _renderTarget.BeginDraw();
 
-        _renderTarget.Clear(new Color4(0.6f, 0.6f, 0.6f, 1));
-
         foreach (var component in _scene.Components)
         {
             component.Render(_scene, _renderTarget);

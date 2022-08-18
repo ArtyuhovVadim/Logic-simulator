@@ -105,6 +105,7 @@ public class MainWindowViewModel : BindableBase
 
     private ObservableCollection<BaseRenderingComponent> _components = new()
     {
+        new SolidClearRenderingComponent(){ClearColor = Color4.Black},
         new GridRenderingComponent
         {
             Width = 3000,
