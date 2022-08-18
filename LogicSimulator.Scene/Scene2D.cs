@@ -16,8 +16,7 @@ using LogicSimulator.Scene.Tools.Base;
 using Microsoft.Wpf.Interop.DirectX;
 using SharpDX;
 using SharpDX.Direct2D1;
-using SharpDX.Mathematics.Interop;
-using SolidColorBrush = SharpDX.Direct2D1.SolidColorBrush;
+using Factory1 = SharpDX.Direct2D1.Factory1;
 
 namespace LogicSimulator.Scene;
 
@@ -55,10 +54,10 @@ public class Scene2D : FrameworkElement
 
         foreach (var o in objects)
         {
-            //o.RenderRequired += scene.OnRenderRequired;
+            o.RenderRequired += scene.OnRenderRequired;
         }
 
-        objects.CollectionChanged += OnObjectsCollectionChanged;
+        objects.CollectionChanged += scene.OnObjectsCollectionChanged;
     }
 
     #endregion
@@ -73,7 +72,21 @@ public class Scene2D : FrameworkElement
 
     public static readonly DependencyProperty ComponentsProperty =
         DependencyProperty.Register(nameof(Components), typeof(ObservableCollection<BaseRenderingComponent>), typeof(Scene2D),
-            new PropertyMetadata(null));
+            new PropertyMetadata(null, OnComponentsPropertyChanged));
+
+    private static void OnComponentsPropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+    {
+        if (d is not Scene2D scene) return;
+
+        var components = (ObservableCollection<BaseRenderingComponent>)e.NewValue;
+
+        foreach (var component in components)
+        {
+            component.RenderRequired += scene.OnRenderRequired;
+        }
+
+        components.CollectionChanged += scene.OnComponentsCollectionChanged;
+    }
 
     #endregion
 
@@ -170,10 +183,10 @@ public class Scene2D : FrameworkElement
 
         CompositionTarget.Rendering += (_, _) =>
         {
-            //if (!_isRenderRequired) return;
-
+            if (!_isRenderRequired) return;
             _imageSource.RequestRender();
-            //_isRenderRequired = false;
+
+            _isRenderRequired = false;
         };
     }
 
@@ -240,7 +253,59 @@ public class Scene2D : FrameworkElement
         _isRenderRequired = true;
     }
 
-    private static void OnObjectsCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
+    private void OnObjectsCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
+    {
+        switch (e.Action)
+        {
+            case NotifyCollectionChangedAction.Add:
+                {
+                    var newItems = e.NewItems!.Cast<ResourceDependentObject>();
+
+                    foreach (var newItem in newItems)
+                    {
+                        newItem.RenderRequired += OnRenderRequired;
+                    }
+                }
+                break;
+            case NotifyCollectionChangedAction.Remove:
+                {
+                    var oldItems = e.OldItems!.Cast<ResourceDependentObject>();
+
+                    foreach (var oldItem in oldItems)
+                    {
+                        oldItem.RenderRequired -= OnRenderRequired;
+                        oldItem.Dispose();
+                    }
+                }
+                break;
+            case NotifyCollectionChangedAction.Reset:
+                {
+
+                }
+                break;
+            case NotifyCollectionChangedAction.Replace:
+                {
+                    var newItems = e.NewItems!.Cast<ResourceDependentObject>();
+                    var oldItems = e.OldItems!.Cast<ResourceDependentObject>();
+
+                    foreach (var oldItem in oldItems)
+                    {
+                        oldItem.RenderRequired -= OnRenderRequired;
+                        oldItem.Dispose();
+                    }
+
+                    foreach (var newItem in newItems)
+                    {
+                        newItem.RenderRequired += OnRenderRequired;
+                    }
+                }
+                break;
+        }
+
+        _isRenderRequired = true;
+    }
+
+    private void OnComponentsCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
     {
 
     }

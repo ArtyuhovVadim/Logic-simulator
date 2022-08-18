@@ -37,27 +37,28 @@
                 Margin="0,0,5,0"
                 Foreground="White"
                 Text="{Binding Path=Scale, ElementName=Scene, StringFormat='Масштаб: {0:0.00}'}" />
-            <TextBlock Foreground="White" Text="{Binding Path=MousePosition, ElementName=Scene, StringFormat='Позиция курсора: {0}', Converter={StaticResource Vector2Converter}}" />
+            <TextBlock
+                Margin="0,0,5,0"
+                Foreground="White"
+                Text="{Binding Path=MousePosition, ElementName=Scene, StringFormat='Позиция курсора: {0}', Converter={StaticResource Vector2Converter}}" />
         </StatusBar>
 
-        <scene:Scene2D
-            Components="{Binding Path=Components}"
-            Objects="{Binding Path=Objects}"
-            Tools="{Binding Path=Tools}" />
-
-
-        <!--<DockingManager>
+        <DockingManager>
             <LayoutRoot>
                 <LayoutPanel>
                     <LayoutDocumentPane>
                         <LayoutDocument Title="Scene">
-
+                            <scene:Scene2D
+                                Components="{Binding Path=Components}"
+                                Objects="{Binding Path=Objects}"
+                                Tools="{Binding Path=Tools}" />
                         </LayoutDocument>
-                        <LayoutDocument Title="Test" />
+                        <LayoutDocument Title="Test">
+                        </LayoutDocument>
                     </LayoutDocumentPane>
                 </LayoutPanel>
             </LayoutRoot>
-        </DockingManager>-->
+        </DockingManager>
 
         <!--<DockingManager DocumentsSource="{Binding Path=SchemeViewModels}">
             <DockingManager.LayoutItemTemplateSelector>

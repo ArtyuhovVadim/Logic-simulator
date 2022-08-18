@@ -24,6 +24,8 @@ public class Rectangle : EditableSceneObject
     private Vector2 _location = Vector2.Zero;
     private float _width;
     private float _height;
+    private float _strokeThickness = 1f;
+    private bool _isFilled = true;
 
     private Vector2 _startDragPosition = Vector2.Zero;
     private Vector2 _startDragLocation = Vector2.Zero;
@@ -66,6 +68,7 @@ public class Rectangle : EditableSceneObject
         get => _location;
         set
         {
+            //TODO: Ненужные присваивания при одинаковых значениях
             _location = value;
             RequireUpdate(RectangleGeometryResource);
         }
@@ -111,9 +114,25 @@ public class Rectangle : EditableSceneObject
         }
     }
 
-    public float StrokeThickness { get; set; } = 1f;
+    public float StrokeThickness
+    {
+        get => _strokeThickness;
+        set
+        {
+            _strokeThickness = value; 
+            RequireRender();
+        }
+    }
 
-    public bool IsFilled { get; set; } = true;
+    public bool IsFilled
+    {
+        get => _isFilled;
+        set
+        {
+            _isFilled = value;
+            RequireRender();
+        }
+    }
 
     public override void StartDrag(Vector2 pos)
     {

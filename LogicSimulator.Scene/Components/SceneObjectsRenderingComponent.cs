@@ -7,6 +7,8 @@ public class SceneObjectsRenderingComponent : BaseRenderingComponent
 {
     protected override void OnRender(Scene2D scene, RenderTarget renderTarget)
     {
+        if (scene.Objects is null) return;
+
         foreach (var sceneObject in scene.Objects)
         {
             sceneObject.Render(scene, renderTarget);

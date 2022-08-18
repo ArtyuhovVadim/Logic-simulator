@@ -1,5 +1,7 @@
-﻿using System.Collections.ObjectModel;
+﻿using System;
+using System.Collections.ObjectModel;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Windows.Input;
 using LogicSimulator.Infrastructure.Commands;
 using LogicSimulator.Infrastructure.Services.Interfaces;
@@ -27,7 +29,20 @@ public class MainWindowViewModel : BindableBase
     {
         _schemeFileService = schemeFileService;
         _userDialogService = userDialogService;
-   
+
+        Task.Run(async () =>
+        {
+            //await Task.Delay(3000);
+            //Objects.Add(new Rectangle() { Width = 200, Height = 200, Location = new Vector2(500, 500) });
+            //await Task.Delay(3000);
+
+
+
+
+
+            //Objects.Clear();
+        });
+
         return;
 
         for (var i = 0; i < 3; i++)
@@ -41,7 +56,7 @@ public class MainWindowViewModel : BindableBase
 
         _schemeViewModels = new ObservableCollection<SchemeViewModel>(_schemes.Select(x => new SchemeViewModel(x)));
 
-        
+
     }
 
     #region SchemeViewModels
@@ -100,6 +115,10 @@ public class MainWindowViewModel : BindableBase
 
     public ICommand TestCommand => _testCommand ??= new LambdaCommand(_ =>
     {
+        while (Objects.Count > 0)
+        {
+            Objects.RemoveAt(Objects.Count - 1);
+        }
 
     }, _ => true);
 
@@ -120,9 +139,9 @@ public class MainWindowViewModel : BindableBase
             BoldLineColor = new Color4(220f / 255f, 220f / 255f, 215f / 255f, 1f),
         },
         new SceneObjectsRenderingComponent(),
-        //new SelectionRenderingComponent(),
+        new SelectionRenderingComponent(),
         new SelectionRectangleRenderingComponent(),
-        //new NodeRenderingComponent()
+        new NodeRenderingComponent()
     };
     public ObservableCollection<BaseRenderingComponent> Components
     {

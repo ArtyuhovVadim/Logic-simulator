@@ -25,6 +25,8 @@ public class Ellipse : EditableSceneObject
     private float _radiusY;
     private Color4 _fillColor = Color4.White;
     private Color4 _strokeColor = Color4.Black;
+    private float _strokeThickness = 1f;
+    private bool _isFilled;
 
     private Vector2 _startDragPosition;
     private Vector2 _startDragCenter;
@@ -90,9 +92,25 @@ public class Ellipse : EditableSceneObject
         }
     }
 
-    public float StrokeThickness { get; set; } = 1f;
+    public float StrokeThickness
+    {
+        get => _strokeThickness;
+        set
+        {
+            _strokeThickness = value;
+            RequireRender();
+        }
+    }
 
-    public bool IsFilled { get; set; }
+    public bool IsFilled
+    {
+        get => _isFilled;
+        set
+        {
+            _isFilled = value;
+            RequireRender();
+        }
+    }
 
     public override void StartDrag(Vector2 pos)
     {

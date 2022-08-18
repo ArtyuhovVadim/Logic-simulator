@@ -6,11 +6,30 @@ namespace LogicSimulator.Scene.SceneObjects.Base;
 
 public abstract class BaseSceneObject : ResourceDependentObject
 {
-    [YamlIgnore]
-    public bool IsDragging { get; protected set; }
+    private bool _isSelected;
+    private bool _isDragging;
 
     [YamlIgnore]
-    public bool IsSelected { get; protected set; }
+    public bool IsDragging
+    {
+        get => _isDragging;
+        protected set
+        {
+            _isDragging = value;
+            RequireRender();
+        }
+    }
+
+    [YamlIgnore]
+    public bool IsSelected
+    {
+        get => _isSelected;
+        protected set
+        {
+            _isSelected = value;
+            RequireRender();
+        }
+    }
 
     public abstract void StartDrag(Vector2 pos);
 
