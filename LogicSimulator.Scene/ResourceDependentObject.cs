@@ -7,13 +7,25 @@ namespace LogicSimulator.Scene;
 
 public abstract class ResourceDependentObject : IDisposable
 {
-    internal event Action RequestedRender;
+    private static readonly List<ResourceDependentObject> AllResourceDependentObject = new();
 
     private readonly Dictionary<int, object> _resources = new();
 
     private readonly List<int> _requireUpdateResources = new();
 
-    public T GetResourceValue<T>(Resource resource, RenderTarget renderTarget)
+    public event Action RenderRequired;
+
+    protected ResourceDependentObject() => AllResourceDependentObject.Add(this);
+
+    public static void RequireUpdateInAllResourceDependentObjects()
+    {
+        foreach (var resourceDependentObject in AllResourceDependentObject)
+        {
+            resourceDependentObject._requireUpdateResources.AddRange(resourceDependentObject._resources.Keys);
+        }
+    }
+
+    internal T GetResourceValue<T>(Resource resource, RenderTarget renderTarget)
     {
         var hash = resource.GetHashCode();
 
@@ -46,11 +58,6 @@ public abstract class ResourceDependentObject : IDisposable
         return (T)resourceValue;
     }
 
-    protected void RequestRender()
-    {
-        RequestedRender?.Invoke();
-    }
-
     protected void RequireUpdate(Resource resource)
     {
         var hash = resource.GetHashCode();
@@ -58,6 +65,13 @@ public abstract class ResourceDependentObject : IDisposable
         if (_requireUpdateResources.Contains(hash)) return;
 
         _requireUpdateResources.Add(hash);
+
+        RequireRender();
+    }
+
+    protected void RequireRender()
+    {
+        RenderRequired?.Invoke();
     }
 
     protected T GetCashedResourceValue<T>(Resource resource)

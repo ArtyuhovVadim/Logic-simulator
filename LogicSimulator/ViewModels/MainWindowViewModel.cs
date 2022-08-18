@@ -27,6 +27,8 @@ public class MainWindowViewModel : BindableBase
     {
         _schemeFileService = schemeFileService;
         _userDialogService = userDialogService;
+   
+        return;
 
         for (var i = 0; i < 3; i++)
         {
@@ -38,6 +40,8 @@ public class MainWindowViewModel : BindableBase
         }
 
         _schemeViewModels = new ObservableCollection<SchemeViewModel>(_schemes.Select(x => new SchemeViewModel(x)));
+
+        
     }
 
     #region SchemeViewModels
@@ -105,7 +109,7 @@ public class MainWindowViewModel : BindableBase
 
     private ObservableCollection<BaseRenderingComponent> _components = new()
     {
-        new SolidClearRenderingComponent(){ClearColor = Color4.Black},
+        new SolidClearRenderingComponent{ClearColor = Color4.Black},
         new GridRenderingComponent
         {
             Width = 3000,
@@ -116,9 +120,9 @@ public class MainWindowViewModel : BindableBase
             BoldLineColor = new Color4(220f / 255f, 220f / 255f, 215f / 255f, 1f),
         },
         new SceneObjectsRenderingComponent(),
-        new SelectionRenderingComponent(),
+        //new SelectionRenderingComponent(),
         new SelectionRectangleRenderingComponent(),
-        new NodeRenderingComponent()
+        //new NodeRenderingComponent()
     };
     public ObservableCollection<BaseRenderingComponent> Components
     {
@@ -149,11 +153,11 @@ public class MainWindowViewModel : BindableBase
 
     private ObservableCollection<BaseSceneObject> _objects = new()
     {
-        new Rectangle{Width = 100, Height = 100,Location = new Vector2(100,100)},
-        new Rectangle{Width = 100, Height = 100,Location = new Vector2(100,100)},
-        new Rectangle{Width = 100, Height = 100,Location = new Vector2(100,100)},
-        new Rectangle{Width = 100, Height = 100,Location = new Vector2(100,100)},
-        new Rectangle{Width = 100, Height = 100,Location = new Vector2(100,100)}
+       new Rectangle{Width = 100, Height = 100,Location = new Vector2(100,100)},
+       new Rectangle{Width = 100, Height = 100,Location = new Vector2(100,100)},
+       new Rectangle{Width = 100, Height = 100,Location = new Vector2(100,100)},
+       new Rectangle{Width = 100, Height = 100,Location = new Vector2(100,100)},
+       new Rectangle{Width = 100, Height = 100,Location = new Vector2(100,100)}
     };
 
     public ObservableCollection<BaseSceneObject> Objects

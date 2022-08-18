@@ -59,10 +59,8 @@ public class GridRenderingComponent : BaseRenderingComponent
 
     public int BoldLineStep { get; set; } = 10;
 
-    public override void Render(Scene2D scene, RenderTarget renderTarget)
+    protected override void OnRender(Scene2D scene, RenderTarget renderTarget)
     {
-        if (!IsVisible) return;
-
         var strokeWidth = LineThickness / scene.Scale;
         var rect = new RectangleF(0, 0, Width, Height);
 
@@ -82,7 +80,7 @@ public class GridRenderingComponent : BaseRenderingComponent
                 i % BoldLineStep == 0 ? boldLineBrush : lineBrush,
                 strokeWidth);
         }
-
+        
         for (var i = 0; i <= rect.Width / CellSize; i++)
         {
             renderTarget.DrawLine(

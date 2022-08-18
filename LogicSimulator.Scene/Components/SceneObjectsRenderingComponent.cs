@@ -5,10 +5,8 @@ namespace LogicSimulator.Scene.Components;
 
 public class SceneObjectsRenderingComponent : BaseRenderingComponent
 {
-    public override void Render(Scene2D scene, RenderTarget renderTarget)
+    protected override void OnRender(Scene2D scene, RenderTarget renderTarget)
     {
-        if (!IsVisible) return;
-
         foreach (var sceneObject in scene.Objects)
         {
             sceneObject.Render(scene, renderTarget);

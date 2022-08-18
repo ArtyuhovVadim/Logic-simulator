@@ -19,7 +19,7 @@ public class NodeRenderingComponent : BaseRenderingComponent
     public static readonly Resource UnselectBrushResource = Resource.Register<NodeRenderingComponent, SolidColorBrush>(nameof(UnselectBrushResource),
         (target, o) => new SolidColorBrush(target, new Color4(0, 1, 0, 1)));
 
-    public override void Render(Scene2D scene, RenderTarget renderTarget)
+    protected override void OnRender(Scene2D scene, RenderTarget renderTarget)
     {
         var strokeColor = GetResourceValue<SolidColorBrush>(StrokeBrushResource, renderTarget);
         var selectedColor = GetResourceValue<SolidColorBrush>(SelectBrushResource, renderTarget);

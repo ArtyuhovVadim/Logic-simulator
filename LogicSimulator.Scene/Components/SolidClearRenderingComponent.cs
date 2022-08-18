@@ -21,7 +21,7 @@ public class SolidClearRenderingComponent : BaseRenderingComponent
         }
     }
 
-    public override void Render(Scene2D scene, RenderTarget renderTarget)
+    protected override void OnRender(Scene2D scene, RenderTarget renderTarget)
     {
         renderTarget.Clear(ClearColor);
     }

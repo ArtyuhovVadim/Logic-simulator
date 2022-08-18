@@ -33,10 +33,8 @@ public class SelectionRenderingComponent : BaseRenderingComponent
         }
     }
 
-    public override void Render(Scene2D scene, RenderTarget renderTarget)
+    protected override void OnRender(Scene2D scene, RenderTarget renderTarget)
     {
-        if (!IsVisible) return;
-
         var brush = GetResourceValue<SolidColorBrush>(SelectionBrushResource, renderTarget);
         var style = GetResourceValue<StrokeStyle>(SelectionStyleResource, renderTarget);
 

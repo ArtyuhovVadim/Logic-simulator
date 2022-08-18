@@ -16,15 +16,33 @@ public class SelectionRectangleRenderingComponent : BaseRenderingComponent
 
     private Color4 _secantColor = new(0.39f, 0.78f, 0.39f, 1f);
     private Color4 _normalColor = new(0.49f, 0.68f, 1f, 1f);
+    private Vector2 _startPosition;
+    private Vector2 _endPosition;
 
     public SelectionRectangleRenderingComponent()
     {
         IsVisible = false;
     }
 
-    public Vector2 StartPosition { get; set; }
+    public Vector2 StartPosition
+    {
+        get => _startPosition;
+        set
+        {
+            _startPosition = value;
+            RequireRender();
+        }
+    }
 
-    public Vector2 EndPosition { get; set; }
+    public Vector2 EndPosition
+    {
+        get => _endPosition;
+        set
+        {
+            _endPosition = value;
+            RequireRender();
+        }
+    }
 
     public Color4 SecantColor
     {
@@ -48,10 +66,8 @@ public class SelectionRectangleRenderingComponent : BaseRenderingComponent
 
     public bool IsSecant { get; set; }
 
-    public override void Render(Scene2D scene, RenderTarget renderTarget)
+    protected override void OnRender(Scene2D scene, RenderTarget renderTarget)
     {
-        if (!IsVisible) return;
-
         var brush = GetResourceValue<SolidColorBrush>(IsSecant ? SecantBrushResource : NormalBrushResource, renderTarget);
 
         var location = StartPosition;
