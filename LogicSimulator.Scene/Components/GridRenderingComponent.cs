@@ -59,11 +59,37 @@ public class GridRenderingComponent : BaseRenderingComponent
 
     public int BoldLineStep { get; set; } = 10;
 
-    public override void Render(Scene2D scene, Renderer renderer)
+    public override void Render(Scene2D scene, RenderTarget renderTarget)
     {
-        if (IsVisible)
+        if (!IsVisible) return;
+
+        var strokeWidth = LineThickness / scene.Scale;
+        var rect = new RectangleF(0, 0, Width, Height);
+
+        var backgroundBrush = GetResourceValue<SolidColorBrush>(BackgroundBrushResource, renderTarget);
+        var lineBrush = GetResourceValue<SolidColorBrush>(LineBrushResource, renderTarget);
+        var boldLineBrush = GetResourceValue<SolidColorBrush>(BoldLineBrushResource, renderTarget);
+
+        renderTarget.FillRectangle(rect, backgroundBrush);
+
+        renderTarget.DrawRectangle(rect, lineBrush, strokeWidth);
+
+        for (var i = 0; i <= rect.Height / CellSize; i++)
         {
-            renderer.Render(scene, this);
+            renderTarget.DrawLine(
+                new Vector2(i * CellSize + rect.Left, rect.Top),
+                new Vector2(i * CellSize + rect.Left, rect.Bottom),
+                i % BoldLineStep == 0 ? boldLineBrush : lineBrush,
+                strokeWidth);
+        }
+
+        for (var i = 0; i <= rect.Width / CellSize; i++)
+        {
+            renderTarget.DrawLine(
+                new Vector2(rect.Left, i * CellSize + rect.Top),
+                new Vector2(rect.Right, i * CellSize + rect.Top),
+                i % BoldLineStep == 0 ? boldLineBrush : lineBrush,
+                strokeWidth);
         }
     }
 }

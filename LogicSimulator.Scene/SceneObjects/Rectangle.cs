@@ -24,8 +24,6 @@ public class Rectangle : EditableSceneObject
     private Vector2 _location = Vector2.Zero;
     private float _width;
     private float _height;
-    private bool _isFilled = true;
-    private float _strokeThickness = 1f;
 
     private Vector2 _startDragPosition = Vector2.Zero;
     private Vector2 _startDragLocation = Vector2.Zero;
@@ -113,25 +111,9 @@ public class Rectangle : EditableSceneObject
         }
     }
 
-    public float StrokeThickness
-    {
-        get => _strokeThickness;
-        set
-        {
-            _strokeThickness = value;
-            RequireRender();
-        }
-    }
+    public float StrokeThickness { get; set; } = 1f;
 
-    public bool IsFilled
-    {
-        get => _isFilled;
-        set
-        {
-            _isFilled = value;
-            RequireRender();
-        }
-    }
+    public bool IsFilled { get; set; } = true;
 
     public override void StartDrag(Vector2 pos)
     {
@@ -166,7 +148,24 @@ public class Rectangle : EditableSceneObject
         return geometry.Compare(rectGeometry, matrix, tolerance);
     }
 
-    public override void Render(Scene2D scene, Renderer renderer) => renderer.Render(scene, this);
+    public override void Render(Scene2D scene, RenderTarget renderTarget)
+    {
+        var strokeBrush = GetResourceValue<SolidColorBrush>(StrokeBrushResource, renderTarget);
+        var geometry = GetResourceValue<RectangleGeometry>(RectangleGeometryResource, renderTarget);
 
-    public override void RenderSelection(Scene2D scene, Renderer renderer) => renderer.RenderSelection(scene, this);
+        if (IsFilled)
+        {
+            var fillBrush = GetResourceValue<SolidColorBrush>(FillBrushResource, renderTarget);
+            renderTarget.FillGeometry(geometry, fillBrush);
+        }
+
+        renderTarget.DrawGeometry(geometry, strokeBrush, StrokeThickness / scene.Scale);
+    }
+
+    public override void RenderSelection(Scene2D scene, RenderTarget renderTarget, SolidColorBrush selectionBrush, StrokeStyle selectionStyle)
+    {
+        var geometry = GetResourceValue<RectangleGeometry>(RectangleGeometryResource, renderTarget);
+
+        renderTarget.DrawGeometry(geometry, selectionBrush, 1f / scene.Scale, selectionStyle);
+    }
 }

@@ -7,7 +7,6 @@ public class Node
 {
     private readonly Func<Vector2> _getNodePositionFunc;
     private readonly Action<Vector2> _applyNodeMoveFunc;
-    private bool _isSelected;
 
     public static readonly float NodeSize = 4f;
 
@@ -17,15 +16,7 @@ public class Node
         _applyNodeMoveFunc = applyNodeMoveFunc;
     }
 
-    public bool IsSelected
-    {
-        get => _isSelected;
-        private set
-        {
-            _isSelected = value;
-            ResourceDependentObject.RequireRender();
-        }
-    }
+    public bool IsSelected { get; private set; }
 
     public Vector2 Location => _getNodePositionFunc.Invoke();
 

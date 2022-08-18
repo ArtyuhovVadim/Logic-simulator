@@ -273,7 +273,11 @@ public class Scene2D : FrameworkElement
 
     private void OnLoaded(object sender, RoutedEventArgs e)
     {
-        _sceneRenderer ??= new SceneRenderer(this);
+        if (_sceneRenderer is null)
+        {
+            _sceneRenderer = new SceneRenderer(this);
+            CompositionTarget.Rendering += (_, _) => _sceneRenderer.RequestRender();
+        }
     }
 
     private Vector2 GetMousePosition() => Mouse.GetPosition(this).ToVector2().DpiCorrect(Dpi);

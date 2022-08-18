@@ -21,8 +21,6 @@ public class SceneRenderer : IDisposable
 
     private bool _isInitialized;
 
-    private Renderer _renderer;
-
     public SceneRenderer(Scene2D scene)
     {
         _scene = scene;
@@ -62,7 +60,6 @@ public class SceneRenderer : IDisposable
         Utilities.Dispose(ref _imageSource);
         Utilities.Dispose(ref _factory);
         Utilities.Dispose(ref _renderTarget);
-        Utilities.Dispose(ref _renderer);
     }
 
     public void WpfRender(DrawingContext drawingContext, Size size)
@@ -93,7 +90,7 @@ public class SceneRenderer : IDisposable
 
         foreach (var component in _scene.Components)
         {
-            component.Render(_scene, _renderer);
+            component.Render(_scene, _renderTarget);
         }
 
         _renderTarget.EndDraw();
@@ -115,12 +112,11 @@ public class SceneRenderer : IDisposable
     {
         var tempTransform = Matrix3x2.Identity;
 
-        if(_renderTarget is not null) 
+        if (_renderTarget is not null)
             tempTransform = _renderTarget.Transform;
 
         Utilities.Dispose(ref _factory);
         Utilities.Dispose(ref _renderTarget);
-        Utilities.Dispose(ref _renderer);
 
         using var comObject = new ComObject(resourceHandle);
         using var resource = comObject.QueryInterface<SharpDX.DXGI.Resource>();
@@ -145,8 +141,6 @@ public class SceneRenderer : IDisposable
             AntialiasMode = AntialiasMode.Aliased,
             Transform = tempTransform
         };
-
-        _renderer = new Renderer(_renderTarget);
 
         _isInitialized = true;
     }

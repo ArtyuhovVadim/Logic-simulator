@@ -25,8 +25,6 @@ public class Ellipse : EditableSceneObject
     private float _radiusY;
     private Color4 _fillColor = Color4.White;
     private Color4 _strokeColor = Color4.Black;
-    private float _strokeThickness = 1f;
-    private bool _isFilled;
 
     private Vector2 _startDragPosition;
     private Vector2 _startDragCenter;
@@ -92,25 +90,9 @@ public class Ellipse : EditableSceneObject
         }
     }
 
-    public float StrokeThickness
-    {
-        get => _strokeThickness;
-        set
-        {
-            _strokeThickness = value;
-            RequireRender();
-        }
-    }
+    public float StrokeThickness { get; set; } = 1f;
 
-    public bool IsFilled
-    {
-        get => _isFilled;
-        set
-        {
-            _isFilled = value;
-            RequireRender();
-        }
-    }
+    public bool IsFilled { get; set; }
 
     public override void StartDrag(Vector2 pos)
     {
@@ -145,7 +127,26 @@ public class Ellipse : EditableSceneObject
         return geometry.Compare(rectGeometry, matrix, tolerance);
     }
 
-    public override void Render(Scene2D scene, Renderer renderer) => renderer.Render(scene, this);
+    public override void Render(Scene2D scene, RenderTarget renderTarget)
+    {
+        var strokeBrush = GetResourceValue<SolidColorBrush>(Ellipse.StrokeBrushResource, renderTarget);
+        var geometry = GetResourceValue<EllipseGeometry>(Ellipse.EllipseGeometryResource, renderTarget);
 
-    public override void RenderSelection(Scene2D scene, Renderer renderer) => renderer.RenderSelection(scene, this);
+        if (IsFilled)
+        {
+            var fillBrush = GetResourceValue<SolidColorBrush>(Ellipse.FillBrushResource, renderTarget);
+            renderTarget.FillGeometry(geometry, fillBrush);
+        }
+
+        renderTarget.DrawGeometry(geometry, strokeBrush, StrokeThickness / scene.Scale);
+    }
+
+    public override void RenderSelection(Scene2D scene, RenderTarget renderTarget, SolidColorBrush selectionBrush, StrokeStyle selectionStyle)
+    {
+        var geometry = GetResourceValue<EllipseGeometry>(EllipseGeometryResource, renderTarget);
+        
+        renderTarget.DrawGeometry(geometry, selectionBrush, 1f / scene.Scale, selectionStyle);
+        renderTarget.DrawLine(Center, Center + new Vector2(RadiusX, 0), selectionBrush, 1f / scene.Scale, selectionStyle);
+        renderTarget.DrawLine(Center, Center + new Vector2(0, -RadiusY), selectionBrush, 1f / scene.Scale, selectionStyle);
+    }
 }
