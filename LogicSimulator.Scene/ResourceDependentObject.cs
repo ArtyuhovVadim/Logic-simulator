@@ -13,7 +13,7 @@ public abstract class ResourceDependentObject : IDisposable
 
     private readonly List<int> _requireUpdateResources = new();
 
-    public event Action RenderRequired;
+    //public event Action RenderRequired;
 
     protected ResourceDependentObject() => AllResourceDependentObject.Add(this);
 
@@ -66,12 +66,12 @@ public abstract class ResourceDependentObject : IDisposable
 
         _requireUpdateResources.Add(hash);
 
-        RequireRender();
+        //RequireRender();
     }
 
     protected void RequireRender()
     {
-        RenderRequired?.Invoke();
+        //RenderRequired?.Invoke();
     }
 
     protected T GetCashedResourceValue<T>(Resource resource)

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Collections.Specialized;
 using System.Diagnostics;
 using System.Linq;
 using System.Windows;
@@ -30,32 +31,49 @@ public class Scene2D : FrameworkElement
 
     private bool _isInitialized;
     private bool _isLeftMouseButtonPressedOnScene;
+    private bool _isRenderRequired;
+
+    private int count;
 
     #region Objects
 
-    public IEnumerable<BaseSceneObject> Objects
+    public ObservableCollection<BaseSceneObject> Objects
     {
-        get => (IEnumerable<BaseSceneObject>)GetValue(ObjectsProperty);
+        get => (ObservableCollection<BaseSceneObject>)GetValue(ObjectsProperty);
         set => SetValue(ObjectsProperty, value);
     }
 
     public static readonly DependencyProperty ObjectsProperty =
-        DependencyProperty.Register(nameof(Objects), typeof(IEnumerable<BaseSceneObject>), typeof(Scene2D),
-            new PropertyMetadata(Enumerable.Empty<BaseSceneObject>()));
+        DependencyProperty.Register(nameof(Objects), typeof(ObservableCollection<BaseSceneObject>), typeof(Scene2D),
+            new PropertyMetadata(null, OnObjectsPropertyChanged));
+
+    private static void OnObjectsPropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+    {
+        if (d is not Scene2D scene) return;
+
+        var objects = (ObservableCollection<BaseSceneObject>)e.NewValue;
+
+        foreach (var o in objects)
+        {
+            //o.RenderRequired += scene.OnRenderRequired;
+        }
+
+        objects.CollectionChanged += OnObjectsCollectionChanged;
+    }
 
     #endregion
 
     #region Components
 
-    public IEnumerable<BaseRenderingComponent> Components
+    public ObservableCollection<BaseRenderingComponent> Components
     {
-        get => (IEnumerable<BaseRenderingComponent>)GetValue(ComponentsProperty);
+        get => (ObservableCollection<BaseRenderingComponent>)GetValue(ComponentsProperty);
         set => SetValue(ComponentsProperty, value);
     }
 
     public static readonly DependencyProperty ComponentsProperty =
-        DependencyProperty.Register(nameof(Components), typeof(IEnumerable<BaseRenderingComponent>), typeof(Scene2D),
-            new PropertyMetadata(Enumerable.Empty<BaseRenderingComponent>()));
+        DependencyProperty.Register(nameof(Components), typeof(ObservableCollection<BaseRenderingComponent>), typeof(Scene2D),
+            new PropertyMetadata(null));
 
     #endregion
 
@@ -150,7 +168,13 @@ public class Scene2D : FrameworkElement
 
         Loaded += OnLoaded;
 
-        CompositionTarget.Rendering += (_, _) => _imageSource?.RequestRender();
+        CompositionTarget.Rendering += (_, _) =>
+        {
+            //if (!_isRenderRequired) return;
+
+            _imageSource.RequestRender();
+            //_isRenderRequired = false;
+        };
     }
 
     public BaseTool CurrentTool { get; private set; }
@@ -207,6 +231,18 @@ public class Scene2D : FrameworkElement
         }
 
         _renderTarget.EndDraw();
+
+        Debug.WriteLine($"Render {count++}");
+    }
+
+    private void OnRenderRequired()
+    {
+        _isRenderRequired = true;
+    }
+
+    private static void OnObjectsCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
+    {
+
     }
 
     protected override void OnRenderSizeChanged(SizeChangedInfo sizeInfo)
