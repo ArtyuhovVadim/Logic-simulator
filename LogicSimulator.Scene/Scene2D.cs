@@ -4,29 +4,23 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Windows;
 using System.Windows.Input;
-using System.Windows.Interop;
 using System.Windows.Media;
 using LogicSimulator.Scene.Components.Base;
 using LogicSimulator.Scene.ExtensionMethods;
 using LogicSimulator.Scene.SceneObjects.Base;
 using LogicSimulator.Scene.Tools;
 using LogicSimulator.Scene.Tools.Base;
-using Microsoft.Wpf.Interop.DirectX;
 using SharpDX;
 using SharpDX.Direct2D1;
-using Factory1 = SharpDX.Direct2D1.Factory1;
 
 namespace LogicSimulator.Scene;
 
 public class Scene2D : FrameworkElement
 {
-    private readonly D3D11Image _imageSource;
-    private Factory1 _factory;
-    private RenderTarget _renderTarget;
+    private readonly SceneRenderer _renderer;
 
     private SceneTransformController _sceneTransformController;
 
-    private bool _isInitialized;
     private bool _isLeftMouseButtonPressedOnScene;
 
     #region Objects
@@ -94,10 +88,10 @@ public class Scene2D : FrameworkElement
         if (d is not Scene2D scene) return;
 
         var newValue = (float)e.NewValue;
-        var renderTarget = scene._renderTarget;
+        var renderer = scene._renderer;
 
-        renderTarget.Transform = renderTarget.Transform with { M11 = newValue, M22 = newValue };
-        scene._imageSource.RequestRender();
+        renderer.Transform = renderer.Transform with { M11 = newValue, M22 = newValue };
+        renderer.RequestRender();
     }
 
     #endregion
@@ -121,17 +115,17 @@ public class Scene2D : FrameworkElement
     public float Dpi => (float)VisualTreeHelper.GetDpi(this).PixelsPerInchX;
 
     //TODO: Костыль!
-    internal RenderTarget RenderTarget => _renderTarget;
+    internal RenderTarget RenderTarget => _renderer.RenderTarget;
 
-    public Matrix3x2 Transform => _renderTarget.Transform;
+    public Matrix3x2 Transform => _renderer.Transform;
 
     public Vector2 Translation
     {
-        get => new(_renderTarget.Transform.M31, _renderTarget.Transform.M32);
+        get => new(_renderer.Transform.M31, _renderer.Transform.M32);
         set
         {
-            _renderTarget.Transform = _renderTarget.Transform with { M31 = value.X, M32 = value.Y };
-            _imageSource.RequestRender();
+            _renderer.Transform = _renderer.Transform with { M31 = value.X, M32 = value.Y };
+            _renderer.RequestRender();
         }
     }
 
@@ -143,12 +137,11 @@ public class Scene2D : FrameworkElement
 
         _sceneTransformController = new SceneTransformController(this);
 
-        _imageSource = new D3D11Image { OnRender = OnRender };
-        _imageSource.IsFrontBufferAvailableChanged += OnIsFrontBufferAvailableChanged;
+        _renderer = new SceneRenderer(this);
 
         Loaded += OnLoaded;
 
-        CompositionTarget.Rendering += (_, _) => _imageSource.RequestRender();
+        CompositionTarget.Rendering += (_, _) => _renderer.RequestRender();
     }
 
     public BaseTool CurrentTool { get; private set; }
@@ -185,32 +178,9 @@ public class Scene2D : FrameworkElement
         CurrentTool.Activate(this);
     }
 
-    protected override void OnRender(DrawingContext drawingContext)
-    {
-        drawingContext.DrawImage(_imageSource, new Rect(RenderSize));
-    }
+    protected override void OnRender(DrawingContext drawingContext) => _renderer.WpfRender(drawingContext);
 
-    private void OnRender(IntPtr resourceHandle, bool isNewSurface)
-    {
-        if (!_isInitialized || isNewSurface)
-        {
-            InitializeResources(resourceHandle);
-        }
-
-        _renderTarget.BeginDraw();
-
-        foreach (var component in Components)
-        {
-            component.Render(this, _renderTarget);
-        }
-
-        _renderTarget.EndDraw();
-    }
-
-    protected override void OnRenderSizeChanged(SizeChangedInfo sizeInfo)
-    {
-        SetImageSourcePixelSize(sizeInfo.NewSize);
-    }
+    protected override void OnRenderSizeChanged(SizeChangedInfo sizeInfo) => _renderer.Resize(sizeInfo.NewSize);
 
     protected override void OnMouseMove(MouseEventArgs e)
     {
@@ -306,80 +276,7 @@ public class Scene2D : FrameworkElement
         SwitchTool<SelectionTool>();
     }
 
-    private void OnLoaded(object sender, RoutedEventArgs e)
-    {
-        var window = Window.GetWindow(this);
-
-        if (window is null) return;
-
-        var handle = new WindowInteropHelper(window).Handle;
-
-        if (handle == _imageSource.WindowOwner) return;
-
-        _imageSource.WindowOwner = handle;
-
-        SetImageSourcePixelSize(RenderSize);
-
-        _imageSource.RequestRender();
-    }
-
-    private void OnIsFrontBufferAvailableChanged(object sender, DependencyPropertyChangedEventArgs e)
-    {
-        if (!_imageSource.IsFrontBufferAvailable)
-        {
-            _isInitialized = false;
-        }
-        else
-        {
-            _imageSource.RequestRender();
-        }
-    }
-
-    private void InitializeResources(IntPtr resourceHandle)
-    {
-        var tempTransform = Matrix3x2.Identity;
-
-        if (_renderTarget is not null)
-            tempTransform = _renderTarget.Transform;
-
-        Utilities.Dispose(ref _factory);
-        Utilities.Dispose(ref _renderTarget);
-
-        using var comObject = new ComObject(resourceHandle);
-        using var resource = comObject.QueryInterface<SharpDX.DXGI.Resource>();
-        using var texture = resource.QueryInterface<SharpDX.Direct3D11.Texture2D>();
-        using var surface = texture.QueryInterface<SharpDX.DXGI.Surface1>();
-
-        var properties = new RenderTargetProperties
-        {
-            DpiX = 96,
-            DpiY = 96,
-            MinLevel = FeatureLevel.Level_DEFAULT,
-            PixelFormat =
-                new SharpDX.Direct2D1.PixelFormat(SharpDX.DXGI.Format.B8G8R8A8_UNorm, AlphaMode.Premultiplied),
-            Type = RenderTargetType.Default,
-            Usage = RenderTargetUsage.None
-        };
-
-        _factory = new Factory1();
-
-        _renderTarget = new RenderTarget(_factory, surface, properties)
-        {
-            AntialiasMode = AntialiasMode.Aliased,
-            Transform = tempTransform
-        };
-
-        _isInitialized = true;
-
-        ResourceDependentObject.RequireUpdateInAllResourceDependentObjects();
-    }
-
-    private void SetImageSourcePixelSize(Size size)
-    {
-        var (width, height) = ((int)Math.Max(size.Width * Dpi / 96f, 10), (int)Math.Max(size.Height * Dpi / 96f, 10));
-
-        _imageSource.SetPixelSize(width, height);
-    }
+    private void OnLoaded(object sender, RoutedEventArgs e) => _renderer.SetOwnerWindow();
 
     private Vector2 GetMousePosition() => Mouse.GetPosition(this).ToVector2().DpiCorrect(Dpi);
 }
