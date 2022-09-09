@@ -5,14 +5,13 @@ using SharpDX.Direct2D1;
 using SharpDX;
 using System.Windows.Media;
 using System.Windows.Interop;
-using System.Windows.Media.Imaging;
 using SharpDX.Mathematics.Interop;
 using PixelFormat = SharpDX.Direct2D1.PixelFormat;
 using SolidColorBrush = SharpDX.Direct2D1.SolidColorBrush;
 
 namespace LogicSimulator.Scene;
 
-public class SceneRenderer
+public class SceneRenderer : IDisposable
 {
     private readonly Scene2D _scene;
 
@@ -74,7 +73,7 @@ public class SceneRenderer
         _renderTarget.Clear(Color4.Black);
 
         using var brush = new SolidColorBrush(_renderTarget, new Color4(1f, 0, 0, 1f));
-        _renderTarget.DrawRectangle(new RawRectangleF(100,100,300,300), brush, 1);
+        _renderTarget.DrawRectangle(new RawRectangleF(100, 100, 300, 300), brush, 1);
 
         //foreach (var component in _scene.Components)
         //{
@@ -137,5 +136,25 @@ public class SceneRenderer
         };
 
         _isInitialized = true;
+    }
+
+    private void Dispose(bool disposing)
+    {
+        if (!disposing) return;
+
+        _imageSource?.Dispose();
+        _renderTarget?.Dispose();
+        _factory?.Dispose();
+    }
+
+    public void Dispose()
+    {
+        Dispose(true);
+        GC.SuppressFinalize(this);
+    }
+
+    ~SceneRenderer()
+    {
+        Dispose(false);
     }
 }
