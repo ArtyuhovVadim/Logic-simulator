@@ -29,6 +29,7 @@
                 <Separator />
                 <MenuItem Header="Выход" />
                 <MenuItem Command="{Binding Path=TestCommand}" Header="Test" />
+                <MenuItem Command="{Binding Path=TestCommand1}" Header="Test1" />
             </MenuItem>
         </Menu>
 
@@ -53,8 +54,7 @@
                                 Objects="{Binding Path=Objects}"
                                 Tools="{Binding Path=Tools}" />
                         </LayoutDocument>
-                        <LayoutDocument Title="Test">
-                        </LayoutDocument>
+                        <LayoutDocument Title="Test" />
                     </LayoutDocumentPane>
                 </LayoutPanel>
             </LayoutRoot>

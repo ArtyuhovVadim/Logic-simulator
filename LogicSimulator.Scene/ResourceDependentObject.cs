@@ -15,7 +15,7 @@ public abstract class ResourceDependentObject : IDisposable
 
     public event Action RenderRequired;
 
-    protected ResourceDependentObject() => AllResourceDependentObject.Add(this);
+    //protected ResourceDependentObject() => AllResourceDependentObject.Add(this);
 
     public static void RequireUpdateInAllResourceDependentObjects()
     {
@@ -84,7 +84,23 @@ public abstract class ResourceDependentObject : IDisposable
         throw new ApplicationException($"Resource with hash ({resource.GetHashCode()}) not found!");
     }
 
-    public void Dispose()
+
+
+    //public void Dispose()
+    //{
+    //    foreach (var resource in _resources.Values)
+    //    {
+    //        if (resource is IDisposable o)
+    //        {
+    //            Utilities.Dispose(ref o);
+    //        }
+    //    }
+    //
+    //    //AllResourceDependentObject.Remove(this);
+    //    _resources.Clear();
+    //}
+
+    private void ReleaseUnmanagedResources()
     {
         foreach (var resource in _resources.Values)
         {
@@ -94,7 +110,26 @@ public abstract class ResourceDependentObject : IDisposable
             }
         }
 
-        AllResourceDependentObject.Remove(this);
+        //AllResourceDependentObject.Remove(this);
         _resources.Clear();
+    }
+
+    protected virtual void Dispose(bool disposing)
+    {
+        ReleaseUnmanagedResources();
+        if (disposing)
+        {
+        }
+    }
+
+    public void Dispose()
+    {
+        Dispose(true);
+        GC.SuppressFinalize(this);
+    }
+
+    ~ResourceDependentObject()
+    {
+        Dispose(false);
     }
 }

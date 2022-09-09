@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.ObjectModel;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using LogicSimulator.Infrastructure.Commands;
@@ -14,6 +15,7 @@ using LogicSimulator.Scene.Tools.Base;
 using LogicSimulator.Scene.Tools;
 using LogicSimulator.ViewModels.Base;
 using SharpDX;
+using SharpDX.Direct2D1;
 using Rectangle = LogicSimulator.Scene.SceneObjects.Rectangle;
 
 namespace LogicSimulator.ViewModels;
@@ -23,40 +25,10 @@ public class MainWindowViewModel : BindableBase
     private readonly ISchemeFileService _schemeFileService;
     private readonly IUserDialogService _userDialogService;
 
-    private readonly ObservableCollection<Scheme> _schemes = new();
-
     public MainWindowViewModel(ISchemeFileService schemeFileService, IUserDialogService userDialogService)
     {
         _schemeFileService = schemeFileService;
         _userDialogService = userDialogService;
-
-        Task.Run(async () =>
-        {
-            //await Task.Delay(3000);
-            //Objects.Add(new Rectangle() { Width = 200, Height = 200, Location = new Vector2(500, 500) });
-            //await Task.Delay(3000);
-
-
-
-
-
-            //Objects.Clear();
-        });
-
-        return;
-
-        for (var i = 0; i < 3; i++)
-        {
-            _schemeFileService.ReadFromFile("Data/Example.lss", out var scheme);
-
-            scheme.Name += $" {i}";
-
-            _schemes.Add(scheme);
-        }
-
-        _schemeViewModels = new ObservableCollection<SchemeViewModel>(_schemes.Select(x => new SchemeViewModel(x)));
-
-
     }
 
     #region SchemeViewModels
@@ -115,11 +87,16 @@ public class MainWindowViewModel : BindableBase
 
     public ICommand TestCommand => _testCommand ??= new LambdaCommand(_ =>
     {
-        while (Objects.Count > 0)
-        {
-            Objects.RemoveAt(Objects.Count - 1);
-        }
+    }, _ => true);
 
+    #endregion
+
+    #region TestCommand
+
+    private ICommand _testCommand1;
+
+    public ICommand TestCommand1 => _testCommand1 ??= new LambdaCommand(_ =>
+    {
     }, _ => true);
 
     #endregion
@@ -172,11 +149,7 @@ public class MainWindowViewModel : BindableBase
 
     private ObservableCollection<BaseSceneObject> _objects = new()
     {
-       new Rectangle{Width = 100, Height = 100,Location = new Vector2(100,100)},
-       new Rectangle{Width = 100, Height = 100,Location = new Vector2(100,100)},
-       new Rectangle{Width = 100, Height = 100,Location = new Vector2(100,100)},
-       new Rectangle{Width = 100, Height = 100,Location = new Vector2(100,100)},
-       new Rectangle{Width = 100, Height = 100,Location = new Vector2(100,100)}
+        new Rectangle { Width = 100, Height = 100 }
     };
 
     public ObservableCollection<BaseSceneObject> Objects

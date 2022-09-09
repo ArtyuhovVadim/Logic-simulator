@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Collections.Specialized;
-using System.Diagnostics;
 using System.Linq;
 using System.Windows;
 using System.Windows.Input;
@@ -30,9 +28,6 @@ public class Scene2D : FrameworkElement
 
     private bool _isInitialized;
     private bool _isLeftMouseButtonPressedOnScene;
-    private bool _isRenderRequired;
-
-    private int count;
 
     #region Objects
 
@@ -44,21 +39,7 @@ public class Scene2D : FrameworkElement
 
     public static readonly DependencyProperty ObjectsProperty =
         DependencyProperty.Register(nameof(Objects), typeof(ObservableCollection<BaseSceneObject>), typeof(Scene2D),
-            new PropertyMetadata(null, OnObjectsPropertyChanged));
-
-    private static void OnObjectsPropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
-    {
-        if (d is not Scene2D scene) return;
-
-        var objects = (ObservableCollection<BaseSceneObject>)e.NewValue;
-
-        foreach (var o in objects)
-        {
-            o.RenderRequired += scene.OnRenderRequired;
-        }
-
-        objects.CollectionChanged += scene.OnObjectsCollectionChanged;
-    }
+            new PropertyMetadata(null));
 
     #endregion
 
@@ -72,21 +53,7 @@ public class Scene2D : FrameworkElement
 
     public static readonly DependencyProperty ComponentsProperty =
         DependencyProperty.Register(nameof(Components), typeof(ObservableCollection<BaseRenderingComponent>), typeof(Scene2D),
-            new PropertyMetadata(null, OnComponentsPropertyChanged));
-
-    private static void OnComponentsPropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
-    {
-        if (d is not Scene2D scene) return;
-
-        var components = (ObservableCollection<BaseRenderingComponent>)e.NewValue;
-
-        foreach (var component in components)
-        {
-            component.RenderRequired += scene.OnRenderRequired;
-        }
-
-        components.CollectionChanged += scene.OnComponentsCollectionChanged;
-    }
+            new PropertyMetadata(null));
 
     #endregion
 
@@ -181,13 +148,7 @@ public class Scene2D : FrameworkElement
 
         Loaded += OnLoaded;
 
-        CompositionTarget.Rendering += (_, _) =>
-        {
-            if (!_isRenderRequired) return;
-            _imageSource.RequestRender();
-
-            _isRenderRequired = false;
-        };
+        CompositionTarget.Rendering += (_, _) => _imageSource.RequestRender();
     }
 
     public BaseTool CurrentTool { get; private set; }
@@ -244,70 +205,6 @@ public class Scene2D : FrameworkElement
         }
 
         _renderTarget.EndDraw();
-
-        Debug.WriteLine($"Render {count++}");
-    }
-
-    private void OnRenderRequired()
-    {
-        _isRenderRequired = true;
-    }
-
-    private void OnObjectsCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
-    {
-        switch (e.Action)
-        {
-            case NotifyCollectionChangedAction.Add:
-                {
-                    var newItems = e.NewItems!.Cast<ResourceDependentObject>();
-
-                    foreach (var newItem in newItems)
-                    {
-                        newItem.RenderRequired += OnRenderRequired;
-                    }
-                }
-                break;
-            case NotifyCollectionChangedAction.Remove:
-                {
-                    var oldItems = e.OldItems!.Cast<ResourceDependentObject>();
-
-                    foreach (var oldItem in oldItems)
-                    {
-                        oldItem.RenderRequired -= OnRenderRequired;
-                        oldItem.Dispose();
-                    }
-                }
-                break;
-            case NotifyCollectionChangedAction.Reset:
-                {
-
-                }
-                break;
-            case NotifyCollectionChangedAction.Replace:
-                {
-                    var newItems = e.NewItems!.Cast<ResourceDependentObject>();
-                    var oldItems = e.OldItems!.Cast<ResourceDependentObject>();
-
-                    foreach (var oldItem in oldItems)
-                    {
-                        oldItem.RenderRequired -= OnRenderRequired;
-                        oldItem.Dispose();
-                    }
-
-                    foreach (var newItem in newItems)
-                    {
-                        newItem.RenderRequired += OnRenderRequired;
-                    }
-                }
-                break;
-        }
-
-        _isRenderRequired = true;
-    }
-
-    private void OnComponentsCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
-    {
-
     }
 
     protected override void OnRenderSizeChanged(SizeChangedInfo sizeInfo)
