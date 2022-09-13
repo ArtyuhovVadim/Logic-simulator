@@ -81,10 +81,12 @@ public class MainWindowViewModel : BindableBase
 
     public ICommand TestCommand => _testCommand ??= new LambdaCommand(_ =>
     {
-        for (int i = 0; i < 1; i++)
-        {
-            Objects1.Add(new Rectangle() { Width = 100, Height = 100, Location = Random.Shared.NextVector2(new Vector2(0, 0), new Vector2(300, 300)) });
-        }
+        ((Rectangle)Objects1[0]).FillColor = new Color4(1f, 0, 0, 1f);
+
+        //for (int i = 0; i < 1; i++)
+        //{
+        //    Objects1.Add(new Rectangle() { Width = 100, Height = 100, Location = Random.Shared.NextVector2(new Vector2(0, 0), new Vector2(300, 300)) });
+        //}
     }, _ => true);
 
     #endregion

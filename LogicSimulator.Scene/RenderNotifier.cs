@@ -19,7 +19,8 @@ public static class RenderNotifier
 
         foreach (var (scene, renderRequired) in RenderRequiredDictionary)
         {
-            if (renderRequired) continue;
+            if (renderRequired)
+                continue;
 
             if (scene.Objects.Any(x => x.Id == obj.Id))
             {
@@ -31,6 +32,14 @@ public static class RenderNotifier
             {
                 RenderRequiredDictionary[scene] = true;
                 return;
+            }
+        }
+
+        if (RenderRequiredDictionary.Values.All(x => !x))
+        {
+            foreach (var key in RenderRequiredDictionary.Keys)
+            {
+                RenderRequiredDictionary[key] = true;
             }
         }
     }
