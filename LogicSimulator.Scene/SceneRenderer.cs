@@ -5,8 +5,13 @@ using SharpDX.Direct2D1;
 using SharpDX;
 using System.Windows.Media;
 using System.Windows.Interop;
-using SharpDX.Mathematics.Interop;
+using SharpDX.DirectWrite;
+using Factory = SharpDX.Direct2D1.Factory;
+using Factory1 = SharpDX.Direct2D1.Factory1;
+using FontStyle = SharpDX.DirectWrite.FontStyle;
+using FontWeight = SharpDX.DirectWrite.FontWeight;
 using PixelFormat = SharpDX.Direct2D1.PixelFormat;
+using SolidColorBrush = SharpDX.Direct2D1.SolidColorBrush;
 
 namespace LogicSimulator.Scene;
 
@@ -18,6 +23,8 @@ public class SceneRenderer : IDisposable
 
     private RenderTarget _renderTarget;
     private Factory _factory;
+
+    private int _count;
 
     private bool _isInitialized;
 
@@ -35,6 +42,12 @@ public class SceneRenderer : IDisposable
 
         _imageSource = new D3D11Image { OnRender = OnRender };
         _imageSource.IsFrontBufferAvailableChanged += OnIsFrontBufferAvailableChanged;
+
+        CompositionTarget.Rendering += (_, _) =>
+        {
+            if (RenderNotifier.IsRenderRequired(_scene))
+                RequestRender();
+        };
     }
 
     public void RequestRender() => _imageSource.RequestRender();
@@ -57,7 +70,7 @@ public class SceneRenderer : IDisposable
 
         SetImageSourcePixelSize(_scene.RenderSize);
 
-        _imageSource.RequestRender();
+        RequestRender();
     }
 
     private void OnRender(IntPtr resourceHandle, bool isNewSurface)
@@ -65,6 +78,7 @@ public class SceneRenderer : IDisposable
         if (!_isInitialized || isNewSurface)
         {
             InitializeResources(resourceHandle);
+            ResourceCache.RequestUpdateInAllResources();
         }
 
         _renderTarget.BeginDraw();
@@ -74,7 +88,22 @@ public class SceneRenderer : IDisposable
             component.Render(_scene, RenderTarget);
         }
 
+        var tmp = _renderTarget.Transform;
+
+        _renderTarget.Transform = Matrix3x2.Identity;
+
+        using var factory = new SharpDX.DirectWrite.Factory();
+        using var textFormat = new TextFormat(factory, "Calibri", FontWeight.Normal, FontStyle.Normal, 24);
+        using var layout = new TextLayout(factory, $"Render calls count: {_count++}", textFormat, float.MaxValue, float.MaxValue);
+        using var brush = new SolidColorBrush(_renderTarget, Color4.Black);
+
+        _renderTarget.DrawTextLayout(new Vector2(10, 10), layout, brush, DrawTextOptions.None);
+
+        _renderTarget.Transform = tmp;
+
         _renderTarget.EndDraw();
+
+        RenderNotifier.RenderEnd(_scene);
     }
 
     //TODO: Разобраться
@@ -86,7 +115,7 @@ public class SceneRenderer : IDisposable
         }
         else
         {
-            _imageSource.RequestRender();
+            RequestRender();
         }
     }
 
@@ -95,6 +124,8 @@ public class SceneRenderer : IDisposable
         var (width, height) = ((int)Math.Max(size.Width * _scene.Dpi / 96f, 10), (int)Math.Max(size.Height * _scene.Dpi / 96f, 10));
 
         _imageSource.SetPixelSize(width, height);
+
+        RequestRender();
     }
 
     private void InitializeResources(IntPtr resourceHandle)
@@ -121,6 +152,7 @@ public class SceneRenderer : IDisposable
             Type = RenderTargetType.Default,
             Usage = RenderTargetUsage.None
         };
+
         _factory = new Factory1();
 
         _renderTarget = new RenderTarget(_factory, surface, properties)
@@ -130,8 +162,6 @@ public class SceneRenderer : IDisposable
         };
 
         _isInitialized = true;
-
-        ResourceCache.RequestUpdateInAllResources();
     }
 
     private void Dispose(bool disposing)

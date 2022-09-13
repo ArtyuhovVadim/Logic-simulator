@@ -98,7 +98,7 @@ public class Ellipse : EditableSceneObject
         set
         {
             _strokeThickness = value;
-            //TODO: RequireRender();
+            RenderNotifier.RequestRender(this);
         }
     }
 
@@ -108,7 +108,7 @@ public class Ellipse : EditableSceneObject
         set
         {
             _isFilled = value;
-            //TODO: RequireRender();
+            RenderNotifier.RequestRender(this);
         }
     }
 

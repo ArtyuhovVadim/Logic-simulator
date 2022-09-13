@@ -118,7 +118,7 @@ public class Rectangle : EditableSceneObject
         set
         {
             _strokeThickness = value;
-            //TODO: RequireRender();
+            RenderNotifier.RequestRender(this);
         }
     }
 
@@ -128,7 +128,7 @@ public class Rectangle : EditableSceneObject
         set
         {
             _isFilled = value;
-            //TODO: RequireRender();
+            RenderNotifier.RequestRender(this);
         }
     }
 

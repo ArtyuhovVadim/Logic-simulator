@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Linq;
 using System.Windows;
 using System.Windows.Input;
@@ -25,29 +24,29 @@ public class Scene2D : FrameworkElement
 
     #region Objects
 
-    public ObservableCollection<BaseSceneObject> Objects
+    public IEnumerable<BaseSceneObject> Objects
     {
-        get => (ObservableCollection<BaseSceneObject>)GetValue(ObjectsProperty);
+        get => (IEnumerable<BaseSceneObject>)GetValue(ObjectsProperty);
         set => SetValue(ObjectsProperty, value);
     }
 
     public static readonly DependencyProperty ObjectsProperty =
-        DependencyProperty.Register(nameof(Objects), typeof(ObservableCollection<BaseSceneObject>), typeof(Scene2D),
-            new PropertyMetadata(null));
+        DependencyProperty.Register(nameof(Objects), typeof(IEnumerable<BaseSceneObject>), typeof(Scene2D),
+            new PropertyMetadata(Enumerable.Empty<BaseSceneObject>()));
 
     #endregion
 
     #region Components
 
-    public ObservableCollection<BaseRenderingComponent> Components
+    public IEnumerable<BaseRenderingComponent> Components
     {
-        get => (ObservableCollection<BaseRenderingComponent>)GetValue(ComponentsProperty);
+        get => (IEnumerable<BaseRenderingComponent>)GetValue(ComponentsProperty);
         set => SetValue(ComponentsProperty, value);
     }
 
     public static readonly DependencyProperty ComponentsProperty =
-        DependencyProperty.Register(nameof(Components), typeof(ObservableCollection<BaseRenderingComponent>), typeof(Scene2D),
-            new PropertyMetadata(null));
+        DependencyProperty.Register(nameof(Components), typeof(IEnumerable<BaseRenderingComponent>), typeof(Scene2D),
+            new PropertyMetadata(Enumerable.Empty<BaseRenderingComponent>()));
 
     #endregion
 
@@ -135,13 +134,13 @@ public class Scene2D : FrameworkElement
         Focusable = true;
         VisualEdgeMode = EdgeMode.Aliased;
 
+        RenderNotifier.RegisterScene(this);
+
         _sceneTransformController = new SceneTransformController(this);
 
         _renderer = new SceneRenderer(this);
 
         Loaded += OnLoaded;
-
-        CompositionTarget.Rendering += (_, _) => _renderer.RequestRender();
     }
 
     public BaseTool CurrentTool { get; private set; }

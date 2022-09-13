@@ -31,7 +31,7 @@ public static class ResourceCache
     {
         foreach (var id in Cache.Keys)
         {
-            if (ResourcesToUpdate.Contains(id)) return;
+            if (ResourcesToUpdate.Contains(id)) continue;
 
             ResourcesToUpdate.Add(id);
         }
@@ -39,9 +39,13 @@ public static class ResourceCache
 
     public static void RequestUpdate(ResourceDependentObject obj, Resource resource)
     {
+        //TODO: Костыль!
+        RenderNotifier.RequestRender(obj);
+
         var id = (ulong)obj.Id << 32 | resource.Id;
 
-        if (ResourcesToUpdate.Contains(id)) return;
+        if (ResourcesToUpdate.Contains(id))
+            return;
 
         ResourcesToUpdate.Add(id);
     }

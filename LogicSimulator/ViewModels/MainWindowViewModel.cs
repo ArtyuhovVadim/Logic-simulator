@@ -1,4 +1,5 @@
-﻿using System.Collections.ObjectModel;
+﻿using System;
+using System.Collections.ObjectModel;
 using System.Windows.Input;
 using LogicSimulator.Infrastructure.Commands;
 using LogicSimulator.Infrastructure.Services.Interfaces;
@@ -10,7 +11,6 @@ using LogicSimulator.Scene.Tools;
 using LogicSimulator.ViewModels.Base;
 using SharpDX;
 using Rectangle = LogicSimulator.Scene.SceneObjects.Rectangle;
-using System;
 
 namespace LogicSimulator.ViewModels;
 
@@ -81,8 +81,10 @@ public class MainWindowViewModel : BindableBase
 
     public ICommand TestCommand => _testCommand ??= new LambdaCommand(_ =>
     {
-        ((Rectangle)Objects[0]).FillColor = new Color4(1f, 0f, 0f, 1f);
-        ((Rectangle)Objects[0]).Width = 500;
+        for (int i = 0; i < 1; i++)
+        {
+            Objects1.Add(new Rectangle() { Width = 100, Height = 100, Location = Random.Shared.NextVector2(new Vector2(0, 0), new Vector2(300, 300)) });
+        }
     }, _ => true);
 
     #endregion
@@ -93,7 +95,35 @@ public class MainWindowViewModel : BindableBase
 
     public ICommand TestCommand1 => _testCommand1 ??= new LambdaCommand(_ =>
     {
+        GC.Collect(3, GCCollectionMode.Forced);
     }, _ => true);
+
+    #endregion
+
+    #region Components
+
+    private ObservableCollection<BaseRenderingComponent> _components1 = new()
+    {
+        new SolidClearRenderingComponent{ClearColor = new Color4(0.7f,0.7f,0.7f,1f)},
+        new GridRenderingComponent
+        {
+            Width = 3000,
+            Height = 3000,
+            CellSize = 25,
+            Background = new Color4(1, 252f / 255f, 248f / 255f, 1f),
+            LineColor = new Color4(240f / 255f, 240f / 255f, 235f / 255f, 1f),
+            BoldLineColor = new Color4(220f / 255f, 220f / 255f, 215f / 255f, 1f),
+        },
+        new SceneObjectsRenderingComponent(),
+        new SelectionRenderingComponent(),
+        new SelectionRectangleRenderingComponent(),
+        new NodeRenderingComponent()
+    };
+    public ObservableCollection<BaseRenderingComponent> Components1
+    {
+        get => _components1;
+        set => Set(ref _components1, value);
+    }
 
     #endregion
 
@@ -137,6 +167,21 @@ public class MainWindowViewModel : BindableBase
     {
         get => _tools;
         set => Set(ref _tools, value);
+    }
+
+    #endregion
+
+    #region Objects
+
+    private ObservableCollection<BaseSceneObject> _objects1 = new()
+    {
+        new Rectangle { Width = 100, Height = 100, Location = new Vector2(300, 300)},
+    };
+
+    public ObservableCollection<BaseSceneObject> Objects1
+    {
+        get => _objects1;
+        set => Set(ref _objects1, value);
     }
 
     #endregion

@@ -50,12 +50,13 @@
                     <LayoutDocumentPane>
                         <LayoutDocument Title="Scene">
                             <scene:Scene2D
-                                x:Name="Scene2D"
                                 Components="{Binding Path=Components}"
                                 Objects="{Binding Path=Objects}"
                                 Tools="{Binding Path=Tools}" />
                         </LayoutDocument>
-                        <LayoutDocument Title="Test" />
+                        <LayoutDocument Title="Test">
+                            <scene:Scene2D Components="{Binding Path=Components1}" Objects="{Binding Path=Objects1}" />
+                        </LayoutDocument>
                     </LayoutDocumentPane>
                 </LayoutPanel>
             </LayoutRoot>

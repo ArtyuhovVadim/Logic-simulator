@@ -16,7 +16,7 @@ public abstract class BaseSceneObject : ResourceDependentObject
         protected set
         {
             _isDragging = value;
-            //TODO: RequireRender();
+            RenderNotifier.RequestRender(this);
         }
     }
 
@@ -27,7 +27,7 @@ public abstract class BaseSceneObject : ResourceDependentObject
         protected set
         {
             _isSelected = value;
-            //TODO: RequireRender();
+            RenderNotifier.RequestRender(this);
         }
     }
 

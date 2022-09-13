@@ -28,7 +28,7 @@ public class SelectionRectangleRenderingComponent : BaseRenderingComponent
         set
         {
             _startPosition = value;
-            //TODO: RequireRender();
+            RenderNotifier.RequestRender(this);
         }
     }
 
@@ -38,7 +38,7 @@ public class SelectionRectangleRenderingComponent : BaseRenderingComponent
         set
         {
             _endPosition = value;
-            //TODO: RequireRender();
+            RenderNotifier.RequestRender(this);
         }
     }
 
