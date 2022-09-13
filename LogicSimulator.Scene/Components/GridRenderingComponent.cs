@@ -6,14 +6,14 @@ namespace LogicSimulator.Scene.Components;
 
 public class GridRenderingComponent : BaseRenderingComponent
 {
-    public static readonly Resource BackgroundBrushResource = Resource.Register<GridRenderingComponent, SolidColorBrush>(nameof(BackgroundBrushResource),
-        (target, o) => new SolidColorBrush(target, ((GridRenderingComponent)o).Background));
+    public static readonly Resource BackgroundBrushResource = ResourceCache.Register((target, o) =>
+        new SolidColorBrush(target, ((GridRenderingComponent)o).Background));
 
-    public static readonly Resource LineBrushResource = Resource.Register<GridRenderingComponent, SolidColorBrush>(nameof(LineBrushResource),
-        (target, o) => new SolidColorBrush(target, ((GridRenderingComponent)o).LineColor));
+    public static readonly Resource LineBrushResource = ResourceCache.Register((target, o) =>
+        new SolidColorBrush(target, ((GridRenderingComponent)o).LineColor));
 
-    public static readonly Resource BoldLineBrushResource = Resource.Register<GridRenderingComponent, SolidColorBrush>(nameof(BoldLineBrushResource),
-        (target, o) => new SolidColorBrush(target, ((GridRenderingComponent)o).BoldLineColor));
+    public static readonly Resource BoldLineBrushResource = ResourceCache.Register((target, o) =>
+        new SolidColorBrush(target, ((GridRenderingComponent)o).BoldLineColor));
 
     private Color4 _boldLineColor = Color4.Black;
     private Color4 _lineColor = Color4.Black;
@@ -24,7 +24,7 @@ public class GridRenderingComponent : BaseRenderingComponent
         get => _background;
         set
         {
-            RequireUpdate(BackgroundBrushResource);
+            ResourceCache.RequestUpdate(this, BackgroundBrushResource);
             _background = value;
         }
     }
@@ -34,7 +34,7 @@ public class GridRenderingComponent : BaseRenderingComponent
         get => _lineColor;
         set
         {
-            RequireUpdate(LineBrushResource);
+            ResourceCache.RequestUpdate(this, LineBrushResource);
             _lineColor = value;
         }
     }
@@ -44,7 +44,7 @@ public class GridRenderingComponent : BaseRenderingComponent
         get => _boldLineColor;
         set
         {
-            RequireUpdate(BoldLineBrushResource);
+            ResourceCache.RequestUpdate(this, BoldLineBrushResource);
             _boldLineColor = value;
         }
     }
@@ -64,9 +64,9 @@ public class GridRenderingComponent : BaseRenderingComponent
         var strokeWidth = LineThickness / scene.Scale;
         var rect = new RectangleF(0, 0, Width, Height);
 
-        var backgroundBrush = GetResourceValue<SolidColorBrush>(BackgroundBrushResource, renderTarget);
-        var lineBrush = GetResourceValue<SolidColorBrush>(LineBrushResource, renderTarget);
-        var boldLineBrush = GetResourceValue<SolidColorBrush>(BoldLineBrushResource, renderTarget);
+        var backgroundBrush = ResourceCache.GetOrUpdate<SolidColorBrush>(this, BackgroundBrushResource, renderTarget);
+        var lineBrush = ResourceCache.GetOrUpdate<SolidColorBrush>(this, LineBrushResource, renderTarget);
+        var boldLineBrush = ResourceCache.GetOrUpdate<SolidColorBrush>(this, BoldLineBrushResource, renderTarget);
 
         renderTarget.FillRectangle(rect, backgroundBrush);
 
@@ -80,7 +80,7 @@ public class GridRenderingComponent : BaseRenderingComponent
                 i % BoldLineStep == 0 ? boldLineBrush : lineBrush,
                 strokeWidth);
         }
-        
+
         for (var i = 0; i <= rect.Width / CellSize; i++)
         {
             renderTarget.DrawLine(

@@ -8,8 +8,7 @@ public class SolidClearRenderingComponent : BaseRenderingComponent
 {
     private Color4 _clearColor = Color4.White;
 
-    public static readonly Resource ClearColorResource = Resource.Register<SolidClearRenderingComponent, SolidColorBrush>(nameof(ClearColorResource),
-            (target, o) => new SolidColorBrush(target, ((SolidClearRenderingComponent)o).ClearColor));
+    public static readonly Resource ClearColorResource = ResourceCache.Register((target, o) => new SolidColorBrush(target, ((SolidClearRenderingComponent)o).ClearColor));
 
     public Color4 ClearColor
     {
@@ -17,7 +16,7 @@ public class SolidClearRenderingComponent : BaseRenderingComponent
         set
         {
             _clearColor = value;
-            RequireUpdate(ClearColorResource);
+            ResourceCache.RequestUpdate(this, ClearColorResource);
         }
     }
 

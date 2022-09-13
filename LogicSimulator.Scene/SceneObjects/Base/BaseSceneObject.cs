@@ -16,7 +16,7 @@ public abstract class BaseSceneObject : ResourceDependentObject
         protected set
         {
             _isDragging = value;
-            RequireRender();
+            //TODO: RequireRender();
         }
     }
 
@@ -27,7 +27,7 @@ public abstract class BaseSceneObject : ResourceDependentObject
         protected set
         {
             _isSelected = value;
-            RequireRender();
+            //TODO: RequireRender();
         }
     }
 
@@ -44,7 +44,7 @@ public abstract class BaseSceneObject : ResourceDependentObject
     public abstract bool IsIntersectsPoint(Vector2 pos, Matrix3x2 matrix, float tolerance = 0.25f);
 
     public abstract GeometryRelation CompareWithRectangle(RectangleGeometry rectGeometry, Matrix3x2 matrix, float tolerance = 0.25f);
-    
+
     public abstract void Render(Scene2D scene, RenderTarget renderTarget);
 
     public abstract void RenderSelection(Scene2D scene, RenderTarget renderTarget, SolidColorBrush selectionBrush, StrokeStyle selectionStyle);

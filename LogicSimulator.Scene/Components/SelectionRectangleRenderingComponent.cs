@@ -6,13 +6,11 @@ namespace LogicSimulator.Scene.Components;
 
 public class SelectionRectangleRenderingComponent : BaseRenderingComponent
 {
-    public static readonly Resource SecantBrushResource =
-        Resource.Register<SelectionRectangleRenderingComponent, SolidColorBrush>(nameof(SecantBrushResource),
-            (target, o) => new SolidColorBrush(target, ((SelectionRectangleRenderingComponent)o).SecantColor));
+    public static readonly Resource SecantBrushResource = ResourceCache.Register((target, o) =>
+        new SolidColorBrush(target, ((SelectionRectangleRenderingComponent)o).SecantColor));
 
-    public static readonly Resource NormalBrushResource =
-        Resource.Register<SelectionRectangleRenderingComponent, SolidColorBrush>(nameof(NormalBrushResource),
-            (target, o) => new SolidColorBrush(target, ((SelectionRectangleRenderingComponent)o).NormalColor));
+    public static readonly Resource NormalBrushResource = ResourceCache.Register((target, o) =>
+        new SolidColorBrush(target, ((SelectionRectangleRenderingComponent)o).NormalColor));
 
     private Color4 _secantColor = new(0.39f, 0.78f, 0.39f, 1f);
     private Color4 _normalColor = new(0.49f, 0.68f, 1f, 1f);
@@ -30,7 +28,7 @@ public class SelectionRectangleRenderingComponent : BaseRenderingComponent
         set
         {
             _startPosition = value;
-            RequireRender();
+            //TODO: RequireRender();
         }
     }
 
@@ -40,7 +38,7 @@ public class SelectionRectangleRenderingComponent : BaseRenderingComponent
         set
         {
             _endPosition = value;
-            RequireRender();
+            //TODO: RequireRender();
         }
     }
 
@@ -50,7 +48,7 @@ public class SelectionRectangleRenderingComponent : BaseRenderingComponent
         set
         {
             _secantColor = value;
-            RequireUpdate(SecantBrushResource);
+            ResourceCache.RequestUpdate(this, SecantBrushResource);
         }
     }
 
@@ -60,7 +58,7 @@ public class SelectionRectangleRenderingComponent : BaseRenderingComponent
         set
         {
             _normalColor = value;
-            RequireUpdate(NormalBrushResource);
+            ResourceCache.RequestUpdate(this, NormalBrushResource);
         }
     }
 
@@ -68,7 +66,7 @@ public class SelectionRectangleRenderingComponent : BaseRenderingComponent
 
     protected override void OnRender(Scene2D scene, RenderTarget renderTarget)
     {
-        var brush = GetResourceValue<SolidColorBrush>(IsSecant ? SecantBrushResource : NormalBrushResource, renderTarget);
+        var brush = ResourceCache.GetOrUpdate<SolidColorBrush>(this, IsSecant ? SecantBrushResource : NormalBrushResource, renderTarget);
 
         var location = StartPosition;
         var size = EndPosition - StartPosition;

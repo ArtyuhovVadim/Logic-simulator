@@ -10,20 +10,17 @@ namespace LogicSimulator.Scene.Components;
 
 public class NodeRenderingComponent : BaseRenderingComponent
 {
-    public static readonly Resource StrokeBrushResource = Resource.Register<NodeRenderingComponent, SolidColorBrush>(nameof(StrokeBrushResource),
-        (target, o) => new SolidColorBrush(target, Color4.Black));
+    public static readonly Resource StrokeBrushResource = ResourceCache.Register((target, o) => new SolidColorBrush(target, Color4.Black));
 
-    public static readonly Resource SelectBrushResource = Resource.Register<NodeRenderingComponent, SolidColorBrush>(nameof(SelectBrushResource),
-        (target, o) => new SolidColorBrush(target, new Color4(1, 0, 0, 1)));
+    public static readonly Resource SelectBrushResource = ResourceCache.Register((target, o) => new SolidColorBrush(target, new Color4(1, 0, 0, 1)));
 
-    public static readonly Resource UnselectBrushResource = Resource.Register<NodeRenderingComponent, SolidColorBrush>(nameof(UnselectBrushResource),
-        (target, o) => new SolidColorBrush(target, new Color4(0, 1, 0, 1)));
+    public static readonly Resource UnselectBrushResource = ResourceCache.Register((target, o) => new SolidColorBrush(target, new Color4(0, 1, 0, 1)));
 
     protected override void OnRender(Scene2D scene, RenderTarget renderTarget)
     {
-        var strokeColor = GetResourceValue<SolidColorBrush>(StrokeBrushResource, renderTarget);
-        var selectedColor = GetResourceValue<SolidColorBrush>(SelectBrushResource, renderTarget);
-        var unselectedColor = GetResourceValue<SolidColorBrush>(UnselectBrushResource, renderTarget);
+        var strokeColor = ResourceCache.GetOrUpdate<SolidColorBrush>(this, StrokeBrushResource, renderTarget);
+        var selectedColor = ResourceCache.GetOrUpdate<SolidColorBrush>(this, SelectBrushResource, renderTarget);
+        var unselectedColor = ResourceCache.GetOrUpdate<SolidColorBrush>(this, UnselectBrushResource, renderTarget);
 
         var size = Node.NodeSize / scene.Scale;
 

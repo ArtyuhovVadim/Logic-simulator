@@ -6,20 +6,19 @@ namespace LogicSimulator.Scene.Components;
 
 public class SelectionRenderingComponent : BaseRenderingComponent
 {
-    public static readonly Resource SelectionBrushResource = Resource.Register<SelectionRenderingComponent, SolidColorBrush>(nameof(SelectionBrushResource),
-        (target, o) => new SolidColorBrush(target, ((SelectionRenderingComponent)o).SelectionColor));
+    public static readonly Resource SelectionBrushResource = ResourceCache.Register((target, o) =>
+        new SolidColorBrush(target, ((SelectionRenderingComponent)o).SelectionColor));
 
-    public static readonly Resource SelectionStyleResource = Resource.Register<SelectionRenderingComponent, StrokeStyle>(nameof(SelectionStyleResource),
-        (target, _) =>
+    public static readonly Resource SelectionStyleResource = ResourceCache.Register((target, _) =>
+    {
+        var properties = new StrokeStyleProperties
         {
-            var properties = new StrokeStyleProperties
-            {
-                DashStyle = DashStyle.Custom,
-                DashCap = CapStyle.Flat
-            };
+            DashStyle = DashStyle.Custom,
+            DashCap = CapStyle.Flat
+        };
 
-            return new StrokeStyle(target.Factory, properties, new[] { 2f, 2f });
-        });
+        return new StrokeStyle(target.Factory, properties, new[] { 2f, 2f });
+    });
 
     private Color4 _selectionColor = new(0, 1, 0, 1);
 
@@ -29,14 +28,14 @@ public class SelectionRenderingComponent : BaseRenderingComponent
         set
         {
             _selectionColor = value;
-            RequireUpdate(SelectionBrushResource);
+            ResourceCache.RequestUpdate(this, SelectionBrushResource);
         }
     }
 
     protected override void OnRender(Scene2D scene, RenderTarget renderTarget)
     {
-        var brush = GetResourceValue<SolidColorBrush>(SelectionBrushResource, renderTarget);
-        var style = GetResourceValue<StrokeStyle>(SelectionStyleResource, renderTarget);
+        var brush = ResourceCache.GetOrUpdate<SolidColorBrush>(this, SelectionBrushResource, renderTarget);
+        var style = ResourceCache.GetOrUpdate<StrokeStyle>(this, SelectionStyleResource, renderTarget);
 
         foreach (var sceneObject in scene.Objects)
         {

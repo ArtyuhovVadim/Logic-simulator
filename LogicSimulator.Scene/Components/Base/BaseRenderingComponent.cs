@@ -12,7 +12,7 @@ public abstract class BaseRenderingComponent : ResourceDependentObject
         set
         {
             _isVisible = value;
-            RequireRender();
+            //TODO:RequireRender();
         }
     }
 

@@ -6,17 +6,15 @@ namespace LogicSimulator.Scene.SceneObjects;
 
 public class Rectangle : EditableSceneObject
 {
-    public static readonly Resource FillBrushResource = Resource.Register<Rectangle, SolidColorBrush>(nameof(FillBrushResource), (target, o) =>
-        new SolidColorBrush(target, ((Rectangle)o).FillColor));
+    public static readonly Resource FillBrushResource = ResourceCache.Register((target, o) => new SolidColorBrush(target, ((Rectangle)o).FillColor));
 
-    public static readonly Resource StrokeBrushResource = Resource.Register<Rectangle, SolidColorBrush>(nameof(StrokeBrushResource), (target, o) =>
-        new SolidColorBrush(target, ((Rectangle)o).StrokeColor));
+    public static readonly Resource StrokeBrushResource = ResourceCache.Register((target, o) => new SolidColorBrush(target, ((Rectangle)o).StrokeColor));
 
-    public static readonly Resource RectangleGeometryResource = Resource.Register<Rectangle, RectangleGeometry>(nameof(RectangleGeometryResource), (target, o) =>
+    public static readonly Resource RectangleGeometryResource = ResourceCache.Register((target, o) =>
     {
-        var rectangle = (Rectangle)o;
+        var rect = (Rectangle)o;
 
-        return new RectangleGeometry(target.Factory, new RectangleF(rectangle.Location.X, rectangle.Location.Y, rectangle.Width, rectangle.Height));
+        return new RectangleGeometry(target.Factory, new RectangleF(rect.Location.X, rect.Location.Y, rect.Width, rect.Height));
     });
 
     private Color4 _fillColor = Color4.White;
@@ -70,7 +68,7 @@ public class Rectangle : EditableSceneObject
         {
             //TODO: Ненужные присваивания при одинаковых значениях
             _location = value;
-            RequireUpdate(RectangleGeometryResource);
+            ResourceCache.RequestUpdate(this, RectangleGeometryResource);
         }
     }
 
@@ -80,7 +78,7 @@ public class Rectangle : EditableSceneObject
         set
         {
             _width = value;
-            RequireUpdate(RectangleGeometryResource);
+            ResourceCache.RequestUpdate(this, RectangleGeometryResource);
         }
     }
 
@@ -90,7 +88,7 @@ public class Rectangle : EditableSceneObject
         set
         {
             _height = value;
-            RequireUpdate(RectangleGeometryResource);
+            ResourceCache.RequestUpdate(this, RectangleGeometryResource);
         }
     }
 
@@ -100,7 +98,7 @@ public class Rectangle : EditableSceneObject
         set
         {
             _fillColor = value;
-            RequireUpdate(FillBrushResource);
+            ResourceCache.RequestUpdate(this, FillBrushResource);
         }
     }
 
@@ -110,7 +108,7 @@ public class Rectangle : EditableSceneObject
         set
         {
             _strokeColor = value;
-            RequireUpdate(StrokeBrushResource);
+            ResourceCache.RequestUpdate(this, StrokeBrushResource);
         }
     }
 
@@ -119,8 +117,8 @@ public class Rectangle : EditableSceneObject
         get => _strokeThickness;
         set
         {
-            _strokeThickness = value; 
-            RequireRender();
+            _strokeThickness = value;
+            //TODO: RequireRender();
         }
     }
 
@@ -130,7 +128,7 @@ public class Rectangle : EditableSceneObject
         set
         {
             _isFilled = value;
-            RequireRender();
+            //TODO: RequireRender();
         }
     }
 
@@ -154,7 +152,7 @@ public class Rectangle : EditableSceneObject
 
     public override bool IsIntersectsPoint(Vector2 pos, Matrix3x2 matrix, float tolerance = 0.25f)
     {
-        var geometry = GetCashedResourceValue<RectangleGeometry>(RectangleGeometryResource);
+        var geometry = ResourceCache.GetCached<RectangleGeometry>(this, RectangleGeometryResource);
 
         return IsFilled ? geometry.FillContainsPoint(pos, matrix, tolerance) :
                             geometry.StrokeContainsPoint(pos, StrokeThickness, null, matrix, tolerance);
@@ -162,19 +160,20 @@ public class Rectangle : EditableSceneObject
 
     public override GeometryRelation CompareWithRectangle(RectangleGeometry rectGeometry, Matrix3x2 matrix, float tolerance = 0.25f)
     {
-        var geometry = GetCashedResourceValue<RectangleGeometry>(RectangleGeometryResource);
+        var geometry = ResourceCache.GetCached<RectangleGeometry>(this, RectangleGeometryResource);
 
         return geometry.Compare(rectGeometry, matrix, tolerance);
     }
 
     public override void Render(Scene2D scene, RenderTarget renderTarget)
     {
-        var strokeBrush = GetResourceValue<SolidColorBrush>(StrokeBrushResource, renderTarget);
-        var geometry = GetResourceValue<RectangleGeometry>(RectangleGeometryResource, renderTarget);
+        var strokeBrush = ResourceCache.GetOrUpdate<SolidColorBrush>(this, StrokeBrushResource, renderTarget);
+        var geometry = ResourceCache.GetOrUpdate<RectangleGeometry>(this, RectangleGeometryResource, renderTarget);
 
         if (IsFilled)
         {
-            var fillBrush = GetResourceValue<SolidColorBrush>(FillBrushResource, renderTarget);
+            var fillBrush = ResourceCache.GetOrUpdate<SolidColorBrush>(this, FillBrushResource, renderTarget);
+
             renderTarget.FillGeometry(geometry, fillBrush);
         }
 
@@ -183,7 +182,7 @@ public class Rectangle : EditableSceneObject
 
     public override void RenderSelection(Scene2D scene, RenderTarget renderTarget, SolidColorBrush selectionBrush, StrokeStyle selectionStyle)
     {
-        var geometry = GetResourceValue<RectangleGeometry>(RectangleGeometryResource, renderTarget);
+        var geometry = ResourceCache.GetOrUpdate<RectangleGeometry>(this, RectangleGeometryResource, renderTarget);
 
         renderTarget.DrawGeometry(geometry, selectionBrush, 1f / scene.Scale, selectionStyle);
     }

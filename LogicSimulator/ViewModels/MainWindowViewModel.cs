@@ -1,22 +1,16 @@
-﻿using System;
-using System.Collections.ObjectModel;
-using System.Linq;
-using System.Runtime.InteropServices;
-using System.Threading.Tasks;
+﻿using System.Collections.ObjectModel;
 using System.Windows.Input;
 using LogicSimulator.Infrastructure.Commands;
 using LogicSimulator.Infrastructure.Services.Interfaces;
-using LogicSimulator.Models;
 using LogicSimulator.Scene.Components.Base;
 using LogicSimulator.Scene.Components;
-using LogicSimulator.Scene.SceneObjects;
 using LogicSimulator.Scene.SceneObjects.Base;
 using LogicSimulator.Scene.Tools.Base;
 using LogicSimulator.Scene.Tools;
 using LogicSimulator.ViewModels.Base;
 using SharpDX;
-using SharpDX.Direct2D1;
 using Rectangle = LogicSimulator.Scene.SceneObjects.Rectangle;
+using System;
 
 namespace LogicSimulator.ViewModels;
 
@@ -87,6 +81,8 @@ public class MainWindowViewModel : BindableBase
 
     public ICommand TestCommand => _testCommand ??= new LambdaCommand(_ =>
     {
+        ((Rectangle)Objects[0]).FillColor = new Color4(1f, 0f, 0f, 1f);
+        ((Rectangle)Objects[0]).Width = 500;
     }, _ => true);
 
     #endregion
@@ -105,7 +101,7 @@ public class MainWindowViewModel : BindableBase
 
     private ObservableCollection<BaseRenderingComponent> _components = new()
     {
-        new SolidClearRenderingComponent{ClearColor = Color4.Black},
+        new SolidClearRenderingComponent{ClearColor = new Color4(0.7f,0.7f,0.7f,1f)},
         new GridRenderingComponent
         {
             Width = 3000,
@@ -149,7 +145,7 @@ public class MainWindowViewModel : BindableBase
 
     private ObservableCollection<BaseSceneObject> _objects = new()
     {
-        new Rectangle { Width = 100, Height = 100 }
+        new Rectangle { Width = 100, Height = 100, Location = new Vector2(300, 300)},
     };
 
     public ObservableCollection<BaseSceneObject> Objects

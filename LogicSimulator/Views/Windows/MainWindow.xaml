@@ -50,6 +50,7 @@
                     <LayoutDocumentPane>
                         <LayoutDocument Title="Scene">
                             <scene:Scene2D
+                                x:Name="Scene2D"
                                 Components="{Binding Path=Components}"
                                 Objects="{Binding Path=Objects}"
                                 Tools="{Binding Path=Tools}" />

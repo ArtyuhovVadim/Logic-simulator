@@ -1,30 +1,23 @@
-﻿using System;
-using SharpDX.Direct2D1;
+﻿using SharpDX.Direct2D1;
 
 namespace LogicSimulator.Scene;
 
 public class Resource
 {
-    private readonly int _hash;
+    private static uint _lastId;
+
+    public uint Id { get; }
+
     private readonly ResourceChangedCallback _changedCallback;
 
-    public delegate object ResourceChangedCallback(RenderTarget renderTarget, ResourceDependentObject o);
-
-    private Resource(int hash, ResourceChangedCallback changedCallback)
+    public Resource(ResourceChangedCallback changedCallback)
     {
         _changedCallback = changedCallback;
-        _hash = hash;
+        Id = _lastId++;
     }
 
-    public static Resource Register<TOwner, TResource>(string name, ResourceChangedCallback changedCallback) where TOwner : ResourceDependentObject
-                                                                                                             where TResource : IDisposable
+    public object Update(RenderTarget renderTarget, ResourceDependentObject o)
     {
-        var hash = typeof(TOwner).GetHashCode() ^ typeof(TResource).GetHashCode() ^ name.GetHashCode();
-
-        return new Resource(hash, changedCallback);
+        return _changedCallback.Invoke(renderTarget, o);
     }
-
-    public object Update(RenderTarget renderTarget, ResourceDependentObject o) => _changedCallback.Invoke(renderTarget, o);
-
-    public override int GetHashCode() => _hash;
 }

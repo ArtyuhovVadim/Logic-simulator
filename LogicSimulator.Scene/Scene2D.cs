@@ -115,7 +115,7 @@ public class Scene2D : FrameworkElement
     public float Dpi => (float)VisualTreeHelper.GetDpi(this).PixelsPerInchX;
 
     //TODO: Костыль!
-    internal RenderTarget RenderTarget => _renderer.RenderTarget;
+    public RenderTarget RenderTarget => _renderer.RenderTarget;
 
     public Matrix3x2 Transform => _renderer.Transform;
 

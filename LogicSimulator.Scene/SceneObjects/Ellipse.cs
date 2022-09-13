@@ -7,17 +7,17 @@ namespace LogicSimulator.Scene.SceneObjects;
 
 public class Ellipse : EditableSceneObject
 {
-    public static readonly Resource EllipseGeometryResource = Resource.Register<Ellipse, EllipseGeometry>(nameof(EllipseGeometryResource), (target, o) =>
+    public static readonly Resource EllipseGeometryResource = ResourceCache.Register((target, o) =>
     {
         var ellipse = (Ellipse)o;
 
         return new EllipseGeometry(target.Factory, new SharpDX.Direct2D1.Ellipse(ellipse.Center, ellipse.RadiusX, ellipse.RadiusY));
     });
 
-    public static readonly Resource FillBrushResource = Resource.Register<Ellipse, SolidColorBrush>(nameof(FillBrushResource), (target, o) =>
+    public static readonly Resource FillBrushResource = ResourceCache.Register((target, o) =>
         new SolidColorBrush(target, ((Ellipse)o).FillColor));
 
-    public static readonly Resource StrokeBrushResource = Resource.Register<Ellipse, SolidColorBrush>(nameof(StrokeBrushResource), (target, o) =>
+    public static readonly Resource StrokeBrushResource = ResourceCache.Register((target, o) =>
         new SolidColorBrush(target, ((Ellipse)o).StrokeColor));
 
     private Vector2 _center = Vector2.Zero;
@@ -48,7 +48,7 @@ public class Ellipse : EditableSceneObject
         set
         {
             _center = value;
-            RequireUpdate(EllipseGeometryResource);
+            ResourceCache.RequestUpdate(this, EllipseGeometryResource);
         }
     }
 
@@ -58,7 +58,7 @@ public class Ellipse : EditableSceneObject
         set
         {
             _radiusX = value;
-            RequireUpdate(EllipseGeometryResource);
+            ResourceCache.RequestUpdate(this, EllipseGeometryResource);
         }
     }
 
@@ -68,7 +68,7 @@ public class Ellipse : EditableSceneObject
         set
         {
             _radiusY = value;
-            RequireUpdate(EllipseGeometryResource);
+            ResourceCache.RequestUpdate(this, EllipseGeometryResource);
         }
     }
 
@@ -78,7 +78,7 @@ public class Ellipse : EditableSceneObject
         set
         {
             _fillColor = value;
-            RequireUpdate(FillBrushResource);
+            ResourceCache.RequestUpdate(this, FillBrushResource);
         }
     }
 
@@ -88,7 +88,7 @@ public class Ellipse : EditableSceneObject
         set
         {
             _strokeColor = value;
-            RequireUpdate(StrokeBrushResource);
+            ResourceCache.RequestUpdate(this, StrokeBrushResource);
         }
     }
 
@@ -98,7 +98,7 @@ public class Ellipse : EditableSceneObject
         set
         {
             _strokeThickness = value;
-            RequireRender();
+            //TODO: RequireRender();
         }
     }
 
@@ -108,7 +108,7 @@ public class Ellipse : EditableSceneObject
         set
         {
             _isFilled = value;
-            RequireRender();
+            //TODO: RequireRender();
         }
     }
 
@@ -132,7 +132,7 @@ public class Ellipse : EditableSceneObject
 
     public override bool IsIntersectsPoint(Vector2 pos, Matrix3x2 matrix, float tolerance = 0.25f)
     {
-        var geometry = GetCashedResourceValue<EllipseGeometry>(EllipseGeometryResource);
+        var geometry = ResourceCache.GetCached<EllipseGeometry>(this, EllipseGeometryResource);
 
         return IsFilled ? geometry.FillContainsPoint(pos, matrix, tolerance) :
                             geometry.StrokeContainsPoint(pos, StrokeThickness, null, matrix, tolerance);
@@ -140,19 +140,19 @@ public class Ellipse : EditableSceneObject
 
     public override GeometryRelation CompareWithRectangle(RectangleGeometry rectGeometry, Matrix3x2 matrix, float tolerance = 0.25f)
     {
-        var geometry = GetCashedResourceValue<EllipseGeometry>(EllipseGeometryResource);
+        var geometry = ResourceCache.GetCached<EllipseGeometry>(this, EllipseGeometryResource);
 
         return geometry.Compare(rectGeometry, matrix, tolerance);
     }
 
     public override void Render(Scene2D scene, RenderTarget renderTarget)
     {
-        var strokeBrush = GetResourceValue<SolidColorBrush>(Ellipse.StrokeBrushResource, renderTarget);
-        var geometry = GetResourceValue<EllipseGeometry>(Ellipse.EllipseGeometryResource, renderTarget);
+        var strokeBrush = ResourceCache.GetOrUpdate<SolidColorBrush>(this, StrokeBrushResource, renderTarget);
+        var geometry = ResourceCache.GetOrUpdate<EllipseGeometry>(this, EllipseGeometryResource, renderTarget);
 
         if (IsFilled)
         {
-            var fillBrush = GetResourceValue<SolidColorBrush>(Ellipse.FillBrushResource, renderTarget);
+            var fillBrush = ResourceCache.GetOrUpdate<SolidColorBrush>(this, FillBrushResource, renderTarget);
             renderTarget.FillGeometry(geometry, fillBrush);
         }
 
@@ -161,8 +161,8 @@ public class Ellipse : EditableSceneObject
 
     public override void RenderSelection(Scene2D scene, RenderTarget renderTarget, SolidColorBrush selectionBrush, StrokeStyle selectionStyle)
     {
-        var geometry = GetResourceValue<EllipseGeometry>(EllipseGeometryResource, renderTarget);
-        
+        var geometry = ResourceCache.GetOrUpdate<EllipseGeometry>(this, EllipseGeometryResource, renderTarget);
+
         renderTarget.DrawGeometry(geometry, selectionBrush, 1f / scene.Scale, selectionStyle);
         renderTarget.DrawLine(Center, Center + new Vector2(RadiusX, 0), selectionBrush, 1f / scene.Scale, selectionStyle);
         renderTarget.DrawLine(Center, Center + new Vector2(0, -RadiusY), selectionBrush, 1f / scene.Scale, selectionStyle);
