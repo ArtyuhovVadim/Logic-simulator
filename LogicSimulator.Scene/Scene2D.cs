@@ -128,6 +128,8 @@ public class Scene2D : FrameworkElement
         }
     }
 
+    //TODO: При перетаскивание объекта и одновременном нажатии пкм за окном сбрасывается захват мыши
+
     public Scene2D()
     {
         ClipToBounds = true;

@@ -9,11 +9,7 @@ public abstract class BaseRenderingComponent : ResourceDependentObject
     public bool IsVisible
     {
         get => _isVisible;
-        set
-        {
-            _isVisible = value;
-            RenderNotifier.RequestRender(this);
-        }
+        set => SetAndRequestRender(ref _isVisible, value);
     }
 
     public void Render(Scene2D scene, RenderTarget renderTarget)

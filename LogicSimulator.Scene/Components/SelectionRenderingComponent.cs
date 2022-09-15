@@ -25,11 +25,7 @@ public class SelectionRenderingComponent : BaseRenderingComponent
     public Color4 SelectionColor
     {
         get => _selectionColor;
-        set
-        {
-            _selectionColor = value;
-            ResourceCache.RequestUpdate(this, SelectionBrushResource);
-        }
+        set => SetAndUpdateResource(ref _selectionColor, value, SelectionBrushResource);
     }
 
     protected override void OnRender(Scene2D scene, RenderTarget renderTarget)

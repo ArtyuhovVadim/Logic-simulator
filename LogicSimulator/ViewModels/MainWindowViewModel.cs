@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.ObjectModel;
+using System.Linq;
 using System.Windows.Input;
 using LogicSimulator.Infrastructure.Commands;
 using LogicSimulator.Infrastructure.Services.Interfaces;
@@ -81,12 +82,6 @@ public class MainWindowViewModel : BindableBase
 
     public ICommand TestCommand => _testCommand ??= new LambdaCommand(_ =>
     {
-        ((Rectangle)Objects1[0]).FillColor = new Color4(1f, 0, 0, 1f);
-
-        //for (int i = 0; i < 1; i++)
-        //{
-        //    Objects1.Add(new Rectangle() { Width = 100, Height = 100, Location = Random.Shared.NextVector2(new Vector2(0, 0), new Vector2(300, 300)) });
-        //}
     }, _ => true);
 
     #endregion
@@ -97,7 +92,6 @@ public class MainWindowViewModel : BindableBase
 
     public ICommand TestCommand1 => _testCommand1 ??= new LambdaCommand(_ =>
     {
-        GC.Collect(3, GCCollectionMode.Forced);
     }, _ => true);
 
     #endregion
@@ -133,7 +127,11 @@ public class MainWindowViewModel : BindableBase
 
     private ObservableCollection<BaseRenderingComponent> _components = new()
     {
-        new SolidClearRenderingComponent{ClearColor = new Color4(0.7f,0.7f,0.7f,1f)},
+        new GradientClearRenderingComponent
+        {
+            StartColor = new Color4(0.755f, 0.755f, 0.755f, 1f),
+            EndColor = new Color4(0.887f, 0.887f, 0.887f, 1f)
+        },
         new GridRenderingComponent
         {
             Width = 3000,

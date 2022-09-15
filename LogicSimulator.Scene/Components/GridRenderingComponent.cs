@@ -22,31 +22,19 @@ public class GridRenderingComponent : BaseRenderingComponent
     public Color4 Background
     {
         get => _background;
-        set
-        {
-            ResourceCache.RequestUpdate(this, BackgroundBrushResource);
-            _background = value;
-        }
+        set => SetAndUpdateResource(ref _background, value, BackgroundBrushResource);
     }
 
     public Color4 LineColor
     {
         get => _lineColor;
-        set
-        {
-            ResourceCache.RequestUpdate(this, LineBrushResource);
-            _lineColor = value;
-        }
+        set => SetAndUpdateResource(ref _lineColor, value, LineBrushResource);
     }
 
     public Color4 BoldLineColor
     {
         get => _boldLineColor;
-        set
-        {
-            ResourceCache.RequestUpdate(this, BoldLineBrushResource);
-            _boldLineColor = value;
-        }
+        set => SetAndUpdateResource(ref _boldLineColor, value, BoldLineBrushResource);
     }
 
     public float LineThickness { get; set; } = 1f;

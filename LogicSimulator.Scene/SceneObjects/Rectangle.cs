@@ -64,72 +64,43 @@ public class Rectangle : EditableSceneObject
     public Vector2 Location
     {
         get => _location;
-        set
-        {
-            //TODO: Ненужные присваивания при одинаковых значениях
-            _location = value;
-            ResourceCache.RequestUpdate(this, RectangleGeometryResource);
-        }
+        set => SetAndUpdateResource(ref _location, value, RectangleGeometryResource);
     }
 
     public float Width
     {
         get => _width;
-        set
-        {
-            _width = value;
-            ResourceCache.RequestUpdate(this, RectangleGeometryResource);
-        }
+        set => SetAndUpdateResource(ref _width, value, RectangleGeometryResource);
     }
 
     public float Height
     {
         get => _height;
-        set
-        {
-            _height = value;
-            ResourceCache.RequestUpdate(this, RectangleGeometryResource);
-        }
+        set => SetAndUpdateResource(ref _height, value, RectangleGeometryResource);
     }
 
     public Color4 FillColor
     {
         get => _fillColor;
-        set
-        {
-            _fillColor = value;
-            ResourceCache.RequestUpdate(this, FillBrushResource);
-        }
+        set => SetAndUpdateResource(ref _fillColor, value, FillBrushResource);
     }
 
     public Color4 StrokeColor
     {
         get => _strokeColor;
-        set
-        {
-            _strokeColor = value;
-            ResourceCache.RequestUpdate(this, StrokeBrushResource);
-        }
+        set => SetAndUpdateResource(ref _strokeColor, value, StrokeBrushResource);
     }
 
     public float StrokeThickness
     {
         get => _strokeThickness;
-        set
-        {
-            _strokeThickness = value;
-            RenderNotifier.RequestRender(this);
-        }
+        set => SetAndRequestRender(ref _strokeThickness, value);
     }
 
     public bool IsFilled
     {
         get => _isFilled;
-        set
-        {
-            _isFilled = value;
-            RenderNotifier.RequestRender(this);
-        }
+        set => SetAndRequestRender(ref _isFilled, value);
     }
 
     public override void StartDrag(Vector2 pos)

@@ -13,22 +13,14 @@ public abstract class BaseSceneObject : ResourceDependentObject
     public bool IsDragging
     {
         get => _isDragging;
-        protected set
-        {
-            _isDragging = value;
-            RenderNotifier.RequestRender(this);
-        }
+        protected set => SetAndRequestRender(ref _isDragging, value);
     }
 
     [YamlIgnore]
     public bool IsSelected
     {
         get => _isSelected;
-        protected set
-        {
-            _isSelected = value;
-            RenderNotifier.RequestRender(this);
-        }
+        protected set => SetAndRequestRender(ref _isSelected, value);
     }
 
     public abstract void StartDrag(Vector2 pos);

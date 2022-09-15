@@ -25,41 +25,25 @@ public class SelectionRectangleRenderingComponent : BaseRenderingComponent
     public Vector2 StartPosition
     {
         get => _startPosition;
-        set
-        {
-            _startPosition = value;
-            RenderNotifier.RequestRender(this);
-        }
+        set => SetAndRequestRender(ref _startPosition, value);
     }
 
     public Vector2 EndPosition
     {
         get => _endPosition;
-        set
-        {
-            _endPosition = value;
-            RenderNotifier.RequestRender(this);
-        }
+        set => SetAndRequestRender(ref _endPosition, value);
     }
 
     public Color4 SecantColor
     {
         get => _secantColor;
-        set
-        {
-            _secantColor = value;
-            ResourceCache.RequestUpdate(this, SecantBrushResource);
-        }
+        set => SetAndUpdateResource(ref _secantColor, value, SecantBrushResource);
     }
 
     public Color4 NormalColor
     {
         get => _normalColor;
-        set
-        {
-            _normalColor = value;
-            ResourceCache.RequestUpdate(this, NormalBrushResource);
-        }
+        set => SetAndUpdateResource(ref _normalColor, value, NormalBrushResource);
     }
 
     public bool IsSecant { get; set; }

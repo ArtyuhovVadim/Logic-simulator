@@ -45,71 +45,43 @@ public class Ellipse : EditableSceneObject
     public Vector2 Center
     {
         get => _center;
-        set
-        {
-            _center = value;
-            ResourceCache.RequestUpdate(this, EllipseGeometryResource);
-        }
+        set => SetAndUpdateResource(ref _center, value, EllipseGeometryResource);
     }
 
     public float RadiusX
     {
         get => _radiusX;
-        set
-        {
-            _radiusX = value;
-            ResourceCache.RequestUpdate(this, EllipseGeometryResource);
-        }
+        set => SetAndUpdateResource(ref _radiusX, value, EllipseGeometryResource);
     }
 
     public float RadiusY
     {
         get => _radiusY;
-        set
-        {
-            _radiusY = value;
-            ResourceCache.RequestUpdate(this, EllipseGeometryResource);
-        }
+        set => SetAndUpdateResource(ref _radiusY, value, EllipseGeometryResource);
     }
 
     public Color4 FillColor
     {
         get => _fillColor;
-        set
-        {
-            _fillColor = value;
-            ResourceCache.RequestUpdate(this, FillBrushResource);
-        }
+        set => SetAndUpdateResource(ref _fillColor, value, FillBrushResource);
     }
 
     public Color4 StrokeColor
     {
         get => _strokeColor;
-        set
-        {
-            _strokeColor = value;
-            ResourceCache.RequestUpdate(this, StrokeBrushResource);
-        }
+        set => SetAndUpdateResource(ref _strokeColor, value, StrokeBrushResource);
     }
 
     public float StrokeThickness
     {
         get => _strokeThickness;
-        set
-        {
-            _strokeThickness = value;
-            RenderNotifier.RequestRender(this);
-        }
+        set => SetAndRequestRender(ref _strokeThickness, value);
     }
 
     public bool IsFilled
     {
         get => _isFilled;
-        set
-        {
-            _isFilled = value;
-            RenderNotifier.RequestRender(this);
-        }
+        set => SetAndRequestRender(ref _isFilled, value);
     }
 
     public override void StartDrag(Vector2 pos)
