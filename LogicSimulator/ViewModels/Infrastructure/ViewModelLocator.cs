@@ -7,8 +7,6 @@ public class ViewModelLocator
 {
     public static MainWindowViewModel MainWindowViewModel => App.Host.Services.GetRequiredService<MainWindowViewModel>();
 
-    public static SchemeSceneViewModel SchemeSceneViewModel => App.Host.Services.GetRequiredService<SchemeSceneViewModel>();
-
     public static InfoDialogWindowViewModel InfoDialogWindowViewModel => App.Host.Services.GetRequiredService<InfoDialogWindowViewModel>();
 
     public static ErrorDialogWindowViewModel ErrorDialogWindowViewModel => App.Host.Services.GetRequiredService<ErrorDialogWindowViewModel>();

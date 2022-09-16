@@ -44,6 +44,7 @@
                 Text="{Binding Path=MousePosition, ElementName=Scene, StringFormat='Позиция курсора: {0}', Converter={StaticResource Vector2Converter}}" />
         </StatusBar>
 
+        <!--
         <DockingManager>
             <LayoutRoot>
                 <LayoutPanel>
@@ -54,15 +55,13 @@
                                 Objects="{Binding Path=Objects}"
                                 Tools="{Binding Path=Tools}" />
                         </LayoutDocument>
-                        <LayoutDocument Title="Test">
-                            <scene:Scene2D Components="{Binding Path=Components1}" Objects="{Binding Path=Objects1}" />
-                        </LayoutDocument>
                     </LayoutDocumentPane>
                 </LayoutPanel>
             </LayoutRoot>
         </DockingManager>
+        -->
 
-        <!--<DockingManager DocumentsSource="{Binding Path=SchemeViewModels}">
+        <DockingManager DocumentsSource="{Binding Path=SchemeViewModels}">
             <DockingManager.LayoutItemTemplateSelector>
                 <infrastructure:PanesTemplateSelector>
                     <infrastructure:PanesTemplateSelector.SchemeViewTemplate>
@@ -88,6 +87,6 @@
                     <LayoutDocumentPane />
                 </LayoutPanel>
             </LayoutRoot>
-        </DockingManager>-->
+        </DockingManager>
     </DockPanel>
 </c:Window>

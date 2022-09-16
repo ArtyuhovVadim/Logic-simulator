@@ -9,7 +9,6 @@ public static class Registrator
     {
         services
             .AddSingleton<MainWindowViewModel>()
-            .AddTransient<SchemeSceneViewModel>()
             .AddSingleton<InfoDialogWindowViewModel>()
             .AddSingleton<ErrorDialogWindowViewModel>()
             .AddSingleton<WarningDialogWindowViewModel>()
