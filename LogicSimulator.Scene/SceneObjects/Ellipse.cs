@@ -14,11 +14,9 @@ public class Ellipse : EditableSceneObject
         return new EllipseGeometry(target.Factory, new SharpDX.Direct2D1.Ellipse(ellipse.Center, ellipse.RadiusX, ellipse.RadiusY));
     });
 
-    public static readonly Resource FillBrushResource = ResourceCache.Register((target, o) =>
-        new SolidColorBrush(target, ((Ellipse)o).FillColor));
+    public static readonly Resource FillBrushResource = ResourceCache.Register((target, o) => new SolidColorBrush(target, ((Ellipse)o).FillColor));
 
-    public static readonly Resource StrokeBrushResource = ResourceCache.Register((target, o) =>
-        new SolidColorBrush(target, ((Ellipse)o).StrokeColor));
+    public static readonly Resource StrokeBrushResource = ResourceCache.Register((target, o) => new SolidColorBrush(target, ((Ellipse)o).StrokeColor));
 
     private Vector2 _center = Vector2.Zero;
     private float _radiusX;
@@ -31,16 +29,13 @@ public class Ellipse : EditableSceneObject
     private Vector2 _startDragPosition;
     private Vector2 _startDragCenter;
 
-    public Ellipse()
+    private static readonly AbstractNode[] AbstractNodes =
     {
-        Nodes = new Node[]
-        {
-            new(() => Center + new Vector2(RadiusX, 0), pos => RadiusX = Math.Abs((pos - Center).X)),
-            new(() => Center + new Vector2(0, -RadiusY), pos => RadiusY = Math.Abs((pos - Center).Y))
-        };
-    }
+        new Node<Ellipse>(o => o.Center + new Vector2(o.RadiusX, 0), (o, p)=> o.RadiusX = Math.Abs((p - o.Center).X)),
+        new Node<Ellipse>(o => o.Center + new Vector2(0, -o.RadiusY), (o, p)=> o.RadiusY = Math.Abs((p - o.Center).Y))
+    };
 
-    public override Node[] Nodes { get; }
+    public override AbstractNode[] Nodes => AbstractNodes;
 
     public Vector2 Center
     {

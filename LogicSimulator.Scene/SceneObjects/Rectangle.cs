@@ -28,38 +28,35 @@ public class Rectangle : EditableSceneObject
     private Vector2 _startDragPosition = Vector2.Zero;
     private Vector2 _startDragLocation = Vector2.Zero;
 
-    public Rectangle()
+    private static readonly AbstractNode[] AbstractNodes =
     {
-        Nodes = new[]
+        new Node<Rectangle>(o => o.Location, (o, p)=>
         {
-            new Node(() => Location, pos =>
-            {
-                Width += (Location - pos).X;
-                Height += (Location - pos).Y;
-                Location = pos;
-            }),
-            new Node(() => Location + new Vector2(Width, 0), pos =>
-            {
-                Width = pos.X - Location.X;
-                Height = Location.Y + Height - pos.Y;
-                Location = new Vector2(Location.X, pos.Y);
-            }),
-            new Node(() => Location + new Vector2(Width, Height), pos =>
-            {
-                var size = pos - Location;
-                Width = size.X;
-                Height = size.Y;
-            }),
-            new Node(() => Location + new Vector2(0, Height), pos =>
-            {
-                Width = Location.X + Width- pos.X;
-                Height = pos.Y - Location.Y;
-                Location = new Vector2(pos.X, Location.Y);
-            })
-        };
-    }
+            o.Width += (o.Location - p).X;
+            o.Height += (o.Location - p).Y;
+            o.Location = p;
+        }),
+        new Node<Rectangle>(o => o.Location + new Vector2(o.Width, 0), (o, p) =>
+        {
+            o.Width = p.X - o.Location.X;
+            o.Height = o.Location.Y + o.Height - p.Y;
+            o.Location = new Vector2(o.Location.X, p.Y);
+        }),
+        new Node<Rectangle>(o => o.Location + new Vector2(o.Width, o.Height), (o, p) =>
+        {
+            var size = p - o.Location;
+            o.Width = size.X;
+            o.Height = size.Y;
+        }),
+        new Node<Rectangle>(o => o.Location + new Vector2(0, o.Height), (o, p) =>
+        {
+            o.Width = o.Location.X + o.Width- p.X;
+            o.Height = p.Y - o.Location.Y;
+            o.Location = new Vector2(p.X, o.Location.Y);
+        })
+    };
 
-    public override Node[] Nodes { get; }
+    public override AbstractNode[] Nodes => AbstractNodes;
 
     public Vector2 Location
     {

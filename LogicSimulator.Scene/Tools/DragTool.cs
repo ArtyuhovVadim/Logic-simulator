@@ -18,7 +18,7 @@ public class DragTool : BaseTool
 
     protected override void OnActivated(Scene2D scene)
     {
-        _objectsUnderCursor = scene.GetTool<SelectionTool>().ObjectUnderCursor.ToList();
+        _objectsUnderCursor = scene.GetTool<SelectionTool>().ObjectsUnderCursor.ToList();
         _snap = scene.GetComponent<GridRenderingComponent>().CellSize;
     }
 

@@ -6,6 +6,7 @@ using LogicSimulator.Infrastructure.Commands;
 using LogicSimulator.Infrastructure.Services.Interfaces;
 using LogicSimulator.Scene.Components.Base;
 using LogicSimulator.Scene.Components;
+using LogicSimulator.Scene.SceneObjects;
 using LogicSimulator.Scene.SceneObjects.Base;
 using LogicSimulator.Scene.Tools.Base;
 using LogicSimulator.Scene.Tools;
@@ -82,6 +83,15 @@ public class MainWindowViewModel : BindableBase
 
     public ICommand TestCommand => _testCommand ??= new LambdaCommand(_ =>
     {
+        for (int i = 0; i < 300; i++)
+        {
+            Objects.Add(new Rectangle() { Width = 100, Height = 100, Location = Random.Shared.NextVector2(new Vector2(0, 0), new Vector2(1000, 1000)) });
+        }
+
+        for (int i = 0; i < 300; i++)
+        {
+            Objects.Add(new Ellipse() { RadiusX = 100, RadiusY = 100, Center = Random.Shared.NextVector2(new Vector2(0, 0), new Vector2(1000, 1000)) });
+        }
     }, _ => true);
 
     #endregion
@@ -144,7 +154,7 @@ public class MainWindowViewModel : BindableBase
         new SceneObjectsRenderingComponent(),
         new SelectionRenderingComponent(),
         new SelectionRectangleRenderingComponent(),
-        new NodeRenderingComponent()
+        new NodeRenderingComponent { BackgroundColor = new Color4(0f,1f,0f,1f) }
     };
     public ObservableCollection<BaseRenderingComponent> Components
     {

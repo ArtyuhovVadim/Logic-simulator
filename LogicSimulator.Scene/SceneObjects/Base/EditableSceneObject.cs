@@ -5,5 +5,5 @@ namespace LogicSimulator.Scene.SceneObjects.Base;
 public abstract class EditableSceneObject : BaseSceneObject
 {
     [YamlIgnore]
-    public abstract Node[] Nodes { get; }
+    public abstract AbstractNode[] Nodes { get; }
 }

@@ -1,6 +1,5 @@
 ﻿using LogicSimulator.Scene.Components.Base;
 using LogicSimulator.Scene.SceneObjects.Base;
-using LogicSimulator.Scene.SceneObjects;
 using SharpDX;
 using SharpDX.Direct2D1;
 using System.Linq;
@@ -10,28 +9,40 @@ namespace LogicSimulator.Scene.Components;
 
 public class NodeRenderingComponent : BaseRenderingComponent
 {
-    public static readonly Resource StrokeBrushResource = ResourceCache.Register((target, o) => new SolidColorBrush(target, Color4.Black));
+    public static readonly Resource StrokeBrushResource = ResourceCache.Register((target, o) => new SolidColorBrush(target, ((NodeRenderingComponent)o).StrokeColor));
 
-    public static readonly Resource SelectBrushResource = ResourceCache.Register((target, o) => new SolidColorBrush(target, new Color4(1, 0, 0, 1)));
+    public static readonly Resource BackgroundBrushResource = ResourceCache.Register((target, o) => new SolidColorBrush(target, ((NodeRenderingComponent)o).BackgroundColor));
 
-    public static readonly Resource UnselectBrushResource = ResourceCache.Register((target, o) => new SolidColorBrush(target, new Color4(0, 1, 0, 1)));
+    private Color4 _strokeColor = Color4.Black;
+    private Color4 _backgroundColor = Color4.White;
+
+    public Color4 StrokeColor
+    {
+        get => _strokeColor;
+        set => SetAndUpdateResource(ref _strokeColor, value, StrokeBrushResource);
+    }
+
+    public Color4 BackgroundColor
+    {
+        get => _backgroundColor;
+        set => SetAndUpdateResource(ref _backgroundColor, value, BackgroundBrushResource);
+    }
 
     protected override void OnRender(Scene2D scene, RenderTarget renderTarget)
     {
-        var strokeColor = ResourceCache.GetOrUpdate<SolidColorBrush>(this, StrokeBrushResource, renderTarget);
-        var selectedColor = ResourceCache.GetOrUpdate<SolidColorBrush>(this, SelectBrushResource, renderTarget);
-        var unselectedColor = ResourceCache.GetOrUpdate<SolidColorBrush>(this, UnselectBrushResource, renderTarget);
+        var strokeBrush = ResourceCache.GetOrUpdate<SolidColorBrush>(this, StrokeBrushResource, renderTarget);
+        var backgroundBrush = ResourceCache.GetOrUpdate<SolidColorBrush>(this, BackgroundBrushResource, renderTarget);
 
-        var size = Node.NodeSize / scene.Scale;
+        var size = AbstractNode.NodeSize / scene.Scale;
 
         foreach (var sceneObject in scene.Objects.OfType<EditableSceneObject>().Where(x => x.IsSelected))
         {
             foreach (var node in sceneObject.Nodes)
             {
-                var rect = node.Location.RectangleRelativePointAsCenter(size);
+                var rect = node.GetLocation(sceneObject).RectangleRelativePointAsCenter(size);
 
-                renderTarget.FillRectangle(rect, node.IsSelected ? selectedColor : unselectedColor);
-                renderTarget.DrawRectangle(rect, strokeColor, 1f / scene.Scale);
+                renderTarget.FillRectangle(rect, backgroundBrush);
+                renderTarget.DrawRectangle(rect, strokeBrush, 1f / scene.Scale);
             }
         }
     }
