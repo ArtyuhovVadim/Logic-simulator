@@ -16,7 +16,6 @@ public class MainWindowViewModel : BindableBase
         _schemeFileService = schemeFileService;
         _userDialogService = userDialogService;
 
-        LoadExampleCommand.Execute(null);
         AnchorableViewModels.Add(new PropertiesViewModel { Name = "Test 1" });
         AnchorableViewModels.Add(new PropertiesViewModel { Name = "Test 2" });
         AnchorableViewModels.Add(new PropertiesViewModel { Name = "Test 3" });
@@ -80,7 +79,7 @@ public class MainWindowViewModel : BindableBase
 
         if (!_schemeFileService.ReadFromFile(path, out var scheme))
         {
-            _userDialogService.ShowErrorMessage("Ошибка загрузки файла", $"Не удалось загрузить файл:{path}");
+            _userDialogService.ShowErrorMessage("Ошибка загрузки файла", $"Не удалось загрузить файл: {path}");
             return;
         }
 
