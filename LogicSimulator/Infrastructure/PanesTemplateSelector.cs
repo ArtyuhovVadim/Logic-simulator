@@ -8,11 +8,12 @@ public class PanesTemplateSelector : DataTemplateSelector
 {
     public DataTemplate SchemeViewTemplate { get; set; }
 
-    public override DataTemplate SelectTemplate(object item, DependencyObject container)
-    {
-        if (item is SchemeViewModel)
-            return SchemeViewTemplate;
+    public DataTemplate PropertiesViewTemplate { get; set; }
 
-        return base.SelectTemplate(item, container);
-    }
+    public override DataTemplate SelectTemplate(object item, DependencyObject container) => item switch
+    {
+        SchemeViewModel => SchemeViewTemplate,
+        PropertiesViewModel => PropertiesViewTemplate,
+        _ => base.SelectTemplate(item, container)
+    };
 }

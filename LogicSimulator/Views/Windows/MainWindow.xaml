@@ -28,8 +28,6 @@
                 <MenuItem Command="{Binding Path=SaveExampleCommand}" Header="Сохранить пример" />
                 <Separator />
                 <MenuItem Header="Выход" />
-                <MenuItem Command="{Binding Path=TestCommand}" Header="Test" />
-                <MenuItem Command="{Binding Path=TestCommand1}" Header="Test1" />
             </MenuItem>
         </Menu>
 
@@ -37,38 +35,29 @@
             <TextBlock
                 Margin="0,0,5,0"
                 Foreground="White"
-                Text="{Binding Path=Scale, ElementName=Scene, StringFormat='Масштаб: {0:0.00}'}" />
+                Text="{Binding Path=ActiveContent.Scale, StringFormat='Масштаб: {0:0.00}', FallbackValue=''}" />
             <TextBlock
                 Margin="0,0,5,0"
                 Foreground="White"
-                Text="{Binding Path=MousePosition, ElementName=Scene, StringFormat='Позиция курсора: {0}', Converter={StaticResource Vector2Converter}}" />
+                Text="{Binding Path=ActiveContent.MousePosition, StringFormat='Позиция курсора: {0}', Converter={StaticResource Vector2Converter}, FallbackValue=''}" />
         </StatusBar>
 
-        <!--
-        <DockingManager>
-            <LayoutRoot>
-                <LayoutPanel>
-                    <LayoutDocumentPane>
-                        <LayoutDocument Title="Scene">
-                            <scene:Scene2D
-                                Components="{Binding Path=Components}"
-                                Objects="{Binding Path=Objects}"
-                                Tools="{Binding Path=Tools}" />
-                        </LayoutDocument>
-                    </LayoutDocumentPane>
-                </LayoutPanel>
-            </LayoutRoot>
-        </DockingManager>
-        -->
-
-        <DockingManager DocumentsSource="{Binding Path=SchemeViewModels}">
+        <DockingManager
+            ActiveContent="{Binding Path=ActiveContent, Mode=TwoWay}"
+            AnchorablesSource="{Binding Path=AnchorableViewModels}"
+            DocumentsSource="{Binding Path=SchemeViewModels}">
             <DockingManager.LayoutItemTemplateSelector>
                 <infrastructure:PanesTemplateSelector>
                     <infrastructure:PanesTemplateSelector.SchemeViewTemplate>
                         <DataTemplate DataType="{x:Type viewModels:SchemeViewModel}">
-                            <views:SchemeSceneView />
+                            <views:SchemeView />
                         </DataTemplate>
                     </infrastructure:PanesTemplateSelector.SchemeViewTemplate>
+                    <infrastructure:PanesTemplateSelector.PropertiesViewTemplate>
+                        <DataTemplate DataType="{x:Type viewModels:PropertiesViewModel}">
+                            <views:PropertiesView />
+                        </DataTemplate>
+                    </infrastructure:PanesTemplateSelector.PropertiesViewTemplate>
                 </infrastructure:PanesTemplateSelector>
             </DockingManager.LayoutItemTemplateSelector>
             <DockingManager.LayoutItemContainerStyleSelector>
@@ -79,6 +68,12 @@
                             <Setter Property="CanClose" Value="False" />
                         </Style>
                     </infrastructure:PanesStyleSelector.SchemeViewStyle>
+                    <infrastructure:PanesStyleSelector.PropertiesViewStyle>
+                        <Style TargetType="{x:Type LayoutAnchorableItem}">
+                            <Setter Property="Title" Value="{Binding Model.Name}" />
+                            <Setter Property="CanClose" Value="True" />
+                        </Style>
+                    </infrastructure:PanesStyleSelector.PropertiesViewStyle>
                 </infrastructure:PanesStyleSelector>
             </DockingManager.LayoutItemContainerStyleSelector>
 

@@ -28,9 +28,33 @@ public class SchemeViewModel : BindableBase
         get => _scheme.Name;
         set
         {
-            _scheme.Name = value; 
+            _scheme.Name = value;
             OnPropertyChanged();
         }
+    }
+
+    #endregion
+
+    #region Scale
+
+    private float _scale = 1f;
+
+    public float Scale
+    {
+        get => _scale;
+        set => Set(ref _scale, value);
+    }
+
+    #endregion
+
+    #region MousePosition
+
+    private Vector2 _mousePosition = Vector2.Zero;
+
+    public Vector2 MousePosition
+    {
+        get => _mousePosition;
+        set => Set(ref _mousePosition, value);
     }
 
     #endregion

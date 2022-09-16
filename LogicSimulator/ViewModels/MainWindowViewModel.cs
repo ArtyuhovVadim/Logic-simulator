@@ -15,7 +15,36 @@ public class MainWindowViewModel : BindableBase
     {
         _schemeFileService = schemeFileService;
         _userDialogService = userDialogService;
+
+        LoadExampleCommand.Execute(null);
+        AnchorableViewModels.Add(new PropertiesViewModel { Name = "Test 1" });
+        AnchorableViewModels.Add(new PropertiesViewModel { Name = "Test 2" });
+        AnchorableViewModels.Add(new PropertiesViewModel { Name = "Test 3" });
     }
+
+    #region Width
+
+    private double _width = 0;
+
+    public double Width
+    {
+        get => _width;
+        set => Set(ref _width, value);
+    }
+
+    #endregion
+
+    #region ActiveContent
+
+    private BindableBase _activeContent;
+
+    public BindableBase ActiveContent
+    {
+        get => _activeContent;
+        set => Set(ref _activeContent, value);
+    }
+
+    #endregion
 
     #region SchemeViewModels
 
@@ -29,6 +58,18 @@ public class MainWindowViewModel : BindableBase
 
     #endregion
 
+    #region AnchorableViewModels
+
+    private ObservableCollection<BindableBase> _anchorableViewModels = new();
+
+    public ObservableCollection<BindableBase> AnchorableViewModels
+    {
+        get => _anchorableViewModels;
+        private set => Set(ref _anchorableViewModels, value);
+    }
+
+    #endregion
+
     #region LoadExampleCommand
 
     private ICommand _loadExampleCommand;
@@ -36,7 +77,7 @@ public class MainWindowViewModel : BindableBase
     public ICommand LoadExampleCommand => _loadExampleCommand ??= new LambdaCommand(_ =>
     {
         var path = "Data/Example.lss";
-        
+
         if (!_schemeFileService.ReadFromFile(path, out var scheme))
         {
             _userDialogService.ShowErrorMessage("Ошибка загрузки файла", $"Не удалось загрузить файл:{path}");

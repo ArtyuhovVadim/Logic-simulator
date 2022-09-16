@@ -8,11 +8,12 @@ public class PanesStyleSelector : StyleSelector
 {
     public Style SchemeViewStyle { get; set; }
 
-    public override Style SelectStyle(object item, DependencyObject container)
-    {
-        if (item is SchemeViewModel)
-            return SchemeViewStyle;
+    public Style PropertiesViewStyle { get; set; }
 
-        return base.SelectStyle(item, container);
-    }
+    public override Style SelectStyle(object item, DependencyObject container) => item switch
+    {
+        SchemeViewModel => SchemeViewStyle,
+        PropertiesViewModel => PropertiesViewStyle,
+        _ => base.SelectStyle(item, container)
+    };
 }
