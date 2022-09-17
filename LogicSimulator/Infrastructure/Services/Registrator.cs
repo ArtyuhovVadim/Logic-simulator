@@ -9,7 +9,9 @@ public static class Registrator
     {
         services.AddSingleton<IUserDialogService, UserDialogService>()
                 .AddSingleton<ISchemeFileService, SchemeFileService>()
-            ;
+
+                .AddSingleton<IPropertiesSelectionService, EditorSelectionService>()
+                ;
 
         return services;
     }

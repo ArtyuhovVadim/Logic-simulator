@@ -60,6 +60,7 @@ public class UserDialogService : IUserDialogService
         var errorDialogWindow = new ErrorDialogWindow
         {
             DataContext = _errorDialogWindowViewModel,
+            //TODO: ошибка при еще не открытом MainWindow
             Owner = Application.Current.MainWindow,
             WindowStartupLocation = WindowStartupLocation.CenterOwner
         };

@@ -1,4 +1,7 @@
-﻿using System.Collections.ObjectModel;
+﻿using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.Linq;
+using LogicSimulator.Infrastructure.Services.Interfaces;
 using LogicSimulator.Models;
 using LogicSimulator.Scene.Components.Base;
 using LogicSimulator.Scene.Components;
@@ -6,6 +9,7 @@ using LogicSimulator.Scene.SceneObjects.Base;
 using LogicSimulator.Scene.Tools.Base;
 using LogicSimulator.Scene.Tools;
 using LogicSimulator.ViewModels.Base;
+using Microsoft.Extensions.DependencyInjection;
 using SharpDX;
 
 namespace LogicSimulator.ViewModels;
@@ -14,11 +18,30 @@ public class SchemeViewModel : BindableBase
 {
     private readonly Scheme _scheme;
 
+    private readonly SelectionTool _selectionTool = new();
+    private readonly RectangleSelectionTool _rectangleSelectionTool = new();
+    private readonly DragTool _dragTool = new();
+    private readonly NodeDragTool _nodeDragTool = new();
+
+    private readonly IPropertiesSelectionService _propertiesSelectionService;
+
     public SchemeViewModel(Scheme scheme)
     {
         _scheme = scheme;
 
+        _tools = new ObservableCollection<BaseTool> { _selectionTool, _rectangleSelectionTool, _dragTool, _nodeDragTool };
+
         Objects = new ObservableCollection<BaseSceneObject>(_scheme.Objects);
+
+        _selectionTool.SelectionChanged += OnSelectionChanged;
+        _rectangleSelectionTool.SelectionChanged += OnSelectionChanged;
+
+        _propertiesSelectionService = App.Host.Services.GetRequiredService<IPropertiesSelectionService>();
+    }
+
+    private void OnSelectionChanged()
+    {
+        _propertiesSelectionService.Select(Objects.Where(x => x.IsSelected));
     }
 
     #region Name
@@ -104,13 +127,7 @@ public class SchemeViewModel : BindableBase
 
     #region Tools
 
-    private ObservableCollection<BaseTool> _tools = new()
-    {
-        new SelectionTool(),
-        new DragTool(),
-        new RectangleSelectionTool(),
-        new NodeDragTool()
-    };
+    private ObservableCollection<BaseTool> _tools;
     public ObservableCollection<BaseTool> Tools
     {
         get => _tools;

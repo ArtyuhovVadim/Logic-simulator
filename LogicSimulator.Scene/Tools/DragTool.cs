@@ -14,7 +14,7 @@ public class DragTool : BaseTool
 
     private readonly List<BaseSceneObject> _draggingSceneObjects = new();
 
-    private float _snap = 0f;
+    private float _snap;
 
     protected override void OnActivated(Scene2D scene)
     {

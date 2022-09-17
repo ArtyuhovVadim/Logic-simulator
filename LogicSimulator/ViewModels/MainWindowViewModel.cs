@@ -11,14 +11,12 @@ public class MainWindowViewModel : BindableBase
     private readonly ISchemeFileService _schemeFileService;
     private readonly IUserDialogService _userDialogService;
 
-    public MainWindowViewModel(ISchemeFileService schemeFileService, IUserDialogService userDialogService)
+    public MainWindowViewModel(ISchemeFileService schemeFileService, IUserDialogService userDialogService, PropertiesViewModel propertiesViewModel)
     {
         _schemeFileService = schemeFileService;
         _userDialogService = userDialogService;
-
-        AnchorableViewModels.Add(new PropertiesViewModel { Name = "Test 1" });
-        AnchorableViewModels.Add(new PropertiesViewModel { Name = "Test 2" });
-        AnchorableViewModels.Add(new PropertiesViewModel { Name = "Test 3" });
+        
+        AnchorableViewModels.Add(propertiesViewModel);
     }
 
     #region Width
