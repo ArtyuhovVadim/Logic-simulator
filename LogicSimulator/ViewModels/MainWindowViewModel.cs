@@ -1,8 +1,12 @@
-﻿using System.Collections.ObjectModel;
+﻿using System;
+using System.Collections.ObjectModel;
+using System.Linq;
 using System.Windows.Input;
 using LogicSimulator.Infrastructure.Commands;
 using LogicSimulator.Infrastructure.Services.Interfaces;
 using LogicSimulator.ViewModels.Base;
+using SharpDX;
+using Rectangle = LogicSimulator.Scene.SceneObjects.Rectangle;
 
 namespace LogicSimulator.ViewModels;
 
@@ -15,7 +19,7 @@ public class MainWindowViewModel : BindableBase
     {
         _schemeFileService = schemeFileService;
         _userDialogService = userDialogService;
-        
+
         AnchorableViewModels.Add(propertiesViewModel);
     }
 
@@ -98,6 +102,20 @@ public class MainWindowViewModel : BindableBase
         //{
         //    _userDialogService.ShowErrorMessage("Ошибка сохранения файла", $"Не удалось сохранить файл: {path}");
         //}
+    }, _ => true);
+
+    #endregion
+
+    #region TestCommand
+
+    private ICommand _testCommand;
+
+    public ICommand TestCommand => _testCommand ??= new LambdaCommand(_ =>
+    {
+        for (int i = 0; i < 500; i++)
+        {
+            SchemeViewModels.First().Objects.Add(new Rectangle() { Width = 100, Height = 100, Location = Random.Shared.NextVector2(new Vector2(0, 0), new Vector2(3000, 3000)) });
+        }
     }, _ => true);
 
     #endregion

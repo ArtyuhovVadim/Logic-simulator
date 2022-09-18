@@ -7,20 +7,20 @@ public class RectangleEditorViewModel : BaseEditorViewModel
 {
     #region LocationX
 
-    public float LocationX
+    public float Width
     {
-        get => ((Rectangle)SceneObjects.First()).Location.X;
-        set => ((Rectangle)SceneObjects.First()).Location = ((Rectangle)SceneObjects.First()).Location with { X = value };
+        get => ((Rectangle)SceneObjects.First()).Width;
+        set => ((Rectangle)SceneObjects.First()).Width = value;
     }
 
     #endregion
 
     #region LocationY
 
-    public float LocationY
+    public float Height
     {
-        get => ((Rectangle)SceneObjects.First()).Location.Y;
-        set => ((Rectangle)SceneObjects.First()).Location = ((Rectangle)SceneObjects.First()).Location with { Y = value };
+        get => ((Rectangle)SceneObjects.First()).Height;
+        set => ((Rectangle)SceneObjects.First()).Height = value;
     }
 
     #endregion

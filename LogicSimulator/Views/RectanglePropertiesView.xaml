@@ -24,10 +24,10 @@
                 <Setter Property="VerticalAlignment" Value="Center" />
             </Style>
         </UniformGrid.Resources>
-        <TextBlock Text="Location X:" />
-        <TextBox Text="{Binding Path=LocationX, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
-        <TextBlock Text="Location Y:" />
-        <TextBox Text="{Binding Path=LocationY, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+        <TextBlock Text="Width:" />
+        <TextBox Text="{Binding Path=Width, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+        <TextBlock Text="Height:" />
+        <TextBox Text="{Binding Path=Height, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
         <TextBlock Text="StrokeThickness:" />
         <TextBox Text="{Binding Path=StrokeThickness, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
     </UniformGrid>

@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Linq;
+﻿using System.Collections.ObjectModel;
 using LogicSimulator.Infrastructure.Services.Interfaces;
 using LogicSimulator.Models;
 using LogicSimulator.Scene.Components.Base;
@@ -23,7 +21,7 @@ public class SchemeViewModel : BindableBase
     private readonly DragTool _dragTool = new();
     private readonly NodeDragTool _nodeDragTool = new();
 
-    private readonly IPropertiesSelectionService _propertiesSelectionService;
+    private readonly IEditorSelectionService _editorSelectionService;
 
     public SchemeViewModel(Scheme scheme)
     {
@@ -36,12 +34,12 @@ public class SchemeViewModel : BindableBase
         _selectionTool.SelectionChanged += OnSelectionChanged;
         _rectangleSelectionTool.SelectionChanged += OnSelectionChanged;
 
-        _propertiesSelectionService = App.Host.Services.GetRequiredService<IPropertiesSelectionService>();
+        _editorSelectionService = App.Host.Services.GetRequiredService<IEditorSelectionService>();
     }
 
     private void OnSelectionChanged()
     {
-        _propertiesSelectionService.Select(Objects.Where(x => x.IsSelected));
+        _editorSelectionService.Select(this);
     }
 
     #region Name

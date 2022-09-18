@@ -28,6 +28,7 @@
                 <MenuItem Command="{Binding Path=SaveExampleCommand}" Header="Сохранить пример" />
                 <Separator />
                 <MenuItem Header="Выход" />
+                <MenuItem Command="{Binding Path=TestCommand}" Header="Тест" />
             </MenuItem>
         </Menu>
 
@@ -40,6 +41,10 @@
                 Margin="0,0,5,0"
                 Foreground="White"
                 Text="{Binding Path=ActiveContent.MousePosition, StringFormat='Позиция курсора: {0}', Converter={StaticResource Vector2Converter}, FallbackValue=''}" />
+            <TextBlock
+                Margin="0,0,5,0"
+                Foreground="White"
+                Text="{Binding Path=ActiveContent.Objects.Count, StringFormat='Кол-во объектов: {0}', FallbackValue=''}" />
         </StatusBar>
 
         <DockingManager

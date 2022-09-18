@@ -3,13 +3,12 @@ using System.Collections.Generic;
 using System.Linq;
 using LogicSimulator.Infrastructure.Services.Interfaces;
 using LogicSimulator.Scene.SceneObjects;
-using LogicSimulator.Scene.SceneObjects.Base;
 using LogicSimulator.ViewModels;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace LogicSimulator.Infrastructure.Services;
 
-public class EditorSelectionService : IPropertiesSelectionService
+public class EditorSelectionService : IEditorSelectionService
 {
     private readonly PropertiesViewModel _propertiesViewModel;
 
@@ -23,8 +22,10 @@ public class EditorSelectionService : IPropertiesSelectionService
         _propertiesViewModel = propertiesViewModel;
     }
 
-    public void Select(IEnumerable<BaseSceneObject> selectedSceneObjects)
+    public void Select(SchemeViewModel schemeViewModel)
     {
+        var selectedSceneObjects = schemeViewModel.Objects.Where(x => x.IsSelected);
+
         if (!selectedSceneObjects.Any())
         {
             _propertiesViewModel.CurrentEditorViewModel = null;

@@ -28,8 +28,6 @@
     <ItemGroup>
         <Folder Include="Infrastructure\Converters\" />
         <Folder Include="Models\" />
-        <Folder Include="ViewModels\Base\" />
-        <Folder Include="ViewModels\UserDialogViewModels\Base\" />
         <Folder Include="Models\" />
     </ItemGroup>
 
