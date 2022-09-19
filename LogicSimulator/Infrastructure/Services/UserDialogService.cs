@@ -2,6 +2,7 @@
 using System.Windows;
 using LogicSimulator.Infrastructure.Services.Interfaces;
 using LogicSimulator.ViewModels.UserDialogViewModels;
+using LogicSimulator.ViewModels.UserDialogViewModels.Base;
 using LogicSimulator.Views.Windows.UserDialogWindows;
 
 namespace LogicSimulator.Infrastructure.Services;
@@ -24,107 +25,45 @@ public class UserDialogService : IUserDialogService
         _questionDialogWindowViewModel = questionDialogWindowViewModel;
     }
 
-    public UserDialogResult ShowInfoMessage(string title, string message)
-    {
-        var result = UserDialogResult.None;
-        
-        _infoDialogWindowViewModel.Message = message;
-        _infoDialogWindowViewModel.Title = title;
+    public UserDialogResult ShowInfoMessage(string title, string message) =>
+        ShowUserDialogWindow<InfoDialogWindow>(title, message, _infoDialogWindowViewModel, SystemSounds.Beep);
 
-        var infoDialogWindow = new InfoDialogWindow
-        {
-            DataContext = _infoDialogWindowViewModel,
-            Owner = Application.Current.MainWindow,
-            WindowStartupLocation = WindowStartupLocation.CenterOwner
-        };
+    public UserDialogResult ShowErrorMessage(string title, string message) =>
+        ShowUserDialogWindow<ErrorDialogWindow>(title, message, _errorDialogWindowViewModel, SystemSounds.Hand);
 
-        _infoDialogWindowViewModel.Completed += e =>
-        {
-            result = e;
-            infoDialogWindow.Close();
-        };
+    public UserDialogResult ShowWarningMessage(string title, string message) =>
+        ShowUserDialogWindow<WarningDialogWindow>(title, message, _warningDialogWindowViewModel, SystemSounds.Beep);
 
-        SystemSounds.Beep.Play();
-        infoDialogWindow.ShowDialog();
+    public UserDialogResult ShowQuestionMessage(string title, string message) =>
+        ShowUserDialogWindow<QuestionDialogWindow>(title, message, _questionDialogWindowViewModel, SystemSounds.Beep);
 
-        return result;
-    }
-
-    public UserDialogResult ShowErrorMessage(string title, string message)
+    private static UserDialogResult ShowUserDialogWindow<TWindow>(string title, string message, BaseUserDialogViewModel userDialogViewModel, SystemSound sound) 
+        where TWindow : Controls.Window, new()
     {
         var result = UserDialogResult.None;
 
-        _errorDialogWindowViewModel.Message = message;
-        _errorDialogWindowViewModel.Title = title;
+        userDialogViewModel.Message = message;
+        userDialogViewModel.Title = title;
 
-        var errorDialogWindow = new ErrorDialogWindow
+        var window = new TWindow
         {
-            DataContext = _errorDialogWindowViewModel,
-            //TODO: ошибка при еще не открытом MainWindow
-            Owner = Application.Current.MainWindow,
+            DataContext = userDialogViewModel,
             WindowStartupLocation = WindowStartupLocation.CenterOwner
         };
 
-        _errorDialogWindowViewModel.Completed += e =>
+        if (App.CurrentWindow is not null && App.CurrentWindow.IsLoaded)
+        {
+            window.Owner = App.CurrentWindow;
+        }
+
+        userDialogViewModel.Completed += e =>
         {
             result = e;
-            errorDialogWindow.Close();
+            window.Close();
         };
 
-        SystemSounds.Hand.Play();
-        errorDialogWindow.ShowDialog();
-
-        return result;
-    }
-
-    public UserDialogResult ShowWarningMessage(string title, string message)
-    {
-        var result = UserDialogResult.None;
-
-        _warningDialogWindowViewModel.Message = message;
-        _warningDialogWindowViewModel.Title = title;
-
-        var warningDialogWindow = new WarningDialogWindow
-        {
-            DataContext = _warningDialogWindowViewModel,
-            Owner = Application.Current.MainWindow,
-            WindowStartupLocation = WindowStartupLocation.CenterOwner
-        };
-
-        _warningDialogWindowViewModel.Completed += e =>
-        {
-            result = e;
-            warningDialogWindow.Close();
-        };
-
-        SystemSounds.Beep.Play();
-        warningDialogWindow.ShowDialog();
-
-        return result;
-    }
-
-    public UserDialogResult ShowQuestionMessage(string title, string message)
-    {
-        var result = UserDialogResult.None;
-
-        _questionDialogWindowViewModel.Message = message;
-        _questionDialogWindowViewModel.Title = title;
-
-        var questionDialogWindow = new QuestionDialogWindow()
-        {
-            DataContext = _questionDialogWindowViewModel,
-            Owner = Application.Current.MainWindow,
-            WindowStartupLocation = WindowStartupLocation.CenterOwner
-        };
-
-        _questionDialogWindowViewModel.Completed += e =>
-        {
-            result = e;
-            questionDialogWindow.Close();
-        };
-
-        SystemSounds.Beep.Play();
-        questionDialogWindow.ShowDialog();
+        sound.Play();
+        window.ShowDialog();
 
         return result;
     }
