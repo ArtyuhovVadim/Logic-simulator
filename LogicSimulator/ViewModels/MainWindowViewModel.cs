@@ -1,13 +1,8 @@
-﻿using System;
-using System.Collections.ObjectModel;
-using System.ComponentModel;
-using System.Linq;
+﻿using System.Collections.ObjectModel;
 using System.Windows.Input;
 using LogicSimulator.Infrastructure.Commands;
 using LogicSimulator.Infrastructure.Services.Interfaces;
 using LogicSimulator.ViewModels.Base;
-using SharpDX;
-using Rectangle = LogicSimulator.Scene.SceneObjects.Rectangle;
 
 namespace LogicSimulator.ViewModels;
 
@@ -23,18 +18,6 @@ public class MainWindowViewModel : BindableBase
 
         AnchorableViewModels.Add(propertiesViewModel);
     }
-
-    #region SomeDouble
-
-    private double _someDouble = 1f;
-
-    public double SomeDouble
-    {
-        get => _someDouble;
-        set => Set(ref _someDouble, value);
-    }
-
-    #endregion
 
     #region ActiveContent
 
@@ -113,10 +96,6 @@ public class MainWindowViewModel : BindableBase
 
     public ICommand TestCommand => _testCommand ??= new LambdaCommand(_ =>
     {
-        for (int i = 0; i < 500; i++)
-        {
-            SchemeViewModels.First().Objects.Add(new Rectangle() { Width = 100, Height = 100, Location = Random.Shared.NextVector2(new Vector2(0, 0), new Vector2(3000, 3000)) });
-        }
     }, _ => true);
 
     #endregion

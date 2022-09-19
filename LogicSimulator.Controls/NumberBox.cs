@@ -27,6 +27,7 @@ public class NumberBox : TextBoxEx
         if (!numberBox.IsHasError)
         {
             numberBox.Text = numberBox.NumberToString(number);
+            numberBox.RaiseEvent(new RoutedEventArgs(NumberChangedEvent, numberBox));
         }
     }
 
@@ -110,6 +111,19 @@ public class NumberBox : TextBoxEx
 
     public static readonly DependencyProperty RoundNumberProperty =
         DependencyProperty.Register(nameof(RoundNumber), typeof(bool), typeof(NumberBox), new PropertyMetadata(false));
+
+    #endregion
+
+    #region NumberChangedEvent
+
+    public event RoutedEventHandler NumberChanged
+    {
+        add => AddHandler(NumberChangedEvent, value);
+        remove => RemoveHandler(NumberChangedEvent, value);
+    }
+
+    public static readonly RoutedEvent NumberChangedEvent =
+        EventManager.RegisterRoutedEvent(nameof(NumberChanged), RoutingStrategy.Bubble, typeof(RoutedEventHandler), typeof(NumberBox));
 
     #endregion
 

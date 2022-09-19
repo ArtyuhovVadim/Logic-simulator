@@ -21,13 +21,16 @@
             <Setter Property="VerticalAlignment" Value="Center" />
             <Setter Property="RoundNumber" Value="True" />
             <Setter Property="DecimalPlaces" Value="3" />
+            <Setter Property="SelectAllTextOnFocus" Value="True" />
         </Style>
     </UserControl.Resources>
     <UniformGrid
         VerticalAlignment="Top"
         Columns="2"
-        Rows="3">
+        Rows="4">
         <UniformGrid.Resources />
+        <TextBlock Text="Location:" />
+        <controls:Vector2Box Vector="{Binding Path=Location}" />
         <TextBlock Text="Width:" />
         <controls:NumberBox Number="{Binding Path=Width}" />
         <TextBlock Text="Height:" />
