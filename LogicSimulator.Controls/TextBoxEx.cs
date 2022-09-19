@@ -44,6 +44,7 @@ public class TextBoxEx : TextBox
         base.OnApplyTemplate();
 
         GotFocus += OnGotFocus;
+        LostFocus += OnLostFocus;
         KeyDown += OnKeyDown;
     }
 
@@ -76,6 +77,12 @@ public class TextBoxEx : TextBox
         {
             SelectAllText();
         }
+    }
+
+    private void OnLostFocus(object sender, RoutedEventArgs e)
+    {
+        OnConfirm();
+        _lastText = Text;
     }
 
     private async void SelectAllText() => await Dispatcher.InvokeAsync(SelectAll);

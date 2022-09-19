@@ -6,6 +6,7 @@
         <ResourceDictionary Source="NumberBoxStyle.xaml" />
     </ResourceDictionary.MergedDictionaries>
     <Style TargetType="{x:Type controls:Vector2Box}">
+        <Setter Property="Focusable" Value="False" />
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate>
