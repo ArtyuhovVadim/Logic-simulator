@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.ObjectModel;
+using System.ComponentModel;
 using System.Linq;
 using System.Windows.Input;
 using LogicSimulator.Infrastructure.Commands;
@@ -23,14 +24,14 @@ public class MainWindowViewModel : BindableBase
         AnchorableViewModels.Add(propertiesViewModel);
     }
 
-    #region Width
+    #region SomeDouble
 
-    private double _width = 0;
+    private double _someDouble = 1f;
 
-    public double Width
+    public double SomeDouble
     {
-        get => _width;
-        set => Set(ref _width, value);
+        get => _someDouble;
+        set => Set(ref _someDouble, value);
     }
 
     #endregion

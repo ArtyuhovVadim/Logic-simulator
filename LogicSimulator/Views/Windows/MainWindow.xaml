@@ -47,6 +47,19 @@
                 Text="{Binding Path=ActiveContent.Objects.Count, StringFormat='Кол-во объектов: {0}', FallbackValue=''}" />
         </StatusBar>
 
+        <!--<Grid Width="100">
+            <c:NumberBox
+                VerticalAlignment="Top"
+                DecimalPlaces="3"
+                Number="{Binding Path=SomeDouble}"
+                RoundNumber="True"
+                SelectAllTextOnFocus="True" />
+            <TextBlock
+                Margin="5,50,5,5"
+                VerticalAlignment="Top"
+                Text="{Binding Path=SomeDouble}" />
+        </Grid>-->
+
         <DockingManager
             ActiveContent="{Binding Path=ActiveContent, Mode=TwoWay}"
             AnchorablesSource="{Binding Path=AnchorableViewModels}"

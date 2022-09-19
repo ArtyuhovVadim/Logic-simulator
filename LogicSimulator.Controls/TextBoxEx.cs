@@ -56,9 +56,9 @@ public class TextBoxEx : TextBox
         switch (e.Key)
         {
             case Key.Enter:
+                OnConfirm();
                 _lastText = Text;
                 SelectAllText();
-                OnConfirm();
                 break;
             case Key.Escape:
                 Text = _lastText;
