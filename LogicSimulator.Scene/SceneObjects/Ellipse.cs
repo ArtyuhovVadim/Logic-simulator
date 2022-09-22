@@ -37,42 +37,49 @@ public class Ellipse : EditableSceneObject
 
     public override AbstractNode[] Nodes => AbstractNodes;
 
+    [Editable]
     public Vector2 Center
     {
         get => _center;
         set => SetAndUpdateResource(ref _center, value, EllipseGeometryResource);
     }
 
+    [Editable]
     public float RadiusX
     {
         get => _radiusX;
         set => SetAndUpdateResource(ref _radiusX, value, EllipseGeometryResource);
     }
 
+    [Editable]
     public float RadiusY
     {
         get => _radiusY;
         set => SetAndUpdateResource(ref _radiusY, value, EllipseGeometryResource);
     }
 
+    [Editable]
     public Color4 FillColor
     {
         get => _fillColor;
         set => SetAndUpdateResource(ref _fillColor, value, FillBrushResource);
     }
 
+    [Editable]
     public Color4 StrokeColor
     {
         get => _strokeColor;
         set => SetAndUpdateResource(ref _strokeColor, value, StrokeBrushResource);
     }
 
+    [Editable]
     public float StrokeThickness
     {
         get => _strokeThickness;
         set => SetAndRequestRender(ref _strokeThickness, value);
     }
 
+    [Editable]
     public bool IsFilled
     {
         get => _isFilled;

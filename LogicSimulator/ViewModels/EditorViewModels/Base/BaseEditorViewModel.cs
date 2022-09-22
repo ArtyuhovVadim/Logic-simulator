@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
+using System.Runtime.CompilerServices;
+using LogicSimulator.Scene;
 using LogicSimulator.Scene.SceneObjects.Base;
 
 namespace LogicSimulator.ViewModels.EditorViewModels.Base;
@@ -20,7 +22,9 @@ public abstract class BaseEditorViewModel<T> : AbstractEditorViewModel where T :
 
     #endregion
 
-    protected T FirstObject { get; set; }
+    public Dictionary<string, bool> UndefinedPropertiesMap { get; } = new();
+
+    private T FirstObject { get; set; }
 
     public override void SetObjectsToEdit(IEnumerable<BaseSceneObject> objects)
     {
@@ -35,8 +39,7 @@ public abstract class BaseEditorViewModel<T> : AbstractEditorViewModel where T :
             Objects.Clear();
         }
 
-        if(!objects.Any())
-            return;
+        if (!objects.Any()) return;
 
         if (objects.Any(x => x.GetType() != typeof(T)))
             throw new ArgumentException($"All objects must be {typeof(T)} type!");
@@ -52,8 +55,42 @@ public abstract class BaseEditorViewModel<T> : AbstractEditorViewModel where T :
 
         FirstObject = Objects.First();
 
-        NotifyPropertiesChange();
+        if (!UndefinedPropertiesMap.Any())
+        {
+            foreach (var prop in typeof(T).GetProperties().Where(x => Attribute.IsDefined(x, typeof(EditableAttribute))))
+            {
+                UndefinedPropertiesMap.Add(prop.Name, false);
+            }
+        }
+
+        foreach (var key in UndefinedPropertiesMap.Keys)
+        {
+            OnPropertyChanged(key);
+        }
+
+        OnPropertyChanged(nameof(UndefinedPropertiesMap));
     }
 
-    protected abstract void NotifyPropertiesChange();
+    protected TProp Get<TProp>([CallerMemberName] string propertyName = null)
+    {
+        var propInfo = typeof(T).GetProperty(propertyName!)!;
+
+        UndefinedPropertiesMap[propertyName] = Objects.Any(o => !Equals(propInfo.GetValue(o), propInfo.GetValue(FirstObject)));
+
+        OnPropertyChanged(nameof(UndefinedPropertiesMap));
+
+        return (TProp)propInfo.GetValue(FirstObject);
+    }
+
+    protected void Set<TProp>(TProp value, [CallerMemberName] string propertyName = null)
+    {
+        if (UndefinedPropertiesMap[propertyName!]) return;
+
+        var propInfo = typeof(T).GetProperty(propertyName!)!;
+
+        foreach (var o in Objects)
+        {
+            propInfo.SetValue(o, value);
+        }
+    }
 }

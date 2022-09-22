@@ -155,7 +155,7 @@ public class NumberBox : TextBoxEx
 
     private void OnLostFocus(object sender, RoutedEventArgs e)
     {
-        if (!IsEnterPressed || IsTextChanged)
+        if (!IsEnterPressed && IsTextChanged)
         {
             OnConfirm();
         }

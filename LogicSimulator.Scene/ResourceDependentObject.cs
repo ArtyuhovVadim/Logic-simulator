@@ -15,49 +15,17 @@ public abstract class ResourceDependentObject : IDisposable, INotifyPropertyChan
 
     protected ResourceDependentObject() => Id = _lastId++;
 
-    protected void SetAndUpdateResource(ref Vector2 field, Vector2 value, Resource resource, [CallerMemberName]string propertyName = null)
+    protected void SetAndUpdateResource<T>(ref T field, T value, Resource resource, [CallerMemberName] string propertyName = null)
     {
-        if (field == value) return;
+        if (Equals(field, value)) return;
         field = value;
         ResourceCache.RequestUpdate(this, resource);
         OnPropertyChanged(propertyName);
     }
 
-    protected void SetAndUpdateResource(ref float field, float value, Resource resource, [CallerMemberName] string propertyName = null)
+    protected void SetAndRequestRender<T>(ref T field, T value, [CallerMemberName] string propertyName = null)
     {
-        if (MathUtil.NearEqual(field, value)) return;
-        field = value;
-        ResourceCache.RequestUpdate(this, resource);
-        OnPropertyChanged(propertyName);
-    }
-
-    protected void SetAndUpdateResource(ref Color4 field, Color4 value, Resource resource, [CallerMemberName] string propertyName = null)
-    {
-        if (field == value) return;
-        field = value;
-        ResourceCache.RequestUpdate(this, resource);
-        OnPropertyChanged(propertyName);
-    }
-
-    protected void SetAndRequestRender(ref Vector2 field, Vector2 value, [CallerMemberName] string propertyName = null)
-    {
-        if (field == value) return;
-        field = value;
-        RenderNotifier.RequestRender(this);
-        OnPropertyChanged(propertyName);
-    }
-
-    protected void SetAndRequestRender(ref float field, float value, [CallerMemberName] string propertyName = null)
-    {
-        if (MathUtil.NearEqual(field, value)) return;
-        field = value;
-        RenderNotifier.RequestRender(this);
-        OnPropertyChanged(propertyName);
-    }
-
-    protected void SetAndRequestRender(ref bool field, bool value, [CallerMemberName] string propertyName = null)
-    {
-        if (field == value) return;
+        if (Equals(field, value)) return;
         field = value;
         RenderNotifier.RequestRender(this);
         OnPropertyChanged(propertyName);

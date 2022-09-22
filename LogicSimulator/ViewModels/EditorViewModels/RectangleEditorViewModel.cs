@@ -1,58 +1,37 @@
-﻿using System.Collections.Generic;
-using LogicSimulator.ViewModels.EditorViewModels.Base;
-using SharpDX;
+﻿using LogicSimulator.ViewModels.EditorViewModels.Base;
 using Rectangle = LogicSimulator.Scene.SceneObjects.Rectangle;
 
 namespace LogicSimulator.ViewModels.EditorViewModels;
 
 public class RectangleEditorViewModel : BaseEditorViewModel<Rectangle>
 {
-    #region UndefinedPropertiesMap
-
-    public Dictionary<string, bool> UndefinedPropertiesMap { get; } = new()
-    {
-        { nameof(Width), false }
-    };
-
-    #endregion
-
     #region Width
 
     public float Width
     {
-        get
-        {
-            UndefinedPropertiesMap[nameof(Width)] = false;
-
-            foreach (var o in Objects)
-            {
-                if (!MathUtil.NearEqual(o.Width, FirstObject.Width))
-                {
-                    UndefinedPropertiesMap[nameof(Width)] = true;
-                    break;
-                }
-            }
-
-            OnPropertyChanged(nameof(UndefinedPropertiesMap));
-
-            return FirstObject.Width;
-        }
-        set
-        {
-            if (UndefinedPropertiesMap[nameof(Width)]) return;
-
-            foreach (var o in Objects)
-            {
-                o.Width = value;
-            }
-        }
+        get => Get<float>();
+        set => Set(value);
     }
 
     #endregion
 
-    protected override void NotifyPropertiesChange()
+    #region Height
+
+    public float Height
     {
-        OnPropertyChanged(nameof(Width));
-        OnPropertyChanged(nameof(UndefinedPropertiesMap));
+        get => Get<float>();
+        set => Set(value);
     }
+
+    #endregion
+
+    #region StrokeThickness
+
+    public float StrokeThickness
+    {
+        get => Get<float>();
+        set => Set(value);
+    }
+
+    #endregion
 }

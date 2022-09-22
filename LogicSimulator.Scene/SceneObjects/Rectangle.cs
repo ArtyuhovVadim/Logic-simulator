@@ -58,42 +58,49 @@ public class Rectangle : EditableSceneObject
 
     public override AbstractNode[] Nodes => AbstractNodes;
 
+    [Editable]
     public Vector2 Location
     {
         get => _location;
         set => SetAndUpdateResource(ref _location, value, RectangleGeometryResource);
     }
 
+    [Editable]
     public float Width
     {
         get => _width;
         set => SetAndUpdateResource(ref _width, value, RectangleGeometryResource);
     }
 
+    [Editable]
     public float Height
     {
         get => _height;
         set => SetAndUpdateResource(ref _height, value, RectangleGeometryResource);
     }
 
+    [Editable]
     public Color4 FillColor
     {
         get => _fillColor;
         set => SetAndUpdateResource(ref _fillColor, value, FillBrushResource);
     }
 
+    [Editable]
     public Color4 StrokeColor
     {
         get => _strokeColor;
         set => SetAndUpdateResource(ref _strokeColor, value, StrokeBrushResource);
     }
 
+    [Editable]
     public float StrokeThickness
     {
         get => _strokeThickness;
         set => SetAndRequestRender(ref _strokeThickness, value);
     }
 
+    [Editable]
     public bool IsFilled
     {
         get => _isFilled;

@@ -35,8 +35,8 @@
         <TextBlock Text="Width:" />
         <controls:NumberBox IsValueUndefined="{Binding Path=UndefinedPropertiesMap[Width]}" Number="{Binding Path=Width}" />
         <TextBlock Text="Height:" />
-        <controls:NumberBox Number="{Binding Path=Height}" />
+        <controls:NumberBox IsValueUndefined="{Binding Path=UndefinedPropertiesMap[Height]}" Number="{Binding Path=Height}" />
         <TextBlock Text="StrokeThickness:" />
-        <controls:NumberBox Number="{Binding Path=StrokeThickness}" />
+        <controls:NumberBox IsValueUndefined="{Binding Path=UndefinedPropertiesMap[StrokeThickness]}" Number="{Binding Path=StrokeThickness}" />
     </UniformGrid>
 </UserControl>

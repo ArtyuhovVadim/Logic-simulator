@@ -86,6 +86,7 @@ public class TextBoxEx : TextBox
                 break;
             case Key.Escape:
                 Text = _lastText;
+                IsTextChanged = false;
                 SelectAllText();
                 OnReject();
                 break;
