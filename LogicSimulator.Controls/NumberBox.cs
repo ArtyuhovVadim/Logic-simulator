@@ -139,6 +139,8 @@ public class NumberBox : TextBoxEx
         base.OnApplyTemplate();
 
         Text = NumberToString(Number);
+
+        LostFocus += OnLostFocus;
     }
 
     protected override void OnConfirm()
@@ -151,6 +153,14 @@ public class NumberBox : TextBoxEx
         }
     }
 
+    private void OnLostFocus(object sender, RoutedEventArgs e)
+    {
+        if (!IsEnterPressed && IsTextChanged)
+        {
+            OnConfirm();
+        }
+    }
+
     private double ParseText(string text)
     {
         if (!Parser.TryParse(text, out var number) || number < MinNumber || number > MaxNumber)
@@ -160,6 +170,7 @@ public class NumberBox : TextBoxEx
         }
 
         IsHasError = false;
+        IsValueUndefined = false;
 
         return RoundNumber ? Math.Round(number, DecimalPlaces) : number;
     }

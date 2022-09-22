@@ -12,8 +12,6 @@ public static class Registrator
 
             .AddSingleton<PropertiesViewModel>()
 
-            .AddTransient<RectangleEditorViewModel>()
-
             .AddSingleton<InfoDialogWindowViewModel>()
             .AddSingleton<ErrorDialogWindowViewModel>()
             .AddSingleton<WarningDialogWindowViewModel>()

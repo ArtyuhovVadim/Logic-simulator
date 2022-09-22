@@ -24,6 +24,7 @@ public class Scene2D : FrameworkElement
 
     #region Objects
 
+    //TODO: При удаленни объекта сцена не обновляется
     public IEnumerable<BaseSceneObject> Objects
     {
         get => (IEnumerable<BaseSceneObject>)GetValue(ObjectsProperty);

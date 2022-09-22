@@ -3,8 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using LogicSimulator.Infrastructure.Services.Interfaces;
 using LogicSimulator.Scene.SceneObjects;
+using LogicSimulator.Scene.SceneObjects.Base;
 using LogicSimulator.ViewModels;
-using Microsoft.Extensions.DependencyInjection;
+using LogicSimulator.ViewModels.EditorViewModels.Base;
 
 namespace LogicSimulator.Infrastructure.Services;
 
@@ -12,9 +13,9 @@ public class EditorSelectionService : IEditorSelectionService
 {
     private readonly PropertiesViewModel _propertiesViewModel;
 
-    private readonly Dictionary<Type, Type> _editorTypesMap = new()
+    private readonly Dictionary<Type, AbstractEditorViewModel> _editorsMap = new()
     {
-        { typeof(Rectangle), typeof(RectangleEditorViewModel) }
+        { typeof(Rectangle), new RectangleEditorViewModel() }
     };
 
     public EditorSelectionService(PropertiesViewModel propertiesViewModel)
@@ -28,29 +29,31 @@ public class EditorSelectionService : IEditorSelectionService
 
         if (!selectedSceneObjects.Any())
         {
-            _propertiesViewModel.CurrentEditorViewModel = null;
+            SetEmptyEditor();
             return;
         }
 
         var firstObjectType = selectedSceneObjects.First().GetType();
 
-        if (selectedSceneObjects.Count(x => x.GetType() == firstObjectType) != selectedSceneObjects.Count())
+        if (selectedSceneObjects.Any(x => x.GetType() != firstObjectType))
         {
-            _propertiesViewModel.CurrentEditorViewModel = null;
+            SetEmptyEditor();
             return;
         }
 
-        if (!_editorTypesMap.TryGetValue(firstObjectType, out var editorType))
+        if (!_editorsMap.TryGetValue(firstObjectType, out var editor))
         {
-            _propertiesViewModel.CurrentEditorViewModel = null;
-
+            SetEmptyEditor();
             return;
         }
 
-        var editorViewModel = (BaseEditorViewModel)App.Host.Services.GetRequiredService(editorType);
+        editor.SetObjectsToEdit(selectedSceneObjects);
+        _propertiesViewModel.CurrentEditorViewModel = editor;
+    }
 
-        editorViewModel.SceneObjects = selectedSceneObjects.ToList();
-
-        _propertiesViewModel.CurrentEditorViewModel = editorViewModel;
+    private void SetEmptyEditor()
+    {
+        _propertiesViewModel.CurrentEditorViewModel?.SetObjectsToEdit(Enumerable.Empty<BaseSceneObject>());
+        _propertiesViewModel.CurrentEditorViewModel = null;
     }
 }

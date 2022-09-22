@@ -32,7 +32,23 @@ public class TextBoxEx : TextBox
 
     #endregion
 
+    #region IsValueUndefined
+
+    public bool IsValueUndefined
+    {
+        get => (bool)GetValue(IsValueUndefinedProperty);
+        set => SetValue(IsValueUndefinedProperty, value);
+    }
+
+    public static readonly DependencyProperty IsValueUndefinedProperty =
+        DependencyProperty.Register(nameof(IsValueUndefined), typeof(bool), typeof(TextBoxEx), new FrameworkPropertyMetadata(false, FrameworkPropertyMetadataOptions.BindsTwoWayByDefault));
+
+    #endregion
+
     private string _lastText = string.Empty;
+
+    protected bool IsEnterPressed { get; private set; }
+    protected bool IsTextChanged { get; private set; }
 
     static TextBoxEx()
     {
@@ -46,11 +62,17 @@ public class TextBoxEx : TextBox
         GotFocus += OnGotFocus;
         LostFocus += OnLostFocus;
         KeyDown += OnKeyDown;
+        TextChanged += OnTextChanged;
     }
 
     protected virtual void OnConfirm() { }
 
     protected virtual void OnReject() { }
+
+    private void OnTextChanged(object sender, TextChangedEventArgs e)
+    {
+        IsTextChanged = true;
+    }
 
     private void OnKeyDown(object sender, KeyEventArgs e)
     {
@@ -58,6 +80,7 @@ public class TextBoxEx : TextBox
         {
             case Key.Enter:
                 OnConfirm();
+                IsEnterPressed = true;
                 _lastText = Text;
                 SelectAllText();
                 break;
@@ -71,6 +94,8 @@ public class TextBoxEx : TextBox
 
     private void OnGotFocus(object sender, RoutedEventArgs e)
     {
+        IsEnterPressed = false;
+        IsTextChanged = false;
         _lastText = Text;
 
         if (SelectAllTextOnFocus)
@@ -81,7 +106,6 @@ public class TextBoxEx : TextBox
 
     private void OnLostFocus(object sender, RoutedEventArgs e)
     {
-        OnConfirm();
         _lastText = Text;
     }
 

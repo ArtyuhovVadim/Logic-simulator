@@ -1,4 +1,5 @@
 ﻿using LogicSimulator.ViewModels.Base;
+using LogicSimulator.ViewModels.EditorViewModels.Base;
 
 namespace LogicSimulator.ViewModels;
 
@@ -18,9 +19,9 @@ public class PropertiesViewModel : BindableBase
 
     #region CurrentEditorViewModel
 
-    private BaseEditorViewModel _currentEditorViewModel;
+    private AbstractEditorViewModel _currentEditorViewModel;
 
-    public BaseEditorViewModel CurrentEditorViewModel
+    public AbstractEditorViewModel CurrentEditorViewModel
     {
         get => _currentEditorViewModel;
         set => Set(ref _currentEditorViewModel, value);

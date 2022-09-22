@@ -7,7 +7,6 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:infrastructure="clr-namespace:LogicSimulator.Infrastructure"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    xmlns:scene="clr-namespace:LogicSimulator.Scene;assembly=LogicSimulator.Scene"
     xmlns:viewModels="clr-namespace:LogicSimulator.ViewModels"
     xmlns:views="clr-namespace:LogicSimulator.Views"
     Title="Logic-simulator"
@@ -46,13 +45,6 @@
                 Foreground="White"
                 Text="{Binding Path=ActiveContent.Objects.Count, StringFormat='Кол-во объектов: {0}', FallbackValue=''}" />
         </StatusBar>
-
-        <Grid
-            Width="300"
-            Background="DarkRed"
-            Visibility="Collapsed">
-            <TextBlock Margin="5,50,5,5" VerticalAlignment="Top" />
-        </Grid>
 
         <DockingManager
             ActiveContent="{Binding Path=ActiveContent, Mode=TwoWay}"
