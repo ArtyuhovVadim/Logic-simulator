@@ -5,6 +5,7 @@ using LogicSimulator.Infrastructure.Services.Interfaces;
 using LogicSimulator.Scene.SceneObjects;
 using LogicSimulator.Scene.SceneObjects.Base;
 using LogicSimulator.ViewModels;
+using LogicSimulator.ViewModels.EditorViewModels;
 using LogicSimulator.ViewModels.EditorViewModels.Base;
 
 namespace LogicSimulator.Infrastructure.Services;

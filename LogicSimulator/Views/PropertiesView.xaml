@@ -6,12 +6,13 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:views="clr-namespace:LogicSimulator.Views"
     xmlns:vm="clr-namespace:LogicSimulator.ViewModels"
+    xmlns:evm="clr-namespace:LogicSimulator.ViewModels.EditorViewModels"
     d:DataContext="{d:DesignInstance Type=vm:PropertiesViewModel}"
     d:DesignHeight="450"
     d:DesignWidth="800"
     mc:Ignorable="d">
     <UserControl.Resources>
-        <DataTemplate DataType="{x:Type vm:RectangleEditorViewModel}">
+        <DataTemplate DataType="{x:Type evm:RectangleEditorViewModel}">
             <views:RectanglePropertiesView />
         </DataTemplate>
     </UserControl.Resources>
