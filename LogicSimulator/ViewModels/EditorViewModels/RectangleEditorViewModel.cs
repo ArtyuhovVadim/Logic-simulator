@@ -1,4 +1,4 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
 using LogicSimulator.ViewModels.EditorViewModels.Base;
 using SharpDX;
 using Rectangle = LogicSimulator.Scene.SceneObjects.Rectangle;
@@ -7,44 +7,52 @@ namespace LogicSimulator.ViewModels.EditorViewModels;
 
 public class RectangleEditorViewModel : BaseEditorViewModel<Rectangle>
 {
-    #region Location
+    #region UndefinedPropertiesMap
 
-    public Vector2 Location
+    public Dictionary<string, bool> UndefinedPropertiesMap { get; } = new()
     {
-        get => Objects.First().Location;
-        set => Objects.First().Location = value;
-    }
+        { nameof(Width), false }
+    };
 
     #endregion
 
-    #region LocationX
+    #region Width
 
     public float Width
     {
-        get => Objects.First().Width;
-        set => Objects.First().Width = value;
+        get
+        {
+            UndefinedPropertiesMap[nameof(Width)] = false;
+
+            foreach (var o in Objects)
+            {
+                if (!MathUtil.NearEqual(o.Width, FirstObject.Width))
+                {
+                    UndefinedPropertiesMap[nameof(Width)] = true;
+                    break;
+                }
+            }
+
+            OnPropertyChanged(nameof(UndefinedPropertiesMap));
+
+            return FirstObject.Width;
+        }
+        set
+        {
+            if (UndefinedPropertiesMap[nameof(Width)]) return;
+
+            foreach (var o in Objects)
+            {
+                o.Width = value;
+            }
+        }
     }
 
     #endregion
 
-    #region LocationY
-
-    public float Height
+    protected override void NotifyPropertiesChange()
     {
-        get => Objects.First().Height;
-        set => Objects.First().Height = value;
+        OnPropertyChanged(nameof(Width));
+        OnPropertyChanged(nameof(UndefinedPropertiesMap));
     }
-
-    #endregion
-
-    #region StrokeThickness
-
-    public float StrokeThickness
-    {
-        get => Objects.First().StrokeThickness;
-        set => Objects.First().StrokeThickness = value;
-    }
-
-    #endregion
-
 }

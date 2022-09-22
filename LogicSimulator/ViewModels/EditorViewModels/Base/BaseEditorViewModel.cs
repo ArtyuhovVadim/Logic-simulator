@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using LogicSimulator.Scene.SceneObjects.Base;
 
@@ -9,15 +10,17 @@ public abstract class BaseEditorViewModel<T> : AbstractEditorViewModel where T :
 {
     #region Objects
 
-    private List<T> _objects;
+    private ObservableCollection<T> _objects;
 
-    public List<T> Objects
+    public ObservableCollection<T> Objects
     {
         get => _objects;
         protected set => Set(ref _objects, value);
     }
 
     #endregion
+
+    protected T FirstObject { get; set; }
 
     public override void SetObjectsToEdit(IEnumerable<BaseSceneObject> objects)
     {
@@ -28,19 +31,29 @@ public abstract class BaseEditorViewModel<T> : AbstractEditorViewModel where T :
                 o.PropertyChanged -= OnPropertyChanged;
             }
 
+            FirstObject = null;
             Objects.Clear();
         }
+
+        if(!objects.Any())
+            return;
 
         if (objects.Any(x => x.GetType() != typeof(T)))
             throw new ArgumentException($"All objects must be {typeof(T)} type!");
 
         var castObjects = objects.Cast<T>();
 
-        Objects = new List<T>(castObjects);
+        Objects = new ObservableCollection<T>(castObjects);
 
         foreach (var o in Objects)
         {
             o.PropertyChanged += OnPropertyChanged;
         }
+
+        FirstObject = Objects.First();
+
+        NotifyPropertiesChange();
     }
+
+    protected abstract void NotifyPropertiesChange();
 }

@@ -4,10 +4,11 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:controls="clr-namespace:LogicSimulator.Controls;assembly=LogicSimulator.Controls"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:evm="clr-namespace:LogicSimulator.ViewModels.EditorViewModels"
     xmlns:local="clr-namespace:LogicSimulator.Views"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:viewModels="clr-namespace:LogicSimulator.ViewModels"
-    d:DataContext="{d:DesignInstance Type=viewModels:RectangleEditorViewModel}"
+    d:DataContext="{d:DesignInstance Type=evm:RectangleEditorViewModel}"
     d:DesignHeight="450"
     d:DesignWidth="400"
     mc:Ignorable="d">
@@ -32,7 +33,7 @@
         <TextBlock Text="Location:" />
         <controls:Vector2Box Vector="{Binding Path=Location}" />
         <TextBlock Text="Width:" />
-        <controls:NumberBox IsValueUndefined="True" Number="{Binding Path=Width}" />
+        <controls:NumberBox IsValueUndefined="{Binding Path=UndefinedPropertiesMap[Width]}" Number="{Binding Path=Width}" />
         <TextBlock Text="Height:" />
         <controls:NumberBox Number="{Binding Path=Height}" />
         <TextBlock Text="StrokeThickness:" />
