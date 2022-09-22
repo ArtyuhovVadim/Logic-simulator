@@ -5,6 +5,7 @@ using System.Linq;
 using System.Runtime.CompilerServices;
 using LogicSimulator.Scene;
 using LogicSimulator.Scene.SceneObjects.Base;
+using SharpDX;
 
 namespace LogicSimulator.ViewModels.EditorViewModels.Base;
 
@@ -23,6 +24,8 @@ public abstract class BaseEditorViewModel<T> : AbstractEditorViewModel where T :
     #endregion
 
     public Dictionary<string, bool> UndefinedPropertiesMap { get; } = new();
+
+    private readonly List<string> _propertyNames = new();
 
     private T FirstObject { get; set; }
 
@@ -57,15 +60,27 @@ public abstract class BaseEditorViewModel<T> : AbstractEditorViewModel where T :
 
         if (!UndefinedPropertiesMap.Any())
         {
+            var a = typeof(T).GetProperties().Where(x => Attribute.IsDefined(x, typeof(EditableAttribute)));
+
             foreach (var prop in typeof(T).GetProperties().Where(x => Attribute.IsDefined(x, typeof(EditableAttribute))))
             {
-                UndefinedPropertiesMap.Add(prop.Name, false);
+                if (prop.PropertyType == typeof(Vector2))
+                {
+                    UndefinedPropertiesMap.Add(prop.Name + "X", false);
+                    UndefinedPropertiesMap.Add(prop.Name + "Y", false);
+                }
+                else
+                {
+                    UndefinedPropertiesMap.Add(prop.Name, false);
+                }
+
+                _propertyNames.Add(prop.Name);
             }
         }
 
-        foreach (var key in UndefinedPropertiesMap.Keys)
+        foreach (var propName in _propertyNames)
         {
-            OnPropertyChanged(key);
+            OnPropertyChanged(propName);
         }
 
         OnPropertyChanged(nameof(UndefinedPropertiesMap));
@@ -75,7 +90,15 @@ public abstract class BaseEditorViewModel<T> : AbstractEditorViewModel where T :
     {
         var propInfo = typeof(T).GetProperty(propertyName!)!;
 
-        UndefinedPropertiesMap[propertyName] = Objects.Any(o => !Equals(propInfo.GetValue(o), propInfo.GetValue(FirstObject)));
+        if (propInfo.PropertyType == typeof(Vector2))
+        {
+            UndefinedPropertiesMap[propertyName + "X"] = Objects.Any(o => !MathUtil.NearEqual(((Vector2)propInfo.GetValue(o)!).X, ((Vector2)propInfo.GetValue(FirstObject)!).X));
+            UndefinedPropertiesMap[propertyName + "Y"] = Objects.Any(o => !MathUtil.NearEqual(((Vector2)propInfo.GetValue(o)!).Y, ((Vector2)propInfo.GetValue(FirstObject)!).Y));
+        }
+        else
+        {
+            UndefinedPropertiesMap[propertyName] = Objects.Any(o => !Equals(propInfo.GetValue(o), propInfo.GetValue(FirstObject)));
+        }
 
         OnPropertyChanged(nameof(UndefinedPropertiesMap));
 
@@ -84,9 +107,26 @@ public abstract class BaseEditorViewModel<T> : AbstractEditorViewModel where T :
 
     protected void Set<TProp>(TProp value, [CallerMemberName] string propertyName = null)
     {
-        if (UndefinedPropertiesMap[propertyName!]) return;
-
         var propInfo = typeof(T).GetProperty(propertyName!)!;
+
+        if (propInfo.PropertyType == typeof(Vector2))
+        {
+            var newVec = (Vector2)(object)value;
+
+            foreach (var o in Objects)
+            {
+                var oldVec = (Vector2)propInfo.GetValue(o)!;
+
+                if (!UndefinedPropertiesMap[propertyName! + "X"]) oldVec.X = newVec.X;
+                if (!UndefinedPropertiesMap[propertyName! + "Y"]) oldVec.Y = newVec.Y;
+
+                propInfo.SetValue(o, oldVec);
+            }
+
+            return;
+        }
+
+        if (UndefinedPropertiesMap[propertyName!]) return;
 
         foreach (var o in Objects)
         {

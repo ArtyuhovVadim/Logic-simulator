@@ -1,10 +1,21 @@
 ﻿using LogicSimulator.ViewModels.EditorViewModels.Base;
+using SharpDX;
 using Rectangle = LogicSimulator.Scene.SceneObjects.Rectangle;
 
 namespace LogicSimulator.ViewModels.EditorViewModels;
 
 public class RectangleEditorViewModel : BaseEditorViewModel<Rectangle>
 {
+    #region Location
+
+    public Vector2 Location
+    {
+        get => Get<Vector2>();
+        set => Set(value);
+    }
+
+    #endregion
+
     #region Width
 
     public float Width

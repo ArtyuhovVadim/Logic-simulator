@@ -26,7 +26,10 @@
     <UniformGrid VerticalAlignment="Top" Columns="2">
         <UniformGrid.Resources />
         <TextBlock Text="Location:" />
-        <controls:Vector2Box />
+        <controls:Vector2Box
+            IsVectorXUndefined="{Binding Path=UndefinedPropertiesMap[LocationX]}"
+            IsVectorYUndefined="{Binding Path=UndefinedPropertiesMap[LocationY]}"
+            Vector="{Binding Path=Location}" />
         <TextBlock Text="Width:" />
         <controls:NumberBox IsValueUndefined="{Binding Path=UndefinedPropertiesMap[Width]}" Number="{Binding Path=Width}" />
         <TextBlock Text="Height:" />
