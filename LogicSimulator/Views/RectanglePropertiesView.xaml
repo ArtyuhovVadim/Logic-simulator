@@ -5,9 +5,7 @@
     xmlns:controls="clr-namespace:LogicSimulator.Controls;assembly=LogicSimulator.Controls"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:evm="clr-namespace:LogicSimulator.ViewModels.EditorViewModels"
-    xmlns:local="clr-namespace:LogicSimulator.Views"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    xmlns:viewModels="clr-namespace:LogicSimulator.ViewModels"
     d:DataContext="{d:DesignInstance Type=evm:RectangleEditorViewModel}"
     d:DesignHeight="450"
     d:DesignWidth="400"
@@ -25,18 +23,21 @@
             <Setter Property="SelectAllTextOnFocus" Value="True" />
         </Style>
     </UserControl.Resources>
-    <UniformGrid
-        VerticalAlignment="Top"
-        Columns="2"
-        Rows="4">
+    <UniformGrid VerticalAlignment="Top" Columns="2">
         <UniformGrid.Resources />
         <TextBlock Text="Location:" />
-        <controls:Vector2Box Vector="{Binding Path=Location}" />
+        <controls:Vector2Box />
         <TextBlock Text="Width:" />
         <controls:NumberBox IsValueUndefined="{Binding Path=UndefinedPropertiesMap[Width]}" Number="{Binding Path=Width}" />
         <TextBlock Text="Height:" />
         <controls:NumberBox IsValueUndefined="{Binding Path=UndefinedPropertiesMap[Height]}" Number="{Binding Path=Height}" />
         <TextBlock Text="StrokeThickness:" />
         <controls:NumberBox IsValueUndefined="{Binding Path=UndefinedPropertiesMap[StrokeThickness]}" Number="{Binding Path=StrokeThickness}" />
+        <TextBlock Text="StrokeColor:" />
+        <controls:NumberBox />
+        <TextBlock Text="IsFilled:" />
+        <controls:NumberBox />
+        <TextBlock Text="FillColor:" />
+        <controls:NumberBox />
     </UniformGrid>
 </UserControl>
