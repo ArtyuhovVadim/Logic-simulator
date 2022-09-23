@@ -54,15 +54,20 @@
                                FallbackValue=''}" />
         </StatusBar>
 
-        <Grid Margin="10" Width="200" VerticalAlignment="Top">
+        <Grid
+            Width="200"
+            Margin="10"
+            VerticalAlignment="Top">
             <TextBox
                 HorizontalAlignment="Left"
                 VerticalAlignment="Center"
                 Text="12312312" />
             <c:ColorPicker
+                IsValueUndefined="True"
                 Margin="70,0,0,0"
                 HorizontalAlignment="Left"
-                VerticalAlignment="Center" />
+                VerticalAlignment="Center"
+                Color="{Binding Path=Color}" />
         </Grid>
 
         <DockingManager
