@@ -209,7 +209,10 @@
                             Grid.Row="0"
                             Margin="1,0"
                             Panel.ZIndex="1"
-                            Visibility="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type LayoutDocumentPaneControl}}, Path=Model.ShowHeader, Converter={BoolToVisibilityConverter}}">
+                            Visibility="{Binding RelativeSource={RelativeSource Mode=FindAncestor,
+                                                                                AncestorType={x:Type LayoutDocumentPaneControl}},
+                                                 Path=Model.ShowHeader,
+                                                 Converter={BoolToVisibilityConverter}}">
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition />
                                 <ColumnDefinition Width="Auto" />
@@ -331,8 +334,10 @@
                                         UseLayoutRounding="True" />
                                     <ContentPresenter
                                         x:Name="Content"
-                                        HorizontalAlignment="{Binding HorizontalContentAlignment, RelativeSource={RelativeSource AncestorType={x:Type ItemsControl}}}"
-                                        VerticalAlignment="{Binding VerticalContentAlignment, RelativeSource={RelativeSource AncestorType={x:Type ItemsControl}}}"
+                                        HorizontalAlignment="{Binding HorizontalContentAlignment,
+                                                                      RelativeSource={RelativeSource AncestorType={x:Type ItemsControl}}}"
+                                        VerticalAlignment="{Binding VerticalContentAlignment,
+                                                                    RelativeSource={RelativeSource AncestorType={x:Type ItemsControl}}}"
                                         ContentSource="Header"
                                         RecognizesAccessKey="True"
                                         SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" />
@@ -491,8 +496,10 @@
                                         <ContentPresenter
                                             x:Name="Content"
                                             Margin="7,4"
-                                            HorizontalAlignment="{Binding HorizontalContentAlignment, RelativeSource={RelativeSource AncestorType={x:Type ItemsControl}}}"
-                                            VerticalAlignment="{Binding VerticalContentAlignment, RelativeSource={RelativeSource AncestorType={x:Type ItemsControl}}}"
+                                            HorizontalAlignment="{Binding HorizontalContentAlignment,
+                                                                          RelativeSource={RelativeSource AncestorType={x:Type ItemsControl}}}"
+                                            VerticalAlignment="{Binding VerticalContentAlignment,
+                                                                        RelativeSource={RelativeSource AncestorType={x:Type ItemsControl}}}"
                                             ContentSource="Header"
                                             RecognizesAccessKey="True"
                                             SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" />
@@ -596,14 +603,19 @@
                                     HorizontalAlignment="Left"
                                     Background="{TemplateBinding Background}">
                                     <DropDownControlArea
-                                        DropDownContextMenu="{Binding Model.Root.Manager.AnchorableContextMenu, RelativeSource={RelativeSource TemplatedParent}}"
-                                        DropDownContextMenuDataContext="{Binding Path=LayoutItem, RelativeSource={RelativeSource TemplatedParent}}"
+                                        DropDownContextMenu="{Binding Model.Root.Manager.AnchorableContextMenu,
+                                                                      RelativeSource={RelativeSource TemplatedParent}}"
+                                        DropDownContextMenuDataContext="{Binding Path=LayoutItem,
+                                                                                 RelativeSource={RelativeSource TemplatedParent}}"
                                         Style="{DynamicResource DropDownControlArea}">
                                         <ContentPresenter
                                             x:Name="Header"
-                                            Content="{Binding Model, RelativeSource={RelativeSource TemplatedParent}}"
-                                            ContentTemplate="{Binding Model.Root.Manager.AnchorableTitleTemplate, RelativeSource={RelativeSource TemplatedParent}}"
-                                            ContentTemplateSelector="{Binding Model.Root.Manager.AnchorableTitleTemplateSelector, RelativeSource={RelativeSource TemplatedParent}}"
+                                            Content="{Binding Model,
+                                                              RelativeSource={RelativeSource TemplatedParent}}"
+                                            ContentTemplate="{Binding Model.Root.Manager.AnchorableTitleTemplate,
+                                                                      RelativeSource={RelativeSource TemplatedParent}}"
+                                            ContentTemplateSelector="{Binding Model.Root.Manager.AnchorableTitleTemplateSelector,
+                                                                              RelativeSource={RelativeSource TemplatedParent}}"
                                             TextElement.FontWeight="Bold"
                                             TextElement.Foreground="{TemplateBinding Foreground}" />
                                     </DropDownControlArea>
@@ -617,8 +629,10 @@
                                 Margin="0"
                                 HorizontalAlignment="Center"
                                 VerticalAlignment="Center"
-                                DropDownContextMenu="{Binding Model.Root.Manager.AnchorableContextMenu, RelativeSource={RelativeSource TemplatedParent}}"
-                                DropDownContextMenuDataContext="{Binding Path=LayoutItem, RelativeSource={RelativeSource TemplatedParent}}"
+                                DropDownContextMenu="{Binding Model.Root.Manager.AnchorableContextMenu,
+                                                              RelativeSource={RelativeSource TemplatedParent}}"
+                                DropDownContextMenuDataContext="{Binding Path=LayoutItem,
+                                                                         RelativeSource={RelativeSource TemplatedParent}}"
                                 Focusable="False"
                                 Style="{StaticResource AvalonDockThemeVs2013ToolButtonStyle}"
                                 ToolTip="{x:Static avalonDockProperties:Resources.Anchorable_CxMenu_Hint}">
@@ -640,11 +654,15 @@
                                 Margin="0"
                                 HorizontalAlignment="Center"
                                 VerticalAlignment="Center"
-                                Command="{Binding Path=LayoutItem.AutoHideCommand, RelativeSource={RelativeSource TemplatedParent}}"
+                                Command="{Binding Path=LayoutItem.AutoHideCommand,
+                                                  RelativeSource={RelativeSource TemplatedParent}}"
                                 Focusable="False"
                                 Style="{StaticResource AvalonDockThemeVs2013ButtonStyle}"
                                 ToolTip="{x:Static avalonDockProperties:Resources.Anchorable_BtnAutoHide_Hint}"
-                                Visibility="{Binding Path=IsEnabled, RelativeSource={RelativeSource Self}, Mode=OneWay, Converter={BoolToVisibilityConverter}}">
+                                Visibility="{Binding Path=IsEnabled,
+                                                     RelativeSource={RelativeSource Self},
+                                                     Mode=OneWay,
+                                                     Converter={BoolToVisibilityConverter}}">
                                 <Path
                                     x:Name="PART_ImgAutoHidePin"
                                     Width="8"
@@ -665,11 +683,15 @@
                                 Margin="0"
                                 HorizontalAlignment="Center"
                                 VerticalAlignment="Center"
-                                Command="{Binding Path=LayoutItem.HideCommand, RelativeSource={RelativeSource TemplatedParent}}"
+                                Command="{Binding Path=LayoutItem.HideCommand,
+                                                  RelativeSource={RelativeSource TemplatedParent}}"
                                 Focusable="False"
                                 Style="{StaticResource AvalonDockThemeVs2013ButtonStyle}"
                                 ToolTip="{x:Static avalonDockProperties:Resources.Anchorable_BtnClose_Hint}"
-                                Visibility="{Binding Path=IsEnabled, RelativeSource={RelativeSource Self}, Mode=OneWay, Converter={BoolToVisibilityConverter}}">
+                                Visibility="{Binding Path=IsEnabled,
+                                                     RelativeSource={RelativeSource Self},
+                                                     Mode=OneWay,
+                                                     Converter={BoolToVisibilityConverter}}">
                                 <Path
                                     x:Name="PART_ImgHidePin"
                                     Width="7"
@@ -797,7 +819,10 @@
                     <StackPanel
                         MinWidth="6"
                         MinHeight="6"
-                        Orientation="{Binding Path=Model.Side, RelativeSource={RelativeSource AncestorType={x:Type LayoutAnchorSideControl}, Mode=FindAncestor}, Converter={AnchorSideToOrientationConverter}}" />
+                        Orientation="{Binding Path=Model.Side,
+                                              RelativeSource={RelativeSource AncestorType={x:Type LayoutAnchorSideControl},
+                                                                             Mode=FindAncestor},
+                                              Converter={AnchorSideToOrientationConverter}}" />
                 </ItemsPanelTemplate>
             </ItemsControl.ItemsPanel>
         </ItemsControl>
@@ -828,9 +853,16 @@
             TextElement.Foreground="{DynamicResource {x:Static r:AvalonDockResourceKeys.AutoHideTabDefaultText}}"
             TextOptions.TextFormattingMode="Display">
             <ContentPresenter
-                Content="{Binding Model, RelativeSource={RelativeSource TemplatedParent}}"
-                ContentTemplate="{Binding AnchorableHeaderTemplate, Mode=OneWay, RelativeSource={RelativeSource AncestorType={x:Type DockingManager}, Mode=FindAncestor}}"
-                ContentTemplateSelector="{Binding AnchorableHeaderTemplateSelector, Mode=OneWay, RelativeSource={RelativeSource AncestorType={x:Type DockingManager}, Mode=FindAncestor}}" />
+                Content="{Binding Model,
+                                  RelativeSource={RelativeSource TemplatedParent}}"
+                ContentTemplate="{Binding AnchorableHeaderTemplate,
+                                          Mode=OneWay,
+                                          RelativeSource={RelativeSource AncestorType={x:Type DockingManager},
+                                                                         Mode=FindAncestor}}"
+                ContentTemplateSelector="{Binding AnchorableHeaderTemplateSelector,
+                                                  Mode=OneWay,
+                                                  RelativeSource={RelativeSource AncestorType={x:Type DockingManager},
+                                                                                 Mode=FindAncestor}}" />
         </Border>
         <ControlTemplate.Triggers>
             <!--<Trigger Property="Side" Value="Right">
@@ -1267,14 +1299,20 @@
         <MenuItem
             Command="{Binding Path=HideCommand}"
             Header="{x:Static avalonDockProperties:Resources.Anchorable_Hide}"
-            Visibility="{Binding Path=IsEnabled, RelativeSource={RelativeSource Self}, Mode=OneWay, Converter={BoolToVisibilityConverter}}" />
+            Visibility="{Binding Path=IsEnabled,
+                                 RelativeSource={RelativeSource Self},
+                                 Mode=OneWay,
+                                 Converter={BoolToVisibilityConverter}}" />
     </ContextMenu>
 
     <ContextMenu x:Key="AvalonDockThemeVs2013DocumentContextMenu">
         <MenuItem
             Command="{Binding Path=CloseCommand}"
             Header="{x:Static avalonDockProperties:Resources.Document_Close}"
-            Visibility="{Binding Path=IsEnabled, RelativeSource={RelativeSource Self}, Mode=OneWay, Converter={BoolToVisibilityConverter}}" />
+            Visibility="{Binding Path=IsEnabled,
+                                 RelativeSource={RelativeSource Self},
+                                 Mode=OneWay,
+                                 Converter={BoolToVisibilityConverter}}" />
         <MenuItem Command="{Binding Path=CloseAllButThisCommand}" Header="{x:Static avalonDockProperties:Resources.Document_CloseAllButThis}" />
         <MenuItem Command="{Binding Path=CloseAllCommand}" Header="{x:Static avalonDockProperties:Resources.Document_CloseAll}" />
         <MenuItem Command="{Binding Path=FloatCommand}" Header="{x:Static avalonDockProperties:Resources.Document_Float}" />
@@ -1282,7 +1320,10 @@
         <MenuItem
             Command="{Binding Path=NewHorizontalTabGroupCommand}"
             Header="{x:Static avalonDockProperties:Resources.Document_NewHorizontalTabGroup}"
-            Visibility="{Binding Path=IsEnabled, RelativeSource={RelativeSource Self}, Mode=OneWay, Converter={BoolToVisibilityConverter}}">
+            Visibility="{Binding Path=IsEnabled,
+                                 RelativeSource={RelativeSource Self},
+                                 Mode=OneWay,
+                                 Converter={BoolToVisibilityConverter}}">
             <MenuItem.Icon>
                 <Path
                     Width="14"
@@ -1297,7 +1338,10 @@
         <MenuItem
             Command="{Binding Path=NewVerticalTabGroupCommand}"
             Header="{x:Static avalonDockProperties:Resources.Document_NewVerticalTabGroup}"
-            Visibility="{Binding Path=IsEnabled, RelativeSource={RelativeSource Self}, Mode=OneWay, Converter={BoolToVisibilityConverter}}">
+            Visibility="{Binding Path=IsEnabled,
+                                 RelativeSource={RelativeSource Self},
+                                 Mode=OneWay,
+                                 Converter={BoolToVisibilityConverter}}">
             <MenuItem.Icon>
                 <Path
                     Width="14"
@@ -1311,11 +1355,17 @@
         <MenuItem
             Command="{Binding Path=MoveToNextTabGroupCommand}"
             Header="{x:Static avalonDockProperties:Resources.Document_MoveToNextTabGroup}"
-            Visibility="{Binding Path=IsEnabled, RelativeSource={RelativeSource Self}, Mode=OneWay, Converter={BoolToVisibilityConverter}}" />
+            Visibility="{Binding Path=IsEnabled,
+                                 RelativeSource={RelativeSource Self},
+                                 Mode=OneWay,
+                                 Converter={BoolToVisibilityConverter}}" />
         <MenuItem
             Command="{Binding Path=MoveToPreviousTabGroupCommand}"
             Header="{x:Static avalonDockProperties:Resources.Document_MoveToPreviousTabGroup}"
-            Visibility="{Binding Path=IsEnabled, RelativeSource={RelativeSource Self}, Mode=OneWay, Converter={BoolToVisibilityConverter}}" />
+            Visibility="{Binding Path=IsEnabled,
+                                 RelativeSource={RelativeSource Self},
+                                 Mode=OneWay,
+                                 Converter={BoolToVisibilityConverter}}" />
     </ContextMenu>
 
     <!--  DockingManager  -->
@@ -1421,7 +1471,8 @@
                 <ControlTemplate TargetType="{x:Type LayoutDocumentTabItem}">
                     <DropDownControlArea
                         DropDownContextMenu="{Binding Root.Manager.DocumentContextMenu}"
-                        DropDownContextMenuDataContext="{Binding LayoutItem, RelativeSource={RelativeSource TemplatedParent}}"
+                        DropDownContextMenuDataContext="{Binding LayoutItem,
+                                                                 RelativeSource={RelativeSource TemplatedParent}}"
                         Style="{DynamicResource DropDownControlArea}">
                         <Border
                             x:Name="Header"
@@ -1438,11 +1489,20 @@
                                 <ContentPresenter
                                     Margin="8,4"
                                     VerticalAlignment="Bottom"
-                                    Content="{Binding Model, RelativeSource={RelativeSource TemplatedParent}}"
-                                    ContentTemplate="{Binding DocumentHeaderTemplate, Mode=OneWay, RelativeSource={RelativeSource AncestorType={x:Type DockingManager}, Mode=FindAncestor}}"
-                                    ContentTemplateSelector="{Binding DocumentHeaderTemplateSelector, Mode=OneWay, RelativeSource={RelativeSource AncestorType={x:Type DockingManager}, Mode=FindAncestor}}"
+                                    Content="{Binding Model,
+                                                      RelativeSource={RelativeSource TemplatedParent}}"
+                                    ContentTemplate="{Binding DocumentHeaderTemplate,
+                                                              Mode=OneWay,
+                                                              RelativeSource={RelativeSource AncestorType={x:Type DockingManager},
+                                                                                             Mode=FindAncestor}}"
+                                    ContentTemplateSelector="{Binding DocumentHeaderTemplateSelector,
+                                                                      Mode=OneWay,
+                                                                      RelativeSource={RelativeSource AncestorType={x:Type DockingManager},
+                                                                                                     Mode=FindAncestor}}"
                                     TextBlock.FontSize="11"
-                                    TextBlock.Foreground="{Binding Foreground, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=TabItem}}" />
+                                    TextBlock.Foreground="{Binding Foreground,
+                                                                   RelativeSource={RelativeSource Mode=FindAncestor,
+                                                                                                  AncestorType=TabItem}}" />
 
                                 <!--  Close button should be moved out to the container style  -->
                                 <Button
@@ -1451,7 +1511,8 @@
                                     Margin="0,0,3,0"
                                     HorizontalAlignment="Center"
                                     VerticalAlignment="Center"
-                                    Command="{Binding Path=LayoutItem.CloseCommand, RelativeSource={RelativeSource TemplatedParent}}"
+                                    Command="{Binding Path=LayoutItem.CloseCommand,
+                                                      RelativeSource={RelativeSource TemplatedParent}}"
                                     Style="{StaticResource AvalonDockThemeVs2013ButtonStyle}"
                                     ToolTip="{x:Static avalonDockProperties:Resources.Document_Close}"
                                     Visibility="Collapsed">
@@ -1607,7 +1668,8 @@
                 <ControlTemplate TargetType="{x:Type LayoutAnchorableTabItem}">
                     <DropDownControlArea
                         DropDownContextMenu="{Binding Root.Manager.AnchorableContextMenu}"
-                        DropDownContextMenuDataContext="{Binding LayoutItem, RelativeSource={RelativeSource TemplatedParent}}"
+                        DropDownContextMenuDataContext="{Binding LayoutItem,
+                                                                 RelativeSource={RelativeSource TemplatedParent}}"
                         Style="{DynamicResource DropDownControlArea}">
                         <Border
                             Background="{TemplateBinding Background}"
@@ -1615,13 +1677,22 @@
                             BorderThickness="{TemplateBinding BorderThickness}">
                             <Grid>
                                 <ContentPresenter
-                                    Content="{Binding Model, RelativeSource={RelativeSource TemplatedParent}}"
-                                    ContentTemplate="{Binding AnchorableHeaderTemplate, Mode=OneWay, RelativeSource={RelativeSource AncestorType={x:Type DockingManager}, Mode=FindAncestor}}"
-                                    ContentTemplateSelector="{Binding AnchorableHeaderTemplateSelector, Mode=OneWay, RelativeSource={RelativeSource AncestorType={x:Type DockingManager}, Mode=FindAncestor}}" />
+                                    Content="{Binding Model,
+                                                      RelativeSource={RelativeSource TemplatedParent}}"
+                                    ContentTemplate="{Binding AnchorableHeaderTemplate,
+                                                              Mode=OneWay,
+                                                              RelativeSource={RelativeSource AncestorType={x:Type DockingManager},
+                                                                                             Mode=FindAncestor}}"
+                                    ContentTemplateSelector="{Binding AnchorableHeaderTemplateSelector,
+                                                                      Mode=OneWay,
+                                                                      RelativeSource={RelativeSource AncestorType={x:Type DockingManager},
+                                                                                                     Mode=FindAncestor}}" />
                                 <DropDownControlArea
                                     Grid.Column="0"
-                                    DropDownContextMenu="{Binding Model.Root.Manager.AnchorableContextMenu, RelativeSource={RelativeSource TemplatedParent}}"
-                                    DropDownContextMenuDataContext="{Binding Path=Model, RelativeSource={RelativeSource TemplatedParent}}" />
+                                    DropDownContextMenu="{Binding Model.Root.Manager.AnchorableContextMenu,
+                                                                  RelativeSource={RelativeSource TemplatedParent}}"
+                                    DropDownContextMenuDataContext="{Binding Path=Model,
+                                                                             RelativeSource={RelativeSource TemplatedParent}}" />
                             </Grid>
                         </Border>
                     </DropDownControlArea>
@@ -1653,9 +1724,12 @@
                             -->
                             <ContentPresenter
                                 Grid.Row="1"
-                                Content="{Binding LayoutItem.View, RelativeSource={RelativeSource TemplatedParent}}"
-                                ContentTemplate="{Binding LayoutItem.View.ContentTemplate, RelativeSource={RelativeSource TemplatedParent}}"
-                                ContentTemplateSelector="{Binding LayoutItem.View.ContentTemplateSelector, RelativeSource={RelativeSource TemplatedParent}}"
+                                Content="{Binding LayoutItem.View,
+                                                  RelativeSource={RelativeSource TemplatedParent}}"
+                                ContentTemplate="{Binding LayoutItem.View.ContentTemplate,
+                                                          RelativeSource={RelativeSource TemplatedParent}}"
+                                ContentTemplateSelector="{Binding LayoutItem.View.ContentTemplateSelector,
+                                                                  RelativeSource={RelativeSource TemplatedParent}}"
                                 FlowDirection="{TemplateBinding FlowDirection}" />
 
                             <!--
@@ -1765,9 +1839,12 @@
                                         <ContentPresenter
                                             x:Name="HeaderContent"
                                             Margin="12,4,12,0"
-                                            Content="{Binding Model.SinglePane.SelectedContent, RelativeSource={RelativeSource TemplatedParent}}"
-                                            ContentTemplate="{Binding Model.Root.Manager.DocumentTitleTemplate, RelativeSource={RelativeSource TemplatedParent}}"
-                                            ContentTemplateSelector="{Binding Model.Root.Manager.DocumentTitleTemplateSelector, RelativeSource={RelativeSource TemplatedParent}}"
+                                            Content="{Binding Model.SinglePane.SelectedContent,
+                                                              RelativeSource={RelativeSource TemplatedParent}}"
+                                            ContentTemplate="{Binding Model.Root.Manager.DocumentTitleTemplate,
+                                                                      RelativeSource={RelativeSource TemplatedParent}}"
+                                            ContentTemplateSelector="{Binding Model.Root.Manager.DocumentTitleTemplateSelector,
+                                                                              RelativeSource={RelativeSource TemplatedParent}}"
                                             TextElement.Foreground="{DynamicResource {x:Static r:AvalonDockResourceKeys.DocumentWellTabSelectedInactiveText}}" />
 
                                         <Button
@@ -1782,7 +1859,9 @@
                                             Focusable="False"
                                             Style="{StaticResource AvalonDockThemeVs2013ButtonStyle}"
                                             ToolTip="{x:Static avalonDockProperties:Resources.Window_Maximize}"
-                                            Visibility="{Binding IsMaximized, RelativeSource={RelativeSource TemplatedParent}, Converter={InverseBoolToVisibilityConverter}}">
+                                            Visibility="{Binding IsMaximized,
+                                                                 RelativeSource={RelativeSource TemplatedParent},
+                                                                 Converter={InverseBoolToVisibilityConverter}}">
                                             <Path
                                                 x:Name="PART_ImgPinMaximize"
                                                 Width="9"
@@ -1806,7 +1885,9 @@
                                             Focusable="False"
                                             Style="{StaticResource AvalonDockThemeVs2013ButtonStyle}"
                                             ToolTip="{x:Static avalonDockProperties:Resources.Window_Restore}"
-                                            Visibility="{Binding IsMaximized, RelativeSource={RelativeSource TemplatedParent}, Converter={BoolToVisibilityConverter}}">
+                                            Visibility="{Binding IsMaximized,
+                                                                 RelativeSource={RelativeSource TemplatedParent},
+                                                                 Converter={BoolToVisibilityConverter}}">
                                             <Path
                                                 x:Name="PART_ImgPinRestore"
                                                 Width="10"
@@ -1824,11 +1905,15 @@
                                             Height="26"
                                             VerticalAlignment="Top"
                                             shell:WindowChrome.IsHitTestVisibleInChrome="True"
-                                            Command="{Binding Path=CloseWindowCommand, RelativeSource={RelativeSource TemplatedParent}}"
+                                            Command="{Binding Path=CloseWindowCommand,
+                                                              RelativeSource={RelativeSource TemplatedParent}}"
                                             Focusable="False"
                                             Style="{StaticResource AvalonDockThemeVs2013ButtonStyle}"
                                             ToolTip="{x:Static avalonDockProperties:Resources.Document_Close}"
-                                            Visibility="{Binding Path=IsEnabled, RelativeSource={RelativeSource Self}, Mode=OneWay, Converter={BoolToVisibilityConverter}}">
+                                            Visibility="{Binding Path=IsEnabled,
+                                                                 RelativeSource={RelativeSource Self},
+                                                                 Mode=OneWay,
+                                                                 Converter={BoolToVisibilityConverter}}">
                                             <Path
                                                 x:Name="PART_ImgPinClose"
                                                 Width="10"
@@ -2044,15 +2129,22 @@
                                             <Border
                                                 Padding="2,0,4,0"
                                                 HorizontalAlignment="Left"
-                                                Visibility="{Binding Path=Model.IsSinglePane, RelativeSource={RelativeSource TemplatedParent}, Converter={BoolToVisibilityConverter}}">
+                                                Visibility="{Binding Path=Model.IsSinglePane,
+                                                                     RelativeSource={RelativeSource TemplatedParent},
+                                                                     Converter={BoolToVisibilityConverter}}">
                                                 <DropDownControlArea
-                                                    DropDownContextMenu="{Binding Model.Root.Manager.AnchorableContextMenu, RelativeSource={RelativeSource TemplatedParent}}"
-                                                    DropDownContextMenuDataContext="{Binding Path=SingleContentLayoutItem, RelativeSource={RelativeSource TemplatedParent}}"
+                                                    DropDownContextMenu="{Binding Model.Root.Manager.AnchorableContextMenu,
+                                                                                  RelativeSource={RelativeSource TemplatedParent}}"
+                                                    DropDownContextMenuDataContext="{Binding Path=SingleContentLayoutItem,
+                                                                                             RelativeSource={RelativeSource TemplatedParent}}"
                                                     Style="{DynamicResource DropDownControlArea}">
                                                     <ContentPresenter
-                                                        Content="{Binding Model.SinglePane.SelectedContent, RelativeSource={RelativeSource TemplatedParent}}"
-                                                        ContentTemplate="{Binding Model.Root.Manager.AnchorableTitleTemplate, RelativeSource={RelativeSource TemplatedParent}}"
-                                                        ContentTemplateSelector="{Binding Model.Root.Manager.AnchorableTitleTemplateSelector, RelativeSource={RelativeSource TemplatedParent}}" />
+                                                        Content="{Binding Model.SinglePane.SelectedContent,
+                                                                          RelativeSource={RelativeSource TemplatedParent}}"
+                                                        ContentTemplate="{Binding Model.Root.Manager.AnchorableTitleTemplate,
+                                                                                  RelativeSource={RelativeSource TemplatedParent}}"
+                                                        ContentTemplateSelector="{Binding Model.Root.Manager.AnchorableTitleTemplateSelector,
+                                                                                          RelativeSource={RelativeSource TemplatedParent}}" />
                                                 </DropDownControlArea>
                                             </Border>
 
@@ -2096,12 +2188,16 @@
                                             HorizontalAlignment="Center"
                                             VerticalAlignment="Center"
                                             shell:WindowChrome.IsHitTestVisibleInChrome="True"
-                                            DropDownContextMenu="{Binding Model.Root.Manager.AnchorableContextMenu, RelativeSource={RelativeSource TemplatedParent}}"
-                                            DropDownContextMenuDataContext="{Binding Path=SingleContentLayoutItem, RelativeSource={RelativeSource TemplatedParent}}"
+                                            DropDownContextMenu="{Binding Model.Root.Manager.AnchorableContextMenu,
+                                                                          RelativeSource={RelativeSource TemplatedParent}}"
+                                            DropDownContextMenuDataContext="{Binding Path=SingleContentLayoutItem,
+                                                                                     RelativeSource={RelativeSource TemplatedParent}}"
                                             Focusable="False"
                                             Style="{StaticResource AvalonDockThemeVs2013ToolButtonStyle}"
                                             ToolTip="{x:Static avalonDockProperties:Resources.Anchorable_CxMenu_Hint}"
-                                            Visibility="{Binding Path=Model.IsSinglePane, RelativeSource={RelativeSource TemplatedParent}, Converter={BoolToVisibilityConverter}}">
+                                            Visibility="{Binding Path=Model.IsSinglePane,
+                                                                 RelativeSource={RelativeSource TemplatedParent},
+                                                                 Converter={BoolToVisibilityConverter}}">
                                             <Path
                                                 x:Name="PART_ImgPinMenu"
                                                 Width="8"
@@ -2126,7 +2222,9 @@
                                             Focusable="False"
                                             Style="{StaticResource AvalonDockThemeVs2013ButtonStyle}"
                                             ToolTip="{x:Static avalonDockProperties:Resources.Window_Maximize}"
-                                            Visibility="{Binding IsMaximized, RelativeSource={RelativeSource TemplatedParent}, Converter={InverseBoolToVisibilityConverter}}">
+                                            Visibility="{Binding IsMaximized,
+                                                                 RelativeSource={RelativeSource TemplatedParent},
+                                                                 Converter={InverseBoolToVisibilityConverter}}">
                                             <Path
                                                 x:Name="PART_ImgPinMaximize"
                                                 Width="9"
@@ -2151,7 +2249,9 @@
                                             Focusable="False"
                                             Style="{StaticResource AvalonDockThemeVs2013ButtonStyle}"
                                             ToolTip="{x:Static avalonDockProperties:Resources.Window_Restore}"
-                                            Visibility="{Binding IsMaximized, RelativeSource={RelativeSource TemplatedParent}, Converter={BoolToVisibilityConverter}}">
+                                            Visibility="{Binding IsMaximized,
+                                                                 RelativeSource={RelativeSource TemplatedParent},
+                                                                 Converter={BoolToVisibilityConverter}}">
                                             <Path
                                                 x:Name="PART_ImgPinRestore"
                                                 Width="10"
@@ -2172,11 +2272,15 @@
                                             HorizontalAlignment="Center"
                                             VerticalAlignment="Center"
                                             shell:WindowChrome.IsHitTestVisibleInChrome="True"
-                                            Command="{Binding HideWindowCommand, RelativeSource={RelativeSource TemplatedParent}}"
+                                            Command="{Binding HideWindowCommand,
+                                                              RelativeSource={RelativeSource TemplatedParent}}"
                                             Focusable="False"
                                             Style="{StaticResource AvalonDockThemeVs2013ButtonStyle}"
                                             ToolTip="{x:Static avalonDockProperties:Resources.Anchorable_BtnClose_Hint}"
-                                            Visibility="{Binding Path=IsEnabled, RelativeSource={RelativeSource Self}, Mode=OneWay, Converter={BoolToVisibilityConverter}}">
+                                            Visibility="{Binding Path=IsEnabled,
+                                                                 RelativeSource={RelativeSource Self},
+                                                                 Mode=OneWay,
+                                                                 Converter={BoolToVisibilityConverter}}">
                                             <Path
                                                 x:Name="PART_ImgPinClose"
                                                 Width="10"
@@ -2516,9 +2620,13 @@
                                             <ColumnDefinition />
                                         </Grid.ColumnDefinitions>
                                         <Image
-                                            Source="{Binding SelectedDocument.LayoutElement.IconSource, RelativeSource={RelativeSource TemplatedParent}, Converter={NullToDoNothingConverter}}"
+                                            Source="{Binding SelectedDocument.LayoutElement.IconSource,
+                                                             RelativeSource={RelativeSource TemplatedParent},
+                                                             Converter={NullToDoNothingConverter}}"
                                             Stretch="None"
-                                            Visibility="{Binding SelectedDocument.LayoutElement.IconSource, RelativeSource={RelativeSource TemplatedParent}, Converter={BoolToVisibilityConverter}}" />
+                                            Visibility="{Binding SelectedDocument.LayoutElement.IconSource,
+                                                                 RelativeSource={RelativeSource TemplatedParent},
+                                                                 Converter={BoolToVisibilityConverter}}" />
                                         <TextBlock
                                             x:Name="selectedElementTitle"
                                             Grid.Column="1"
@@ -2526,7 +2634,8 @@
                                             VerticalAlignment="Center"
                                             FontWeight="Bold"
                                             Foreground="{DynamicResource {x:Static r:AvalonDockResourceKeys.NavigatorWindowForeground}}"
-                                            Text="{Binding SelectedDocument.LayoutElement.Title, RelativeSource={RelativeSource TemplatedParent}}"
+                                            Text="{Binding SelectedDocument.LayoutElement.Title,
+                                                           RelativeSource={RelativeSource TemplatedParent}}"
                                             TextTrimming="CharacterEllipsis" />
                                     </Grid>
                                     <TextBlock
@@ -2565,7 +2674,8 @@
                                                 Background="Transparent"
                                                 ItemContainerStyle="{StaticResource AvalonDockThemeVs2013NavigatorWindowListBoxItemStyle}"
                                                 ItemsSource="{Binding Anchorables}"
-                                                SelectedItem="{Binding SelectedAnchorable, Mode=TwoWay}">
+                                                SelectedItem="{Binding SelectedAnchorable,
+                                                                       Mode=TwoWay}">
                                                 <ListBox.ItemTemplate>
                                                     <DataTemplate>
                                                         <Grid>
@@ -2603,7 +2713,8 @@
                                                 Background="Transparent"
                                                 ItemContainerStyle="{StaticResource AvalonDockThemeVs2013NavigatorWindowListBoxItemStyle}"
                                                 ItemsSource="{Binding Documents}"
-                                                SelectedItem="{Binding SelectedDocument, Mode=TwoWay}">
+                                                SelectedItem="{Binding SelectedDocument,
+                                                                       Mode=TwoWay}">
                                                 <ListBox.ItemTemplate>
                                                     <DataTemplate>
                                                         <Grid>
@@ -2634,7 +2745,8 @@
                                     <TextBlock
                                         VerticalAlignment="Center"
                                         Foreground="{DynamicResource {x:Static r:AvalonDockResourceKeys.NavigatorWindowForeground}}"
-                                        Text="{Binding SelectedDocument.LayoutElement.ToolTip, RelativeSource={RelativeSource TemplatedParent}}" />
+                                        Text="{Binding SelectedDocument.LayoutElement.ToolTip,
+                                                       RelativeSource={RelativeSource TemplatedParent}}" />
                                 </Grid>
                             </Grid>
                         </Border>

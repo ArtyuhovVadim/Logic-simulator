@@ -13,7 +13,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LogicSimulator.Scene", "Log
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Microsoft.Wpf.Interop.DirectX", "Microsoft.Wpf.Interop.DirectX\Microsoft.Wpf.Interop.DirectX.vcxproj", "{0DFED4DE-C1BF-4041-B08A-BA3A84C28EF6}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LogicSimulator.MathParser", "LogicSimulator.MathParser\LogicSimulator.MathParser.csproj", "{8C7A6C42-BABF-497E-A421-BBCA9C3A72CF}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LogicSimulator.MathParser", "LogicSimulator.MathParser\LogicSimulator.MathParser.csproj", "{8C7A6C42-BABF-497E-A421-BBCA9C3A72CF}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LogicSimulator.Extensions", "LogicSimulator.Extensions\LogicSimulator.Extensions.csproj", "{64E81F91-1585-4484-92E7-D4086B8F862A}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -97,6 +99,18 @@ Global
 		{8C7A6C42-BABF-497E-A421-BBCA9C3A72CF}.Release|x64.Build.0 = Release|Any CPU
 		{8C7A6C42-BABF-497E-A421-BBCA9C3A72CF}.Release|x86.ActiveCfg = Release|Any CPU
 		{8C7A6C42-BABF-497E-A421-BBCA9C3A72CF}.Release|x86.Build.0 = Release|Any CPU
+		{64E81F91-1585-4484-92E7-D4086B8F862A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{64E81F91-1585-4484-92E7-D4086B8F862A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{64E81F91-1585-4484-92E7-D4086B8F862A}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{64E81F91-1585-4484-92E7-D4086B8F862A}.Debug|x64.Build.0 = Debug|Any CPU
+		{64E81F91-1585-4484-92E7-D4086B8F862A}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{64E81F91-1585-4484-92E7-D4086B8F862A}.Debug|x86.Build.0 = Debug|Any CPU
+		{64E81F91-1585-4484-92E7-D4086B8F862A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{64E81F91-1585-4484-92E7-D4086B8F862A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{64E81F91-1585-4484-92E7-D4086B8F862A}.Release|x64.ActiveCfg = Release|Any CPU
+		{64E81F91-1585-4484-92E7-D4086B8F862A}.Release|x64.Build.0 = Release|Any CPU
+		{64E81F91-1585-4484-92E7-D4086B8F862A}.Release|x86.ActiveCfg = Release|Any CPU
+		{64E81F91-1585-4484-92E7-D4086B8F862A}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

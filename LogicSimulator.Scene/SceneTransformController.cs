@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Runtime.InteropServices;
 using System.Windows.Input;
-using LogicSimulator.Scene.ExtensionMethods;
+using LogicSimulator.Extensions;
 using SharpDX;
 
 namespace LogicSimulator.Scene;

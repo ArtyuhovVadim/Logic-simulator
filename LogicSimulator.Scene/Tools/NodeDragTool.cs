@@ -1,5 +1,5 @@
-﻿using LogicSimulator.Scene.Components;
-using LogicSimulator.Scene.ExtensionMethods;
+﻿using LogicSimulator.Extensions;
+using LogicSimulator.Scene.Components;
 using LogicSimulator.Scene.SceneObjects.Base;
 using LogicSimulator.Scene.Tools.Base;
 using SharpDX;

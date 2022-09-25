@@ -63,10 +63,10 @@
                 VerticalAlignment="Center"
                 Text="12312312" />
             <c:ColorPicker
-                IsValueUndefined="True"
                 Margin="70,0,0,0"
                 HorizontalAlignment="Left"
                 VerticalAlignment="Center"
+                IsValueUndefined="True"
                 Color="{Binding Path=Color}" />
         </Grid>
 

@@ -101,50 +101,56 @@
                                         <RowDefinition Height="Auto" />
                                         <RowDefinition Height="Auto" />
                                     </Grid.RowDefinitions>
-                                    <Border
-                                        Grid.Row="0"
-                                        Margin="5"
-                                        Background="Black"
-                                        CornerRadius="4">
-                                        <Rectangle RadiusX="3" RadiusY="3">
-                                            <Rectangle.Fill>
-                                                <LinearGradientBrush StartPoint="0,0" EndPoint="1,0">
-                                                    <LinearGradientBrush.GradientStops>
-                                                        <GradientStop Offset="0" Color="White" />
-                                                        <GradientStop Offset="1" Color="Red" />
-                                                    </LinearGradientBrush.GradientStops>
-                                                </LinearGradientBrush>
-                                            </Rectangle.Fill>
-                                            <Rectangle.OpacityMask>
-                                                <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
-                                                    <LinearGradientBrush.GradientStops>
-                                                        <GradientStop Offset="0" Color="#FFFFFFFF" />
-                                                        <GradientStop Offset="1" Color="#00000000" />
-                                                    </LinearGradientBrush.GradientStops>
-                                                </LinearGradientBrush>
-                                            </Rectangle.OpacityMask>
-                                        </Rectangle>
-                                    </Border>
+                                    <Grid Grid.Row="0" Margin="5">
+                                        <AdornerDecorator ClipToBounds="True">
+                                            <Border
+                                                x:Name="PART_SaturationBrightnessBorder"
+                                                Background="Black"
+                                                CornerRadius="4">
+                                                <Rectangle RadiusX="3" RadiusY="3">
+                                                    <Rectangle.Fill>
+                                                        <LinearGradientBrush StartPoint="0,0" EndPoint="1,0">
+                                                            <LinearGradientBrush.GradientStops>
+                                                                <GradientStop Offset="0" Color="White" />
+                                                                <GradientStop Offset="1" Color="Red" />
+                                                            </LinearGradientBrush.GradientStops>
+                                                        </LinearGradientBrush>
+                                                    </Rectangle.Fill>
+                                                    <Rectangle.OpacityMask>
+                                                        <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
+                                                            <LinearGradientBrush.GradientStops>
+                                                                <GradientStop Offset="0" Color="#FFFFFFFF" />
+                                                                <GradientStop Offset="1" Color="#00000000" />
+                                                            </LinearGradientBrush.GradientStops>
+                                                        </LinearGradientBrush>
+                                                    </Rectangle.OpacityMask>
+                                                </Rectangle>
+                                            </Border>
+                                        </AdornerDecorator>
+                                    </Grid>
                                     <Grid Grid.Row="1" Margin="5">
-                                        <Border
-                                            Height="8"
-                                            BorderBrush="#222222"
-                                            BorderThickness="1">
-                                            <Border.Background>
-                                                <LinearGradientBrush StartPoint="0.5,0" EndPoint="0.5,1">
-                                                    <LinearGradientBrush.RelativeTransform>
-                                                        <RotateTransform Angle="90" CenterX="0.5" CenterY="0.5" />
-                                                    </LinearGradientBrush.RelativeTransform>
-                                                    <GradientStop Offset="0" Color="Red" />
-                                                    <GradientStop Offset="0.1666" Color="Fuchsia" />
-                                                    <GradientStop Offset="0.3333" Color="Blue" />
-                                                    <GradientStop Offset="0.5" Color="Aqua" />
-                                                    <GradientStop Offset="0.6666" Color="Lime" />
-                                                    <GradientStop Offset="0.8333" Color="Yellow" />
-                                                    <GradientStop Offset="1" Color="Red" />
-                                                </LinearGradientBrush>
-                                            </Border.Background>
-                                        </Border>
+                                        <AdornerDecorator>
+                                            <Border
+                                                x:Name="PART_HuePickerBorder"
+                                                Height="8"
+                                                BorderBrush="#222222"
+                                                BorderThickness="1">
+                                                <Border.Background>
+                                                    <LinearGradientBrush StartPoint="0.5,0" EndPoint="0.5,1">
+                                                        <LinearGradientBrush.RelativeTransform>
+                                                            <RotateTransform Angle="90" CenterX="0.5" CenterY="0.5" />
+                                                        </LinearGradientBrush.RelativeTransform>
+                                                        <GradientStop Offset="0" Color="Red" />
+                                                        <GradientStop Offset="0.1666" Color="Fuchsia" />
+                                                        <GradientStop Offset="0.3333" Color="Blue" />
+                                                        <GradientStop Offset="0.5" Color="Aqua" />
+                                                        <GradientStop Offset="0.6666" Color="Lime" />
+                                                        <GradientStop Offset="0.8333" Color="Yellow" />
+                                                        <GradientStop Offset="1" Color="Red" />
+                                                    </LinearGradientBrush>
+                                                </Border.Background>
+                                            </Border>
+                                        </AdornerDecorator>
                                     </Grid>
                                     <Grid Grid.Row="2" Margin="5">
                                         <Grid.Resources>

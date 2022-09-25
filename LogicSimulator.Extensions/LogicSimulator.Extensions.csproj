@@ -1,0 +1,15 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+	<PropertyGroup>
+		<TargetFramework>net6.0-windows</TargetFramework>
+		<ImplicitUsings>enable</ImplicitUsings>
+		<UseWpf>true</UseWpf>
+		<Nullable>enable</Nullable>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<PackageReference Include="SharpDX" Version="4.2.0" />
+		<PackageReference Include="SharpDX.Mathematics" Version="4.2.0" />
+	</ItemGroup>
+
+</Project>

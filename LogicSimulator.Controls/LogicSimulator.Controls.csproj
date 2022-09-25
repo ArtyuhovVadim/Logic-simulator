@@ -16,6 +16,7 @@
 
     <ItemGroup>
         <ProjectReference Include="..\LogicSimulator.AvalonDock\LogicSimulator.AvalonDock.csproj" />
+        <ProjectReference Include="..\LogicSimulator.Extensions\LogicSimulator.Extensions.csproj" />
         <ProjectReference Include="..\LogicSimulator.MathParser\LogicSimulator.MathParser.csproj" />
     </ItemGroup>
 

@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Windows.Input;
-using LogicSimulator.Scene.ExtensionMethods;
+using LogicSimulator.Extensions;
 using LogicSimulator.Scene.SceneObjects.Base;
 using LogicSimulator.Scene.Tools.Base;
 using SharpDX;

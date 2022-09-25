@@ -14,7 +14,8 @@
     <scene:Scene2D
         Components="{Binding Path=Components}"
         Objects="{Binding Path=Objects}"
-        Scale="{Binding Path=Scale, Mode=OneWayToSource}"
+        Scale="{Binding Path=Scale,
+                        Mode=OneWayToSource}"
         Tools="{Binding Path=Tools}">
         <p:DataPiping.DataPipes>
             <p:DataPipeCollection>
