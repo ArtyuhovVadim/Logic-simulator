@@ -20,8 +20,4 @@
         <ProjectReference Include="..\LogicSimulator.MathParser\LogicSimulator.MathParser.csproj" />
     </ItemGroup>
 
-    <ItemGroup>
-      <Folder Include="Converters\" />
-    </ItemGroup>
-
 </Project>

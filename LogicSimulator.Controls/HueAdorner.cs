@@ -35,12 +35,16 @@ public class HueAdorner : Adorner
 
     #endregion
 
-    private readonly Pen _blackPen = new(Brushes.Black, 1);
+    private readonly Pen _blackPen = new(new SolidColorBrush(Color.FromRgb(34, 34, 34)), 1);
     private readonly SolidColorBrush _brush = new();
 
     private readonly UIElement _root;
 
-    public HueAdorner(UIElement adornedElement) : base(adornedElement) => _root = adornedElement;
+    public HueAdorner(UIElement adornedElement) : base(adornedElement)
+    {
+        IsHitTestVisible = false;
+        _root = adornedElement;
+    }
 
     protected override void OnRender(DrawingContext drawingContext)
     {
@@ -54,7 +58,7 @@ public class HueAdorner : Adorner
         var rect = new Rect(location, size);
         rect = new Rect(rect.Left - halfPenThickness, rect.Top - halfPenThickness, rect.Width + _blackPen.Thickness, rect.Height + _blackPen.Thickness);
 
-        _brush.Color = FromHsv(Hue, 1, 1);
+        _brush.Color = ColorHelper.ColorFromHsv(Hue, 1, 1);
 
         var guidelines = new GuidelineSet();
 
@@ -66,21 +70,5 @@ public class HueAdorner : Adorner
         drawingContext.PushGuidelineSet(guidelines);
 
         drawingContext.DrawRoundedRectangle(_brush, _blackPen, rect, 2, 2);
-    }
-
-    private static Color FromHsv(double h, double s, double v)
-    {
-        h.Clamp(0, 360);
-        s.Clamp(0, 1);
-        v.Clamp(0, 1);
-
-        byte F(double n)
-        {
-            var k = (n + h / 60) % 6;
-            var value = v - v * s * Math.Max(Math.Min(Math.Min(k, 4 - k), 1), 0);
-            return (byte)Math.Round(value * 255);
-        }
-
-        return Color.FromRgb(F(5), F(3), F(1));
     }
 }

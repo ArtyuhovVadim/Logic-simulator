@@ -55,19 +55,13 @@
         </StatusBar>
 
         <Grid
-            Width="200"
+            Width="0"
             Margin="10"
             VerticalAlignment="Top">
             <TextBox
                 HorizontalAlignment="Left"
                 VerticalAlignment="Center"
                 Text="12312312" />
-            <c:ColorPicker
-                Margin="70,0,0,0"
-                HorizontalAlignment="Left"
-                VerticalAlignment="Center"
-                IsValueUndefined="True"
-                Color="{Binding Path=Color}" />
         </Grid>
 
         <DockingManager

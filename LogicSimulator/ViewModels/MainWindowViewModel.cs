@@ -20,18 +20,6 @@ public class MainWindowViewModel : BindableBase
         AnchorableViewModels.Add(propertiesViewModel);
     }
 
-    #region Color
-
-    private Color4 _color = new(1, 0, 0, 1);
-
-    public Color4 Color
-    {
-        get => _color;
-        set => Set(ref _color, value);
-    }
-
-    #endregion
-
     #region ActiveContent
 
     private BindableBase _activeContent;

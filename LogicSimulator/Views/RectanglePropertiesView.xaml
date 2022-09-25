@@ -22,6 +22,10 @@
             <Setter Property="DecimalPlaces" Value="3" />
             <Setter Property="SelectAllTextOnFocus" Value="True" />
         </Style>
+        <Style BasedOn="{StaticResource {x:Type controls:ColorPicker}}" TargetType="{x:Type controls:ColorPicker}">
+            <Setter Property="HorizontalAlignment" Value="Left" />
+            <Setter Property="Margin" Value="5" />
+        </Style>
     </UserControl.Resources>
     <UniformGrid VerticalAlignment="Top" Columns="2">
         <UniformGrid.Resources />
@@ -37,10 +41,10 @@
         <TextBlock Text="StrokeThickness:" />
         <controls:NumberBox IsValueUndefined="{Binding Path=UndefinedPropertiesMap[StrokeThickness]}" Number="{Binding Path=StrokeThickness}" />
         <TextBlock Text="StrokeColor:" />
-        <controls:NumberBox />
+        <controls:ColorPicker IsValueUndefined="{Binding Path=UndefinedPropertiesMap[StrokeColor]}" Color="{Binding Path=StrokeColor}" />
         <TextBlock Text="IsFilled:" />
         <controls:NumberBox />
         <TextBlock Text="FillColor:" />
-        <controls:NumberBox />
+        <controls:ColorPicker IsValueUndefined="{Binding Path=UndefinedPropertiesMap[FillColor]}" Color="{Binding Path=FillColor}" />
     </UniformGrid>
 </UserControl>

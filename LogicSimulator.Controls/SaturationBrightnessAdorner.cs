@@ -61,7 +61,11 @@ public class SaturationBrightnessAdorner : Adorner
 
     private readonly UIElement _root;
 
-    public SaturationBrightnessAdorner(UIElement adornedElement) : base(adornedElement) => _root = adornedElement;
+    public SaturationBrightnessAdorner(UIElement adornedElement) : base(adornedElement)
+    {
+        IsHitTestVisible = false;
+        _root = adornedElement;
+    }
 
     protected override void OnRender(DrawingContext drawingContext)
     {

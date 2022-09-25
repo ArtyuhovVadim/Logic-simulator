@@ -4,8 +4,10 @@ using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
 using System.Windows.Documents;
 using System.Windows.Input;
+using System.Windows.Media;
 using LogicSimulator.Extensions;
 using SharpDX;
+using WpfColor = System.Windows.Media.Color;
 
 namespace LogicSimulator.Controls;
 
@@ -26,7 +28,91 @@ public class ColorPicker : Control
     }
 
     public static readonly DependencyProperty ColorProperty =
-        DependencyProperty.Register(nameof(Color), typeof(Color4), typeof(ColorPicker), new PropertyMetadata(default(Color4)));
+        DependencyProperty.Register(nameof(Color), typeof(Color4), typeof(ColorPicker), new FrameworkPropertyMetadata(Color4.Black, FrameworkPropertyMetadataOptions.BindsTwoWayByDefault, OnColorChanged));
+
+    private static void OnColorChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+    {
+        if (d is not ColorPicker colorPicker) return;
+
+        var color = (Color4)e.NewValue;
+        var hsv = color.AsHsv();
+
+        colorPicker.TempColor = color.ToColor();
+
+        colorPicker.Hue = hsv.h;
+        colorPicker.TempHue = hsv.h;
+        colorPicker.Saturation = hsv.s;
+        colorPicker.Brightness = hsv.v;
+
+        colorPicker._hue = hsv.h;
+        colorPicker._saturation = hsv.s;
+        colorPicker._brightness = hsv.v;
+    }
+
+    #endregion
+
+    #region TempColor
+
+    public static readonly DependencyPropertyKey TempColorPropertyKey =
+        DependencyProperty.RegisterReadOnly(nameof(TempColor), typeof(WpfColor), typeof(ColorPicker), new FrameworkPropertyMetadata(Colors.Black));
+
+    public WpfColor TempColor
+    {
+        get => (WpfColor)GetValue(TempColorPropertyKey.DependencyProperty);
+        private set => SetValue(TempColorPropertyKey, value);
+    }
+
+    #endregion
+
+    #region Hue
+
+    public static readonly DependencyPropertyKey HuePropertyKey =
+        DependencyProperty.RegisterReadOnly(nameof(Hue), typeof(double), typeof(ColorPicker), new FrameworkPropertyMetadata(default(double)));
+
+    public double Hue
+    {
+        get => (double)GetValue(HuePropertyKey.DependencyProperty);
+        private set => SetValue(HuePropertyKey, value);
+    }
+
+    #endregion
+
+    #region TempHue
+
+    internal static readonly DependencyPropertyKey TempHuePropertyKey =
+        DependencyProperty.RegisterReadOnly(nameof(TempHue), typeof(double), typeof(ColorPicker), new FrameworkPropertyMetadata(default(double)));
+
+    internal double TempHue
+    {
+        get => (double)GetValue(TempHuePropertyKey.DependencyProperty);
+        private set => SetValue(TempHuePropertyKey, value);
+    }
+
+    #endregion
+
+    #region Saturation
+
+    public static readonly DependencyPropertyKey SaturationPropertyKey =
+        DependencyProperty.RegisterReadOnly(nameof(Saturation), typeof(double), typeof(ColorPicker), new FrameworkPropertyMetadata(default(double)));
+
+    public double Saturation
+    {
+        get => (double)GetValue(SaturationPropertyKey.DependencyProperty);
+        private set => SetValue(SaturationPropertyKey, value);
+    }
+
+    #endregion
+
+    #region Brightness
+
+    public static readonly DependencyPropertyKey BrightnessPropertyKey =
+        DependencyProperty.RegisterReadOnly(nameof(Brightness), typeof(double), typeof(ColorPicker), new FrameworkPropertyMetadata(default(double)));
+
+    public double Brightness
+    {
+        get => (double)GetValue(BrightnessPropertyKey.DependencyProperty);
+        private set => SetValue(BrightnessPropertyKey, value);
+    }
 
     #endregion
 
@@ -39,7 +125,7 @@ public class ColorPicker : Control
     }
 
     public static readonly DependencyProperty IsValueUndefinedProperty =
-        DependencyProperty.Register(nameof(IsValueUndefined), typeof(bool), typeof(ColorPicker), new PropertyMetadata(false));
+        DependencyProperty.Register(nameof(IsValueUndefined), typeof(bool), typeof(ColorPicker), new FrameworkPropertyMetadata(false, FrameworkPropertyMetadataOptions.BindsTwoWayByDefault));
 
     #endregion
 
@@ -61,6 +147,10 @@ public class ColorPicker : Control
 
     private HueAdorner _huePickerAdorner;
     private SaturationBrightnessAdorner _saturationBrightnessAdorner;
+
+    private double _hue;
+    private double _saturation;
+    private double _brightness;
 
     static ColorPicker()
     {
@@ -96,8 +186,8 @@ public class ColorPicker : Control
         _saturationBrightnessBorder.MouseLeftButtonUp += OnSaturationBrightnessBorderMouseLeftButtonUp;
         _saturationBrightnessBorder.MouseMove += OnSaturationBrightnessBorderMouseMove;
 
-        _huePickerAdorner = new HueAdorner(_huePickerBorder);
-        _saturationBrightnessAdorner = new SaturationBrightnessAdorner(_saturationBrightnessBorder);
+        _huePickerAdorner = new HueAdorner(_huePickerBorder) { Hue = this.Hue };
+        _saturationBrightnessAdorner = new SaturationBrightnessAdorner(_saturationBrightnessBorder) { Saturation = this.Saturation, Brightness = this.Brightness };
 
         var huePickerLayer = AdornerLayer.GetAdornerLayer(_huePickerBorder);
         var saturationBrightnessLayer = AdornerLayer.GetAdornerLayer(_saturationBrightnessBorder);
@@ -118,14 +208,21 @@ public class ColorPicker : Control
     {
         if (e.LeftButton == MouseButtonState.Pressed)
         {
-            _saturationBrightnessBorder.CaptureMouse();
+            if (!_saturationBrightnessBorder.IsMouseCaptured)
+            {
+                _saturationBrightnessBorder.CaptureMouse();
+            }
+
             (_saturationBrightnessAdorner.Saturation, _saturationBrightnessAdorner.Brightness) = GetSaturationBrightnessValues(e);
         }
     }
 
     private void OnSaturationBrightnessBorderMouseLeftButtonUp(object sender, MouseButtonEventArgs e)
     {
-        Mouse.Capture(null);
+        if (_saturationBrightnessBorder.IsMouseCaptured)
+        {
+            Mouse.Capture(null);
+        }
     }
 
     private void OnHuePickerBorderMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
@@ -137,40 +234,63 @@ public class ColorPicker : Control
     {
         if (e.LeftButton == MouseButtonState.Pressed)
         {
-            _huePickerBorder.CaptureMouse();
+            if (!_huePickerBorder.IsMouseCaptured)
+            {
+                _huePickerBorder.CaptureMouse();
+            }
+
             _huePickerAdorner.Hue = GetHueValue(e);
         }
     }
 
     private void OnHuePickerBorderMouseLeftButtonUp(object sender, MouseButtonEventArgs e)
     {
-        Mouse.Capture(null);
-    }
-
-    private void OnRootButtonClick(object sender, RoutedEventArgs e)
-    {
-        _rootPopup.IsOpen = true;
+        if (_huePickerBorder.IsMouseCaptured)
+        {
+            Mouse.Capture(null);
+        }
     }
 
     private void OnApplyButtonClick(object sender, RoutedEventArgs e)
     {
+        Hue = _hue;
+        Saturation = _saturation;
+        Brightness = _brightness;
+
+        IsValueUndefined = false;
+
+        Color = ColorHelper.Color4FromHsv(Hue, Saturation, Brightness);
+
         _rootPopup.IsOpen = false;
     }
+
+    private void OnRootButtonClick(object sender, RoutedEventArgs e) => _rootPopup.IsOpen = true;
 
     private void OnCancelButtonClick(object sender, RoutedEventArgs e)
     {
         _rootPopup.IsOpen = false;
     }
 
-    private double GetHueValue(MouseEventArgs e) => e.GetPosition(_huePickerBorder).X.Map(0, _huePickerBorder.RenderSize.Width, 0, 360).Clamp(0, 360);
+    private double GetHueValue(MouseEventArgs e)
+    {
+        _hue = e.GetPosition(_huePickerBorder).X.Map(0, _huePickerBorder.RenderSize.Width, 0, 360).Clamp(0, 360);
+
+        TempColor = ColorHelper.ColorFromHsv(_hue, _saturation, _brightness);
+
+        TempHue = _hue;
+
+        return _hue;
+    }
 
     private (double saturation, double brightness) GetSaturationBrightnessValues(MouseEventArgs e)
     {
         var pos = e.GetPosition(_saturationBrightnessBorder);
 
-        var saturation = pos.X.Map(0, _saturationBrightnessBorder.RenderSize.Width, 0, 1).Clamp(0, 1);
-        var brightness = 1d - pos.Y.Map(0, _saturationBrightnessBorder.RenderSize.Height, 0, 1).Clamp(0, 1);
+        _saturation = pos.X.Map(0, _saturationBrightnessBorder.RenderSize.Width, 0, 1).Clamp(0, 1);
+        _brightness = 1d - pos.Y.Map(0, _saturationBrightnessBorder.RenderSize.Height, 0, 1).Clamp(0, 1);
 
-        return (saturation, brightness);
+        TempColor = ColorHelper.ColorFromHsv(_hue, _saturation, _brightness);
+
+        return (_saturation, _brightness);
     }
 }

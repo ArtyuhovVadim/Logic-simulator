@@ -45,4 +45,24 @@ public class RectangleEditorViewModel : BaseEditorViewModel<Rectangle>
     }
 
     #endregion
+
+    #region StrokeColor
+
+    public Color4 StrokeColor
+    {
+        get => Get<Color4>();
+        set => Set(value);
+    }
+
+    #endregion
+
+    #region FillColor
+
+    public Color4 FillColor
+    {
+        get => Get<Color4>();
+        set => Set(value);
+    }
+
+    #endregion
 }
