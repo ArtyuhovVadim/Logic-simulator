@@ -96,17 +96,17 @@ public class Vector2Box : Control
         _numberBoxX.IsValueUndefined = IsVectorXUndefined;
         _numberBoxY.IsValueUndefined = IsVectorYUndefined;
 
-        _numberBoxX.NumberChanged += OnXNumberChanged;
-        _numberBoxY.NumberChanged += OnYNumberChanged;
+        _numberBoxX.Confirm += OnXConfirm;
+        _numberBoxY.Confirm += OnYConfirm;
     }
 
-    private void OnXNumberChanged(object sender, RoutedEventArgs e)
+    private void OnXConfirm(object sender, RoutedEventArgs e)
     {
         IsVectorXUndefined = _numberBoxX.IsValueUndefined;
         Vector = new Vector2((float)_numberBoxX.Number, Vector.Y);
     }
 
-    private void OnYNumberChanged(object sender, RoutedEventArgs e)
+    private void OnYConfirm(object sender, RoutedEventArgs e)
     {
         IsVectorYUndefined = _numberBoxY.IsValueUndefined;
         Vector = new Vector2(Vector.X, (float)_numberBoxY.Number);
