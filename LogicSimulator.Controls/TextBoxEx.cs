@@ -136,6 +136,12 @@ public class TextBoxEx : TextBox
     private void OnLostFocus(object sender, RoutedEventArgs e)
     {
         _lastText = Text;
+
+        if (!IsEnterPressed && IsTextChanged)
+        {
+            OnConfirm();
+            RaiseEvent(new RoutedEventArgs(ConfirmEvent, this));
+        }
     }
 
     private async void SelectAllText() => await Dispatcher.InvokeAsync(SelectAll);

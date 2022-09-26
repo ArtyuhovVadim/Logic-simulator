@@ -139,8 +139,6 @@ public class NumberBox : TextBoxEx
         base.OnApplyTemplate();
 
         Text = NumberToString(Number);
-
-        LostFocus += OnLostFocus;
     }
 
     protected override void OnConfirm()
@@ -150,14 +148,6 @@ public class NumberBox : TextBoxEx
         if (!IsHasError)
         {
             Text = NumberToString(Number);
-        }
-    }
-
-    private void OnLostFocus(object sender, RoutedEventArgs e)
-    {
-        if (!IsEnterPressed && IsTextChanged)
-        {
-            OnConfirm();
         }
     }
 

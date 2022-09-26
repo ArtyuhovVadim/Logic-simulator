@@ -1,4 +1,5 @@
-﻿using System.Windows;
+﻿using System;
+using System.Windows;
 using System.Windows.Automation;
 using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
@@ -44,10 +45,10 @@ public class ColorPicker : Control
         colorPicker.TempColor = color.ToColor();
 
         colorPicker.Hue = hsv.h;
-        colorPicker.TempHue = hsv.h;
         colorPicker.Saturation = hsv.s;
         colorPicker.Brightness = hsv.v;
 
+        colorPicker.TempHue = hsv.h;
         colorPicker._hue = hsv.h;
         colorPicker._saturation = hsv.s;
         colorPicker._brightness = hsv.v;
@@ -202,10 +203,11 @@ public class ColorPicker : Control
         _saturationBrightnessBorder.MouseLeftButtonUp += OnSaturationBrightnessBorderMouseLeftButtonUp;
         _saturationBrightnessBorder.MouseMove += OnSaturationBrightnessBorderMouseMove;
 
-        _redTextBoxEx.Confirm += (sender, args) =>
-        {
+        _hexTextBox.Confirm += OnHexTextBoxConfirm;
 
-        };
+        _redTextBoxEx.Confirm += OnRgbTextBoxesConfirm;
+        _greenTextBoxEx.Confirm += OnRgbTextBoxesConfirm;
+        _blueTextBoxEx.Confirm += OnRgbTextBoxesConfirm;
 
         UpdateRgbTextBoxes();
 
@@ -220,6 +222,54 @@ public class ColorPicker : Control
 
         huePickerLayer.Add(_huePickerAdorner);
         saturationBrightnessLayer.Add(_saturationBrightnessAdorner);
+    }
+
+    private void OnHexTextBoxConfirm(object sender, RoutedEventArgs e)
+    {
+        try
+        {
+            var color = (WpfColor)ColorConverter.ConvertFromString(_hexTextBox.Text)! with { A = 255 };
+            _hexTextBox.IsHasError = false;
+            TempColor = color;
+
+            var hsv = TempColor.ToColor4().AsHsv();
+
+            _huePickerAdorner.Hue = hsv.h;
+            TempHue = hsv.h;
+            _saturationBrightnessAdorner.Saturation = hsv.s;
+            _saturationBrightnessAdorner.Brightness = hsv.v;
+
+            UpdateRgbTextBoxes();
+        }
+        catch
+        {
+            _hexTextBox.IsHasError = true;
+        }
+    }
+
+    private void OnRgbTextBoxesConfirm(object sender, RoutedEventArgs e)
+    {
+        var textBox = (TextBoxEx)sender;
+
+        if (byte.TryParse(textBox.Text, out var result))
+        {
+            textBox.IsHasError = false;
+
+            if (textBox == _redTextBoxEx) TempColor = TempColor with { R = result };
+            else if (textBox == _greenTextBoxEx) TempColor = TempColor with { G = result };
+            else TempColor = TempColor with { B = result };
+
+            var color = TempColor.ToColor4().AsHsv();
+
+            _huePickerAdorner.Hue = color.h;
+            TempHue = color.h;
+            _saturationBrightnessAdorner.Saturation = color.s;
+            _saturationBrightnessAdorner.Brightness = color.v;
+        }
+        else
+        {
+            textBox.IsHasError = true;
+        }
     }
 
     private void OnSaturationBrightnessBorderMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
@@ -282,7 +332,7 @@ public class ColorPicker : Control
 
         IsValueUndefined = false;
 
-        Color = ColorHelper.Color4FromHsv(Hue, Saturation, Brightness);
+        Color = TempColor.ToColor4();
 
         _rootPopup.IsOpen = false;
     }
@@ -326,5 +376,7 @@ public class ColorPicker : Control
         _redTextBoxEx.Text = TempColor.R.ToString();
         _greenTextBoxEx.Text = TempColor.G.ToString();
         _blueTextBoxEx.Text = TempColor.B.ToString();
+
+        _hexTextBox.Text = "#" + Convert.ToHexString(new[] { TempColor.R, TempColor.G, TempColor.B });
     }
 }

@@ -1,6 +1,5 @@
 ﻿using LogicSimulator.Extensions;
 using System.Windows;
-using System.Windows.Automation;
 using System.Windows.Controls;
 
 namespace LogicSimulator.Controls;
