@@ -54,6 +54,12 @@ public class ColorPicker : Control
         colorPicker._brightness = hsv.v;
 
         colorPicker.UpdateRgbTextBoxes();
+
+        if (colorPicker._huePickerAdorner is null || colorPicker._saturationBrightnessAdorner is null) return;
+
+        colorPicker._huePickerAdorner.Hue = hsv.h;
+        colorPicker._saturationBrightnessAdorner.Saturation = hsv.s;
+        colorPicker._saturationBrightnessAdorner.Brightness = hsv.v;
     }
 
     #endregion
