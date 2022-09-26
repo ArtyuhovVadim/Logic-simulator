@@ -36,7 +36,7 @@
                                     Margin="5"
                                     HorizontalAlignment="Left"
                                     VerticalAlignment="Top"
-                                    Fill="Yellow"
+                                    Fill="#F4E48C"
                                     RadiusX="3"
                                     RadiusY="3"
                                     Visibility="Collapsed">
