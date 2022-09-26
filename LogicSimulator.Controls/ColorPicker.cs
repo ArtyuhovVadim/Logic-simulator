@@ -17,6 +17,10 @@ namespace LogicSimulator.Controls;
 [TemplatePart(Name = CancelButtonName, Type = typeof(Button))]
 [TemplatePart(Name = HuePickerBorderName, Type = typeof(Border))]
 [TemplatePart(Name = SaturationBrightnessBorderName, Type = typeof(Border))]
+[TemplatePart(Name = HexTextBoxExName, Type = typeof(TextBoxEx))]
+[TemplatePart(Name = RedNumberBoxName, Type = typeof(NumberBox))]
+[TemplatePart(Name = GreenNumberBoxName, Type = typeof(NumberBox))]
+[TemplatePart(Name = BlueNumberBoxName, Type = typeof(NumberBox))]
 public class ColorPicker : Control
 {
     #region Color
@@ -135,6 +139,11 @@ public class ColorPicker : Control
     private const string CancelButtonName = "PART_CancelButton";
     private const string HuePickerBorderName = "PART_HuePickerBorder";
     private const string SaturationBrightnessBorderName = "PART_SaturationBrightnessBorder";
+    private const string HexTextBoxExName = "PART_HexTextBoxEx";
+    private const string RedNumberBoxName = "PART_RedNumberBox";
+    private const string GreenNumberBoxName = "PART_GreenNumberBox";
+    private const string BlueNumberBoxName = "PART_BlueNumberBox";
+
 
     private Popup _rootPopup;
     private Button _rootButton;
@@ -147,6 +156,11 @@ public class ColorPicker : Control
 
     private HueAdorner _huePickerAdorner;
     private SaturationBrightnessAdorner _saturationBrightnessAdorner;
+
+    private TextBoxEx _hexTextBox;
+    private NumberBox _redNumberBox;
+    private NumberBox _greenNumberBox;
+    private NumberBox _blueNumberBox;
 
     private double _hue;
     private double _saturation;
@@ -161,17 +175,19 @@ public class ColorPicker : Control
     {
         base.OnApplyTemplate();
 
-        _rootPopup = GetTemplateChild(RootPopupName) as Popup;
-        _rootButton = GetTemplateChild(RootButtonName) as Button;
+        _rootPopup = this.GetTemplateChildOrThrowIfNull<Popup>(GetTemplateChild(RootPopupName));
+        _rootButton = this.GetTemplateChildOrThrowIfNull<Button>(GetTemplateChild(RootButtonName));
 
-        _applyButton = GetTemplateChild(ApplyButtonName) as Button;
-        _cancelButton = GetTemplateChild(CancelButtonName) as Button;
+        _applyButton = this.GetTemplateChildOrThrowIfNull<Button>(GetTemplateChild(ApplyButtonName));
+        _cancelButton = this.GetTemplateChildOrThrowIfNull<Button>(GetTemplateChild(CancelButtonName));
 
-        _huePickerBorder = GetTemplateChild(HuePickerBorderName) as Border;
-        _saturationBrightnessBorder = GetTemplateChild(SaturationBrightnessBorderName) as Border;
+        _huePickerBorder = this.GetTemplateChildOrThrowIfNull<Border>(GetTemplateChild(HuePickerBorderName));
+        _saturationBrightnessBorder = this.GetTemplateChildOrThrowIfNull<Border>(GetTemplateChild(SaturationBrightnessBorderName));
 
-        if (_rootPopup is null || _rootButton is null || _applyButton is null || _cancelButton is null || _huePickerBorder is null || _saturationBrightnessBorder is null)
-            throw new ElementNotAvailableException($"Part element is not available in {GetType()} template!");
+        _hexTextBox = this.GetTemplateChildOrThrowIfNull<TextBoxEx>(GetTemplateChild(HexTextBoxExName));
+        _redNumberBox = this.GetTemplateChildOrThrowIfNull<NumberBox>(GetTemplateChild(RedNumberBoxName));
+        _greenNumberBox = this.GetTemplateChildOrThrowIfNull<NumberBox>(GetTemplateChild(GreenNumberBoxName));
+        _blueNumberBox = this.GetTemplateChildOrThrowIfNull<NumberBox>(GetTemplateChild(BlueNumberBoxName));
 
         _rootButton.Click += OnRootButtonClick;
 

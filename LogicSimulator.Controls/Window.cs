@@ -1,4 +1,5 @@
-﻿using System.Windows;
+﻿using LogicSimulator.Extensions;
+using System.Windows;
 using System.Windows.Automation;
 using System.Windows.Controls;
 
@@ -26,12 +27,9 @@ public class Window : System.Windows.Window
     {
         base.OnApplyTemplate();
         
-        _minimizeButton = GetTemplateChild(MinimizeButtonName) as Button;
-        _maximizeButton = GetTemplateChild(MaximizeButtonName) as Button;
-        _closeButton = GetTemplateChild(CloseButtonName) as Button;
-
-        if (_minimizeButton is null || _maximizeButton is null || _closeButton is null)
-            throw new ElementNotAvailableException($"Part element is not available in {GetType()} template!");
+        _minimizeButton = this.GetTemplateChildOrThrowIfNull<Button>(GetTemplateChild(MinimizeButtonName));
+        _maximizeButton = this.GetTemplateChildOrThrowIfNull<Button>(GetTemplateChild(MaximizeButtonName));
+        _closeButton = this.GetTemplateChildOrThrowIfNull<Button>(GetTemplateChild(CloseButtonName));
 
         _minimizeButton.Click += OnMinimizeButtonClicked;
         _maximizeButton.Click += OnMaximizeButtonClicked;

@@ -178,6 +178,11 @@
                                                 <Setter Property="VerticalAlignment" Value="Center" />
                                                 <Setter Property="Margin" Value="2,0,2,0" />
                                             </Style>
+                                            <Style BasedOn="{StaticResource {x:Type c:NumberBox}}" TargetType="{x:Type c:NumberBox}">
+                                                <Setter Property="Grid.Row" Value="0" />
+                                                <Setter Property="VerticalAlignment" Value="Center" />
+                                                <Setter Property="Margin" Value="2,0,2,0" />
+                                            </Style>
                                         </Grid.Resources>
                                         <Grid.RowDefinitions>
                                             <RowDefinition />
@@ -190,10 +195,13 @@
                                             <ColumnDefinition Width="1.5*" />
                                             <ColumnDefinition Width="*" />
                                         </Grid.ColumnDefinitions>
-                                        <c:TextBoxEx Grid.Column="0" Margin="0,0,2,0" />
-                                        <c:TextBoxEx Grid.Column="1" />
-                                        <c:TextBoxEx Grid.Column="2" />
-                                        <c:TextBoxEx Grid.Column="3" />
+                                        <c:TextBoxEx
+                                            x:Name="PART_HexTextBoxEx"
+                                            Grid.Column="0"
+                                            Margin="0,0,2,0" />
+                                        <c:NumberBox x:Name="PART_RedNumberBox" Grid.Column="1" />
+                                        <c:NumberBox x:Name="PART_GreenNumberBox" Grid.Column="2" />
+                                        <c:NumberBox x:Name="PART_BlueNumberBox" Grid.Column="3" />
                                         <Border
                                             Grid.Row="0"
                                             Grid.Column="4"

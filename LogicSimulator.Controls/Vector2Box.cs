@@ -1,6 +1,7 @@
 ﻿using System.Windows;
 using System.Windows.Automation;
 using System.Windows.Controls;
+using LogicSimulator.Extensions;
 using SharpDX;
 
 namespace LogicSimulator.Controls;
@@ -87,11 +88,8 @@ public class Vector2Box : Control
     {
         base.OnApplyTemplate();
 
-        _numberBoxX = GetTemplateChild(NumberBoxXName) as NumberBox;
-        _numberBoxY = GetTemplateChild(NumberBoxYName) as NumberBox;
-
-        if (_numberBoxX is null || _numberBoxY is null)
-            throw new ElementNotAvailableException($"Part element is not available in {GetType()} template!");
+        _numberBoxX = this.GetTemplateChildOrThrowIfNull<NumberBox>(GetTemplateChild(NumberBoxXName));
+        _numberBoxY = this.GetTemplateChildOrThrowIfNull<NumberBox>(GetTemplateChild(NumberBoxYName));
 
         _numberBoxX.Number = Vector.X;
         _numberBoxY.Number = Vector.Y;
