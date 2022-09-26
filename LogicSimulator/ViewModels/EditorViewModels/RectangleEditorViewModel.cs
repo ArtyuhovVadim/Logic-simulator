@@ -56,6 +56,16 @@ public class RectangleEditorViewModel : BaseEditorViewModel<Rectangle>
 
     #endregion
 
+    #region IsFilled
+
+    public bool IsFilled
+    {
+        get => Get<bool>();
+        set => Set(value);
+    }
+
+    #endregion
+
     #region FillColor
 
     public Color4 FillColor

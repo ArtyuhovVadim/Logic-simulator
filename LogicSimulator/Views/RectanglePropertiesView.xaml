@@ -43,7 +43,11 @@
         <TextBlock Text="StrokeColor:" />
         <controls:ColorPicker IsValueUndefined="{Binding Path=UndefinedPropertiesMap[StrokeColor]}" Color="{Binding Path=StrokeColor}" />
         <TextBlock Text="IsFilled:" />
-        <controls:NumberBox />
+        <controls:CheckBoxEx
+            Margin="5"
+            HorizontalAlignment="Left"
+            IsChecked="{Binding Path=IsFilled}"
+            IsValueUndefined="{Binding Path=UndefinedPropertiesMap[IsFilled]}" />
         <TextBlock Text="FillColor:" />
         <controls:ColorPicker IsValueUndefined="{Binding Path=UndefinedPropertiesMap[FillColor]}" Color="{Binding Path=FillColor}" />
     </UniformGrid>

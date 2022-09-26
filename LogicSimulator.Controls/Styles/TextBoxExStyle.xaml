@@ -92,7 +92,6 @@
                             </MultiTrigger.Conditions>
                             <MultiTrigger.Setters>
                                 <Setter TargetName="PART_ContentHost" Property="Visibility" Value="Hidden" />
-                                <Setter Property="IsReadOnly" Value="True" />
                                 <Setter TargetName="Rectangle" Property="Visibility" Value="Visible" />
                             </MultiTrigger.Setters>
                         </MultiTrigger>

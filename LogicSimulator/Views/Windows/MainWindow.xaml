@@ -54,16 +54,6 @@
                                FallbackValue=''}" />
         </StatusBar>
 
-        <Grid
-            Width="0"
-            Margin="0"
-            VerticalAlignment="Top">
-            <TextBox
-                HorizontalAlignment="Left"
-                VerticalAlignment="Center"
-                Text="12312312" />
-        </Grid>
-
         <DockingManager
             ActiveContent="{Binding Path=ActiveContent,
                                     Mode=TwoWay}"
