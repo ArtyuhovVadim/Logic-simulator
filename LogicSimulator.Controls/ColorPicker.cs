@@ -18,9 +18,9 @@ namespace LogicSimulator.Controls;
 [TemplatePart(Name = HuePickerBorderName, Type = typeof(Border))]
 [TemplatePart(Name = SaturationBrightnessBorderName, Type = typeof(Border))]
 [TemplatePart(Name = HexTextBoxExName, Type = typeof(TextBoxEx))]
-[TemplatePart(Name = RedNumberBoxName, Type = typeof(NumberBox))]
-[TemplatePart(Name = GreenNumberBoxName, Type = typeof(NumberBox))]
-[TemplatePart(Name = BlueNumberBoxName, Type = typeof(NumberBox))]
+[TemplatePart(Name = RedTextBoxExName, Type = typeof(TextBoxEx))]
+[TemplatePart(Name = GreenTextBoxExName, Type = typeof(TextBoxEx))]
+[TemplatePart(Name = BlueTextBoxExName, Type = typeof(TextBoxEx))]
 public class ColorPicker : Control
 {
     #region Color
@@ -51,6 +51,8 @@ public class ColorPicker : Control
         colorPicker._hue = hsv.h;
         colorPicker._saturation = hsv.s;
         colorPicker._brightness = hsv.v;
+
+        colorPicker.UpdateRgbTextBoxes();
     }
 
     #endregion
@@ -140,10 +142,9 @@ public class ColorPicker : Control
     private const string HuePickerBorderName = "PART_HuePickerBorder";
     private const string SaturationBrightnessBorderName = "PART_SaturationBrightnessBorder";
     private const string HexTextBoxExName = "PART_HexTextBoxEx";
-    private const string RedNumberBoxName = "PART_RedNumberBox";
-    private const string GreenNumberBoxName = "PART_GreenNumberBox";
-    private const string BlueNumberBoxName = "PART_BlueNumberBox";
-
+    private const string RedTextBoxExName = "PART_RedTextBoxEx";
+    private const string GreenTextBoxExName = "PART_GreenTextBoxEx";
+    private const string BlueTextBoxExName = "PART_BlueTextBoxEx";
 
     private Popup _rootPopup;
     private Button _rootButton;
@@ -158,9 +159,9 @@ public class ColorPicker : Control
     private SaturationBrightnessAdorner _saturationBrightnessAdorner;
 
     private TextBoxEx _hexTextBox;
-    private NumberBox _redNumberBox;
-    private NumberBox _greenNumberBox;
-    private NumberBox _blueNumberBox;
+    private TextBoxEx _redTextBoxEx;
+    private TextBoxEx _greenTextBoxEx;
+    private TextBoxEx _blueTextBoxEx;
 
     private double _hue;
     private double _saturation;
@@ -185,12 +186,11 @@ public class ColorPicker : Control
         _saturationBrightnessBorder = this.GetTemplateChildOrThrowIfNull<Border>(GetTemplateChild(SaturationBrightnessBorderName));
 
         _hexTextBox = this.GetTemplateChildOrThrowIfNull<TextBoxEx>(GetTemplateChild(HexTextBoxExName));
-        _redNumberBox = this.GetTemplateChildOrThrowIfNull<NumberBox>(GetTemplateChild(RedNumberBoxName));
-        _greenNumberBox = this.GetTemplateChildOrThrowIfNull<NumberBox>(GetTemplateChild(GreenNumberBoxName));
-        _blueNumberBox = this.GetTemplateChildOrThrowIfNull<NumberBox>(GetTemplateChild(BlueNumberBoxName));
+        _redTextBoxEx = this.GetTemplateChildOrThrowIfNull<TextBoxEx>(GetTemplateChild(RedTextBoxExName));
+        _greenTextBoxEx = this.GetTemplateChildOrThrowIfNull<TextBoxEx>(GetTemplateChild(GreenTextBoxExName));
+        _blueTextBoxEx = this.GetTemplateChildOrThrowIfNull<TextBoxEx>(GetTemplateChild(BlueTextBoxExName));
 
         _rootButton.Click += OnRootButtonClick;
-
         _applyButton.Click += OnApplyButtonClick;
         _cancelButton.Click += OnCancelButtonClick;
 
@@ -202,8 +202,15 @@ public class ColorPicker : Control
         _saturationBrightnessBorder.MouseLeftButtonUp += OnSaturationBrightnessBorderMouseLeftButtonUp;
         _saturationBrightnessBorder.MouseMove += OnSaturationBrightnessBorderMouseMove;
 
-        _huePickerAdorner = new HueAdorner(_huePickerBorder) { Hue = this.Hue };
-        _saturationBrightnessAdorner = new SaturationBrightnessAdorner(_saturationBrightnessBorder) { Saturation = this.Saturation, Brightness = this.Brightness };
+        _redTextBoxEx.Confirm += (sender, args) =>
+        {
+
+        };
+
+        UpdateRgbTextBoxes();
+
+        _huePickerAdorner = new HueAdorner(_huePickerBorder) { Hue = Hue };
+        _saturationBrightnessAdorner = new SaturationBrightnessAdorner(_saturationBrightnessBorder) { Saturation = Saturation, Brightness = Brightness };
 
         var huePickerLayer = AdornerLayer.GetAdornerLayer(_huePickerBorder);
         var saturationBrightnessLayer = AdornerLayer.GetAdornerLayer(_saturationBrightnessBorder);
@@ -295,6 +302,8 @@ public class ColorPicker : Control
 
         TempHue = _hue;
 
+        UpdateRgbTextBoxes();
+
         return _hue;
     }
 
@@ -307,6 +316,15 @@ public class ColorPicker : Control
 
         TempColor = ColorHelper.ColorFromHsv(_hue, _saturation, _brightness);
 
+        UpdateRgbTextBoxes();
+
         return (_saturation, _brightness);
+    }
+
+    private void UpdateRgbTextBoxes()
+    {
+        _redTextBoxEx.Text = TempColor.R.ToString();
+        _greenTextBoxEx.Text = TempColor.G.ToString();
+        _blueTextBoxEx.Text = TempColor.B.ToString();
     }
 }

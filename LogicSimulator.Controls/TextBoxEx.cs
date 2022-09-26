@@ -45,6 +45,32 @@ public class TextBoxEx : TextBox
 
     #endregion
 
+    #region ConfirmEvent
+
+    public event RoutedEventHandler Confirm
+    {
+        add => AddHandler(ConfirmEvent, value);
+        remove => RemoveHandler(ConfirmEvent, value);
+    }
+
+    public static readonly RoutedEvent ConfirmEvent =
+        EventManager.RegisterRoutedEvent(nameof(Confirm), RoutingStrategy.Bubble, typeof(RoutedEventHandler), typeof(TextBoxEx));
+
+    #endregion
+
+    #region RejectEvent
+
+    public event RoutedEventHandler Reject
+    {
+        add => AddHandler(RejectEvent, value);
+        remove => RemoveHandler(RejectEvent, value);
+    }
+
+    public static readonly RoutedEvent RejectEvent =
+        EventManager.RegisterRoutedEvent(nameof(Reject), RoutingStrategy.Bubble, typeof(RoutedEventHandler), typeof(TextBoxEx));
+
+    #endregion
+
     private string _lastText = string.Empty;
 
     protected bool IsEnterPressed { get; private set; }
@@ -80,6 +106,7 @@ public class TextBoxEx : TextBox
         {
             case Key.Enter:
                 OnConfirm();
+                RaiseEvent(new RoutedEventArgs(ConfirmEvent, this));
                 IsEnterPressed = true;
                 _lastText = Text;
                 SelectAllText();
@@ -89,6 +116,7 @@ public class TextBoxEx : TextBox
                 IsTextChanged = false;
                 SelectAllText();
                 OnReject();
+                RaiseEvent(new RoutedEventArgs(RejectEvent, this));
                 break;
         }
     }
