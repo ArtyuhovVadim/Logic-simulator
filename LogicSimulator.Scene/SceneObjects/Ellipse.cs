@@ -7,16 +7,16 @@ namespace LogicSimulator.Scene.SceneObjects;
 
 public class Ellipse : EditableSceneObject
 {
-    public static readonly Resource EllipseGeometryResource = ResourceCache.Register((target, o) =>
+    private static readonly Resource EllipseGeometryResource = ResourceCache.Register((target, o) =>
     {
         var ellipse = (Ellipse)o;
 
         return new EllipseGeometry(target.Factory, new SharpDX.Direct2D1.Ellipse(ellipse.Center, ellipse.RadiusX, ellipse.RadiusY));
     });
 
-    public static readonly Resource FillBrushResource = ResourceCache.Register((target, o) => new SolidColorBrush(target, ((Ellipse)o).FillColor));
+    private static readonly Resource FillBrushResource = ResourceCache.Register((target, o) => new SolidColorBrush(target, ((Ellipse)o).FillColor));
 
-    public static readonly Resource StrokeBrushResource = ResourceCache.Register((target, o) => new SolidColorBrush(target, ((Ellipse)o).StrokeColor));
+    private static readonly Resource StrokeBrushResource = ResourceCache.Register((target, o) => new SolidColorBrush(target, ((Ellipse)o).StrokeColor));
 
     private Vector2 _center = Vector2.Zero;
     private float _radiusX;

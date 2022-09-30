@@ -17,7 +17,8 @@ public class EditorSelectionService : IEditorSelectionService
     private readonly Dictionary<Type, AbstractEditorViewModel> _editorsMap = new()
     {
         { typeof(Rectangle), new RectangleEditorViewModel() },
-        { typeof(Ellipse), new EllipseEditorViewModel() }
+        { typeof(Ellipse), new EllipseEditorViewModel() },
+        { typeof(Line), new LineEditorViewModel() }
     };
 
     public EditorSelectionService(PropertiesViewModel propertiesViewModel)

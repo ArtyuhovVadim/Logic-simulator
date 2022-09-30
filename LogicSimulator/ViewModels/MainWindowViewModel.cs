@@ -1,7 +1,9 @@
 ﻿using System.Collections.ObjectModel;
+using System.Linq;
 using System.Windows.Input;
 using LogicSimulator.Infrastructure.Commands;
 using LogicSimulator.Infrastructure.Services.Interfaces;
+using LogicSimulator.Scene.SceneObjects;
 using LogicSimulator.ViewModels.Base;
 using SharpDX;
 
@@ -70,6 +72,14 @@ public class MainWindowViewModel : BindableBase
             return;
         }
 
+        var line = new Line { StrokeThickness = 10 };
+
+        line.AddSegment(new Vector2(500, 500));
+        line.AddSegment(new Vector2(800, 500));
+        line.AddSegment(new Vector2(800, 800));
+
+        scheme.Objects.Add(line);
+
         SchemeViewModels.Add(new SchemeViewModel(scheme));
     }, _ => true);
 
@@ -81,12 +91,7 @@ public class MainWindowViewModel : BindableBase
 
     public ICommand SaveExampleCommand => _saveExampleCommand ??= new LambdaCommand(_ =>
     {
-        //var path = "Data/Example.lss";
-        //
-        //if (!_schemeFileService.SaveToFile("Data/Example.lss", _scheme))
-        //{
-        //    _userDialogService.ShowErrorMessage("Ошибка сохранения файла", $"Не удалось сохранить файл: {path}");
-        //}
+
     }, _ => true);
 
     #endregion
@@ -97,6 +102,7 @@ public class MainWindowViewModel : BindableBase
 
     public ICommand TestCommand => _testCommand ??= new LambdaCommand(_ =>
     {
+        SchemeViewModels.First().Objects.OfType<Line>().First().InsertSegment(1, new Vector2(100, 700));
     }, _ => true);
 
     #endregion

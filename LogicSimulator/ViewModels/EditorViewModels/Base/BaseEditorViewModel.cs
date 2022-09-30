@@ -18,7 +18,7 @@ public abstract class BaseEditorViewModel<T> : AbstractEditorViewModel where T :
     public ObservableCollection<T> Objects
     {
         get => _objects;
-        protected set => Set(ref _objects, value);
+        private set => Set(ref _objects, value);
     }
 
     #endregion

@@ -18,6 +18,9 @@
         <DataTemplate DataType="{x:Type evm:EllipseEditorViewModel}">
             <editorViews:EllipseEditorView />
         </DataTemplate>
+        <DataTemplate DataType="{x:Type evm:LineEditorViewModel}">
+            <editorViews:LineEditorView />
+        </DataTemplate>
     </UserControl.Resources>
     <ContentPresenter Content="{Binding Path=CurrentEditorViewModel}" />
 </UserControl>

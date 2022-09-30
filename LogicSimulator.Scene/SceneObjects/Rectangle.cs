@@ -6,11 +6,11 @@ namespace LogicSimulator.Scene.SceneObjects;
 
 public class Rectangle : EditableSceneObject
 {
-    public static readonly Resource FillBrushResource = ResourceCache.Register((target, o) => new SolidColorBrush(target, ((Rectangle)o).FillColor));
+    private static readonly Resource FillBrushResource = ResourceCache.Register((target, o) => new SolidColorBrush(target, ((Rectangle)o).FillColor));
 
-    public static readonly Resource StrokeBrushResource = ResourceCache.Register((target, o) => new SolidColorBrush(target, ((Rectangle)o).StrokeColor));
+    private static readonly Resource StrokeBrushResource = ResourceCache.Register((target, o) => new SolidColorBrush(target, ((Rectangle)o).StrokeColor));
 
-    public static readonly Resource RectangleGeometryResource = ResourceCache.Register((target, o) =>
+    private static readonly Resource RectangleGeometryResource = ResourceCache.Register((target, o) =>
     {
         var rect = (Rectangle)o;
 
