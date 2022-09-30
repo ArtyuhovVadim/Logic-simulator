@@ -30,6 +30,9 @@ public class Line : EditableSceneObject
         return geometry;
     });
 
+    private static readonly Resource StrokeStyleResource = ResourceCache.Register((target, o) =>
+        new StrokeStyle(target.Factory, new StrokeStyleProperties { StartCap = CapStyle.Round, EndCap = CapStyle.Round, LineJoin = LineJoin.Round }));
+
     private Color4 _strokeColor = Color4.Black;
     private float _strokeThickness = 1f;
     private readonly List<Vector2> _segments = new();
@@ -54,7 +57,6 @@ public class Line : EditableSceneObject
         }
     }
 
-    [Editable]
     public IReadOnlyCollection<Vector2> Segments => _segments;
 
     [Editable]
@@ -166,12 +168,11 @@ public class Line : EditableSceneObject
     {
         if (_segments.Count == 0) return;
 
-        using var style = new StrokeStyle(renderTarget.Factory, new StrokeStyleProperties { StartCap = CapStyle.Round, EndCap = CapStyle.Round, LineJoin = LineJoin.Round });
-
         var brush = ResourceCache.GetOrUpdate<SolidColorBrush>(this, StrokeBrushResource, renderTarget);
         var geometry = ResourceCache.GetOrUpdate<PathGeometry>(this, PathGeometryResource, renderTarget);
-
-        renderTarget.DrawGeometry(geometry, brush, StrokeThickness / scene.Scale, style);
+        var strokeStyle = ResourceCache.GetOrUpdate<StrokeStyle>(this, StrokeStyleResource, renderTarget);
+        
+        renderTarget.DrawGeometry(geometry, brush, StrokeThickness / scene.Scale, strokeStyle);
     }
 
     public override void RenderSelection(Scene2D scene, RenderTarget renderTarget, SolidColorBrush selectionBrush, StrokeStyle selectionStyle)
