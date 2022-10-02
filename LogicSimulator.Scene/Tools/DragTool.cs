@@ -83,5 +83,6 @@ public class DragTool : BaseTool
         }
 
         _draggingSceneObjects.Clear();
+        _objectsUnderCursor.Clear();
     }
 }

@@ -347,6 +347,21 @@ public class ColorPicker : Control
 
     private void OnCancelButtonClick(object sender, RoutedEventArgs e)
     {
+        _hue = Hue;
+        _saturation = Saturation;
+        _brightness = Brightness;
+
+        TempColor = Color.ToColor();
+
+        var hsv = TempColor.ToColor4().AsHsv();
+
+        _huePickerAdorner.Hue = hsv.h;
+        TempHue = hsv.h;
+        _saturationBrightnessAdorner.Saturation = hsv.s;
+        _saturationBrightnessAdorner.Brightness = hsv.v;
+
+        UpdateRgbTextBoxes();
+
         _rootPopup.IsOpen = false;
     }
 

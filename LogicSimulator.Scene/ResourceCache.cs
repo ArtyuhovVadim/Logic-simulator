@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using SharpDX;
 using SharpDX.Direct2D1;
 
@@ -92,7 +93,7 @@ public static class ResourceCache
 
     public static void ReleaseResources(ResourceDependentObject obj)
     {
-        var ids = obj.GetType().GetFields()
+        var ids = obj.GetType().GetFields(BindingFlags.Static | BindingFlags.NonPublic)
                      .Where(x => x.FieldType == typeof(Resource))
                      .Select(x => (ulong)obj.Id << 32 | ((Resource)x.GetValue(obj))!.Id);
 
