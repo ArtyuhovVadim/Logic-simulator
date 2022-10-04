@@ -7,7 +7,7 @@ namespace LogicSimulator.Controls;
 
 [TemplatePart(Name = NumberBoxXName, Type = typeof(NumberBox))]
 [TemplatePart(Name = NumberBoxYName, Type = typeof(NumberBox))]
-public class Vector2Box : Control
+public class Vector2Box : ContentControl
 {
     #region Vector
 
