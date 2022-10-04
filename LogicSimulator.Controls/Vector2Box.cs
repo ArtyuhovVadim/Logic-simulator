@@ -72,6 +72,19 @@ public class Vector2Box : Control
 
     #endregion
 
+    #region VectorChangedEvent
+
+    public event RoutedEventHandler VectorChanged
+    {
+        add => AddHandler(VectorChangedEvent, value);
+        remove => RemoveHandler(VectorChangedEvent, value);
+    }
+
+    public static readonly RoutedEvent VectorChangedEvent =
+        EventManager.RegisterRoutedEvent(nameof(VectorChanged), RoutingStrategy.Bubble, typeof(RoutedEventHandler), typeof(Vector2Box));
+
+    #endregion
+
     private const string NumberBoxXName = "PART_NumberBoxX";
     private const string NumberBoxYName = "PART_NumberBoxY";
 
@@ -104,11 +117,15 @@ public class Vector2Box : Control
     {
         IsVectorXUndefined = _numberBoxX.IsValueUndefined;
         Vector = new Vector2((float)_numberBoxX.Number, Vector.Y);
+
+        RaiseEvent(new RoutedEventArgs(VectorChangedEvent, this));
     }
 
     private void OnYConfirm(object sender, RoutedEventArgs e)
     {
         IsVectorYUndefined = _numberBoxY.IsValueUndefined;
         Vector = new Vector2(Vector.X, (float)_numberBoxY.Number);
+
+        RaiseEvent(new RoutedEventArgs(VectorChangedEvent, this));
     }
 }
