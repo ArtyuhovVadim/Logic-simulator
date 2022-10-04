@@ -38,19 +38,6 @@ public class VertexViewModel : BindableBase
 
 public class LineEditorViewModel : BaseEditorViewModel<Line>
 {
-    #region TestCommand
-
-    private ICommand _vertexChangedCommand;
-
-    public ICommand VertexChangedCommand => _vertexChangedCommand ??= new LambdaCommand(obj =>
-    {
-        if (obj is not VertexViewModel vertexViewModel) return;
-
-        FirstObject.ModifyVertex(vertexViewModel.Index, vertexViewModel.Position);
-    }, _ => true);
-
-    #endregion
-
     #region Vertexes
 
     private readonly ObservableCollection<VertexViewModel> _vertexes = new();
@@ -76,6 +63,43 @@ public class LineEditorViewModel : BaseEditorViewModel<Line>
         get => Get<Color4>();
         set => Set(value);
     }
+
+    #endregion
+
+    #region VertexChangedCommand
+
+    private ICommand _vertexChangedCommand;
+
+    public ICommand VertexChangedCommand => _vertexChangedCommand ??= new LambdaCommand(obj =>
+    {
+        if (obj is not VertexViewModel vertexViewModel) return;
+
+        FirstObject.ModifyVertex(vertexViewModel.Index, vertexViewModel.Position);
+    }, _ => true);
+
+    #endregion
+
+    #region AddVertexCommand
+
+    private ICommand _addVertexCommand;
+
+    public ICommand AddVertexCommand => _addVertexCommand ??= new LambdaCommand(obj =>
+    {
+        if (obj is not VertexViewModel vertexViewModel) return;
+
+    }, _ => true);
+
+    #endregion
+
+    #region RemoveVertexCommand
+
+    private ICommand _removeVertexCommand;
+
+    public ICommand RemoveVertexCommand => _removeVertexCommand ??= new LambdaCommand(obj =>
+    {
+        if (obj is not VertexViewModel vertexViewModel) return;
+
+    }, _ => true);
 
     #endregion
 
