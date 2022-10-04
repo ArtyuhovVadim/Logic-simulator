@@ -27,7 +27,7 @@ public abstract class BaseEditorViewModel<T> : AbstractEditorViewModel where T :
 
     private readonly List<string> _propertyNames = new();
 
-    private T FirstObject { get; set; }
+    public T FirstObject { get; private set; }
 
     public override void SetObjectsToEdit(IEnumerable<BaseSceneObject> objects)
     {
@@ -57,11 +57,10 @@ public abstract class BaseEditorViewModel<T> : AbstractEditorViewModel where T :
         }
 
         FirstObject = Objects.First();
+        OnPropertyChanged(nameof(FirstObject));
 
         if (!UndefinedPropertiesMap.Any())
         {
-            var a = typeof(T).GetProperties().Where(x => Attribute.IsDefined(x, typeof(EditableAttribute)));
-
             foreach (var prop in typeof(T).GetProperties().Where(x => Attribute.IsDefined(x, typeof(EditableAttribute))))
             {
                 if (prop.PropertyType == typeof(Vector2))

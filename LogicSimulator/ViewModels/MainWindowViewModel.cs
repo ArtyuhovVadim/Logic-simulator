@@ -1,9 +1,13 @@
-﻿using System.Collections.ObjectModel;
+﻿using System;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Windows.Input;
 using LogicSimulator.Infrastructure.Commands;
 using LogicSimulator.Infrastructure.Services.Interfaces;
+using LogicSimulator.Models;
 using LogicSimulator.Scene.SceneObjects;
+using LogicSimulator.Scene.SceneObjects.Base;
 using LogicSimulator.ViewModels.Base;
 using SharpDX;
 
@@ -13,6 +17,8 @@ public class MainWindowViewModel : BindableBase
 {
     private readonly ISchemeFileService _schemeFileService;
     private readonly IUserDialogService _userDialogService;
+
+    private Scheme _scheme;
 
     public MainWindowViewModel(ISchemeFileService schemeFileService, IUserDialogService userDialogService, PropertiesViewModel propertiesViewModel)
     {
@@ -66,21 +72,39 @@ public class MainWindowViewModel : BindableBase
     {
         var path = "Data/Example.lss";
 
-        if (!_schemeFileService.ReadFromFile(path, out var scheme))
-        {
-            _userDialogService.ShowErrorMessage("Ошибка загрузки файла", $"Не удалось загрузить файл: {path}");
-            return;
-        }
+        //if (!_schemeFileService.ReadFromFile(path, out var scheme))
+        //{
+        //    _userDialogService.ShowErrorMessage("Ошибка загрузки файла", $"Не удалось загрузить файл: {path}");
+        //    return;
+        //}
+        //
+        //for (int i = 0; i < 300; i++)
+        //{
+        //    var line = new Line { StrokeThickness = 10 };
+        //
+        //    line.Vertices.Add(new Vertex(500, 500));
+        //    line.Vertices.Add(new Vertex(800, 500));
+        //    line.Vertices.Add(new Vertex(800, 800));
+        //
+        //    scheme.Objects.Add(line);
+        //}
+        //
+        //scheme.Objects.Add(new Rectangle());
 
-        var line = new Line { StrokeThickness = 10 };
+        _scheme = new Scheme { Name = "Line test" };
 
-        line.AddSegment(new Vector2(500, 500));
-        line.AddSegment(new Vector2(800, 500));
-        line.AddSegment(new Vector2(800, 800));
+        var list = new List<BaseSceneObject>();
 
-        scheme.Objects.Add(line);
+        var line = new Line();
+        line.AddVertex(new Vector2(300, 300));
+        line.AddVertex(new Vector2(500, 300));
+        line.AddVertex(new Vector2(500, 500));
 
-        SchemeViewModels.Add(new SchemeViewModel(scheme));
+        list.Add(line);
+
+        _scheme.Objects = list;
+
+        SchemeViewModels.Add(new SchemeViewModel(_scheme));
     }, _ => true);
 
     #endregion
@@ -102,7 +126,18 @@ public class MainWindowViewModel : BindableBase
 
     public ICommand TestCommand => _testCommand ??= new LambdaCommand(_ =>
     {
-        SchemeViewModels.First().Objects.OfType<Line>().First().InsertSegment(1, new Vector2(100, 700));
+        //foreach (var line in SchemeViewModels.First().Objects.OfType<Line>())
+        //{
+        //    //line.Vertices.Clear();
+        //}
+
+        //_scheme.Objects.Clear();
+        //
+        //SchemeViewModels.First().Objects.Clear();
+        //
+        //GC.Collect(3, GCCollectionMode.Forced);
+
+        SchemeViewModels.First().Objects.OfType<Line>().First().AddVertex(new Vector2(100,200));
     }, _ => true);
 
     #endregion

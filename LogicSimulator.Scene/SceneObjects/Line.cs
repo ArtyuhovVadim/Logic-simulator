@@ -16,11 +16,11 @@ public class Line : EditableSceneObject
         var geometry = new PathGeometry(target.Factory);
 
         var sink = geometry.Open();
-        sink.BeginFigure(line._segments.First(), FigureBegin.Hollow);
+        sink.BeginFigure(line._vertices.First(), FigureBegin.Hollow);
 
-        for (var i = 1; i < line._segments.Count; i++)
+        for (var i = 1; i < line._vertices.Count; i++)
         {
-            sink.AddLine(line._segments[i]);
+            sink.AddLine(line._vertices[i]);
         }
 
         sink.EndFigure(FigureEnd.Open);
@@ -35,29 +35,29 @@ public class Line : EditableSceneObject
 
     private Color4 _strokeColor = Color4.Black;
     private float _strokeThickness = 1f;
-    private readonly List<Vector2> _segments = new();
 
     private Vector2 _startDragPosition;
-    private Vector2[] _starDragSegments;
+    private Vector2[] _starDragPositions;
+    private readonly List<Vector2> _vertices = new();
 
     public override AbstractNode[] Nodes
     {
         get
         {
-            var nodes = new AbstractNode[_segments.Count];
+            var nodes = new AbstractNode[_vertices.Count];
 
-            for (var i = 0; i < _segments.Count; i++)
+            for (var i = 0; i < _vertices.Count; i++)
             {
                 var index = i;
 
-                nodes[i] = new Node<Line>(o => o._segments[index], (o, p) => o.ModifySegment(index, p));
+                nodes[i] = new Node<Line>(o => o._vertices[index], (o, p) => o.ModifyVertex(index, p));
             }
 
             return nodes;
         }
     }
 
-    public IReadOnlyCollection<Vector2> Segments => _segments;
+    public IReadOnlyList<Vector2> Vertexes => _vertices;
 
     [Editable]
     public Color4 StrokeColor
@@ -73,38 +73,42 @@ public class Line : EditableSceneObject
         set => SetAndRequestRender(ref _strokeThickness, value);
     }
 
-    public void AddSegment(Vector2 segment)
+    public void AddVertex(Vector2 segment)
     {
-        _segments.Add(segment);
+        _vertices.Add(segment);
         ResourceCache.RequestUpdate(this, PathGeometryResource);
+        OnPropertyChanged(nameof(Vertexes));
     }
 
-    public bool RemoveSegment(Vector2 segment)
+    public bool RemoveVertex(Vector2 segment)
     {
-        var result = _segments.Remove(segment);
+        var result = _vertices.Remove(segment);
 
         if (result)
         {
             ResourceCache.RequestUpdate(this, PathGeometryResource);
+            OnPropertyChanged(nameof(Vertexes));
         }
 
         return result;
     }
 
-    public void InsertSegment(int index, Vector2 segment)
+    public void InsertVertex(int index, Vector2 segment)
     {
-        _segments.Insert(index, segment);
+        _vertices.Insert(index, segment);
         ResourceCache.RequestUpdate(this, PathGeometryResource);
+        OnPropertyChanged(nameof(Vertexes));
     }
 
-    public bool ModifySegment(int index, Vector2 segment)
+    public bool ModifyVertex(int index, Vector2 segment)
     {
-        if (index < 0 || index >= _segments.Count) return false;
+        if (index < 0 || index >= _vertices.Count) return false;
 
-        if (_segments[index] == segment) return true;
+        if (_vertices[index] == segment) return true;
 
-        _segments[index] = segment;
+        _vertices[index] = segment;
         ResourceCache.RequestUpdate(this, PathGeometryResource);
+        OnPropertyChanged(nameof(Vertexes));
 
         return true;
     }
@@ -113,32 +117,31 @@ public class Line : EditableSceneObject
     {
         IsDragging = true;
 
-        _starDragSegments = new Vector2[_segments.Count];
+        _starDragPositions = new Vector2[_vertices.Count];
 
         _startDragPosition = pos;
-        _segments.CopyTo(_starDragSegments);
+        _vertices.CopyTo(_starDragPositions);
     }
 
     public override void Drag(Vector2 pos)
     {
-        var flag = false;
+        var isModified = false;
 
-        for (var i = 0; i < _starDragSegments.Length; i++)
+        for (var i = 0; i < _starDragPositions.Length; i++)
         {
-            var newValue = _starDragSegments[i] - _startDragPosition + pos;
+            var newValue = _starDragPositions[i] - _startDragPosition + pos;
 
-            if (_segments[i] == newValue)
-                continue;
-
-            _segments[i] = newValue;
-
-            flag = true;
+            if (newValue != _vertices[i])
+            {
+                _vertices[i] = newValue;
+                isModified = true;
+            }
         }
 
-        if (flag)
-        {
-            ResourceCache.RequestUpdate(this, PathGeometryResource);
-        }
+        if (!isModified) return;
+
+        ResourceCache.RequestUpdate(this, PathGeometryResource);
+        OnPropertyChanged(nameof(Vertexes));
     }
 
     public override void EndDrag()
@@ -148,7 +151,7 @@ public class Line : EditableSceneObject
 
     public override bool IsIntersectsPoint(Vector2 pos, Matrix3x2 matrix, float tolerance = 0.25f)
     {
-        if (_segments.Count == 0) return false;
+        if (_vertices.Count == 0) return false;
 
         var geometry = ResourceCache.GetCached<PathGeometry>(this, PathGeometryResource);
 
@@ -157,7 +160,7 @@ public class Line : EditableSceneObject
 
     public override GeometryRelation CompareWithRectangle(RectangleGeometry rectGeometry, Matrix3x2 matrix, float tolerance = 0.25f)
     {
-        if (_segments.Count == 0) return GeometryRelation.Unknown;
+        if (_vertices.Count == 0) return GeometryRelation.Unknown;
 
         var geometry = ResourceCache.GetCached<PathGeometry>(this, PathGeometryResource);
 
@@ -166,18 +169,18 @@ public class Line : EditableSceneObject
 
     public override void Render(Scene2D scene, RenderTarget renderTarget)
     {
-        if (_segments.Count == 0) return;
+        if (_vertices.Count == 0) return;
 
         var brush = ResourceCache.GetOrUpdate<SolidColorBrush>(this, StrokeBrushResource, renderTarget);
         var geometry = ResourceCache.GetOrUpdate<PathGeometry>(this, PathGeometryResource, renderTarget);
         var strokeStyle = ResourceCache.GetOrUpdate<StrokeStyle>(this, StrokeStyleResource, renderTarget);
-        
+
         renderTarget.DrawGeometry(geometry, brush, StrokeThickness / scene.Scale, strokeStyle);
     }
 
     public override void RenderSelection(Scene2D scene, RenderTarget renderTarget, SolidColorBrush selectionBrush, StrokeStyle selectionStyle)
     {
-        if (_segments.Count == 0) return;
+        if (_vertices.Count == 0) return;
 
         var geometry = ResourceCache.GetOrUpdate<PathGeometry>(this, PathGeometryResource, renderTarget);
 

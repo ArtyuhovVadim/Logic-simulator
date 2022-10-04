@@ -19,7 +19,6 @@
     </ItemGroup>
 
     <ItemGroup>
-        <Folder Include="SceneObjects\Base\" />
         <Folder Include="Tools\Base\" />
     </ItemGroup>
 
