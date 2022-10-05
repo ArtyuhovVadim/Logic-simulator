@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.ObjectModel;
+using System.Linq;
 using System.Windows.Input;
 using LogicSimulator.Infrastructure.Commands;
 using LogicSimulator.Scene.SceneObjects;
@@ -46,6 +47,18 @@ public class LineEditorViewModel : BaseEditorViewModel<Line>
 
     #endregion
 
+    #region SelectedVertexIndex
+
+    private int _selectedVertexIndex = -1;
+
+    public int SelectedVertexIndex
+    {
+        get => _selectedVertexIndex;
+        set => Set(ref _selectedVertexIndex, value);
+    }
+
+    #endregion
+
     #region StrokeThickness
 
     public float StrokeThickness
@@ -83,10 +96,10 @@ public class LineEditorViewModel : BaseEditorViewModel<Line>
 
     private ICommand _addVertexCommand;
 
-    public ICommand AddVertexCommand => _addVertexCommand ??= new LambdaCommand(obj =>
+    public ICommand AddVertexCommand => _addVertexCommand ??= new LambdaCommand(_ =>
     {
-        if (obj is not VertexViewModel vertexViewModel) return;
-
+        FirstObject.AddVertex(_vertexes.Last().Position);
+        SelectedVertexIndex = _vertexes.Count - 1;
     }, _ => true);
 
     #endregion
@@ -95,11 +108,10 @@ public class LineEditorViewModel : BaseEditorViewModel<Line>
 
     private ICommand _removeVertexCommand;
 
-    public ICommand RemoveVertexCommand => _removeVertexCommand ??= new LambdaCommand(obj =>
+    public ICommand RemoveVertexCommand => _removeVertexCommand ??= new LambdaCommand(_ =>
     {
-        if (obj is not VertexViewModel vertexViewModel) return;
-
-    }, _ => true);
+        FirstObject.RemoveVertex(_vertexes[SelectedVertexIndex].Position);
+    }, _ => SelectedVertexIndex != -1 && _vertexes.Count > 2);
 
     #endregion
 
