@@ -64,9 +64,10 @@
                         Grid.ColumnSpan="2"
                         Background="#545454">
                         <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="32" />
+                            <ColumnDefinition Width="34" />
                             <ColumnDefinition Width="*" />
                             <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="19" />
                         </Grid.ColumnDefinitions>
                         <TextBlock
                             Grid.Column="0"

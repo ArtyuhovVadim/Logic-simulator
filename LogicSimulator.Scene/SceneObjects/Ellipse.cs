@@ -24,7 +24,7 @@ public class Ellipse : EditableSceneObject
     private Color4 _fillColor = Color4.White;
     private Color4 _strokeColor = Color4.Black;
     private float _strokeThickness = 1f;
-    private bool _isFilled;
+    private bool _isFilled = true;
 
     private Vector2 _startDragPosition;
     private Vector2 _startDragCenter;

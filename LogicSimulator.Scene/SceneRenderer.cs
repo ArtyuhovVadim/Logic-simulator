@@ -121,7 +121,7 @@ public class SceneRenderer : IDisposable
 
     private void SetImageSourcePixelSize(Size size)
     {
-        var (width, height) = ((int)Math.Max(size.Width * _scene.Dpi / 96f, 10), (int)Math.Max(size.Height * _scene.Dpi / 96f, 10));
+        var (width, height) = ((int)Math.Max(Math.Round(size.Width * _scene.Dpi / 96f), 10), (int)Math.Max(Math.Round(size.Height * _scene.Dpi / 96f), 10));
 
         _imageSource.SetPixelSize(width, height);
 
