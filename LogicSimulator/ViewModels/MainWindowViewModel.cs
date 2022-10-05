@@ -100,7 +100,7 @@ public class MainWindowViewModel : BindableBase
         line.AddVertex(new Vector2(500, 300));
         line.AddVertex(new Vector2(500, 500));
 
-        var rect = new Rectangle { Width = 100, Height = 100 };
+        var rect = new RoundedRectangle { Width = 100, Height = 100, RadiusX = 10, RadiusY = 20};
 
         var ellipse = new Ellipse { RadiusX = 100, RadiusY = 100 };
 

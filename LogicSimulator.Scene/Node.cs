@@ -9,10 +9,11 @@ public class Node<T> : AbstractNode where T : EditableSceneObject
     private readonly Func<T, Vector2> _getNodePositionFunc;
     private readonly Action<T, Vector2> _applyNodeMoveFunc;
 
-    public Node(Func<T, Vector2> getNodePositionFunc, Action<T, Vector2> applyNodeMoveFunc)
+    public Node(Func<T, Vector2> getNodePositionFunc, Action<T, Vector2> applyNodeMoveFunc, bool useGridSnap = true)
     {
         _getNodePositionFunc = getNodePositionFunc;
         _applyNodeMoveFunc = applyNodeMoveFunc;
+        UseGridSnap = useGridSnap;
     }
 
     public Vector2 GetLocation(T obj) => _getNodePositionFunc.Invoke(obj);

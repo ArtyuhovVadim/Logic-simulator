@@ -15,6 +15,9 @@
         <DataTemplate DataType="{x:Type evm:RectangleEditorViewModel}">
             <editorViews:RectangleEditorView />
         </DataTemplate>
+        <DataTemplate DataType="{x:Type evm:RoundedRectangleEditorViewModel}">
+            <editorViews:RoundedRectangleEditorView />
+        </DataTemplate>
         <DataTemplate DataType="{x:Type evm:EllipseEditorViewModel}">
             <editorViews:EllipseEditorView />
         </DataTemplate>
