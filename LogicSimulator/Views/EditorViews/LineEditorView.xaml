@@ -14,263 +14,302 @@
     d:DesignHeight="450"
     d:DesignWidth="400"
     mc:Ignorable="d">
-    <Grid Margin="5" Background="#404040">
-        <Grid.Resources>
-            <Style BasedOn="{StaticResource {x:Type TextBlock}}" TargetType="{x:Type TextBlock}">
-                <Setter Property="Margin" Value="5" />
-                <Setter Property="VerticalAlignment" Value="Center" />
-                <Setter Property="HorizontalAlignment" Value="Right" />
-            </Style>
-            <Style BasedOn="{StaticResource {x:Type controls:NumberBox}}" TargetType="{x:Type controls:NumberBox}">
-                <Setter Property="Margin" Value="5" />
-                <Setter Property="VerticalAlignment" Value="Center" />
-                <Setter Property="RoundNumber" Value="True" />
-                <Setter Property="DecimalPlaces" Value="3" />
-                <Setter Property="SelectAllTextOnFocus" Value="True" />
-            </Style>
-            <Style BasedOn="{StaticResource {x:Type controls:ColorPicker}}" TargetType="{x:Type controls:ColorPicker}">
-                <Setter Property="Margin" Value="5" />
-                <Setter Property="VerticalAlignment" Value="Center" />
-            </Style>
-        </Grid.Resources>
-        <Grid.RowDefinitions>
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="Auto" />
-        </Grid.RowDefinitions>
-        <TextBlock
-            Grid.Row="0"
-            Margin="4,4"
-            HorizontalAlignment="Left"
-            Text="Ломаная линия" />
-        <Expander
-            Grid.Row="1"
-            Header="Вершины"
-            IsExpanded="True">
-            <Grid Margin="8">
-                <Grid.RowDefinitions>
-                    <RowDefinition />
-                    <RowDefinition />
-                    <RowDefinition />
-                </Grid.RowDefinitions>
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition />
-                    <ColumnDefinition Width="Auto" />
-                </Grid.ColumnDefinitions>
-                <Grid
-                    Grid.Row="0"
-                    Grid.Column="0"
-                    Grid.ColumnSpan="2"
-                    Background="#545454">
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="32" />
-                        <ColumnDefinition Width="*" />
-                        <ColumnDefinition Width="*" />
-                    </Grid.ColumnDefinitions>
-                    <TextBlock
-                        Grid.Column="0"
-                        HorizontalAlignment="Center"
-                        VerticalAlignment="Center"
-                        Text="№" />
-                    <TextBlock
-                        Grid.Column="1"
-                        HorizontalAlignment="Center"
-                        VerticalAlignment="Center"
-                        Text="X" />
-                    <TextBlock
-                        Grid.Column="2"
-                        HorizontalAlignment="Center"
-                        VerticalAlignment="Center"
-                        Text="Y" />
-                </Grid>
-                <ListBox
-                    x:Name="VertexListBox"
-                    Grid.Row="1"
-                    Grid.Column="0"
-                    Grid.ColumnSpan="2"
-                    MaxHeight="154"
-                    Margin="-1,-1,-1,4"
-                    HorizontalContentAlignment="Stretch"
-                    Background="Transparent"
-                    BorderThickness="0"
-                    ItemsSource="{Binding Path=Vertexes}"
-                    ScrollViewer.HorizontalScrollBarVisibility="Disabled"
-                    ScrollViewer.VerticalScrollBarVisibility="Visible"
-                    SelectedIndex="{Binding Path=SelectedVertexIndex}"
-                    SelectionMode="Single">
-                    <ListBox.Resources>
-                        <Style BasedOn="{StaticResource {x:Type ScrollBar}}" TargetType="{x:Type ScrollBar}">
-                            <Setter Property="Background" Value="#545454" />
-                        </Style>
-                    </ListBox.Resources>
-                    <i:Interaction.Behaviors>
-                        <b:ListBoxScrollAtSelectedItemBehavior />
-                    </i:Interaction.Behaviors>
-                    <ListBox.ItemContainerStyle>
-                        <Style TargetType="{x:Type ListBoxItem}">
-                            <Setter Property="Focusable" Value="False" />
-                            <Setter Property="Template">
-                                <Setter.Value>
-                                    <ControlTemplate TargetType="{x:Type ListBoxItem}">
-                                        <Border
-                                            x:Name="Border"
-                                            Background="#545454"
-                                            BorderBrush="#222222"
-                                            BorderThickness="0"
-                                            CornerRadius="0">
-                                            <ToggleButton IsChecked="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ListBoxItem}}, Path=IsSelected}">
-                                                <ToggleButton.Style>
-                                                    <Style TargetType="{x:Type ToggleButton}">
-                                                        <Setter Property="Background" Value="Transparent" />
-                                                        <Setter Property="BorderBrush" Value="Transparent" />
-                                                        <Setter Property="Foreground" Value="Transparent" />
-                                                        <Setter Property="BorderThickness" Value="0" />
-                                                        <Setter Property="HorizontalContentAlignment" Value="Stretch" />
-                                                        <Setter Property="VerticalContentAlignment" Value="Center" />
-                                                        <Setter Property="Padding" Value="4,4" />
-                                                        <Setter Property="Focusable" Value="False" />
-                                                        <Setter Property="Template">
-                                                            <Setter.Value>
-                                                                <ControlTemplate TargetType="{x:Type ToggleButton}">
-                                                                    <Border
-                                                                        x:Name="border"
-                                                                        Background="{TemplateBinding Background}"
-                                                                        BorderBrush="{TemplateBinding BorderBrush}"
-                                                                        BorderThickness="{TemplateBinding BorderThickness}"
-                                                                        SnapsToDevicePixels="true">
-                                                                        <ContentPresenter
-                                                                            x:Name="contentPresenter"
-                                                                            Margin="{TemplateBinding Padding}"
-                                                                            HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
-                                                                            VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
-                                                                            Focusable="False"
-                                                                            RecognizesAccessKey="True"
-                                                                            SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" />
-                                                                    </Border>
-                                                                </ControlTemplate>
-                                                            </Setter.Value>
-                                                        </Setter>
-                                                    </Style>
-                                                </ToggleButton.Style>
-                                                <ContentPresenter />
-                                            </ToggleButton>
-                                        </Border>
-                                        <ControlTemplate.Triggers>
-                                            <Trigger Property="IsSelected" Value="True">
-                                                <Trigger.Setters>
-                                                    <Setter TargetName="Border" Property="Background" Value="#6283A2" />
-                                                </Trigger.Setters>
-                                            </Trigger>
-                                            <MultiTrigger>
-                                                <MultiTrigger.Conditions>
-                                                    <Condition Property="IsMouseOver" Value="True" />
-                                                    <Condition Property="IsSelected" Value="False" />
-                                                </MultiTrigger.Conditions>
-                                                <MultiTrigger.Setters>
-                                                    <Setter TargetName="Border" Property="Background" Value="#5C5C5C" />
-                                                </MultiTrigger.Setters>
-                                            </MultiTrigger>
-                                        </ControlTemplate.Triggers>
-                                    </ControlTemplate>
-                                </Setter.Value>
-                            </Setter>
-                        </Style>
-                    </ListBox.ItemContainerStyle>
-                    <ListBox.ItemTemplate>
-                        <DataTemplate DataType="{x:Type vm:VertexViewModel}">
-                            <controls:Vector2Box Vector="{Binding Path=Position}">
-                                <controls:Vector2Box.Content>
-                                    <TextBlock
-                                        MinWidth="25"
-                                        Margin="0"
-                                        HorizontalAlignment="Center"
-                                        VerticalAlignment="Center"
-                                        Text="{Binding Path=Index}"
-                                        TextAlignment="Center" />
-                                </controls:Vector2Box.Content>
-                                <i:Interaction.Triggers>
-                                    <i:EventTrigger EventName="VectorChanged">
-                                        <i:InvokeCommandAction Command="{Binding DataContext.VertexChangedCommand, RelativeSource={RelativeSource AncestorType=ev:LineEditorView}}" CommandParameter="{Binding}" />
-                                    </i:EventTrigger>
-                                </i:Interaction.Triggers>
-                                <i:Interaction.Behaviors>
-                                    <b:FocusListBoxItemOnContentFocusBehavior ListBox="{Binding ElementName=VertexListBox}" ViewModel="{Binding}" />
-                                </i:Interaction.Behaviors>
-                            </controls:Vector2Box>
-                        </DataTemplate>
-                    </ListBox.ItemTemplate>
-                </ListBox>
-                <TextBlock
-                    Grid.Row="2"
-                    Grid.Column="0"
-                    Margin="0"
-                    HorizontalAlignment="Left"
-                    VerticalAlignment="Center"
-                    Text="{Binding Path=Vertexes.Count,
-                                   StringFormat='Кол-во вершин: {0}'}" />
-                <StackPanel
-                    Grid.Row="2"
-                    Grid.Column="1"
-                    HorizontalAlignment="Right"
-                    Orientation="Horizontal">
-                    <Button
-                        Margin="0,0,4,0"
-                        Padding="8,5"
-                        Command="{Binding Path=AddVertexCommand}">
-                        <Button.Content>
-                            <fa5:ImageAwesome
-                                Height="12"
-                                Foreground="#FDFDFD"
-                                Icon="Solid_Plus" />
-                        </Button.Content>
-                    </Button>
-                    <Button Padding="8,5" Command="{Binding Path=RemoveVertexCommand}">
-                        <Button.Content>
-                            <fa5:ImageAwesome
-                                Height="12"
-                                Foreground="#FDFDFD"
-                                Icon="Solid_TrashAlt" />
-                        </Button.Content>
-                    </Button>
-                </StackPanel>
-            </Grid>
-        </Expander>
-        <Expander
-            Grid.Row="2"
-            Margin="0,4"
-            Header="Свойства"
-            IsExpanded="True">
-            <Grid Margin="3">
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="*" />
-                    <RowDefinition Height="*" />
-                </Grid.RowDefinitions>
-
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="Auto" />
-                    <ColumnDefinition />
-                </Grid.ColumnDefinitions>
-
-                <TextBlock
-                    Grid.Row="0"
-                    Grid.Column="0"
-                    Text="Толщина" />
-                <Grid Grid.Row="0" Grid.Column="1">
+    <ScrollViewer HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Auto">
+        <Grid Margin="5" Background="#404040">
+            <Grid.Resources>
+                <Style BasedOn="{StaticResource {x:Type TextBlock}}" TargetType="{x:Type TextBlock}">
+                    <Setter Property="Margin" Value="5" />
+                    <Setter Property="VerticalAlignment" Value="Center" />
+                    <Setter Property="HorizontalAlignment" Value="Right" />
+                </Style>
+                <Style BasedOn="{StaticResource {x:Type controls:NumberBox}}" TargetType="{x:Type controls:NumberBox}">
+                    <Setter Property="Margin" Value="5" />
+                    <Setter Property="VerticalAlignment" Value="Center" />
+                    <Setter Property="RoundNumber" Value="True" />
+                    <Setter Property="DecimalPlaces" Value="3" />
+                    <Setter Property="SelectAllTextOnFocus" Value="True" />
+                </Style>
+                <Style BasedOn="{StaticResource {x:Type controls:ColorPicker}}" TargetType="{x:Type controls:ColorPicker}">
+                    <Setter Property="Margin" Value="5" />
+                    <Setter Property="VerticalAlignment" Value="Center" />
+                </Style>
+            </Grid.Resources>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
+            <TextBlock
+                Grid.Row="0"
+                Margin="4,4"
+                HorizontalAlignment="Left"
+                Text="Ломаная линия" />
+            <Expander
+                Grid.Row="1"
+                Header="Вершины"
+                IsExpanded="True">
+                <Grid Margin="8">
+                    <Grid.RowDefinitions>
+                        <RowDefinition />
+                        <RowDefinition />
+                        <RowDefinition />
+                    </Grid.RowDefinitions>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition />
                         <ColumnDefinition Width="Auto" />
                     </Grid.ColumnDefinitions>
-                    <controls:NumberBox
+                    <Grid
+                        Grid.Row="0"
                         Grid.Column="0"
-                        IsValueUndefined="{Binding Path=UndefinedPropertiesMap[StrokeThickness]}"
-                        Number="{Binding Path=StrokeThickness}" />
-                    <controls:ColorPicker
+                        Grid.ColumnSpan="2"
+                        Background="#545454">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="32" />
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+                        <TextBlock
+                            Grid.Column="0"
+                            HorizontalAlignment="Center"
+                            VerticalAlignment="Center"
+                            Text="№" />
+                        <TextBlock
+                            Grid.Column="1"
+                            HorizontalAlignment="Center"
+                            VerticalAlignment="Center"
+                            Text="X" />
+                        <TextBlock
+                            Grid.Column="2"
+                            HorizontalAlignment="Center"
+                            VerticalAlignment="Center"
+                            Text="Y" />
+                    </Grid>
+                    <ListBox
+                        x:Name="VertexListBox"
+                        Grid.Row="1"
+                        Grid.Column="0"
+                        Grid.ColumnSpan="2"
+                        MaxHeight="152"
+                        Margin="0,0,0,4"
+                        HorizontalContentAlignment="Stretch"
+                        Background="Transparent"
+                        BorderThickness="0"
+                        ItemsSource="{Binding Path=Vertexes}"
+                        ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+                        ScrollViewer.VerticalScrollBarVisibility="Visible"
+                        SelectedIndex="{Binding Path=SelectedVertexIndex}"
+                        SelectionMode="Single">
+                        <ListBox.Style>
+                            <Style TargetType="{x:Type ListBox}">
+                                <Style.Resources>
+                                    <SolidColorBrush x:Key="ListBox.Disabled.Background" Color="#FFFFFFFF" />
+                                    <SolidColorBrush x:Key="ListBox.Disabled.Border" Color="#FFD9D9D9" />
+                                </Style.Resources>
+                                <Setter Property="Background" Value="Transparent" />
+                                <Setter Property="ScrollViewer.HorizontalScrollBarVisibility" Value="Disabled" />
+                                <Setter Property="ScrollViewer.VerticalScrollBarVisibility" Value="Visible" />
+                                <Setter Property="VerticalContentAlignment" Value="Center" />
+                                <Setter Property="Template">
+                                    <Setter.Value>
+                                        <ControlTemplate TargetType="{x:Type ListBox}">
+                                            <Border
+                                                x:Name="Bd"
+                                                Padding="0"
+                                                Background="{TemplateBinding Background}"
+                                                BorderBrush="{TemplateBinding BorderBrush}"
+                                                BorderThickness="{TemplateBinding BorderThickness}"
+                                                SnapsToDevicePixels="true">
+                                                <ScrollViewer Padding="{TemplateBinding Padding}" Focusable="False">
+                                                    <ItemsPresenter SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" />
+                                                </ScrollViewer>
+                                            </Border>
+                                            <ControlTemplate.Triggers>
+                                                <Trigger Property="IsEnabled" Value="false">
+                                                    <Setter TargetName="Bd" Property="Background" Value="{StaticResource ListBox.Disabled.Background}" />
+                                                    <Setter TargetName="Bd" Property="BorderBrush" Value="{StaticResource ListBox.Disabled.Border}" />
+                                                </Trigger>
+                                                <MultiTrigger>
+                                                    <MultiTrigger.Conditions>
+                                                        <Condition Property="IsGrouping" Value="true" />
+                                                        <Condition Property="VirtualizingPanel.IsVirtualizingWhenGrouping" Value="false" />
+                                                    </MultiTrigger.Conditions>
+                                                    <Setter Property="ScrollViewer.CanContentScroll" Value="false" />
+                                                </MultiTrigger>
+                                            </ControlTemplate.Triggers>
+                                        </ControlTemplate>
+                                    </Setter.Value>
+                                </Setter>
+                            </Style>
+                        </ListBox.Style>
+                        <ListBox.Resources>
+                            <Style BasedOn="{StaticResource {x:Type ScrollBar}}" TargetType="{x:Type ScrollBar}">
+                                <Setter Property="Background" Value="#545454" />
+                            </Style>
+                        </ListBox.Resources>
+                        <i:Interaction.Behaviors>
+                            <b:ListBoxScrollAtSelectedItemBehavior />
+                        </i:Interaction.Behaviors>
+                        <ListBox.ItemContainerStyle>
+                            <Style TargetType="{x:Type ListBoxItem}">
+                                <Setter Property="Focusable" Value="False" />
+                                <Setter Property="Template">
+                                    <Setter.Value>
+                                        <ControlTemplate TargetType="{x:Type ListBoxItem}">
+                                            <Border x:Name="Border" Background="#545454">
+                                                <ToggleButton IsChecked="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ListBoxItem}}, Path=IsSelected}">
+                                                    <ToggleButton.Style>
+                                                        <Style TargetType="{x:Type ToggleButton}">
+                                                            <Setter Property="Background" Value="Transparent" />
+                                                            <Setter Property="BorderBrush" Value="Transparent" />
+                                                            <Setter Property="Foreground" Value="Transparent" />
+                                                            <Setter Property="BorderThickness" Value="0" />
+                                                            <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+                                                            <Setter Property="VerticalContentAlignment" Value="Center" />
+                                                            <Setter Property="Padding" Value="4" />
+                                                            <Setter Property="Focusable" Value="False" />
+                                                            <Setter Property="Template">
+                                                                <Setter.Value>
+                                                                    <ControlTemplate TargetType="{x:Type ToggleButton}">
+                                                                        <Border
+                                                                            x:Name="border"
+                                                                            Background="{TemplateBinding Background}"
+                                                                            BorderBrush="{TemplateBinding BorderBrush}"
+                                                                            BorderThickness="{TemplateBinding BorderThickness}"
+                                                                            SnapsToDevicePixels="true">
+                                                                            <ContentPresenter
+                                                                                x:Name="contentPresenter"
+                                                                                Margin="{TemplateBinding Padding}"
+                                                                                HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                                                                VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
+                                                                                Focusable="False"
+                                                                                RecognizesAccessKey="True"
+                                                                                SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" />
+                                                                        </Border>
+                                                                    </ControlTemplate>
+                                                                </Setter.Value>
+                                                            </Setter>
+                                                        </Style>
+                                                    </ToggleButton.Style>
+                                                    <ContentPresenter />
+                                                </ToggleButton>
+                                            </Border>
+                                            <ControlTemplate.Triggers>
+                                                <Trigger Property="IsSelected" Value="True">
+                                                    <Trigger.Setters>
+                                                        <Setter TargetName="Border" Property="Background" Value="#6283A2" />
+                                                    </Trigger.Setters>
+                                                </Trigger>
+                                                <MultiTrigger>
+                                                    <MultiTrigger.Conditions>
+                                                        <Condition Property="IsMouseOver" Value="True" />
+                                                        <Condition Property="IsSelected" Value="False" />
+                                                    </MultiTrigger.Conditions>
+                                                    <MultiTrigger.Setters>
+                                                        <Setter TargetName="Border" Property="Background" Value="#5C5C5C" />
+                                                    </MultiTrigger.Setters>
+                                                </MultiTrigger>
+                                            </ControlTemplate.Triggers>
+                                        </ControlTemplate>
+                                    </Setter.Value>
+                                </Setter>
+                            </Style>
+                        </ListBox.ItemContainerStyle>
+                        <ListBox.ItemTemplate>
+                            <DataTemplate DataType="{x:Type vm:VertexViewModel}">
+                                <controls:Vector2Box Vector="{Binding Path=Position}">
+                                    <controls:Vector2Box.Content>
+                                        <TextBlock
+                                            MinWidth="25"
+                                            Margin="0"
+                                            HorizontalAlignment="Center"
+                                            VerticalAlignment="Center"
+                                            Text="{Binding Path=Index}"
+                                            TextAlignment="Center" />
+                                    </controls:Vector2Box.Content>
+                                    <i:Interaction.Triggers>
+                                        <i:EventTrigger EventName="VectorChanged">
+                                            <i:InvokeCommandAction Command="{Binding DataContext.VertexChangedCommand, RelativeSource={RelativeSource AncestorType=ev:LineEditorView}}" CommandParameter="{Binding}" />
+                                        </i:EventTrigger>
+                                    </i:Interaction.Triggers>
+                                    <i:Interaction.Behaviors>
+                                        <b:FocusListBoxItemOnContentFocusBehavior ListBox="{Binding ElementName=VertexListBox}" ViewModel="{Binding}" />
+                                    </i:Interaction.Behaviors>
+                                </controls:Vector2Box>
+                            </DataTemplate>
+                        </ListBox.ItemTemplate>
+                    </ListBox>
+                    <TextBlock
+                        Grid.Row="2"
+                        Grid.Column="0"
+                        Margin="0"
+                        HorizontalAlignment="Left"
+                        VerticalAlignment="Center"
+                        Text="{Binding Path=Vertexes.Count,
+                                       StringFormat='Кол-во вершин: {0}'}" />
+                    <StackPanel
+                        Grid.Row="2"
                         Grid.Column="1"
-                        Margin="0,5,5,5"
-                        IsValueUndefined="{Binding Path=UndefinedPropertiesMap[StrokeColor]}"
-                        Color="{Binding Path=StrokeColor}" />
+                        HorizontalAlignment="Right"
+                        Orientation="Horizontal">
+                        <Button
+                            Margin="0,0,4,0"
+                            Padding="8,5"
+                            Command="{Binding Path=AddVertexCommand}">
+                            <Button.Content>
+                                <fa5:ImageAwesome
+                                    Height="12"
+                                    Foreground="#FDFDFD"
+                                    Icon="Solid_Plus" />
+                            </Button.Content>
+                        </Button>
+                        <Button Padding="8,5" Command="{Binding Path=RemoveVertexCommand}">
+                            <Button.Content>
+                                <fa5:ImageAwesome
+                                    Height="12"
+                                    Foreground="#FDFDFD"
+                                    Icon="Solid_TrashAlt" />
+                            </Button.Content>
+                        </Button>
+                    </StackPanel>
                 </Grid>
-            </Grid>
-        </Expander>
-    </Grid>
+            </Expander>
+            <Expander
+                Grid.Row="2"
+                Margin="0,4"
+                Header="Свойства"
+                IsExpanded="True">
+                <Grid Margin="3">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="*" />
+                        <RowDefinition Height="*" />
+                    </Grid.RowDefinitions>
+
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition />
+                    </Grid.ColumnDefinitions>
+
+                    <TextBlock
+                        Grid.Row="0"
+                        Grid.Column="0"
+                        Text="Толщина" />
+                    <Grid Grid.Row="0" Grid.Column="1">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+                        <controls:NumberBox
+                            Grid.Column="0"
+                            IsValueUndefined="{Binding Path=UndefinedPropertiesMap[StrokeThickness]}"
+                            Number="{Binding Path=StrokeThickness}" />
+                        <controls:ColorPicker
+                            Grid.Column="1"
+                            Margin="0,5,5,5"
+                            IsValueUndefined="{Binding Path=UndefinedPropertiesMap[StrokeColor]}"
+                            Color="{Binding Path=StrokeColor}" />
+                    </Grid>
+                </Grid>
+            </Expander>
+        </Grid>
+    </ScrollViewer>
 </UserControl>

@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Windows.Input;
@@ -10,6 +9,7 @@ using LogicSimulator.Scene.SceneObjects;
 using LogicSimulator.Scene.SceneObjects.Base;
 using LogicSimulator.ViewModels.Base;
 using SharpDX;
+using Rectangle = LogicSimulator.Scene.SceneObjects.Rectangle;
 
 namespace LogicSimulator.ViewModels;
 
@@ -100,7 +100,13 @@ public class MainWindowViewModel : BindableBase
         line.AddVertex(new Vector2(500, 300));
         line.AddVertex(new Vector2(500, 500));
 
+        var rect = new Rectangle { Width = 100, Height = 100 };
+
+        var ellipse = new Ellipse { RadiusX = 100, RadiusY = 100 };
+
         list.Add(line);
+        list.Add(rect);
+        list.Add(ellipse);
 
         _scheme.Objects = list;
 
@@ -137,7 +143,7 @@ public class MainWindowViewModel : BindableBase
         //
         //GC.Collect(3, GCCollectionMode.Forced);
 
-        SchemeViewModels.First().Objects.OfType<Line>().First().AddVertex(new Vector2(100,200));
+        SchemeViewModels.First().Objects.OfType<Line>().First().AddVertex(new Vector2(100, 200));
     }, _ => true);
 
     #endregion
