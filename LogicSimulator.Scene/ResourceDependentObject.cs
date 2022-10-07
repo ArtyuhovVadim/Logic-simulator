@@ -1,6 +1,7 @@
 ﻿using System;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
+using YamlDotNet.Serialization;
 
 namespace LogicSimulator.Scene;
 
@@ -10,6 +11,7 @@ public abstract class ResourceDependentObject : IDisposable, INotifyPropertyChan
 
     public event PropertyChangedEventHandler PropertyChanged;
 
+    [YamlIgnore]
     public uint Id { get; }
 
     protected ResourceDependentObject() => Id = _lastId++;

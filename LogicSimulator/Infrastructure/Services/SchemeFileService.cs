@@ -21,20 +21,31 @@ public class SchemeFileService : ISchemeFileService
     {
         var vector2Converter = new Vector2YamlConverter();
         var color4Converter = new Color4YamlConverter();
+        var lineConverter = new LineYamlConverter();
 
-        _serializer = new SerializerBuilder()
+        var serializerBuilder = new SerializerBuilder()
             .WithTypeConverter(vector2Converter)
             .WithTypeConverter(color4Converter)
+            .WithTypeConverter(lineConverter)
             .WithTagMapping(new TagName("!Rectangle"), typeof(Rectangle))
+            .WithTagMapping(new TagName("!RoundedRectangle"), typeof(RoundedRectangle))
             .WithTagMapping(new TagName("!Ellipse"), typeof(Ellipse))
-            .Build();
+            .WithTagMapping(new TagName("!Line"), typeof(Line));
 
-        _deserializer = new DeserializerBuilder()
+        var deserializerBuilder = new DeserializerBuilder()
             .WithTypeConverter(vector2Converter)
             .WithTypeConverter(color4Converter)
+            .WithTypeConverter(lineConverter)
             .WithTagMapping(new TagName("!Rectangle"), typeof(Rectangle))
+            .WithTagMapping(new TagName("!RoundedRectangle"), typeof(RoundedRectangle))
             .WithTagMapping(new TagName("!Ellipse"), typeof(Ellipse))
-            .Build();
+            .WithTagMapping(new TagName("!Line"), typeof(Line));
+
+        lineConverter.ValueSerializer = serializerBuilder.BuildValueSerializer();
+        lineConverter.ValueDeserializer = deserializerBuilder.BuildValueDeserializer();
+
+        _serializer = serializerBuilder.Build();
+        _deserializer = deserializerBuilder.Build();
 
         _fileWriteStreamOptions = new FileStreamOptions { Access = FileAccess.Write, Mode = FileMode.Create };
         _fileReadStreamOptions = new FileStreamOptions { Access = FileAccess.Read, Mode = FileMode.Open };

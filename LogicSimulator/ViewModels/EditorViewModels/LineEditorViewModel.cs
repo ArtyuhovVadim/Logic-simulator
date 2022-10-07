@@ -37,6 +37,7 @@ public class VertexViewModel : BindableBase
     #endregion
 }
 
+//TODO: Убирать вершины при выборе нескольких объектов
 public class LineEditorViewModel : BaseEditorViewModel<Line>
 {
     #region Vertexes
