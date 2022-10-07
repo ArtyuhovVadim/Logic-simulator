@@ -119,7 +119,7 @@ public class SelectionTool : BaseTool
 
     private (AbstractNode nodeUnderCursor, EditableSceneObject nodeUnderCursorOwner) GetNodeUnderCursor(Scene2D scene, Vector2 pos)
     {
-        foreach (var sceneObject in scene.Objects)
+        foreach (var sceneObject in scene.Objects.Reverse())
         {
             if (sceneObject is not EditableSceneObject { IsSelected: true } obj) continue;
 
