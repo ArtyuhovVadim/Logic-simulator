@@ -1,7 +1,7 @@
 ﻿using SharpDX;
 using WpfColor = System.Windows.Media.Color;
 
-namespace LogicSimulator.Extensions;
+namespace LogicSimulator.Utils;
 
 public static class ColorExtensionMethods
 {

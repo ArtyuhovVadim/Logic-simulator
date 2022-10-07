@@ -1,6 +1,6 @@
 ﻿using SharpDX;
 
-namespace LogicSimulator.Extensions;
+namespace LogicSimulator.Utils;
 
 public static class PointExtensionMethods
 {

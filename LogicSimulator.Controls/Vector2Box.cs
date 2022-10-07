@@ -1,6 +1,6 @@
 ﻿using System.Windows;
 using System.Windows.Controls;
-using LogicSimulator.Extensions;
+using LogicSimulator.Utils;
 using SharpDX;
 
 namespace LogicSimulator.Controls;

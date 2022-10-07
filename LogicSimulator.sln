@@ -15,7 +15,7 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Microsoft.Wpf.Interop.Direc
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LogicSimulator.MathParser", "LogicSimulator.MathParser\LogicSimulator.MathParser.csproj", "{8C7A6C42-BABF-497E-A421-BBCA9C3A72CF}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LogicSimulator.Extensions", "LogicSimulator.Extensions\LogicSimulator.Extensions.csproj", "{64E81F91-1585-4484-92E7-D4086B8F862A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LogicSimulator.Utils", "LogicSimulator.Extensions\LogicSimulator.Utils.csproj", "{64E81F91-1585-4484-92E7-D4086B8F862A}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

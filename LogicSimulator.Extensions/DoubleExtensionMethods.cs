@@ -1,4 +1,4 @@
-﻿namespace LogicSimulator.Extensions;
+﻿namespace LogicSimulator.Utils;
 
 public static class DoubleExtensionMethods
 {

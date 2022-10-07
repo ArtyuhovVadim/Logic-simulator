@@ -7,7 +7,6 @@ public static class RenderNotifier
 {
     private static readonly Dictionary<Scene2D, bool> RenderRequiredDictionary = new();
 
-    //TODO: Вызывается после создания первых объектов, что пораждает ошибку в ResourceCache (ресурсы не обновляются, так как нет запроса на рендеринг). Исправил в ResourceCache костылем
     public static void RegisterScene(Scene2D scene)
     {
         RenderRequiredDictionary[scene] = false;
@@ -42,6 +41,11 @@ public static class RenderNotifier
                 RenderRequiredDictionary[key] = true;
             }
         }
+    }
+
+    public static void RequestRender(Scene2D scene)
+    {
+        RenderRequiredDictionary[scene] = true;
     }
 
     public static bool IsRenderRequired(Scene2D scene) => RenderRequiredDictionary[scene];

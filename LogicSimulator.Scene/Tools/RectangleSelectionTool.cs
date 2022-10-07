@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Windows.Input;
-using LogicSimulator.Extensions;
 using LogicSimulator.Scene.Components;
 using LogicSimulator.Scene.Tools.Base;
+using LogicSimulator.Utils;
 using SharpDX;
 using SharpDX.Direct2D1;
 

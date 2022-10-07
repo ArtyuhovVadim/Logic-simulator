@@ -1,7 +1,7 @@
 ﻿using System.Windows;
 using System.Windows.Documents;
 using System.Windows.Media;
-using LogicSimulator.Extensions;
+using LogicSimulator.Utils;
 using Color = System.Windows.Media.Color;
 using Point = System.Windows.Point;
 

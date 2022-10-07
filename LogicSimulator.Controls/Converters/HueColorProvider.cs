@@ -2,7 +2,7 @@
 using System.Globalization;
 using System.Windows.Data;
 using System.Windows.Markup;
-using LogicSimulator.Extensions;
+using LogicSimulator.Utils;
 
 namespace LogicSimulator.Controls.Converters;
 

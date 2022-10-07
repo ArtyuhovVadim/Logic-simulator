@@ -1,7 +1,6 @@
 ﻿using System;
-using System.Runtime.InteropServices;
 using System.Windows.Input;
-using LogicSimulator.Extensions;
+using LogicSimulator.Utils;
 using SharpDX;
 
 namespace LogicSimulator.Scene;
@@ -54,7 +53,7 @@ public class SceneTransformController
 
         if (e.MiddleButton == MouseButtonState.Pressed)
         {
-            SetCursorPos((int)_lastMiddleButtonDownPos.X, (int)_lastMiddleButtonDownPos.Y);
+            User32.SetCursorPos((int)_lastMiddleButtonDownPos.X, (int)_lastMiddleButtonDownPos.Y);
             RelativeScale(_lastMiddleButtonDownPosWithDpi, -ScaleStep * (pos.Y - _lastMiddleButtonDownPosWithDpi.Y), Max, Min);
         }
         else if (e.RightButton == MouseButtonState.Pressed)
@@ -76,9 +75,4 @@ public class SceneTransformController
 
         _scene.Scale = newScale;
     }
-
-    //TODO: Перенести
-    [DllImport("user32.dll")]
-    [return: MarshalAs(UnmanagedType.Bool)]
-    private static extern bool SetCursorPos(int x, int y);
 }

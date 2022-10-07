@@ -1,9 +1,9 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using LogicSimulator.Extensions;
 using LogicSimulator.Scene.Components;
 using LogicSimulator.Scene.SceneObjects.Base;
 using LogicSimulator.Scene.Tools.Base;
+using LogicSimulator.Utils;
 using SharpDX;
 
 namespace LogicSimulator.Scene.Tools;

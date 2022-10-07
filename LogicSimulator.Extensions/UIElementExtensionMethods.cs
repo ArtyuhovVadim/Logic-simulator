@@ -1,7 +1,7 @@
 ﻿using System.Windows;
 using System.Windows.Automation;
 
-namespace LogicSimulator.Extensions;
+namespace LogicSimulator.Utils;
 
 public static class UiElementExtensionMethods
 {

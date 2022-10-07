@@ -1,14 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.Specialized;
 using System.Linq;
 using System.Windows;
 using System.Windows.Input;
 using System.Windows.Media;
-using LogicSimulator.Extensions;
 using LogicSimulator.Scene.Components.Base;
 using LogicSimulator.Scene.SceneObjects.Base;
 using LogicSimulator.Scene.Tools;
 using LogicSimulator.Scene.Tools.Base;
+using LogicSimulator.Utils;
 using SharpDX;
 using SharpDX.Direct2D1;
 
@@ -24,7 +25,6 @@ public class Scene2D : FrameworkElement
 
     #region Objects
 
-    //TODO: При удаленни объекта сцена не обновляется
     public IEnumerable<BaseSceneObject> Objects
     {
         get => (IEnumerable<BaseSceneObject>)GetValue(ObjectsProperty);
@@ -33,7 +33,19 @@ public class Scene2D : FrameworkElement
 
     public static readonly DependencyProperty ObjectsProperty =
         DependencyProperty.Register(nameof(Objects), typeof(IEnumerable<BaseSceneObject>), typeof(Scene2D),
-            new PropertyMetadata(Enumerable.Empty<BaseSceneObject>()));
+            new PropertyMetadata(Enumerable.Empty<BaseSceneObject>(), OnObjectsChanged));
+
+    private static void OnObjectsChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+    {
+        if (d is not Scene2D scene2D) return;
+
+        if (e.NewValue is not INotifyCollectionChanged collectionChanged) return;
+
+        collectionChanged.CollectionChanged += (_, _) =>
+        {
+            RenderNotifier.RequestRender(scene2D);
+        };
+    }
 
     #endregion
 

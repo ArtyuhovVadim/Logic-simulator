@@ -1,7 +1,7 @@
 ﻿using SharpDX;
 using SharpDX.Mathematics.Interop;
 
-namespace LogicSimulator.Extensions;
+namespace LogicSimulator.Utils;
 
 public static class Vector2ExtensionMethods
 {
