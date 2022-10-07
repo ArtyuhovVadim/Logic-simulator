@@ -8,7 +8,16 @@
         <Platforms>x64;x86</Platforms>
         <StartupObject>LogicSimulator.Program</StartupObject>
         <LangVersion>latest</LangVersion>
+        <ApplicationIcon>Icons\icon512x512.ico</ApplicationIcon>
     </PropertyGroup>
+
+    <ItemGroup>
+      <None Remove="Icons\icon512x512.png" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Content Include="Icons\icon512x512.ico" />
+    </ItemGroup>
 
     <ItemGroup>
         <ProjectReference Include="..\LogicSimulator.AvalonDock\LogicSimulator.AvalonDock.csproj" />
@@ -37,6 +46,10 @@
         <PackageReference Include="Microsoft.Extensions.Hosting.Abstractions" Version="6.0.0" />
         <PackageReference Include="Microsoft.Xaml.Behaviors.Wpf" Version="1.1.39" />
         <PackageReference Include="YamlDotNet" Version="12.0.1" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Resource Include="Icons\icon512x512.png" />
     </ItemGroup>
 
 </Project>

@@ -36,11 +36,14 @@
                                 <!--  Icon  -->
                                 <Image
                                     x:Name="Icon"
-                                    Margin="7,0,0,0"
+                                    Height="22"
+                                    Margin="6,0"
                                     HorizontalAlignment="Left"
                                     VerticalAlignment="Center"
+                                    RenderOptions.BitmapScalingMode="HighQuality"
                                     Source="{TemplateBinding Icon}"
-                                    WindowChrome.IsHitTestVisibleInChrome="True" />
+                                    Stretch="Uniform"
+                                    WindowChrome.IsHitTestVisibleInChrome="False" />
 
                                 <!--  Title  -->
                                 <TextBlock

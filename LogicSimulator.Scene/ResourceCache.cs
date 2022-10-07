@@ -40,6 +40,9 @@ public static class ResourceCache
 
     public static void RequestUpdate(ResourceDependentObject obj, Resource resource)
     {
+        //TODO: Костыль!
+        RenderNotifier.RequestRender(obj);
+
         var id = (ulong)obj.Id << 32 | resource.Id;
 
         if (ResourcesToUpdate.Contains(id))
