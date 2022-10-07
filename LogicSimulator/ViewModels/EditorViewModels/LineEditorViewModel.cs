@@ -4,47 +4,35 @@ using System.Linq;
 using System.Windows.Input;
 using LogicSimulator.Infrastructure.Commands;
 using LogicSimulator.Scene.SceneObjects;
-using LogicSimulator.ViewModels.Base;
 using LogicSimulator.ViewModels.EditorViewModels.Base;
 using SharpDX;
 
 namespace LogicSimulator.ViewModels.EditorViewModels;
 
-public class VertexViewModel : BindableBase
-{
-    #region Position
-
-    private Vector2 _position = Vector2.Zero;
-
-    public Vector2 Position
-    {
-        get => _position;
-        set => Set(ref _position, value);
-    }
-
-    #endregion
-
-    #region Index
-
-    private int _index;
-
-    public int Index
-    {
-        get => _index;
-        set => Set(ref _index, value);
-    }
-
-    #endregion
-}
-
-//TODO: Убирать вершины при выборе нескольких объектов
 public class LineEditorViewModel : BaseEditorViewModel<Line>
 {
+    public LineEditorViewModel()
+    {
+        PropertyChanged += (_, args) =>
+        {
+            if (args.PropertyName == nameof(Objects))
+            {
+                OnPropertyChanged(nameof(IsVertexEditorVisible));
+            }
+        };
+    }
+
     #region Vertexes
 
     private readonly ObservableCollection<VertexViewModel> _vertexes = new();
 
     public ObservableCollection<VertexViewModel> Vertexes => GetSynchronizedVertexes();
+
+    #endregion
+
+    #region IsVertexEditorVisible
+
+    public bool IsVertexEditorVisible => Objects.Count == 1;
 
     #endregion
 

@@ -123,7 +123,7 @@ public class SelectionTool : BaseTool
         {
             if (sceneObject is not EditableSceneObject { IsSelected: true } obj) continue;
 
-            foreach (var node in obj.Nodes)
+            foreach (var node in obj.Nodes.Reverse())
             {
                 if (pos.IsInRectangle(node.GetLocation(obj).RectangleRelativePointAsCenter(AbstractNode.NodeSize / scene.Scale)))
                     return (node, obj);

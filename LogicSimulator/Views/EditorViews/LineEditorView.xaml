@@ -9,11 +9,15 @@
     xmlns:fa5="http://schemas.fontawesome.com/icons/"
     xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:viewModels="clr-namespace:LogicSimulator.ViewModels"
     xmlns:vm="clr-namespace:LogicSimulator.ViewModels.EditorViewModels"
     d:DataContext="{d:DesignInstance Type={x:Type vm:LineEditorViewModel}}"
     d:DesignHeight="450"
     d:DesignWidth="400"
     mc:Ignorable="d">
+    <UserControl.Resources>
+        <BoolToVisibilityConverter x:Key="BoolToVisibilityConverter" />
+    </UserControl.Resources>
     <ScrollViewer HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Auto">
         <Grid Margin="5" Background="#404040">
             <Grid.Resources>
@@ -47,7 +51,9 @@
             <Expander
                 Grid.Row="1"
                 Header="Вершины"
-                IsExpanded="True">
+                IsExpanded="True"
+                Visibility="{Binding Path=IsVertexEditorVisible,
+                                     Converter={StaticResource BoolToVisibilityConverter}}">
                 <Grid Margin="8">
                     <Grid.RowDefinitions>
                         <RowDefinition />
@@ -216,7 +222,7 @@
                             </Style>
                         </ListBox.ItemContainerStyle>
                         <ListBox.ItemTemplate>
-                            <DataTemplate DataType="{x:Type vm:VertexViewModel}">
+                            <DataTemplate DataType="{x:Type viewModels:VertexViewModel}">
                                 <controls:Vector2Box Vector="{Binding Path=Position}">
                                     <controls:Vector2Box.Content>
                                         <TextBlock
