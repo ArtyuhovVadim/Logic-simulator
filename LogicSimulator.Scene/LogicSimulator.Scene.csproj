@@ -23,7 +23,7 @@
     </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\LogicSimulator.Extensions\LogicSimulator.Utils.csproj" />
+      <ProjectReference Include="..\LogicSimulator.Utils\LogicSimulator.Utils.csproj" />
       <ProjectReference Include="..\Microsoft.Wpf.Interop.DirectX\Microsoft.Wpf.Interop.DirectX.vcxproj" />
     </ItemGroup>
 

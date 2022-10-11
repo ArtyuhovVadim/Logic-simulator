@@ -9,6 +9,7 @@ using SharpDX;
 
 namespace LogicSimulator.ViewModels.EditorViewModels;
 
+//TODO: FirstObject работает неправильно
 public class LineEditorViewModel : BaseEditorViewModel<Line>
 {
     public LineEditorViewModel()
