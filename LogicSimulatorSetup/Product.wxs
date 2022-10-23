@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
-	<Product Id="*" Name="LogicSimulatorSetup" Language="1033" Version="0.1.0" Manufacturer="Vadim" UpgradeCode="c37f6194-3b2b-4ce2-9482-ebb6457d9d25">
+	<Product Id="*" Name="LogicSimulator" Language="1033" Version="0.1.0" Manufacturer="Vadim" UpgradeCode="c37f6194-3b2b-4ce2-9482-ebb6457d9d25">
 		<Package InstallerVersion="200" Compressed="yes" InstallScope="perMachine" />
 
 		<MajorUpgrade DowngradeErrorMessage="A newer version of [ProductName] is already installed." />

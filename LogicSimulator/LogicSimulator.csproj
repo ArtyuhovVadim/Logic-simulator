@@ -9,6 +9,7 @@
         <StartupObject>LogicSimulator.Program</StartupObject>
         <LangVersion>latest</LangVersion>
         <ApplicationIcon>Icons\icon512x512.ico</ApplicationIcon>
+	    <VersionPrefix>0.1.0</VersionPrefix>
     </PropertyGroup>
 
     <ItemGroup>
