@@ -52,7 +52,7 @@ public class HueAdorner : Adorner
         var halfPenThickness = _blackPen.Thickness / 2;
 
         var size = new Size(4, 14);
-        var location = new Point(Hue.Map(0, 360, -size.Width / 2, _root.RenderSize.Width), (_root.RenderSize.Height - size.Height) / 2);
+        var location = new Point(Hue.Map(0, 360, -size.Width / 2, _root.RenderSize.Width - size.Width / 2), (_root.RenderSize.Height - size.Height) / 2);
 
         var rect = new Rect(location, size);
         rect = new Rect(rect.Left - halfPenThickness, rect.Top - halfPenThickness, rect.Width + _blackPen.Thickness, rect.Height + _blackPen.Thickness);
