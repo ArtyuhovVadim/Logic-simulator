@@ -1,5 +1,8 @@
-﻿using System.Collections.ObjectModel;
+﻿using System;
+using System.Collections.ObjectModel;
+using System.IO;
 using System.Linq;
+using System.Windows;
 using System.Windows.Input;
 using LogicSimulator.Infrastructure.Commands;
 using LogicSimulator.Infrastructure.Services.Interfaces;
@@ -63,7 +66,7 @@ public class MainWindowViewModel : BindableBase
 
     public ICommand LoadExampleCommand => _loadExampleCommand ??= new LambdaCommand(_ =>
     {
-        var path = "Data/Example.lss";
+        var path = Path.Combine(Path.GetDirectoryName(System.Reflection.Assembly.GetEntryAssembly().Location), "Data/Example.lss");
 
         if (!_schemeFileService.ReadFromFile(path, out var scheme))
         {
