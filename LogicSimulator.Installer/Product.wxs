@@ -3,12 +3,12 @@
 
 	<?define ProductCode = "{62D376A3-D29B-469B-B441-8FA717C0D2F0}" ?>
 	<?define UpgradeCode = "{996BFE61-BE7F-4DD0-AD1A-2D2FC730A937}" ?>
-	<?define Version = "0.1.0" ?>
+	<!--<?define Version = "0.1.0" ?>-->
 
 	<Product Id="$(var.ProductCode)"
 	         Name="!(loc.ProductName)"
 	         Language="!(loc.Language)"
-	         Version="$(var.Version)"
+	         Version="$(var.BuildVersion)"
 	         Manufacturer="!(loc.Manufacturer)"
 	         UpgradeCode="$(var.UpgradeCode)">
 
@@ -38,6 +38,7 @@
 		<Feature Id="ProductFeature" Title="!(loc.ProductName)" Level="1">
 
 			<ComponentGroupRef Id="ProductComponents" />
+			<ComponentGroupRef Id="PublishedComponents" />
 
 		</Feature>
 	</Product>
