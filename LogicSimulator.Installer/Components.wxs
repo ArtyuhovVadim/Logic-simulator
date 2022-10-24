@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
+	<Fragment>
+
+		<ComponentGroup Id="ProductComponents">
+			<ComponentRef Id="TestFile" />
+		</ComponentGroup>
+
+		<DirectoryRef Id="INSTALLFOLDER" FileSource="..\..\Logic-simulator\LogicSimulator\bin\x64\Release\net6.0-windows\publish\win-x64\">
+			<Component Id="TestFile" Guid="{EA61252F-92DA-4D48-837F-B6BE64225A63}">
+				<File Id="FileTestFile" Name="LogicSimulator.exe" KeyPath="yes"/>
+
+				<RemoveFolder Id="RemoveStartMenu" Directory="InstallProgramMenuFolder" On="uninstall"/>
+			</Component>
+		</DirectoryRef>
+
+	</Fragment>
+</Wix>

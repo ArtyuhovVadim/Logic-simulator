@@ -26,27 +26,19 @@
 
 		<MediaTemplate EmbedCab="yes" />
 
+		<Icon Id="Icon" SourceFile="$(var.LogicSimulator.ProjectDir)\Icons\icon512x512.ico"/>
+
+		<Property Id="ARPPRODUCTICON">Icon</Property>
+		<Property Id="ARPURLINFOABOUT">https://www.google.com</Property>
+
+		<UIRef Id="WixUI_Minimal"/>
+
+		<WixVariable Id="WixUILicenseRtf" Value="$(var.ProjectDir)\License.rtf"/>
+
 		<Feature Id="ProductFeature" Title="!(loc.ProductName)" Level="1">
 
 			<ComponentGroupRef Id="ProductComponents" />
 
 		</Feature>
 	</Product>
-
-	<Fragment>
-		<Directory Id="TARGETDIR" Name="SourceDir">
-			<Directory Id="ProgramFilesFolder">
-				<Directory Id="INSTALLFOLDER" Name="LogicSimulator.Installer" />
-			</Directory>
-		</Directory>
-	</Fragment>
-
-	<Fragment>
-		<ComponentGroup Id="ProductComponents" Directory="INSTALLFOLDER">
-			<!-- TODO: Remove the comments around this Component element and the ComponentRef below in order to add resources to this installer. -->
-			<!-- <Component Id="ProductComponent"> -->
-			<!-- TODO: Insert files, registry keys, and other resources here. -->
-			<!-- </Component> -->
-		</ComponentGroup>
-	</Fragment>
 </Wix>
