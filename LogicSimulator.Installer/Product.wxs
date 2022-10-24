@@ -2,21 +2,34 @@
 <Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
 
 	<?define ProductCode = "{62D376A3-D29B-469B-B441-8FA717C0D2F0}" ?>
+	<?define UpgradeCode = "{996BFE61-BE7F-4DD0-AD1A-2D2FC730A937}" ?>
+	<?define Version = "0.1.0" ?>
 
 	<Product Id="$(var.ProductCode)"
-	         Name="LogicSimulator.Installer"
-	         Language="1033"
-	         Version="1.0.0.0"
-	         Manufacturer="Vadim"
-	         UpgradeCode="1b625e57-61df-4b3e-84a0-957d664039ce">
+	         Name="!(loc.ProductName)"
+	         Language="!(loc.Language)"
+	         Version="$(var.Version)"
+	         Manufacturer="!(loc.Manufacturer)"
+	         UpgradeCode="$(var.UpgradeCode)">
 
-		<Package InstallerVersion="200" Compressed="yes" InstallScope="perMachine" />
+		<Package InstallerVersion="200"
+		         Compressed="yes"
+		         InstallScope="perMachine"
+		         Platform="x64"
+		         Manufacturer="!(loc.Manufacturer)"
+		         Description="!(loc.Description)"
+		         Keywords="!(loc.Keywords)"
+		         Comments="!(loc.Comments)"
+		         Languages="!(loc.Language)"/>
 
-		<MajorUpgrade DowngradeErrorMessage="A newer version of [ProductName] is already installed." />
-		<MediaTemplate />
+		<MajorUpgrade DowngradeErrorMessage="!(loc.DowngradeErrorMessage)" />
 
-		<Feature Id="ProductFeature" Title="LogicSimulator.Installer" Level="1">
+		<MediaTemplate EmbedCab="yes" />
+
+		<Feature Id="ProductFeature" Title="!(loc.ProductName)" Level="1">
+
 			<ComponentGroupRef Id="ProductComponents" />
+
 		</Feature>
 	</Product>
 
