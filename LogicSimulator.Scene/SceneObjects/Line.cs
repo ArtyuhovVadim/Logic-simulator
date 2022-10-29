@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using System.Linq;
 using LogicSimulator.Scene.SceneObjects.Base;
 using SharpDX;
 using SharpDX.Direct2D1;
@@ -9,30 +8,14 @@ namespace LogicSimulator.Scene.SceneObjects;
 //TODO: Сделать больше наконечников линии
 public class Line : EditableSceneObject
 {
-    private static readonly Resource PathGeometryResource = ResourceCache.Register((target, o) =>
-    {
-        var line = (Line)o;
-        var geometry = new PathGeometry(target.Factory);
+    private static readonly Resource PathGeometryResource = ResourceCache.Register((scene, obj) =>
+        scene.ResourceFactory.CreatePolylineGeometry(((Line)obj)._vertices));
 
-        var sink = geometry.Open();
-        sink.BeginFigure(line._vertices.First(), FigureBegin.Hollow);
+    private static readonly Resource StrokeBrushResource = ResourceCache.Register((scene, obj) =>
+        scene.ResourceFactory.CreateSolidColorBrush(((Line)obj).StrokeColor));
 
-        for (var i = 1; i < line._vertices.Count; i++)
-        {
-            sink.AddLine(line._vertices[i]);
-        }
-
-        sink.EndFigure(FigureEnd.Open);
-        sink.Close();
-        sink.Dispose();
-
-        return geometry;
-    });
-
-    private static readonly Resource StrokeBrushResource = ResourceCache.Register((target, o) => new SolidColorBrush(target, ((Line)o).StrokeColor));
-
-    private static readonly Resource StrokeStyleResource = ResourceCache.Register((target, o) =>
-        new StrokeStyle(target.Factory, new StrokeStyleProperties { StartCap = CapStyle.Round, EndCap = CapStyle.Round, LineJoin = LineJoin.Round }));
+    private static readonly Resource StrokeStyleResource = ResourceCache.Register((scene, obj) =>
+        scene.ResourceFactory.CreateStrokeStyle(new StrokeStyleProperties { StartCap = CapStyle.Round, EndCap = CapStyle.Round, LineJoin = LineJoin.Round }));
 
     private Color4 _strokeColor = Color4.Black;
     private float _strokeThickness = 1f;
@@ -67,14 +50,14 @@ public class Line : EditableSceneObject
         set => SetAndUpdateResource(ref _strokeColor, value, StrokeBrushResource);
     }
 
-    [Editable]  
+    [Editable]
     public float StrokeThickness
     {
         get => _strokeThickness;
         set => SetAndRequestRender(ref _strokeThickness, value);
     }
 
-    protected override void OnInitialize(Scene2D scene, RenderTarget renderTarget)
+    protected override void OnInitialize(Scene2D scene)
     {
         InitializeResource(PathGeometryResource);
         InitializeResource(StrokeBrushResource);
@@ -179,9 +162,9 @@ public class Line : EditableSceneObject
     {
         if (_vertices.Count == 0) return;
 
-        var brush = ResourceCache.GetOrUpdate<SolidColorBrush>(this, StrokeBrushResource, renderTarget);
-        var geometry = ResourceCache.GetOrUpdate<PathGeometry>(this, PathGeometryResource, renderTarget);
-        var strokeStyle = ResourceCache.GetOrUpdate<StrokeStyle>(this, StrokeStyleResource, renderTarget);
+        var brush = ResourceCache.GetOrUpdate<SolidColorBrush>(this, StrokeBrushResource, scene);
+        var geometry = ResourceCache.GetOrUpdate<PathGeometry>(this, PathGeometryResource, scene);
+        var strokeStyle = ResourceCache.GetOrUpdate<StrokeStyle>(this, StrokeStyleResource, scene);
 
         renderTarget.DrawGeometry(geometry, brush, StrokeThickness / scene.Scale, strokeStyle);
     }
@@ -190,7 +173,7 @@ public class Line : EditableSceneObject
     {
         if (_vertices.Count == 0) return;
 
-        var geometry = ResourceCache.GetOrUpdate<PathGeometry>(this, PathGeometryResource, renderTarget);
+        var geometry = ResourceCache.GetOrUpdate<PathGeometry>(this, PathGeometryResource, scene);
 
         renderTarget.DrawGeometry(geometry, selectionBrush, 1f / scene.Scale, selectionStyle);
     }

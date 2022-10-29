@@ -5,7 +5,7 @@ namespace LogicSimulator.Scene.Components;
 
 public class SceneObjectsRenderingComponent : BaseRenderingComponent
 {
-    protected override void OnInitialize(Scene2D scene, RenderTarget renderTarget) { }
+    protected override void OnInitialize(Scene2D scene) { }
 
     protected override void OnRender(Scene2D scene, RenderTarget renderTarget)
     {

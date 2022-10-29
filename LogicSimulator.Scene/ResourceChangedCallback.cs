@@ -1,5 +1,3 @@
-﻿using SharpDX.Direct2D1;
+﻿namespace LogicSimulator.Scene;
 
-namespace LogicSimulator.Scene;
-
-public delegate object ResourceChangedCallback(RenderTarget renderTarget, ResourceDependentObject o);
+public delegate object ResourceChangedCallback(Scene2D scene, ResourceDependentObject o);

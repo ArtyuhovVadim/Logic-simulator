@@ -7,16 +7,18 @@ namespace LogicSimulator.Scene.SceneObjects;
 
 public class Ellipse : EditableSceneObject
 {
-    private static readonly Resource EllipseGeometryResource = ResourceCache.Register((target, o) =>
+    private static readonly Resource EllipseGeometryResource = ResourceCache.Register((scene, obj) =>
     {
-        var ellipse = (Ellipse)o;
+        var ellipse = (Ellipse)obj;
 
-        return new EllipseGeometry(target.Factory, new SharpDX.Direct2D1.Ellipse(ellipse.Center, ellipse.RadiusX, ellipse.RadiusY));
+        return scene.ResourceFactory.CreateEllipseGeometry(new SharpDX.Direct2D1.Ellipse(ellipse.Center, ellipse.RadiusX, ellipse.RadiusY));
     });
 
-    private static readonly Resource FillBrushResource = ResourceCache.Register((target, o) => new SolidColorBrush(target, ((Ellipse)o).FillColor));
+    private static readonly Resource FillBrushResource = ResourceCache.Register((scene, obj) =>
+        scene.ResourceFactory.CreateSolidColorBrush(((Ellipse)obj).FillColor));
 
-    private static readonly Resource StrokeBrushResource = ResourceCache.Register((target, o) => new SolidColorBrush(target, ((Ellipse)o).StrokeColor));
+    private static readonly Resource StrokeBrushResource = ResourceCache.Register((scene, obj) =>
+        scene.ResourceFactory.CreateSolidColorBrush(((Ellipse)obj).StrokeColor));
 
     private Vector2 _center = Vector2.Zero;
     private float _radiusX;
@@ -86,7 +88,7 @@ public class Ellipse : EditableSceneObject
         set => SetAndRequestRender(ref _isFilled, value);
     }
 
-    protected override void OnInitialize(Scene2D scene, RenderTarget renderTarget)
+    protected override void OnInitialize(Scene2D scene)
     {
         InitializeResource(EllipseGeometryResource);
         InitializeResource(FillBrushResource);
@@ -128,12 +130,12 @@ public class Ellipse : EditableSceneObject
 
     protected override void OnRender(Scene2D scene, RenderTarget renderTarget)
     {
-        var strokeBrush = ResourceCache.GetOrUpdate<SolidColorBrush>(this, StrokeBrushResource, renderTarget);
-        var geometry = ResourceCache.GetOrUpdate<EllipseGeometry>(this, EllipseGeometryResource, renderTarget);
+        var strokeBrush = ResourceCache.GetOrUpdate<SolidColorBrush>(this, StrokeBrushResource, scene);
+        var geometry = ResourceCache.GetOrUpdate<EllipseGeometry>(this, EllipseGeometryResource, scene);
 
         if (IsFilled)
         {
-            var fillBrush = ResourceCache.GetOrUpdate<SolidColorBrush>(this, FillBrushResource, renderTarget);
+            var fillBrush = ResourceCache.GetOrUpdate<SolidColorBrush>(this, FillBrushResource, scene);
             renderTarget.FillGeometry(geometry, fillBrush);
         }
 
@@ -142,7 +144,7 @@ public class Ellipse : EditableSceneObject
 
     public override void RenderSelection(Scene2D scene, RenderTarget renderTarget, SolidColorBrush selectionBrush, StrokeStyle selectionStyle)
     {
-        var geometry = ResourceCache.GetOrUpdate<EllipseGeometry>(this, EllipseGeometryResource, renderTarget);
+        var geometry = ResourceCache.GetOrUpdate<EllipseGeometry>(this, EllipseGeometryResource, scene);
 
         renderTarget.DrawGeometry(geometry, selectionBrush, 1f / scene.Scale, selectionStyle);
         renderTarget.DrawLine(Center, Center + new Vector2(RadiusX, 0), selectionBrush, 1f / scene.Scale, selectionStyle);

@@ -6,11 +6,11 @@ namespace LogicSimulator.Scene.Components;
 
 public class SelectionRectangleRenderingComponent : BaseRenderingComponent
 {
-    private static readonly Resource SecantBrushResource = ResourceCache.Register((target, o) =>
-        new SolidColorBrush(target, ((SelectionRectangleRenderingComponent)o).SecantColor));
+    private static readonly Resource SecantBrushResource = ResourceCache.Register((scene, obj) =>
+        scene.ResourceFactory.CreateSolidColorBrush(((SelectionRectangleRenderingComponent)obj).SecantColor));
 
-    private static readonly Resource NormalBrushResource = ResourceCache.Register((target, o) =>
-        new SolidColorBrush(target, ((SelectionRectangleRenderingComponent)o).NormalColor));
+    private static readonly Resource NormalBrushResource = ResourceCache.Register((scene, obj) =>
+        scene.ResourceFactory.CreateSolidColorBrush(((SelectionRectangleRenderingComponent)obj).NormalColor));
 
     private Color4 _secantColor = new(0.39f, 0.78f, 0.39f, 1f);
     private Color4 _normalColor = new(0.49f, 0.68f, 1f, 1f);
@@ -48,15 +48,15 @@ public class SelectionRectangleRenderingComponent : BaseRenderingComponent
 
     public bool IsSecant { get; set; }
 
-    protected override void OnInitialize(Scene2D scene, RenderTarget renderTarget)
+    protected override void OnInitialize(Scene2D scene)
     {
-        InitializeResource(SecantBrushResource); 
+        InitializeResource(SecantBrushResource);
         InitializeResource(NormalBrushResource);
     }
 
     protected override void OnRender(Scene2D scene, RenderTarget renderTarget)
     {
-        var brush = ResourceCache.GetOrUpdate<SolidColorBrush>(this, IsSecant ? SecantBrushResource : NormalBrushResource, renderTarget);
+        var brush = ResourceCache.GetOrUpdate<SolidColorBrush>(this, IsSecant ? SecantBrushResource : NormalBrushResource, scene);
 
         var location = StartPosition;
         var size = EndPosition - StartPosition;

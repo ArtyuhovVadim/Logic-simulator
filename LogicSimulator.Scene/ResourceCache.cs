@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using SharpDX;
-using SharpDX.Direct2D1;
 
 namespace LogicSimulator.Scene;
 
@@ -36,11 +35,11 @@ public static class ResourceCache
         }
     }
 
-    public static void InitializeResource(ResourceDependentObject obj, Resource resource, RenderTarget target)
+    public static void InitializeResource(ResourceDependentObject obj, Resource resource, Scene2D scene)
     {
         var id = (ulong)obj.Id << 32 | resource.Id;
 
-        var value = resource.Update(target, obj);
+        var value = resource.Update(scene, obj);
 
         Cache[id] = value;
     }
@@ -62,7 +61,7 @@ public static class ResourceCache
         return (T)Cache[id];
     }
 
-    public static T GetOrUpdate<T>(ResourceDependentObject obj, Resource resource, RenderTarget target)
+    public static T GetOrUpdate<T>(ResourceDependentObject obj, Resource resource, Scene2D scene)
     {
         var id = (ulong)obj.Id << 32 | resource.Id;
 
@@ -86,7 +85,7 @@ public static class ResourceCache
                 }
         }
 
-        var value = resource.Update(target, obj);
+        var value = resource.Update(scene, obj);
 
         Cache[id] = value;
 

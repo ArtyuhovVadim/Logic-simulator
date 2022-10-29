@@ -9,9 +9,11 @@ namespace LogicSimulator.Scene.Components;
 
 public class NodeRenderingComponent : BaseRenderingComponent
 {
-    private static readonly Resource StrokeBrushResource = ResourceCache.Register((target, o) => new SolidColorBrush(target, ((NodeRenderingComponent)o).StrokeColor));
+    private static readonly Resource StrokeBrushResource = ResourceCache.Register((scene, obj) =>
+        scene.ResourceFactory.CreateSolidColorBrush(((NodeRenderingComponent)obj).StrokeColor));
 
-    private static readonly Resource BackgroundBrushResource = ResourceCache.Register((target, o) => new SolidColorBrush(target, ((NodeRenderingComponent)o).BackgroundColor));
+    private static readonly Resource BackgroundBrushResource = ResourceCache.Register((scene, obj) =>
+        scene.ResourceFactory.CreateSolidColorBrush(((NodeRenderingComponent)obj).BackgroundColor));
 
     private Color4 _strokeColor = Color4.Black;
     private Color4 _backgroundColor = Color4.White;
@@ -28,7 +30,7 @@ public class NodeRenderingComponent : BaseRenderingComponent
         set => SetAndUpdateResource(ref _backgroundColor, value, BackgroundBrushResource);
     }
 
-    protected override void OnInitialize(Scene2D scene, RenderTarget renderTarget)
+    protected override void OnInitialize(Scene2D scene)
     {
         InitializeResource(BackgroundBrushResource);
         InitializeResource(StrokeBrushResource);
@@ -36,8 +38,8 @@ public class NodeRenderingComponent : BaseRenderingComponent
 
     protected override void OnRender(Scene2D scene, RenderTarget renderTarget)
     {
-        var strokeBrush = ResourceCache.GetOrUpdate<SolidColorBrush>(this, StrokeBrushResource, renderTarget);
-        var backgroundBrush = ResourceCache.GetOrUpdate<SolidColorBrush>(this, BackgroundBrushResource, renderTarget);
+        var strokeBrush = ResourceCache.GetOrUpdate<SolidColorBrush>(this, StrokeBrushResource, scene);
+        var backgroundBrush = ResourceCache.GetOrUpdate<SolidColorBrush>(this, BackgroundBrushResource, scene);
 
         var size = AbstractNode.NodeSize / scene.Scale;
 

@@ -6,15 +6,15 @@ namespace LogicSimulator.Scene.SceneObjects;
 
 public class Rectangle : EditableSceneObject
 {
-    private static readonly Resource FillBrushResource = ResourceCache.Register((target, o) => new SolidColorBrush(target, ((Rectangle)o).FillColor));
+    private static readonly Resource FillBrushResource = ResourceCache.Register((scene, obj) => scene.ResourceFactory.CreateSolidColorBrush(((Rectangle)obj).FillColor));
 
-    private static readonly Resource StrokeBrushResource = ResourceCache.Register((target, o) => new SolidColorBrush(target, ((Rectangle)o).StrokeColor));
+    private static readonly Resource StrokeBrushResource = ResourceCache.Register((scene, obj) => scene.ResourceFactory.CreateSolidColorBrush(((Rectangle)obj).StrokeColor));
 
-    private static readonly Resource RectangleGeometryResource = ResourceCache.Register((target, o) =>
+    private static readonly Resource RectangleGeometryResource = ResourceCache.Register((scene, obj) =>
     {
-        var rect = (Rectangle)o;
+        var rect = (Rectangle)obj;
 
-        return new RectangleGeometry(target.Factory, new RectangleF(rect.Location.X, rect.Location.Y, rect.Width, rect.Height));
+        return scene.ResourceFactory.CreateRectangleGeometry(new RectangleF(rect.Location.X, rect.Location.Y, rect.Width, rect.Height));
     });
 
     private Color4 _fillColor = Color4.White;
@@ -107,7 +107,7 @@ public class Rectangle : EditableSceneObject
         set => SetAndRequestRender(ref _isFilled, value);
     }
 
-    protected override void OnInitialize(Scene2D scene, RenderTarget renderTarget)
+    protected override void OnInitialize(Scene2D scene)
     {
         InitializeResource(RectangleGeometryResource);
         InitializeResource(StrokeBrushResource);
@@ -149,12 +149,12 @@ public class Rectangle : EditableSceneObject
 
     protected override void OnRender(Scene2D scene, RenderTarget renderTarget)
     {
-        var strokeBrush = ResourceCache.GetOrUpdate<SolidColorBrush>(this, StrokeBrushResource, renderTarget);
-        var geometry = ResourceCache.GetOrUpdate<RectangleGeometry>(this, RectangleGeometryResource, renderTarget);
+        var strokeBrush = ResourceCache.GetOrUpdate<SolidColorBrush>(this, StrokeBrushResource, scene);
+        var geometry = ResourceCache.GetOrUpdate<RectangleGeometry>(this, RectangleGeometryResource, scene);
 
         if (IsFilled)
         {
-            var fillBrush = ResourceCache.GetOrUpdate<SolidColorBrush>(this, FillBrushResource, renderTarget);
+            var fillBrush = ResourceCache.GetOrUpdate<SolidColorBrush>(this, FillBrushResource, scene);
 
             renderTarget.FillGeometry(geometry, fillBrush);
         }
@@ -164,7 +164,7 @@ public class Rectangle : EditableSceneObject
 
     public override void RenderSelection(Scene2D scene, RenderTarget renderTarget, SolidColorBrush selectionBrush, StrokeStyle selectionStyle)
     {
-        var geometry = ResourceCache.GetOrUpdate<RectangleGeometry>(this, RectangleGeometryResource, renderTarget);
+        var geometry = ResourceCache.GetOrUpdate<RectangleGeometry>(this, RectangleGeometryResource, scene);
 
         renderTarget.DrawGeometry(geometry, selectionBrush, 1f / scene.Scale, selectionStyle);
     }

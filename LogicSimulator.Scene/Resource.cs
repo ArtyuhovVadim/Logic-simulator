@@ -1,6 +1,4 @@
-﻿using SharpDX.Direct2D1;
-
-namespace LogicSimulator.Scene;
+﻿namespace LogicSimulator.Scene;
 
 public class Resource
 {
@@ -16,8 +14,8 @@ public class Resource
         Id = _lastId++;
     }
 
-    public object Update(RenderTarget renderTarget, ResourceDependentObject o)
+    public object Update(Scene2D scene, ResourceDependentObject o)
     {
-        return _changedCallback.Invoke(renderTarget, o);
+        return _changedCallback.Invoke(scene, o);
     }
 }

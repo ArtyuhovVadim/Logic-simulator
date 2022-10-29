@@ -6,27 +6,23 @@ namespace LogicSimulator.Scene.Components;
 
 public class GradientClearRenderingComponent : BaseRenderingComponent
 {
-    private static readonly Resource ClearGradientBrushResource = ResourceCache.Register((target, o) =>
+    private static readonly Resource ClearGradientBrushResource = ResourceCache.Register((scene, obj) =>
     {
-        var component = (GradientClearRenderingComponent)o;
+        var component = (GradientClearRenderingComponent)obj;
 
-        var gradientStopCollection = new GradientStopCollection(target, new GradientStop[]
+        var gradientStopCollection = new GradientStop[]
         {
             new() { Position = 0f, Color = component.StartColor },
             new() { Position = 1f, Color = component.EndColor }
-        });
-        
-        var properties = new LinearGradientBrushProperties
-        {
-            StartPoint = new Vector2(target.Size.Width / 2, 0),
-            EndPoint = new Vector2(target.Size.Width / 2, target.Size.Height)
         };
 
-        var brush = new LinearGradientBrush(target, properties, gradientStopCollection);
+        var properties = new LinearGradientBrushProperties
+        {
+            StartPoint = new Vector2(scene.Size.X / 2, 0),
+            EndPoint = new Vector2(scene.Size.X / 2, scene.Size.Y)
+        };
 
-        Utilities.Dispose(ref gradientStopCollection);
-
-        return brush;
+        return scene.ResourceFactory.CreateLinearGradientBrush(properties, gradientStopCollection);
     });
 
     private Color4 _startColor = Color4.White;
@@ -44,7 +40,7 @@ public class GradientClearRenderingComponent : BaseRenderingComponent
         set => SetAndUpdateResource(ref _endColor, value, ClearGradientBrushResource);
     }
 
-    protected override void OnInitialize(Scene2D scene, RenderTarget renderTarget)
+    protected override void OnInitialize(Scene2D scene)
     {
         InitializeResource(ClearGradientBrushResource);
     }
@@ -54,7 +50,7 @@ public class GradientClearRenderingComponent : BaseRenderingComponent
         var tempTransform = renderTarget.Transform;
         renderTarget.Transform = Matrix3x2.Identity;
 
-        var brush = ResourceCache.GetOrUpdate<LinearGradientBrush>(this, ClearGradientBrushResource, renderTarget);
+        var brush = ResourceCache.GetOrUpdate<LinearGradientBrush>(this, ClearGradientBrushResource, scene);
 
         renderTarget.FillRectangle(new RectangleF(0, 0, renderTarget.Size.Width, renderTarget.Size.Height), brush);
 

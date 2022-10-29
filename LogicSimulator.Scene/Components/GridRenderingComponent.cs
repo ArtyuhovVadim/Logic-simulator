@@ -6,14 +6,14 @@ namespace LogicSimulator.Scene.Components;
 
 public class GridRenderingComponent : BaseRenderingComponent
 {
-    private static readonly Resource BackgroundBrushResource = ResourceCache.Register((target, o) =>
-        new SolidColorBrush(target, ((GridRenderingComponent)o).Background));
+    private static readonly Resource BackgroundBrushResource = ResourceCache.Register((scene, obj) =>
+        scene.ResourceFactory.CreateSolidColorBrush(((GridRenderingComponent)obj).Background));
 
-    private static readonly Resource LineBrushResource = ResourceCache.Register((target, o) =>
-        new SolidColorBrush(target, ((GridRenderingComponent)o).LineColor));
+    private static readonly Resource LineBrushResource = ResourceCache.Register((scene, obj) =>
+        scene.ResourceFactory.CreateSolidColorBrush(((GridRenderingComponent)obj).LineColor));
 
-    private static readonly Resource BoldLineBrushResource = ResourceCache.Register((target, o) =>
-        new SolidColorBrush(target, ((GridRenderingComponent)o).BoldLineColor));
+    private static readonly Resource BoldLineBrushResource = ResourceCache.Register((scene, obj) =>
+        scene.ResourceFactory.CreateSolidColorBrush(((GridRenderingComponent)obj).BoldLineColor));
 
     private Color4 _boldLineColor = Color4.Black;
     private Color4 _lineColor = Color4.Black;
@@ -47,7 +47,7 @@ public class GridRenderingComponent : BaseRenderingComponent
 
     public int BoldLineStep { get; set; } = 10;
 
-    protected override void OnInitialize(Scene2D scene, RenderTarget renderTarget)
+    protected override void OnInitialize(Scene2D scene)
     {
         InitializeResource(BackgroundBrushResource);
         InitializeResource(LineBrushResource);
@@ -59,9 +59,9 @@ public class GridRenderingComponent : BaseRenderingComponent
         var strokeWidth = LineThickness / scene.Scale;
         var rect = new RectangleF(0, 0, Width, Height);
 
-        var backgroundBrush = ResourceCache.GetOrUpdate<SolidColorBrush>(this, BackgroundBrushResource, renderTarget);
-        var lineBrush = ResourceCache.GetOrUpdate<SolidColorBrush>(this, LineBrushResource, renderTarget);
-        var boldLineBrush = ResourceCache.GetOrUpdate<SolidColorBrush>(this, BoldLineBrushResource, renderTarget);
+        var backgroundBrush = ResourceCache.GetOrUpdate<SolidColorBrush>(this, BackgroundBrushResource, scene);
+        var lineBrush = ResourceCache.GetOrUpdate<SolidColorBrush>(this, LineBrushResource, scene);
+        var boldLineBrush = ResourceCache.GetOrUpdate<SolidColorBrush>(this, BoldLineBrushResource, scene);
 
         renderTarget.FillRectangle(rect, backgroundBrush);
 

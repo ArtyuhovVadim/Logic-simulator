@@ -6,22 +6,24 @@ namespace LogicSimulator.Scene.SceneObjects;
 
 public class RoundedRectangle : EditableSceneObject
 {
-    private static readonly Resource FillBrushResource = ResourceCache.Register((target, o) => new SolidColorBrush(target, ((RoundedRectangle)o).FillColor));
+    private static readonly Resource FillBrushResource = ResourceCache.Register((scene, obj) => 
+        scene.ResourceFactory.CreateSolidColorBrush(((RoundedRectangle)obj).FillColor));
 
-    private static readonly Resource StrokeBrushResource = ResourceCache.Register((target, o) => new SolidColorBrush(target, ((RoundedRectangle)o).StrokeColor));
+    private static readonly Resource StrokeBrushResource = ResourceCache.Register((scene, obj) => 
+        scene.ResourceFactory.CreateSolidColorBrush(((RoundedRectangle)obj).StrokeColor));
 
-    private static readonly Resource RectangleGeometryResource = ResourceCache.Register((target, o) =>
+    private static readonly Resource RectangleGeometryResource = ResourceCache.Register((scene, obj) =>
     {
-        var rect = (RoundedRectangle)o;
+        var rect = (RoundedRectangle)obj;
 
-        var rectStruct = new SharpDX.Direct2D1.RoundedRectangle()
+        var rectStruct = new SharpDX.Direct2D1.RoundedRectangle
         {
             Rect = new RectangleF(rect.Location.X, rect.Location.Y, rect.Width, rect.Height),
             RadiusX = rect._radiusX,
             RadiusY = rect._radiusY
         };
 
-        return new RoundedRectangleGeometry(target.Factory, rectStruct);
+        return scene.ResourceFactory.CreateRoundedRectangleGeometry(rectStruct);
     });
 
     private Color4 _fillColor = Color4.White;
@@ -137,7 +139,7 @@ public class RoundedRectangle : EditableSceneObject
         set => SetAndRequestRender(ref _isFilled, value);
     }
 
-    protected override void OnInitialize(Scene2D scene, RenderTarget renderTarget)
+    protected override void OnInitialize(Scene2D scene)
     {
         InitializeResource(RectangleGeometryResource);
         InitializeResource(StrokeBrushResource);
@@ -179,12 +181,12 @@ public class RoundedRectangle : EditableSceneObject
 
     protected override void OnRender(Scene2D scene, RenderTarget renderTarget)
     {
-        var strokeBrush = ResourceCache.GetOrUpdate<SolidColorBrush>(this, StrokeBrushResource, renderTarget);
-        var geometry = ResourceCache.GetOrUpdate<RoundedRectangleGeometry>(this, RectangleGeometryResource, renderTarget);
+        var strokeBrush = ResourceCache.GetOrUpdate<SolidColorBrush>(this, StrokeBrushResource, scene);
+        var geometry = ResourceCache.GetOrUpdate<RoundedRectangleGeometry>(this, RectangleGeometryResource, scene);
 
         if (IsFilled)
         {
-            var fillBrush = ResourceCache.GetOrUpdate<SolidColorBrush>(this, FillBrushResource, renderTarget);
+            var fillBrush = ResourceCache.GetOrUpdate<SolidColorBrush>(this, FillBrushResource, scene);
 
             renderTarget.FillGeometry(geometry, fillBrush);
         }
@@ -194,7 +196,7 @@ public class RoundedRectangle : EditableSceneObject
 
     public override void RenderSelection(Scene2D scene, RenderTarget renderTarget, SolidColorBrush selectionBrush, StrokeStyle selectionStyle)
     {
-        var geometry = ResourceCache.GetOrUpdate<RoundedRectangleGeometry>(this, RectangleGeometryResource, renderTarget);
+        var geometry = ResourceCache.GetOrUpdate<RoundedRectangleGeometry>(this, RectangleGeometryResource, scene);
 
         renderTarget.DrawGeometry(geometry, selectionBrush, 1f / scene.Scale, selectionStyle);
     }

@@ -37,6 +37,8 @@ public class SceneRenderer : IDisposable
         set => _renderTarget.Transform = value;
     }
 
+    public Vector2 RenderSize => new(_imageSource.PixelWidth, _imageSource.PixelHeight);
+
     public SceneRenderer(Scene2D scene)
     {
         _scene = scene;
@@ -97,7 +99,7 @@ public class SceneRenderer : IDisposable
         using var textFormat = new TextFormat(factory, "Calibri", FontWeight.Normal, FontStyle.Normal, 24);
         using var layout = new TextLayout(factory, $"Render calls count: {_count++}", textFormat, float.MaxValue, float.MaxValue);
         using var brush = new SolidColorBrush(_renderTarget, Color4.Black);
-
+        
         _renderTarget.DrawTextLayout(new Vector2(10, 10), layout, brush, DrawTextOptions.None);
 
         _renderTarget.Transform = tmp;

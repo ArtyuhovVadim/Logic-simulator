@@ -63,4 +63,14 @@ public class ResourceFactory
 
         return path;
     }
+
+    public StrokeStyle CreateStrokeStyle(in StrokeStyleProperties properties, in float[] dashes)
+    {
+        return new StrokeStyle(_sceneRenderer.Factory, properties, dashes);
+    }
+
+    public StrokeStyle CreateStrokeStyle(in StrokeStyleProperties properties)
+    {
+        return new StrokeStyle(_sceneRenderer.Factory, properties);
+    }
 }

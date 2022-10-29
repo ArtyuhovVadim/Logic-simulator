@@ -11,7 +11,6 @@ using LogicSimulator.Scene.Tools;
 using LogicSimulator.Scene.Tools.Base;
 using LogicSimulator.Utils;
 using SharpDX;
-using SharpDX.Direct2D1;
 
 namespace LogicSimulator.Scene;
 
@@ -126,9 +125,9 @@ public class Scene2D : FrameworkElement
 
     public float Dpi => (float)VisualTreeHelper.GetDpi(this).PixelsPerInchX;
 
-    internal RenderTarget RenderTarget => _renderer.RenderTarget;
-
     internal ResourceFactory ResourceFactory { get; private set; }
+
+    public Vector2 Size => _renderer.RenderSize;
 
     public Matrix3x2 Transform => _renderer.Transform;
 

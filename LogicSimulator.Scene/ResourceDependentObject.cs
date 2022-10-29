@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
-using SharpDX.Direct2D1;
 using YamlDotNet.Serialization;
 
 namespace LogicSimulator.Scene;
@@ -12,8 +11,6 @@ public abstract class ResourceDependentObject : IDisposable, INotifyPropertyChan
     private static uint _lastId = 1;
 
     private Scene2D _scene;
-
-    private RenderTarget _renderTarget;
 
     private readonly List<ulong> _resourceIds = new();
 
@@ -29,23 +26,22 @@ public abstract class ResourceDependentObject : IDisposable, INotifyPropertyChan
 
     protected ResourceDependentObject() => Id = _lastId++;
 
-    protected abstract void OnInitialize(Scene2D scene, RenderTarget renderTarget);
+    protected abstract void OnInitialize(Scene2D scene);
 
-    protected void Initialize(Scene2D scene, RenderTarget renderTarget)
+    protected void Initialize(Scene2D scene)
     {
         if (IsInitialized) return;
 
         _scene = scene;
-        _renderTarget = renderTarget;
 
-        OnInitialize(scene, renderTarget);
+        OnInitialize(scene);
 
         IsInitialized = true;
     }
 
     protected void InitializeResource(Resource resource)
     {
-        ResourceCache.InitializeResource(this, resource, _renderTarget);
+        ResourceCache.InitializeResource(this, resource, _scene);
         _resourceIds.Add((ulong)Id << 32 | resource.Id);
     }
 

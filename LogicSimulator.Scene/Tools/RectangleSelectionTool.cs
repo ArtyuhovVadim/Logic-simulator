@@ -53,8 +53,7 @@ public class RectangleSelectionTool : BaseTool
     {
         var size = EndPosition - StartPosition;
 
-        using var selectionGeometry =
-            new RectangleGeometry(scene.RenderTarget.Factory, new RectangleF { Location = StartPosition, Width = size.X, Height = size.Y });
+        using var selectionGeometry = scene.ResourceFactory.CreateRectangleGeometry(new RectangleF { Location = StartPosition, Width = size.X, Height = size.Y });
 
         var isManySelectionKeyDown = Keyboard.IsKeyDown(ManySelectionKey);
 

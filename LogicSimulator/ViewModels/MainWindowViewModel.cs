@@ -3,7 +3,6 @@ using System.IO;
 using System.Windows.Input;
 using LogicSimulator.Infrastructure.Commands;
 using LogicSimulator.Infrastructure.Services.Interfaces;
-using LogicSimulator.Scene.SceneObjects;
 using LogicSimulator.ViewModels.Base;
 
 namespace LogicSimulator.ViewModels;
@@ -80,7 +79,7 @@ public class MainWindowViewModel : BindableBase
 
     private ICommand _saveExampleCommand;
 
-    public  ICommand SaveExampleCommand => _saveExampleCommand ??= new LambdaCommand(async _  =>
+    public ICommand SaveExampleCommand => _saveExampleCommand ??= new LambdaCommand(_ =>
     {
     }, _ => true);
 

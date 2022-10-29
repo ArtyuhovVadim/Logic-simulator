@@ -39,7 +39,7 @@ public abstract class BaseSceneObject : ResourceDependentObject
 
     public void Render(Scene2D scene, RenderTarget renderTarget)
     {
-        Initialize(scene, renderTarget);
+        Initialize(scene);
         OnRender(scene, renderTarget);
     }
 
