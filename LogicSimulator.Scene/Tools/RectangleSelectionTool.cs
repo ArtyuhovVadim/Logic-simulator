@@ -18,6 +18,7 @@ public class RectangleSelectionTool : BaseTool
     public event Action SelectionChanged;
 
     public Vector2 StartPosition { get; private set; }
+
     public Vector2 EndPosition { get; private set; }
 
     public bool IsSecant { get; private set; }

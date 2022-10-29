@@ -126,8 +126,7 @@ public class Scene2D : FrameworkElement
 
     public float Dpi => (float)VisualTreeHelper.GetDpi(this).PixelsPerInchX;
 
-    //TODO: Костыль!
-    public RenderTarget RenderTarget => _renderer.RenderTarget;
+    internal RenderTarget RenderTarget => _renderer.RenderTarget;
 
     public Matrix3x2 Transform => _renderer.Transform;
 
@@ -141,7 +140,6 @@ public class Scene2D : FrameworkElement
         }
     }
 
-    //TODO: При перетаскивание объекта и одновременном нажатии пкм за окном сбрасывается захват мыши
 
     public Scene2D()
     {

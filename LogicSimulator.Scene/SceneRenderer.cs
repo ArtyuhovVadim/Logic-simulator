@@ -6,7 +6,6 @@ using SharpDX;
 using System.Windows.Media;
 using System.Windows.Interop;
 using SharpDX.DirectWrite;
-using Factory = SharpDX.Direct2D1.Factory;
 using Factory1 = SharpDX.Direct2D1.Factory1;
 using FontStyle = SharpDX.DirectWrite.FontStyle;
 using FontWeight = SharpDX.DirectWrite.FontWeight;
@@ -22,7 +21,7 @@ public class SceneRenderer : IDisposable
     private readonly D3D11Image _imageSource;
 
     private RenderTarget _renderTarget;
-    private Factory _factory;
+    private Factory1 _factory;
 
     private int _count;
 
