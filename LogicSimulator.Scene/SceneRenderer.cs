@@ -29,6 +29,8 @@ public class SceneRenderer : IDisposable
 
     internal RenderTarget RenderTarget => _renderTarget;
 
+    internal Factory1 Factory => _factory;
+
     public Matrix3x2 Transform
     {
         get => _renderTarget.Transform;

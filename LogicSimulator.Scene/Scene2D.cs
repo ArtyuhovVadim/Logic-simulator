@@ -128,6 +128,8 @@ public class Scene2D : FrameworkElement
 
     internal RenderTarget RenderTarget => _renderer.RenderTarget;
 
+    internal ResourceFactory ResourceFactory { get; private set; }
+
     public Matrix3x2 Transform => _renderer.Transform;
 
     public Vector2 Translation
@@ -151,6 +153,8 @@ public class Scene2D : FrameworkElement
         _sceneTransformController = new SceneTransformController(this);
 
         _renderer = new SceneRenderer(this);
+
+        ResourceFactory = new ResourceFactory(_renderer);
 
         Loaded += OnLoaded;
     }
