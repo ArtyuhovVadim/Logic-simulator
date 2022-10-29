@@ -6,10 +6,10 @@ namespace LogicSimulator.Scene.Components;
 
 public class SelectionRenderingComponent : BaseRenderingComponent
 {
-    public static readonly Resource SelectionBrushResource = ResourceCache.Register((target, o) =>
+    private static readonly Resource SelectionBrushResource = ResourceCache.Register((target, o) =>
         new SolidColorBrush(target, ((SelectionRenderingComponent)o).SelectionColor));
 
-    public static readonly Resource SelectionStyleResource = ResourceCache.Register((target, _) =>
+    private static readonly Resource SelectionStyleResource = ResourceCache.Register((target, _) =>
     {
         var properties = new StrokeStyleProperties
         {
@@ -26,6 +26,12 @@ public class SelectionRenderingComponent : BaseRenderingComponent
     {
         get => _selectionColor;
         set => SetAndUpdateResource(ref _selectionColor, value, SelectionBrushResource);
+    }
+
+    protected override void OnInitialize(Scene2D scene, RenderTarget renderTarget)
+    {
+        InitializeResource(SelectionBrushResource);
+        InitializeResource(SelectionStyleResource);
     }
 
     protected override void OnRender(Scene2D scene, RenderTarget renderTarget)

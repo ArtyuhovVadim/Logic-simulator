@@ -6,7 +6,20 @@ namespace LogicSimulator.Scene.Components;
 
 public class SolidClearRenderingComponent : BaseRenderingComponent
 {
-    public Color4 ClearColor { get; set; } = Color4.White;
+    private static readonly Resource ClearBrushResource = ResourceCache.Register((target, o) => new SolidColorBrush(target, ((SolidClearRenderingComponent)o).ClearColor));
+
+    private Color4 _clearColor = Color4.White;
+
+    public Color4 ClearColor
+    {
+        get => _clearColor;
+        set => SetAndUpdateResource(ref _clearColor, value, ClearBrushResource);
+    }
+
+    protected override void OnInitialize(Scene2D scene, RenderTarget renderTarget)
+    {
+        InitializeResource(ClearBrushResource);
+    }
 
     protected override void OnRender(Scene2D scene, RenderTarget renderTarget)
     {

@@ -1,7 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Reflection;
 using SharpDX;
 using SharpDX.Direct2D1;
 
@@ -38,11 +36,17 @@ public static class ResourceCache
         }
     }
 
+    public static void InitializeResource(ResourceDependentObject obj, Resource resource, RenderTarget target)
+    {
+        var id = (ulong)obj.Id << 32 | resource.Id;
+
+        var value = resource.Update(target, obj);
+
+        Cache[id] = value;
+    }
+
     public static void RequestUpdate(ResourceDependentObject obj, Resource resource)
     {
-        //TODO: Костыль!
-        RenderNotifier.RequestRender(obj);
-
         var id = (ulong)obj.Id << 32 | resource.Id;
 
         if (ResourcesToUpdate.Contains(id))
@@ -93,17 +97,14 @@ public static class ResourceCache
 
     public static void ReleaseResources(ResourceDependentObject obj)
     {
-        var ids = obj.GetType().GetFields(BindingFlags.Static | BindingFlags.NonPublic)
-                     .Where(x => x.FieldType == typeof(Resource))
-                     .Select(x => (ulong)obj.Id << 32 | ((Resource)x.GetValue(obj))!.Id);
+        if (!obj.IsInitialized) return;
 
-        foreach (var id in ids)
+        foreach (var id in obj.ResourceIds)
         {
-            if (Cache[id] is IDisposable o)
-            {
-                o.Dispose();
-                Cache.Remove(id);
-            }
+            if (Cache[id] is not IDisposable o) continue;
+
+            o.Dispose();
+            Cache.Remove(id);
         }
     }
 }

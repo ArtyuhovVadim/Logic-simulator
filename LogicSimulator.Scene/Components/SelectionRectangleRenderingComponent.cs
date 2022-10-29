@@ -6,10 +6,10 @@ namespace LogicSimulator.Scene.Components;
 
 public class SelectionRectangleRenderingComponent : BaseRenderingComponent
 {
-    public static readonly Resource SecantBrushResource = ResourceCache.Register((target, o) =>
+    private static readonly Resource SecantBrushResource = ResourceCache.Register((target, o) =>
         new SolidColorBrush(target, ((SelectionRectangleRenderingComponent)o).SecantColor));
 
-    public static readonly Resource NormalBrushResource = ResourceCache.Register((target, o) =>
+    private static readonly Resource NormalBrushResource = ResourceCache.Register((target, o) =>
         new SolidColorBrush(target, ((SelectionRectangleRenderingComponent)o).NormalColor));
 
     private Color4 _secantColor = new(0.39f, 0.78f, 0.39f, 1f);
@@ -47,6 +47,12 @@ public class SelectionRectangleRenderingComponent : BaseRenderingComponent
     }
 
     public bool IsSecant { get; set; }
+
+    protected override void OnInitialize(Scene2D scene, RenderTarget renderTarget)
+    {
+        InitializeResource(SecantBrushResource); 
+        InitializeResource(NormalBrushResource);
+    }
 
     protected override void OnRender(Scene2D scene, RenderTarget renderTarget)
     {

@@ -37,7 +37,13 @@ public abstract class BaseSceneObject : ResourceDependentObject
 
     public abstract GeometryRelation CompareWithRectangle(RectangleGeometry rectGeometry, Matrix3x2 matrix, float tolerance = 0.25f);
 
-    public abstract void Render(Scene2D scene, RenderTarget renderTarget);
+    public void Render(Scene2D scene, RenderTarget renderTarget)
+    {
+        Initialize(scene, renderTarget);
+        OnRender(scene, renderTarget);
+    }
+
+    protected abstract void OnRender(Scene2D scene, RenderTarget renderTarget);
 
     public abstract void RenderSelection(Scene2D scene, RenderTarget renderTarget, SolidColorBrush selectionBrush, StrokeStyle selectionStyle);
 }

@@ -1,26 +1,61 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
+using SharpDX.Direct2D1;
 using YamlDotNet.Serialization;
 
 namespace LogicSimulator.Scene;
 
 public abstract class ResourceDependentObject : IDisposable, INotifyPropertyChanged
 {
-    private static uint _lastId;
+    private static uint _lastId = 1;
+
+    private Scene2D _scene;
+
+    private RenderTarget _renderTarget;
+
+    private readonly List<ulong> _resourceIds = new();
 
     public event PropertyChangedEventHandler PropertyChanged;
 
     [YamlIgnore]
     public uint Id { get; }
 
+    [YamlIgnore]
+    public bool IsInitialized { get; private set; }
+
+    public ulong[] ResourceIds => _resourceIds.ToArray();
+
     protected ResourceDependentObject() => Id = _lastId++;
+
+    protected abstract void OnInitialize(Scene2D scene, RenderTarget renderTarget);
+
+    protected void Initialize(Scene2D scene, RenderTarget renderTarget)
+    {
+        if (IsInitialized) return;
+
+        _scene = scene;
+        _renderTarget = renderTarget;
+
+        OnInitialize(scene, renderTarget);
+
+        IsInitialized = true;
+    }
+
+    protected void InitializeResource(Resource resource)
+    {
+        ResourceCache.InitializeResource(this, resource, _renderTarget);
+        _resourceIds.Add((ulong)Id << 32 | resource.Id);
+    }
 
     protected void SetAndUpdateResource<T>(ref T field, T value, Resource resource, [CallerMemberName] string propertyName = null)
     {
         if (Equals(field, value)) return;
         field = value;
+        if (!IsInitialized) return;
         ResourceCache.RequestUpdate(this, resource);
+        RenderNotifier.RequestRender(_scene);
         OnPropertyChanged(propertyName);
     }
 
@@ -28,7 +63,8 @@ public abstract class ResourceDependentObject : IDisposable, INotifyPropertyChan
     {
         if (Equals(field, value)) return;
         field = value;
-        RenderNotifier.RequestRender(this);
+        if (!IsInitialized) return;
+        RenderNotifier.RequestRender(_scene);
         OnPropertyChanged(propertyName);
     }
 

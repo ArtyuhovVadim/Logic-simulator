@@ -6,13 +6,13 @@ namespace LogicSimulator.Scene.Components;
 
 public class GridRenderingComponent : BaseRenderingComponent
 {
-    public static readonly Resource BackgroundBrushResource = ResourceCache.Register((target, o) =>
+    private static readonly Resource BackgroundBrushResource = ResourceCache.Register((target, o) =>
         new SolidColorBrush(target, ((GridRenderingComponent)o).Background));
 
-    public static readonly Resource LineBrushResource = ResourceCache.Register((target, o) =>
+    private static readonly Resource LineBrushResource = ResourceCache.Register((target, o) =>
         new SolidColorBrush(target, ((GridRenderingComponent)o).LineColor));
 
-    public static readonly Resource BoldLineBrushResource = ResourceCache.Register((target, o) =>
+    private static readonly Resource BoldLineBrushResource = ResourceCache.Register((target, o) =>
         new SolidColorBrush(target, ((GridRenderingComponent)o).BoldLineColor));
 
     private Color4 _boldLineColor = Color4.Black;
@@ -46,6 +46,13 @@ public class GridRenderingComponent : BaseRenderingComponent
     public int CellSize { get; set; } = 10;
 
     public int BoldLineStep { get; set; } = 10;
+
+    protected override void OnInitialize(Scene2D scene, RenderTarget renderTarget)
+    {
+        InitializeResource(BackgroundBrushResource);
+        InitializeResource(LineBrushResource);
+        InitializeResource(BoldLineBrushResource);
+    }
 
     protected override void OnRender(Scene2D scene, RenderTarget renderTarget)
     {

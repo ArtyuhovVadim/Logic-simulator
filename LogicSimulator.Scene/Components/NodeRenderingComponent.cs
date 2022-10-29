@@ -9,9 +9,9 @@ namespace LogicSimulator.Scene.Components;
 
 public class NodeRenderingComponent : BaseRenderingComponent
 {
-    public static readonly Resource StrokeBrushResource = ResourceCache.Register((target, o) => new SolidColorBrush(target, ((NodeRenderingComponent)o).StrokeColor));
+    private static readonly Resource StrokeBrushResource = ResourceCache.Register((target, o) => new SolidColorBrush(target, ((NodeRenderingComponent)o).StrokeColor));
 
-    public static readonly Resource BackgroundBrushResource = ResourceCache.Register((target, o) => new SolidColorBrush(target, ((NodeRenderingComponent)o).BackgroundColor));
+    private static readonly Resource BackgroundBrushResource = ResourceCache.Register((target, o) => new SolidColorBrush(target, ((NodeRenderingComponent)o).BackgroundColor));
 
     private Color4 _strokeColor = Color4.Black;
     private Color4 _backgroundColor = Color4.White;
@@ -26,6 +26,12 @@ public class NodeRenderingComponent : BaseRenderingComponent
     {
         get => _backgroundColor;
         set => SetAndUpdateResource(ref _backgroundColor, value, BackgroundBrushResource);
+    }
+
+    protected override void OnInitialize(Scene2D scene, RenderTarget renderTarget)
+    {
+        InitializeResource(BackgroundBrushResource);
+        InitializeResource(StrokeBrushResource);
     }
 
     protected override void OnRender(Scene2D scene, RenderTarget renderTarget)

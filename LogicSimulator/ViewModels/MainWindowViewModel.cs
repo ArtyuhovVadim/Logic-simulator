@@ -1,8 +1,5 @@
-﻿using System;
-using System.Collections.ObjectModel;
+﻿using System.Collections.ObjectModel;
 using System.IO;
-using System.Linq;
-using System.Windows;
 using System.Windows.Input;
 using LogicSimulator.Infrastructure.Commands;
 using LogicSimulator.Infrastructure.Services.Interfaces;
@@ -83,7 +80,7 @@ public class MainWindowViewModel : BindableBase
 
     private ICommand _saveExampleCommand;
 
-    public ICommand SaveExampleCommand => _saveExampleCommand ??= new LambdaCommand(_ =>
+    public  ICommand SaveExampleCommand => _saveExampleCommand ??= new LambdaCommand(async _  =>
     {
     }, _ => true);
 

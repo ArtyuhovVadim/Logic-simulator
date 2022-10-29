@@ -8,8 +8,6 @@ namespace LogicSimulator.Scene.SceneObjects;
 
 public class Line : EditableSceneObject
 {
-    private static readonly Resource StrokeBrushResource = ResourceCache.Register((target, o) => new SolidColorBrush(target, ((Line)o).StrokeColor));
-
     private static readonly Resource PathGeometryResource = ResourceCache.Register((target, o) =>
     {
         var line = (Line)o;
@@ -29,6 +27,8 @@ public class Line : EditableSceneObject
 
         return geometry;
     });
+
+    private static readonly Resource StrokeBrushResource = ResourceCache.Register((target, o) => new SolidColorBrush(target, ((Line)o).StrokeColor));
 
     private static readonly Resource StrokeStyleResource = ResourceCache.Register((target, o) =>
         new StrokeStyle(target.Factory, new StrokeStyleProperties { StartCap = CapStyle.Round, EndCap = CapStyle.Round, LineJoin = LineJoin.Round }));
@@ -66,11 +66,18 @@ public class Line : EditableSceneObject
         set => SetAndUpdateResource(ref _strokeColor, value, StrokeBrushResource);
     }
 
-    [Editable]
+    [Editable]  
     public float StrokeThickness
     {
         get => _strokeThickness;
         set => SetAndRequestRender(ref _strokeThickness, value);
+    }
+
+    protected override void OnInitialize(Scene2D scene, RenderTarget renderTarget)
+    {
+        InitializeResource(PathGeometryResource);
+        InitializeResource(StrokeBrushResource);
+        InitializeResource(StrokeStyleResource);
     }
 
     public void AddVertex(Vector2 segment)
@@ -167,7 +174,7 @@ public class Line : EditableSceneObject
         return geometry.Compare(rectGeometry, matrix, tolerance);
     }
 
-    public override void Render(Scene2D scene, RenderTarget renderTarget)
+    protected override void OnRender(Scene2D scene, RenderTarget renderTarget)
     {
         if (_vertices.Count == 0) return;
 

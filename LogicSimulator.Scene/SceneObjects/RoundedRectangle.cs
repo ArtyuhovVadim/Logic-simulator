@@ -137,6 +137,13 @@ public class RoundedRectangle : EditableSceneObject
         set => SetAndRequestRender(ref _isFilled, value);
     }
 
+    protected override void OnInitialize(Scene2D scene, RenderTarget renderTarget)
+    {
+        InitializeResource(RectangleGeometryResource);
+        InitializeResource(StrokeBrushResource);
+        InitializeResource(FillBrushResource);
+    }
+
     public override void StartDrag(Vector2 pos)
     {
         IsDragging = true;
@@ -170,7 +177,7 @@ public class RoundedRectangle : EditableSceneObject
         return geometry.Compare(rectGeometry, matrix, tolerance);
     }
 
-    public override void Render(Scene2D scene, RenderTarget renderTarget)
+    protected override void OnRender(Scene2D scene, RenderTarget renderTarget)
     {
         var strokeBrush = ResourceCache.GetOrUpdate<SolidColorBrush>(this, StrokeBrushResource, renderTarget);
         var geometry = ResourceCache.GetOrUpdate<RoundedRectangleGeometry>(this, RectangleGeometryResource, renderTarget);

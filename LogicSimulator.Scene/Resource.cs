@@ -4,7 +4,7 @@ namespace LogicSimulator.Scene;
 
 public class Resource
 {
-    private static uint _lastId;
+    private static uint _lastId = 1;
 
     public uint Id { get; }
 

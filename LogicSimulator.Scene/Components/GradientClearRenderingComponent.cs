@@ -6,7 +6,7 @@ namespace LogicSimulator.Scene.Components;
 
 public class GradientClearRenderingComponent : BaseRenderingComponent
 {
-    public static readonly Resource ClearGradientBrushResource = ResourceCache.Register((target, o) =>
+    private static readonly Resource ClearGradientBrushResource = ResourceCache.Register((target, o) =>
     {
         var component = (GradientClearRenderingComponent)o;
 
@@ -42,6 +42,11 @@ public class GradientClearRenderingComponent : BaseRenderingComponent
     {
         get => _endColor;
         set => SetAndUpdateResource(ref _endColor, value, ClearGradientBrushResource);
+    }
+
+    protected override void OnInitialize(Scene2D scene, RenderTarget renderTarget)
+    {
+        InitializeResource(ClearGradientBrushResource);
     }
 
     protected override void OnRender(Scene2D scene, RenderTarget renderTarget)

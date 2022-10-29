@@ -14,6 +14,8 @@ public abstract class BaseRenderingComponent : ResourceDependentObject
 
     public void Render(Scene2D scene, RenderTarget renderTarget)
     {
+        Initialize(scene, renderTarget);
+
         if (!IsVisible) return;
 
         OnRender(scene, renderTarget);
