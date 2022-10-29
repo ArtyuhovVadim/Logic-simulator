@@ -2,6 +2,7 @@
 using System.Linq;
 using SharpDX;
 using SharpDX.Direct2D1;
+using SharpDX.DirectWrite;
 
 namespace LogicSimulator.Scene;
 
@@ -72,5 +73,16 @@ public class ResourceFactory
     public StrokeStyle CreateStrokeStyle(in StrokeStyleProperties properties)
     {
         return new StrokeStyle(_sceneRenderer.Factory, properties);
+    }
+
+    public TextFormat CreateTextFormat(in string fontFamily, in FontWeight fontWeight, in FontStyle fontStyle, in FontStretch fontStretch, in float fontSize)
+    {
+        return new TextFormat(_sceneRenderer.TextFactory, fontFamily, fontWeight, fontStyle, fontStretch, fontSize);
+    }
+
+    //TODO: Получше разобраться с TextLayout
+    public TextLayout CreateTextLayout(in string text, TextFormat textFormat)
+    {
+        return new TextLayout(_sceneRenderer.TextFactory, text, textFormat, float.MaxValue, float.MaxValue);
     }
 }

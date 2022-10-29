@@ -6,11 +6,15 @@ using SharpDX;
 using System.Windows.Media;
 using System.Windows.Interop;
 using SharpDX.DirectWrite;
+using SharpDX.Mathematics.Interop;
 using Factory1 = SharpDX.Direct2D1.Factory1;
+using FontStretch = SharpDX.DirectWrite.FontStretch;
 using FontStyle = SharpDX.DirectWrite.FontStyle;
 using FontWeight = SharpDX.DirectWrite.FontWeight;
+using GlyphRun = SharpDX.DirectWrite.GlyphRun;
 using PixelFormat = SharpDX.Direct2D1.PixelFormat;
 using SolidColorBrush = SharpDX.Direct2D1.SolidColorBrush;
+using TextFactory = SharpDX.DirectWrite.Factory;
 
 namespace LogicSimulator.Scene;
 
@@ -22,14 +26,14 @@ public class SceneRenderer : IDisposable
 
     private RenderTarget _renderTarget;
     private Factory1 _factory;
+    private TextFactory _textFactory;
 
     private int _count;
-
     private bool _isInitialized;
 
     internal RenderTarget RenderTarget => _renderTarget;
-
     internal Factory1 Factory => _factory;
+    internal TextFactory TextFactory => _textFactory;
 
     public Matrix3x2 Transform
     {
@@ -95,12 +99,11 @@ public class SceneRenderer : IDisposable
 
         _renderTarget.Transform = Matrix3x2.Identity;
 
-        using var factory = new SharpDX.DirectWrite.Factory();
-        using var textFormat = new TextFormat(factory, "Calibri", FontWeight.Normal, FontStyle.Normal, 24);
-        using var layout = new TextLayout(factory, $"Render calls count: {_count++}", textFormat, float.MaxValue, float.MaxValue);
         using var brush = new SolidColorBrush(_renderTarget, Color4.Black);
+        using var textFormat = _scene.ResourceFactory.CreateTextFormat("Calibri", FontWeight.Normal, FontStyle.Normal, FontStretch.Normal, 24);
+        using var textLayout = _scene.ResourceFactory.CreateTextLayout($"Render calls count: {_count++}", textFormat);
         
-        _renderTarget.DrawTextLayout(new Vector2(10, 10), layout, brush, DrawTextOptions.None);
+        _renderTarget.DrawTextLayout(new Vector2(10, 10), textLayout, brush, DrawTextOptions.None);
 
         _renderTarget.Transform = tmp;
 
@@ -157,6 +160,7 @@ public class SceneRenderer : IDisposable
         };
 
         _factory = new Factory1();
+        _textFactory = new TextFactory();
 
         _renderTarget = new RenderTarget(_factory, surface, properties)
         {
