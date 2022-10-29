@@ -6,6 +6,7 @@ using SharpDX.Direct2D1;
 
 namespace LogicSimulator.Scene.SceneObjects;
 
+//TODO: Сделать больше наконечников линии
 public class Line : EditableSceneObject
 {
     private static readonly Resource PathGeometryResource = ResourceCache.Register((target, o) =>

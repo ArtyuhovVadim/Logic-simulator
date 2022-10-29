@@ -140,7 +140,6 @@ public class Scene2D : FrameworkElement
         }
     }
 
-
     public Scene2D()
     {
         ClipToBounds = true;
