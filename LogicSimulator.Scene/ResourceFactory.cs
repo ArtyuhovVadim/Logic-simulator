@@ -65,6 +65,21 @@ public class ResourceFactory
         return path;
     }
 
+    public PathGeometry CreateBezierCurveGeometry(in Vector2 p0, in Vector2 p1, in Vector2 p2, in Vector2 p3)
+    {
+        var pathGeometry = new PathGeometry(_sceneRenderer.Factory);
+        var sink = pathGeometry.Open();
+
+        sink.BeginFigure(p0, FigureBegin.Hollow);
+        sink.AddBezier(new BezierSegment { Point1 = p1, Point2 = p2, Point3 = p3 });
+        sink.EndFigure(FigureEnd.Open);
+
+        sink.Close();
+        sink.Dispose();
+
+        return pathGeometry;
+    }
+
     public StrokeStyle CreateStrokeStyle(in StrokeStyleProperties properties, in float[] dashes)
     {
         return new StrokeStyle(_sceneRenderer.Factory, properties, dashes);

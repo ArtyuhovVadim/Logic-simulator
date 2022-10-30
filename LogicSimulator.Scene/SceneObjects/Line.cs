@@ -68,6 +68,7 @@ public class Line : EditableSceneObject
     {
         _vertices.Add(segment);
         ResourceCache.RequestUpdate(this, PathGeometryResource);
+        RequestRender();
         OnPropertyChanged(nameof(Vertexes));
     }
 
@@ -78,6 +79,7 @@ public class Line : EditableSceneObject
         if (result)
         {
             ResourceCache.RequestUpdate(this, PathGeometryResource);
+            RequestRender();
             OnPropertyChanged(nameof(Vertexes));
         }
 
@@ -88,6 +90,7 @@ public class Line : EditableSceneObject
     {
         _vertices.Insert(index, segment);
         ResourceCache.RequestUpdate(this, PathGeometryResource);
+        RequestRender();
         OnPropertyChanged(nameof(Vertexes));
     }
 
@@ -99,6 +102,7 @@ public class Line : EditableSceneObject
 
         _vertices[index] = segment;
         ResourceCache.RequestUpdate(this, PathGeometryResource);
+        RequestRender();
         OnPropertyChanged(nameof(Vertexes));
 
         return true;
@@ -132,6 +136,7 @@ public class Line : EditableSceneObject
         if (!isModified) return;
 
         ResourceCache.RequestUpdate(this, PathGeometryResource);
+        RequestRender();
         OnPropertyChanged(nameof(Vertexes));
     }
 

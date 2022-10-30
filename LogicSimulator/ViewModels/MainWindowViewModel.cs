@@ -3,7 +3,9 @@ using System.IO;
 using System.Windows.Input;
 using LogicSimulator.Infrastructure.Commands;
 using LogicSimulator.Infrastructure.Services.Interfaces;
+using LogicSimulator.Scene.SceneObjects;
 using LogicSimulator.ViewModels.Base;
+using SharpDX;
 
 namespace LogicSimulator.ViewModels;
 
@@ -71,6 +73,20 @@ public class MainWindowViewModel : BindableBase
         }
 
         SchemeViewModels.Add(new SchemeViewModel(scheme));
+
+        var a = new BezierCurve
+        {
+            Point0 = new Vector2(0, 0),
+            Point1 = new Vector2(250, 0),
+            Point2 = new Vector2(250, 250),
+            Point3 = new Vector2(0, 250),
+            StrokeThickness = 22f,
+            StrokeColor = new Color4(1f, 0f, 0f, 1f)
+        };
+
+        a.Select();
+
+        SchemeViewModels[0].Objects.Add(a);
     }, _ => true);
 
     #endregion

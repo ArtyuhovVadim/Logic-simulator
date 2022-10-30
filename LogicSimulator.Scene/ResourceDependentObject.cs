@@ -51,6 +51,12 @@ public abstract class ResourceDependentObject : IDisposable, INotifyPropertyChan
         return ResourceCache.GetOrUpdate<T>(this, resource, _scene);
     }
 
+    protected void RequestRender()
+    {
+        if (!IsInitialized) return;
+        RenderNotifier.RequestRender(_scene);
+    }
+
     protected bool SetAndImmediatelyUpdateResource<T>(ref T field, T value, Resource resource, [CallerMemberName] string propertyName = null)
     {
         if (Equals(field, value)) return false;
