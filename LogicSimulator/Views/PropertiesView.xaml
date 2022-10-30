@@ -24,7 +24,7 @@
         <DataTemplate DataType="{x:Type evm:LineEditorViewModel}">
             <editorViews:LineEditorView />
         </DataTemplate>
-        <DataTemplate DataType="{x:Type evm:BezierCurveViewModel}">
+        <DataTemplate DataType="{x:Type evm:BezierCurveEditorViewModel}">
             <editorViews:BezierCurveEditorView />
         </DataTemplate>
     </UserControl.Resources>

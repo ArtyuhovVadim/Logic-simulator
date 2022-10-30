@@ -7,7 +7,7 @@
     xmlns:evm="clr-namespace:LogicSimulator.ViewModels.EditorViewModels"
     xmlns:local="clr-namespace:LogicSimulator.Views.EditorViews"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    d:DataContext="{d:DesignInstance Type=evm:BezierCurveViewModel}"
+    d:DataContext="{d:DesignInstance Type=evm:BezierCurveEditorViewModel}"
     d:DesignHeight="500"
     d:DesignWidth="300"
     mc:Ignorable="d">

@@ -4,7 +4,7 @@ using SharpDX;
 
 namespace LogicSimulator.ViewModels.EditorViewModels;
 
-public class BezierCurveViewModel : BaseEditorViewModel<BezierCurve>
+public class BezierCurveEditorViewModel : BaseEditorViewModel<BezierCurve>
 {
     #region Point0
 
