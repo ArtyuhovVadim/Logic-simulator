@@ -22,6 +22,7 @@ public abstract class ResourceDependentObject : IDisposable, INotifyPropertyChan
     [YamlIgnore]
     public bool IsInitialized { get; private set; }
 
+    [YamlIgnore]
     public ulong[] ResourceIds => _resourceIds.ToArray();
 
     protected ResourceDependentObject() => Id = _lastId++;

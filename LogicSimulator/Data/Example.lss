@@ -90,3 +90,22 @@ Objects:
   StrokeThickness: 1
   StrokeColor: [0, 0, 0, 1]
   Vertexes: [[275, 775], [475, 775], [475, 975], [275, 975], [275, 800], [450, 800], [450, 950], [300, 950], [300, 825], [425, 825], [425, 925], [325, 925], [325, 850], [400, 850], [400, 900], [350, 900], [350, 875], [375, 875]]
+- !TextBlock
+  Location: [25, 1000]
+  Text: >-
+    #include <iostream>
+
+
+    int main()
+
+    {
+        std::cout << "Hello World!" << std::endl;
+        return 0;
+    }
+  FontName: Consolas
+  FontSize: 24
+  IsBold: false
+  IsItalic: false
+  IsUnderlined: false
+  IsCross: false
+  TextColor: [0, 0, 0, 1]

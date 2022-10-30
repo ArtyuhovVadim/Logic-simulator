@@ -52,12 +52,14 @@ public class TextBlock : BaseSceneObject
     private Vector2 _startDragPosition;
     private Vector2 _startDragLocation;
 
+    [Editable]
     public Vector2 Location
     {
         get => _location;
         set => SetAndUpdateResource(ref _location, value, TextGeometryResource);
     }
 
+    [Editable]
     public string Text
     {
         get => _text;
@@ -70,6 +72,7 @@ public class TextBlock : BaseSceneObject
         }
     }
 
+    [Editable]
     public string FontName
     {
         get => _fontName;
@@ -83,6 +86,7 @@ public class TextBlock : BaseSceneObject
         }
     }
 
+    [Editable]
     public float FontSize
     {
         get => _fontSize;
@@ -96,6 +100,7 @@ public class TextBlock : BaseSceneObject
         }
     }
 
+    [Editable]
     public bool IsBold
     {
         get => _isBold;
@@ -109,6 +114,7 @@ public class TextBlock : BaseSceneObject
         }
     }
 
+    [Editable]
     public bool IsItalic
     {
         get => _isItalic;
@@ -122,18 +128,21 @@ public class TextBlock : BaseSceneObject
         }
     }
 
+    [Editable]
     public bool IsUnderlined
     {
         get => _isUnderlined;
         set => SetAndRequestRender(ref _isUnderlined, value);
     }
 
+    [Editable]
     public bool IsCross
     {
         get => _isCross;
         set => SetAndRequestRender(ref _isCross, value);
     }
 
+    [Editable]
     public Color4 TextColor
     {
         get => _textColor;

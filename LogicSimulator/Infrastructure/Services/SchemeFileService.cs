@@ -30,7 +30,8 @@ public class SchemeFileService : ISchemeFileService
             .WithTagMapping(new TagName("!Rectangle"), typeof(Rectangle))
             .WithTagMapping(new TagName("!RoundedRectangle"), typeof(RoundedRectangle))
             .WithTagMapping(new TagName("!Ellipse"), typeof(Ellipse))
-            .WithTagMapping(new TagName("!Line"), typeof(Line));
+            .WithTagMapping(new TagName("!Line"), typeof(Line))
+            .WithTagMapping(new TagName("!TextBlock"), typeof(TextBlock));
 
         var deserializerBuilder = new DeserializerBuilder()
             .WithTypeConverter(vector2Converter)
@@ -39,7 +40,9 @@ public class SchemeFileService : ISchemeFileService
             .WithTagMapping(new TagName("!Rectangle"), typeof(Rectangle))
             .WithTagMapping(new TagName("!RoundedRectangle"), typeof(RoundedRectangle))
             .WithTagMapping(new TagName("!Ellipse"), typeof(Ellipse))
-            .WithTagMapping(new TagName("!Line"), typeof(Line));
+            .WithTagMapping(new TagName("!Line"), typeof(Line))
+            .WithTagMapping(new TagName("!TextBlock"), typeof(TextBlock));
+
 
         lineConverter.ValueSerializer = serializerBuilder.BuildValueSerializer();
         lineConverter.ValueDeserializer = deserializerBuilder.BuildValueDeserializer();
