@@ -20,7 +20,8 @@ public class EditorSelectionService : IEditorSelectionService
         { typeof(RoundedRectangle), new RoundedRectangleEditorViewModel() },
         { typeof(Ellipse), new EllipseEditorViewModel() },
         { typeof(Line), new LineEditorViewModel() },
-};
+        { typeof(BezierCurve), new BezierCurveViewModel() },
+    };
 
     public EditorSelectionService(PropertiesViewModel propertiesViewModel)
     {
