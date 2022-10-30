@@ -146,8 +146,10 @@ public class Ellipse : EditableSceneObject
     {
         var geometry = ResourceCache.GetOrUpdate<EllipseGeometry>(this, EllipseGeometryResource, scene);
 
-        renderTarget.DrawGeometry(geometry, selectionBrush, 1f / scene.Scale, selectionStyle);
-        renderTarget.DrawLine(Center, Center + new Vector2(RadiusX, 0), selectionBrush, 1f / scene.Scale, selectionStyle);
-        renderTarget.DrawLine(Center, Center + new Vector2(0, -RadiusY), selectionBrush, 1f / scene.Scale, selectionStyle);
+        var strokeWidth = 1f / scene.Scale;
+
+        renderTarget.DrawGeometry(geometry, selectionBrush, strokeWidth, selectionStyle);
+        renderTarget.DrawLine(Center, Center + new Vector2(RadiusX, 0), selectionBrush, strokeWidth, selectionStyle);
+        renderTarget.DrawLine(Center, Center + new Vector2(0, -RadiusY), selectionBrush, strokeWidth, selectionStyle);
     }
 }

@@ -141,9 +141,11 @@ public class BezierCurve : EditableSceneObject
     {
         var geometry = ResourceCache.GetOrUpdate<PathGeometry>(this, BezierCurveGeometryResource, scene);
 
-        renderTarget.DrawGeometry(geometry, selectionBrush, 1f / scene.Scale, selectionStyle);
-        renderTarget.DrawLine(Point0, Point1, selectionBrush, 1f / scene.Scale, selectionStyle);
-        renderTarget.DrawLine(Point1, Point2, selectionBrush, 1f / scene.Scale, selectionStyle);
-        renderTarget.DrawLine(Point2, Point3, selectionBrush, 1f / scene.Scale, selectionStyle);
+        var strokeWidth = 1f / scene.Scale;
+
+        renderTarget.DrawGeometry(geometry, selectionBrush, strokeWidth, selectionStyle);
+        renderTarget.DrawLine(Point0, Point1, selectionBrush, strokeWidth, selectionStyle);
+        renderTarget.DrawLine(Point1, Point2, selectionBrush, strokeWidth, selectionStyle);
+        renderTarget.DrawLine(Point2, Point3, selectionBrush, strokeWidth, selectionStyle);
     }
 }
