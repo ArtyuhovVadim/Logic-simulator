@@ -75,7 +75,7 @@
                         Grid.Row="3"
                         Margin="8"
                         IsVectorXUndefined="{Binding Path=UndefinedPropertiesMap[Point3X]}"
-                        IsVectorYUndefined="{Binding Path=UndefinedPropertiesMap[Point4Y]}"
+                        IsVectorYUndefined="{Binding Path=UndefinedPropertiesMap[Point3Y]}"
                         Vector="{Binding Path=Point3}" />
                 </Grid>
             </Expander>
