@@ -31,6 +31,7 @@ public class SchemeFileService : ISchemeFileService
             .WithTagMapping(new TagName("!RoundedRectangle"), typeof(RoundedRectangle))
             .WithTagMapping(new TagName("!Ellipse"), typeof(Ellipse))
             .WithTagMapping(new TagName("!Line"), typeof(Line))
+            .WithTagMapping(new TagName("!BezierCurve"), typeof(BezierCurve))
             .WithTagMapping(new TagName("!TextBlock"), typeof(TextBlock));
 
         var deserializerBuilder = new DeserializerBuilder()
@@ -41,6 +42,7 @@ public class SchemeFileService : ISchemeFileService
             .WithTagMapping(new TagName("!RoundedRectangle"), typeof(RoundedRectangle))
             .WithTagMapping(new TagName("!Ellipse"), typeof(Ellipse))
             .WithTagMapping(new TagName("!Line"), typeof(Line))
+            .WithTagMapping(new TagName("!BezierCurve"), typeof(BezierCurve))
             .WithTagMapping(new TagName("!TextBlock"), typeof(TextBlock));
 
 
