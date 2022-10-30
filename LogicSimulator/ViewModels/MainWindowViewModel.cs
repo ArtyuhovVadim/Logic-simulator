@@ -18,6 +18,8 @@ public class MainWindowViewModel : BindableBase
         _userDialogService = userDialogService;
 
         AnchorableViewModels.Add(propertiesViewModel);
+
+        LoadExampleCommand.Execute(null);
     }
 
     #region ActiveContent
