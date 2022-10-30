@@ -1,9 +1,13 @@
 ﻿using System.Collections.ObjectModel;
 using System.IO;
+using System.Linq;
 using System.Windows.Input;
+using System.Windows.Media;
 using LogicSimulator.Infrastructure.Commands;
 using LogicSimulator.Infrastructure.Services.Interfaces;
+using LogicSimulator.Scene.SceneObjects;
 using LogicSimulator.ViewModels.Base;
+using SharpDX;
 
 namespace LogicSimulator.ViewModels;
 
@@ -71,6 +75,18 @@ public class MainWindowViewModel : BindableBase
         }
 
         SchemeViewModels.Add(new SchemeViewModel(scheme));
+
+        SchemeViewModels[0].Objects.Add(new TextBlock
+        {
+            Text = "Some text",
+            FontName = "ISOCPEUR",
+            FontSize = 32f,
+            Location = new Vector2(100, 100),
+            IsBold = true,
+            IsCross = true,
+            IsItalic = true,
+            IsUnderlined = true
+        });
     }, _ => true);
 
     #endregion

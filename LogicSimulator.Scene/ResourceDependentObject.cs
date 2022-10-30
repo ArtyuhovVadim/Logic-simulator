@@ -45,23 +45,41 @@ public abstract class ResourceDependentObject : IDisposable, INotifyPropertyChan
         _resourceIds.Add((ulong)Id << 32 | resource.Id);
     }
 
-    protected void SetAndUpdateResource<T>(ref T field, T value, Resource resource, [CallerMemberName] string propertyName = null)
+    protected T GetOrUpdateResource<T>(Resource resource)
     {
-        if (Equals(field, value)) return;
+        return ResourceCache.GetOrUpdate<T>(this, resource, _scene);
+    }
+
+    protected bool SetAndImmediatelyUpdateResource<T>(ref T field, T value, Resource resource, [CallerMemberName] string propertyName = null)
+    {
+        if (Equals(field, value)) return false;
         field = value;
-        if (!IsInitialized) return;
+        if (!IsInitialized) return false;
+        ResourceCache.ImmediatelyUpdate(this, resource, _scene);
+        RenderNotifier.RequestRender(_scene);
+        OnPropertyChanged(propertyName);
+        return true;
+    }
+
+    protected bool SetAndUpdateResource<T>(ref T field, T value, Resource resource, [CallerMemberName] string propertyName = null)
+    {
+        if (Equals(field, value)) return false;
+        field = value;
+        if (!IsInitialized) return false;
         ResourceCache.RequestUpdate(this, resource);
         RenderNotifier.RequestRender(_scene);
         OnPropertyChanged(propertyName);
+        return true;
     }
 
-    protected void SetAndRequestRender<T>(ref T field, T value, [CallerMemberName] string propertyName = null)
+    protected bool SetAndRequestRender<T>(ref T field, T value, [CallerMemberName] string propertyName = null)
     {
-        if (Equals(field, value)) return;
+        if (Equals(field, value)) return false;
         field = value;
-        if (!IsInitialized) return;
+        if (!IsInitialized) return false;
         RenderNotifier.RequestRender(_scene);
         OnPropertyChanged(propertyName);
+        return true;
     }
 
     protected void OnPropertyChanged([CallerMemberName] string propertyName = null)

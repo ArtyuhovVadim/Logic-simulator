@@ -44,6 +44,27 @@ public static class ResourceCache
         Cache[id] = value;
     }
 
+    public static void ImmediatelyUpdate(ResourceDependentObject obj, Resource resource, Scene2D scene)
+    {
+        var id = (ulong)obj.Id << 32 | resource.Id;
+
+        if (Cache.ContainsKey(id))
+        {
+            if (Cache[id] is IDisposable o)
+            {
+                Utilities.Dispose(ref o);
+                Cache[id] = null;
+            }
+        }
+
+        Cache[id] = resource.Update(scene, obj);
+
+        if (ResourcesToUpdate.Contains(id))
+        {
+            ResourcesToUpdate.Remove(id);
+        }
+    }
+
     public static void RequestUpdate(ResourceDependentObject obj, Resource resource)
     {
         var id = (ulong)obj.Id << 32 | resource.Id;
