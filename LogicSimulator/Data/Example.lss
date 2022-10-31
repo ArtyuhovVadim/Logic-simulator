@@ -109,6 +109,16 @@ Objects:
   IsUnderlined: false
   IsCross: false
   TextColor: [0, 0, 0, 1]
+- !TextBlock
+  Location: [25, 1225]
+  Text: Some text
+  FontName: Consolas
+  FontSize: 24
+  IsBold: true
+  IsItalic: true
+  IsUnderlined: false
+  IsCross: false
+  TextColor: [0, 0, 0, 1]
 - !BezierCurve
   Point0: [1225, 25]
   Point1: [1225, 225]
