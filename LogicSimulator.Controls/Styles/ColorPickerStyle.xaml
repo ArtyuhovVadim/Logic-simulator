@@ -25,7 +25,8 @@
                             x:Name="PART_RootButton"
                             Background="{TemplateBinding Background}"
                             BorderBrush="{TemplateBinding BorderBrush}"
-                            BorderThickness="{TemplateBinding BorderThickness}">
+                            BorderThickness="{TemplateBinding BorderThickness}"
+                            FocusVisualStyle="{x:Null}">
                             <Button.Resources>
                                 <converters:Color4ToColorConverter x:Key="Color4ToColorConverter" />
                             </Button.Resources>
@@ -70,6 +71,7 @@
                                     x:Name="UndefinedValueBorder"
                                     Margin="3"
                                     CornerRadius="2"
+                                    Focusable="False"
                                     SnapsToDevicePixels="True"
                                     UseLayoutRounding="True"
                                     Visibility="Collapsed">
