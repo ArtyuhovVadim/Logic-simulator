@@ -137,7 +137,7 @@ public class TextBoxEx : TextBox
     {
         _lastText = Text;
 
-        if (!IsEnterPressed && IsTextChanged)
+        if (IsTextChanged)
         {
             OnConfirm();
             RaiseEvent(new RoutedEventArgs(ConfirmEvent, this));
