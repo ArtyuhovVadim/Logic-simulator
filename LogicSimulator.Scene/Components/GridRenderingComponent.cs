@@ -65,24 +65,24 @@ public class GridRenderingComponent : BaseRenderingComponent
 
         renderTarget.FillRectangle(rect, backgroundBrush);
 
-        renderTarget.DrawRectangle(rect, lineBrush, strokeWidth);
-
-        for (var i = 0; i <= rect.Height / CellSize; i++)
+        for (var x = 1f; x <= (float)Width / CellSize; x++)
         {
             renderTarget.DrawLine(
-                new Vector2(i * CellSize + rect.Left, rect.Top),
-                new Vector2(i * CellSize + rect.Left, rect.Bottom),
-                i % BoldLineStep == 0 ? boldLineBrush : lineBrush,
+                new Vector2(x * CellSize, 0f),
+                new Vector2(x * CellSize, Height),
+                x % BoldLineStep == 0 ? boldLineBrush : lineBrush,
                 strokeWidth);
         }
 
-        for (var i = 0; i <= rect.Width / CellSize; i++)
+        for (var y = 1f; y <= (float)Height / CellSize; y++)
         {
             renderTarget.DrawLine(
-                new Vector2(rect.Left, i * CellSize + rect.Top),
-                new Vector2(rect.Right, i * CellSize + rect.Top),
-                i % BoldLineStep == 0 ? boldLineBrush : lineBrush,
+                new Vector2(0f, y * CellSize),
+                new Vector2(Width, y * CellSize),
+                y % BoldLineStep == 0 ? boldLineBrush : lineBrush,
                 strokeWidth);
         }
+
+        renderTarget.DrawRectangle(rect, boldLineBrush, strokeWidth);
     }
 }
