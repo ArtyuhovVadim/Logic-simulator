@@ -103,8 +103,9 @@ public class SchemeViewModel : BindableBase
         },
         new GridRenderingComponent
         {
-            Width = 3000,
-            Height = 3000,
+            //A4 - 210×297
+            Width = 2970,
+            Height = 2100,
             CellSize = 25,
             Background = new Color4(1, 0.9882353f, 0.972549f, 1f),
             LineColor = new Color4(0.9411765f, 0.9411765f, 0.9215686f, 1f),

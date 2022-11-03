@@ -1,16 +1,15 @@
-﻿using System;
-using System.Windows;
-using Microsoft.Wpf.Interop.DirectX;
-using SharpDX.Direct2D1;
+﻿using Microsoft.Wpf.Interop.DirectX;
 using SharpDX;
-using System.Windows.Media;
+using SharpDX.Direct2D1;
+using SharpDX.WIC;
+using System;
+using System.IO;
+using System.Windows;
 using System.Windows.Interop;
+using System.Windows.Media;
+using SharpDX.DXGI;
+using AlphaMode = SharpDX.Direct2D1.AlphaMode;
 using Factory1 = SharpDX.Direct2D1.Factory1;
-using FontStretch = SharpDX.DirectWrite.FontStretch;
-using FontStyle = SharpDX.DirectWrite.FontStyle;
-using FontWeight = SharpDX.DirectWrite.FontWeight;
-using PixelFormat = SharpDX.Direct2D1.PixelFormat;
-using SolidColorBrush = SharpDX.Direct2D1.SolidColorBrush;
 using TextFactory = SharpDX.DirectWrite.Factory;
 
 namespace LogicSimulator.Scene;
@@ -25,7 +24,10 @@ public class SceneRenderer : IDisposable
     private Factory1 _factory;
     private TextFactory _textFactory;
 
-    private int _count;
+    private SharpDX.WIC.Bitmap _wicBitmap;
+    private ImagingFactory _wicFactory;
+    private WicRenderTarget _wicRenderTarget;
+
     private bool _isInitialized;
 
     internal RenderTarget RenderTarget => _renderTarget;
@@ -52,6 +54,39 @@ public class SceneRenderer : IDisposable
             if (RenderNotifier.IsRenderRequired(_scene))
                 RequestRender();
         };
+    }
+
+    //TODO: Сделать заебись
+    public void RenderToStream(Stream stream)
+    {
+        var tmp = _renderTarget;
+
+        _wicRenderTarget.Transform = tmp.Transform;
+
+        _renderTarget = _wicRenderTarget;
+        ResourceCache.RequestUpdateInAllResources();
+        RenderScene(_scene, _wicRenderTarget);
+
+        _renderTarget = tmp;
+        ResourceCache.RequestUpdateInAllResources();
+
+        var wicStream = new WICStream(_wicFactory, stream);
+        var encoder = new BitmapEncoder(_wicFactory, ContainerFormatGuids.Png);
+        encoder.Initialize(wicStream);
+
+        var bitmapFrameEncode = new BitmapFrameEncode(encoder);
+        bitmapFrameEncode.Initialize();
+        bitmapFrameEncode.SetSize(5000, 5000);
+        var a = SharpDX.WIC.PixelFormat.FormatDontCare;
+        bitmapFrameEncode.SetPixelFormat(ref a);
+        bitmapFrameEncode.WriteSource(_wicBitmap);
+
+        bitmapFrameEncode.Commit();
+        encoder.Commit();
+
+        bitmapFrameEncode.Dispose();
+        encoder.Dispose();
+        wicStream.Dispose();
     }
 
     public void RequestRender() => _imageSource.RequestRender();
@@ -85,28 +120,7 @@ public class SceneRenderer : IDisposable
             ResourceCache.RequestUpdateInAllResources();
         }
 
-        _renderTarget.BeginDraw();
-
-        foreach (var component in _scene.Components)
-        {
-            component.Render(_scene, RenderTarget);
-        }
-
-        var tmp = _renderTarget.Transform;
-
-        _renderTarget.Transform = Matrix3x2.Identity;
-
-        using var brush = new SolidColorBrush(_renderTarget, Color4.Black);
-        using var textFormat = _scene.ResourceFactory.CreateTextFormat("Calibri", FontWeight.Normal, FontStyle.Normal, FontStretch.Normal, 24);
-        using var textLayout = _scene.ResourceFactory.CreateTextLayout($"Render calls count: {_count++}", textFormat);
-        
-        _renderTarget.DrawTextLayout(new Vector2(10, 10), textLayout, brush, DrawTextOptions.None);
-
-        _renderTarget.Transform = tmp;
-
-        _renderTarget.EndDraw();
-
-        RenderNotifier.RenderEnd(_scene);
+        RenderScene(_scene, _renderTarget);
     }
 
     //TODO: Разобраться
@@ -139,19 +153,26 @@ public class SceneRenderer : IDisposable
             tempTransform = _renderTarget.Transform;
 
         Utilities.Dispose(ref _factory);
+        Utilities.Dispose(ref _textFactory);
         Utilities.Dispose(ref _renderTarget);
+
+        Utilities.Dispose(ref _wicFactory);
+        Utilities.Dispose(ref _wicBitmap);
+        Utilities.Dispose(ref _wicRenderTarget);
 
         using var comObject = new ComObject(resourceHandle);
         using var resource = comObject.QueryInterface<SharpDX.DXGI.Resource>();
         using var texture = resource.QueryInterface<SharpDX.Direct3D11.Texture2D>();
         using var surface = texture.QueryInterface<SharpDX.DXGI.Surface1>();
 
+        var pixelFormat = new SharpDX.Direct2D1.PixelFormat(SharpDX.DXGI.Format.B8G8R8A8_UNorm, SharpDX.Direct2D1.AlphaMode.Premultiplied);
+
         var properties = new RenderTargetProperties
         {
             DpiX = 96,
             DpiY = 96,
             MinLevel = FeatureLevel.Level_DEFAULT,
-            PixelFormat = new PixelFormat(SharpDX.DXGI.Format.B8G8R8A8_UNorm, AlphaMode.Premultiplied),
+            PixelFormat = pixelFormat,
             Type = RenderTargetType.Default,
             Usage = RenderTargetUsage.None
         };
@@ -165,7 +186,29 @@ public class SceneRenderer : IDisposable
             Transform = tempTransform
         };
 
+        _wicFactory = new ImagingFactory();
+        //TODO: Разобраться с константным размером
+        _wicBitmap = new SharpDX.WIC.Bitmap(_wicFactory, 3000, 3000, SharpDX.WIC.PixelFormat.Format32bppBGR, BitmapCreateCacheOption.CacheOnLoad);
+        _wicRenderTarget = new WicRenderTarget(_factory, _wicBitmap, properties with { PixelFormat = pixelFormat with { Format = Format.Unknown, AlphaMode = AlphaMode.Unknown } })
+        {
+            AntialiasMode = AntialiasMode.Aliased
+        };
+
         _isInitialized = true;
+    }
+
+    private void RenderScene(Scene2D scene, RenderTarget renderTarget)
+    {
+        renderTarget.BeginDraw();
+
+        foreach (var component in scene.Components)
+        {
+            component.Render(scene, renderTarget);
+        }
+
+        renderTarget.EndDraw();
+
+        RenderNotifier.RenderEnd(_scene);
     }
 
     private void Dispose(bool disposing)
