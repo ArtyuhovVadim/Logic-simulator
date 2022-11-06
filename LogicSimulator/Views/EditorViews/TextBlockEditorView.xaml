@@ -8,6 +8,7 @@
     xmlns:fa5="http://schemas.fontawesome.com/icons/"
     xmlns:local="clr-namespace:LogicSimulator.Views.EditorViews"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:fa="http://schemas.fontawesome.io/icons/"
     d:DataContext="{d:DesignInstance Type=evm:TextBlockEditorViewModel}"
     d:DesignHeight="450"
     d:DesignWidth="300"
@@ -205,11 +206,11 @@
                                 IsChecked="{Binding Path=IsBold}"
                                 IsValueUndefined="{Binding Path=UndefinedPropertiesMap[IsBold]}">
                                 <controls:CheckBoxEx.Content>
-                                    <fa5:ImageAwesome
+                                    <fa:ImageAwesome
                                         Height="11"
                                         Foreground="{Binding Path=Foreground,
                                                              RelativeSource={RelativeSource AncestorType=controls:CheckBoxEx}}"
-                                        Icon="Solid_Bold" />
+                                        Icon="Bold" />
                                 </controls:CheckBoxEx.Content>
                             </controls:CheckBoxEx>
                             <controls:CheckBoxEx
@@ -218,11 +219,11 @@
                                 IsChecked="{Binding Path=IsItalic}"
                                 IsValueUndefined="{Binding Path=UndefinedPropertiesMap[IsItalic]}">
                                 <controls:CheckBoxEx.Content>
-                                    <fa5:ImageAwesome
+                                    <fa:ImageAwesome
                                         Height="11"
                                         Foreground="{Binding Path=Foreground,
                                                              RelativeSource={RelativeSource AncestorType=controls:CheckBoxEx}}"
-                                        Icon="Solid_Italic" />
+                                        Icon="Italic" />
                                 </controls:CheckBoxEx.Content>
                             </controls:CheckBoxEx>
                             <controls:CheckBoxEx
@@ -231,11 +232,11 @@
                                 IsChecked="{Binding Path=IsUnderlined}"
                                 IsValueUndefined="{Binding Path=UndefinedPropertiesMap[IsUnderlined]}">
                                 <controls:CheckBoxEx.Content>
-                                    <fa5:ImageAwesome
+                                    <fa:ImageAwesome
                                         Height="11"
                                         Foreground="{Binding Path=Foreground,
                                                              RelativeSource={RelativeSource AncestorType=controls:CheckBoxEx}}"
-                                        Icon="Solid_Underline" />
+                                        Icon="Underline" />
                                 </controls:CheckBoxEx.Content>
                             </controls:CheckBoxEx>
                             <controls:CheckBoxEx
@@ -243,11 +244,11 @@
                                 IsChecked="{Binding Path=IsCross}"
                                 IsValueUndefined="{Binding Path=UndefinedPropertiesMap[IsCross]}">
                                 <controls:CheckBoxEx.Content>
-                                    <fa5:ImageAwesome
+                                    <fa:ImageAwesome
                                         Height="11"
                                         Foreground="{Binding Path=Foreground,
                                                              RelativeSource={RelativeSource AncestorType=controls:CheckBoxEx}}"
-                                        Icon="Solid_Strikethrough" />
+                                        Icon="Strikethrough" />
                                 </controls:CheckBoxEx.Content>
                             </controls:CheckBoxEx>
                         </Grid>

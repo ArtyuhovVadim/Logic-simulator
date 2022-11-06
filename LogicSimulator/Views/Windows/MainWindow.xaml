@@ -9,6 +9,8 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:viewModels="clr-namespace:LogicSimulator.ViewModels"
     xmlns:views="clr-namespace:LogicSimulator.Views"
+    xmlns:fa5="http://schemas.fontawesome.com/icons/"
+    xmlns:fa="http://schemas.fontawesome.io/icons/"
     Title="Logic-simulator"
     Width="1280"
     Height="720"
@@ -22,16 +24,20 @@
     </c:Window.Resources>
 
     <DockPanel>
-        <Menu DockPanel.Dock="Top">
-            <MenuItem Header="Файл">
-                <MenuItem Header="Новый" />
-                <MenuItem Command="{Binding Path=LoadExampleCommand}" Header="Загрузить пример" />
-                <MenuItem Command="{Binding Path=SaveExampleCommand}" Header="Сохранить пример" />
-                <Separator />
-                <MenuItem Header="Выход" />
-                <MenuItem Command="{Binding Path=TestCommand}" Header="Тест" />
-            </MenuItem>
-        </Menu>
+        <Grid DockPanel.Dock="Top">
+            <Menu>
+                <MenuItem Header="Файл">
+                    <MenuItem Header="Новый" />
+                    <MenuItem Command="{Binding Path=LoadExampleCommand}" Header="Загрузить пример" />
+                    <MenuItem Command="{Binding Path=SaveExampleCommand}" Header="Сохранить пример" />
+                    <Separator />
+                    <MenuItem Header="Выход" />
+                    <MenuItem Command="{Binding Path=TestCommand}" Header="Тест" />
+                </MenuItem>
+            </Menu>
+
+            <!--<fa:ImageAwesome />-->
+        </Grid>
 
         <StatusBar Background="#424242" DockPanel.Dock="Bottom">
             <TextBlock

@@ -15,7 +15,7 @@
         <PackageReference Include="SharpDX.Direct3D9" Version="4.2.0" />
         <PackageReference Include="SharpDX.DXGI" Version="4.2.0" />
         <PackageReference Include="SharpDX.Mathematics" Version="4.2.0" />
-        <PackageReference Include="YamlDotNet" Version="12.0.1" />
+        <PackageReference Include="YamlDotNet" Version="12.0.2" />
     </ItemGroup>
 
     <ItemGroup>

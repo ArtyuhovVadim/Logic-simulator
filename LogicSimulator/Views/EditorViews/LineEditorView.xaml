@@ -6,6 +6,7 @@
     xmlns:controls="clr-namespace:LogicSimulator.Controls;assembly=LogicSimulator.Controls"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:ev="clr-namespace:LogicSimulator.Views.EditorViews"
+    xmlns:fa="http://schemas.fontawesome.io/icons/"
     xmlns:fa5="http://schemas.fontawesome.com/icons/"
     xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
@@ -263,18 +264,18 @@
                             Padding="8,5"
                             Command="{Binding Path=AddVertexCommand}">
                             <Button.Content>
-                                <fa5:ImageAwesome
+                                <fa:ImageAwesome
                                     Height="12"
                                     Foreground="#FDFDFD"
-                                    Icon="Solid_Plus" />
+                                    Icon="Plus" />
                             </Button.Content>
                         </Button>
                         <Button Padding="8,5" Command="{Binding Path=RemoveVertexCommand}">
                             <Button.Content>
-                                <fa5:ImageAwesome
+                                <fa:ImageAwesome
                                     Height="12"
                                     Foreground="#FDFDFD"
-                                    Icon="Solid_TrashAlt" />
+                                    Icon="Trash" />
                             </Button.Content>
                         </Button>
                     </StackPanel>

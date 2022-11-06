@@ -7,6 +7,7 @@
     xmlns:fa5="http://schemas.fontawesome.com/icons/"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:r="clr-namespace:LogicSimulator.Controls.Themes;assembly=LogicSimulator.Controls"
+    xmlns:fa="http://schemas.fontawesome.io/icons/"
     Title="{Binding Path=Title}"
     Width="450"
     Height="250"
@@ -31,12 +32,12 @@
                 Grid.Column="0"
                 Margin="5"
                 Fill="White" />
-            <fa5:ImageAwesome
+            <fa:ImageAwesome
                 Grid.Column="0"
                 HorizontalAlignment="Left"
                 VerticalAlignment="Center"
                 Foreground="#FF2626"
-                Icon="Solid_ExclamationCircle" />
+                Icon="ExclamationCircle" />
             <TextBlock
                 Grid.Column="1"
                 Margin="10,0,0,0"
