@@ -10,8 +10,6 @@ using YamlDotNet.Serialization.Utilities;
 
 namespace LogicSimulator.Infrastructure.YamlConverters;
 
-//TODO: https://question-it.com/questions/9517155/preobrazovanie-slozhnyh-tipov-c-v-yaml
-
 public class LineYamlConverter : IYamlTypeConverter
 {
     public IValueSerializer ValueSerializer { get; set; }

@@ -56,7 +56,6 @@ public class SceneRenderer : IDisposable
         };
     }
 
-    //TODO: Сделать заебись
     public void RenderToStream(Stream stream)
     {
         var tmp = _renderTarget;
@@ -76,7 +75,7 @@ public class SceneRenderer : IDisposable
 
         var bitmapFrameEncode = new BitmapFrameEncode(encoder);
         bitmapFrameEncode.Initialize();
-        bitmapFrameEncode.SetSize(5000, 5000);
+        bitmapFrameEncode.SetSize(3000, 3000);
         var a = SharpDX.WIC.PixelFormat.FormatDontCare;
         bitmapFrameEncode.SetPixelFormat(ref a);
         bitmapFrameEncode.WriteSource(_wicBitmap);
@@ -123,7 +122,6 @@ public class SceneRenderer : IDisposable
         RenderScene(_scene, _renderTarget);
     }
 
-    //TODO: Разобраться
     private void OnIsFrontBufferAvailableChanged(object sender, DependencyPropertyChangedEventArgs e)
     {
         if (!_imageSource.IsFrontBufferAvailable)
@@ -187,7 +185,6 @@ public class SceneRenderer : IDisposable
         };
 
         _wicFactory = new ImagingFactory();
-        //TODO: Разобраться с константным размером
         _wicBitmap = new SharpDX.WIC.Bitmap(_wicFactory, 3000, 3000, SharpDX.WIC.PixelFormat.Format32bppBGR, BitmapCreateCacheOption.CacheOnLoad);
         _wicRenderTarget = new WicRenderTarget(_factory, _wicBitmap, properties with { PixelFormat = pixelFormat with { Format = Format.Unknown, AlphaMode = AlphaMode.Unknown } })
         {

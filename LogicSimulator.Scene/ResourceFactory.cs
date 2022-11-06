@@ -95,7 +95,6 @@ public class ResourceFactory
         return new TextFormat(_sceneRenderer.TextFactory, fontFamily, fontWeight, fontStyle, fontStretch, fontSize);
     }
 
-    //TODO: Получше разобраться с TextLayout
     public TextLayout CreateTextLayout(in string text, TextFormat textFormat)
     {
         return new TextLayout(_sceneRenderer.TextFactory, text, textFormat, float.MaxValue, float.MaxValue);
