@@ -86,14 +86,4 @@ public class MainWindowViewModel : BindableBase
     }, _ => true);
 
     #endregion
-
-    #region TestCommand
-
-    private ICommand _testCommand;
-
-    public ICommand TestCommand => _testCommand ??= new LambdaCommand(_ =>
-    {
-    }, _ => true);
-
-    #endregion
 }

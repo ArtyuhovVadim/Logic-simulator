@@ -3,6 +3,7 @@
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:c="clr-namespace:LogicSimulator.Controls;assembly=LogicSimulator.Controls"
+    xmlns:commands="clr-namespace:LogicSimulator.Infrastructure.Commands"
     xmlns:con="clr-namespace:LogicSimulator.Infrastructure.Converters"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:fa="http://schemas.fontawesome.io/icons/"
@@ -21,6 +22,7 @@
 
     <c:Window.Resources>
         <con:Vector2Converter x:Key="Vector2Converter" />
+        <commands:AppExitCommand x:Key="AppExitCommand" />
     </c:Window.Resources>
 
     <DockPanel>
@@ -31,8 +33,7 @@
                     <MenuItem Command="{Binding Path=LoadExampleCommand}" Header="Загрузить пример" />
                     <MenuItem Command="{Binding Path=SaveExampleCommand}" Header="Сохранить пример" />
                     <Separator />
-                    <MenuItem Header="Выход" />
-                    <MenuItem Command="{Binding Path=TestCommand}" Header="Тест" />
+                    <MenuItem Command="{StaticResource AppExitCommand}" Header="Выход" />
                 </MenuItem>
             </Menu>
 
