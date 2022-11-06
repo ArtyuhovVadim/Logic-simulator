@@ -3,6 +3,8 @@ using System.IO;
 using System.Windows.Input;
 using LogicSimulator.Infrastructure.Commands;
 using LogicSimulator.Infrastructure.Services.Interfaces;
+using LogicSimulator.ViewModels.AnchorableViewModels;
+using LogicSimulator.ViewModels.AnchorableViewModels.Base;
 using LogicSimulator.ViewModels.Base;
 
 namespace LogicSimulator.ViewModels;
@@ -12,12 +14,17 @@ public class MainWindowViewModel : BindableBase
     private readonly ISchemeFileService _schemeFileService;
     private readonly IUserDialogService _userDialogService;
 
-    public MainWindowViewModel(ISchemeFileService schemeFileService, IUserDialogService userDialogService, PropertiesViewModel propertiesViewModel)
+    public MainWindowViewModel(
+        ISchemeFileService schemeFileService,
+        IUserDialogService userDialogService,
+        PropertiesViewModel propertiesViewModel,
+        ProjectExplorerViewModel projectExplorerViewModel)
     {
         _schemeFileService = schemeFileService;
         _userDialogService = userDialogService;
 
         AnchorableViewModels.Add(propertiesViewModel);
+        AnchorableViewModels.Add(projectExplorerViewModel);
 
         LoadExampleCommand.Execute(null);
     }
@@ -48,9 +55,9 @@ public class MainWindowViewModel : BindableBase
 
     #region AnchorableViewModels
 
-    private ObservableCollection<BindableBase> _anchorableViewModels = new();
+    private ObservableCollection<BaseAnchorableViewModel> _anchorableViewModels = new();
 
-    public ObservableCollection<BindableBase> AnchorableViewModels
+    public ObservableCollection<BaseAnchorableViewModel> AnchorableViewModels
     {
         get => _anchorableViewModels;
         private set => Set(ref _anchorableViewModels, value);

@@ -7,7 +7,8 @@
     xmlns:evm="clr-namespace:LogicSimulator.ViewModels.EditorViewModels"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:vm="clr-namespace:LogicSimulator.ViewModels"
-    d:DataContext="{d:DesignInstance Type=vm:PropertiesViewModel}"
+    xmlns:avm="clr-namespace:LogicSimulator.ViewModels.AnchorableViewModels"
+    d:DataContext="{d:DesignInstance Type=avm:PropertiesViewModel}"
     d:DesignHeight="450"
     d:DesignWidth="800"
     mc:Ignorable="d">

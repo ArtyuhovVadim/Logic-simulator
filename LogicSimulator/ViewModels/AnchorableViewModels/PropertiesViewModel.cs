@@ -1,21 +1,14 @@
-﻿using LogicSimulator.ViewModels.Base;
+﻿using LogicSimulator.ViewModels.AnchorableViewModels.Base;
 using LogicSimulator.ViewModels.EditorViewModels.Base;
 
-namespace LogicSimulator.ViewModels;
+namespace LogicSimulator.ViewModels.AnchorableViewModels;
 
-public class PropertiesViewModel : BindableBase
+public class PropertiesViewModel : BaseAnchorableViewModel
 {
-    #region Name
-
-    private string _name = "Свойства";
-
-    public string Name
+    public PropertiesViewModel()
     {
-        get => _name;
-        set => Set(ref _name, value);
+        Name = "Свойства";
     }
-
-    #endregion
 
     #region CurrentEditorViewModel
 
