@@ -5,12 +5,12 @@
     xmlns:c="clr-namespace:LogicSimulator.Controls;assembly=LogicSimulator.Controls"
     xmlns:con="clr-namespace:LogicSimulator.Infrastructure.Converters"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:fa="http://schemas.fontawesome.io/icons/"
+    xmlns:fa5="http://schemas.fontawesome.com/icons/"
     xmlns:infrastructure="clr-namespace:LogicSimulator.Infrastructure"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:viewModels="clr-namespace:LogicSimulator.ViewModels"
     xmlns:views="clr-namespace:LogicSimulator.Views"
-    xmlns:fa5="http://schemas.fontawesome.com/icons/"
-    xmlns:fa="http://schemas.fontawesome.io/icons/"
     Title="Logic-simulator"
     Width="1280"
     Height="720"
@@ -36,7 +36,20 @@
                 </MenuItem>
             </Menu>
 
-            <!--<fa:ImageAwesome />-->
+            <Button
+                Height="21"
+                Margin="2,0,2,0"
+                Padding="5"
+                HorizontalAlignment="Right"
+                VerticalAlignment="Center"
+                Background="Transparent"
+                BorderThickness="0">
+                <fa:ImageAwesome
+                    Foreground="White"
+                    Icon="Cog"
+                    SnapsToDevicePixels="True"
+                    UseLayoutRounding="True" />
+            </Button>
         </Grid>
 
         <StatusBar Background="#424242" DockPanel.Dock="Bottom">
