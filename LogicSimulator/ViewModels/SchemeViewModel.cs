@@ -14,12 +14,42 @@ namespace LogicSimulator.ViewModels;
 
 public class SchemeViewModel : BindableBase
 {
-    private readonly Scheme _scheme;
+    #region Tools
 
     private readonly SelectionTool _selectionTool = new();
     private readonly RectangleSelectionTool _rectangleSelectionTool = new();
     private readonly DragTool _dragTool = new();
     private readonly NodeDragTool _nodeDragTool = new();
+
+    #endregion
+
+    #region Components
+
+    private readonly GradientClearRenderingComponent _gradientClearRenderingComponent = new()
+    {
+        StartColor = new Color4(0.755f, 0.755f, 0.755f, 1f),
+        EndColor = new Color4(0.887f, 0.887f, 0.887f, 1f)
+    };
+    private readonly GridRenderingComponent _gridRenderingComponent = new()
+    {
+        Width = 2970,
+        Height = 2100,
+        CellSize = 25,
+        Background = new Color4(1, 0.9882353f, 0.972549f, 1f),
+        LineColor = new Color4(0.9411765f, 0.9411765f, 0.9215686f, 1f),
+        BoldLineColor = new Color4(0.8627451f, 0.8627451f, 0.8431373f, 1f),
+    };
+    private readonly SceneObjectsRenderingComponent _sceneObjectsRenderingComponent = new();
+    private readonly SelectionRenderingComponent _selectionRenderingComponent = new();
+    private readonly SelectionRectangleRenderingComponent _selectionRectangleRenderingComponent = new();
+    private readonly NodeRenderingComponent _nodeRenderingComponent = new()
+    {
+        BackgroundColor = new Color4(0f, 1f, 0f, 1f)
+    };
+
+    #endregion
+
+    private readonly Scheme _scheme;
 
     private readonly IEditorSelectionService _editorSelectionService;
 
@@ -27,9 +57,25 @@ public class SchemeViewModel : BindableBase
     {
         _scheme = scheme;
 
-        _tools = new ObservableCollection<BaseTool> { _selectionTool, _rectangleSelectionTool, _dragTool, _nodeDragTool };
-
         Objects = new ObservableCollection<BaseSceneObject>(_scheme.Objects);
+
+        _tools = new ObservableCollection<BaseTool>
+        {
+            _selectionTool,
+            _rectangleSelectionTool,
+            _dragTool,
+            _nodeDragTool
+        };
+
+        _components = new ObservableCollection<BaseRenderingComponent>()
+        {
+            _gradientClearRenderingComponent,
+            _gridRenderingComponent, 
+            _sceneObjectsRenderingComponent,
+            _selectionRenderingComponent,
+            _selectionRectangleRenderingComponent,
+            _nodeRenderingComponent
+        };
 
         _selectionTool.SelectionChanged += OnSelectionChanged;
         _rectangleSelectionTool.SelectionChanged += OnSelectionChanged;
@@ -94,28 +140,7 @@ public class SchemeViewModel : BindableBase
 
     #region Components
 
-    private ObservableCollection<BaseRenderingComponent> _components = new()
-    {
-        new GradientClearRenderingComponent
-        {
-            StartColor = new Color4(0.755f, 0.755f, 0.755f, 1f),
-            EndColor = new Color4(0.887f, 0.887f, 0.887f, 1f)
-        },
-        new GridRenderingComponent
-        {
-            //A4 - 210×297
-            Width = 2970,
-            Height = 2100,
-            CellSize = 25,
-            Background = new Color4(1, 0.9882353f, 0.972549f, 1f),
-            LineColor = new Color4(0.9411765f, 0.9411765f, 0.9215686f, 1f),
-            BoldLineColor = new Color4(0.8627451f, 0.8627451f, 0.8431373f, 1f),
-        },
-        new SceneObjectsRenderingComponent(),
-        new SelectionRenderingComponent(),
-        new SelectionRectangleRenderingComponent(),
-        new NodeRenderingComponent { BackgroundColor = new Color4(0f,1f,0f,1f) }
-    };
+    private ObservableCollection<BaseRenderingComponent> _components;
     public ObservableCollection<BaseRenderingComponent> Components
     {
         get => _components;
