@@ -19,17 +19,6 @@ namespace AvalonDock.Commands
 
 		#endregion Private Fields
 
-		#region Protected Constructors
-
-		/// <summary>
-		/// Initializes an empty instance of the WeakFunc class.
-		/// </summary>
-		protected WeakFunc()
-		{
-		}
-
-		#endregion Protected Constructors
-
 		#region Public Constructors
 
 		/// <summary>
@@ -72,6 +61,17 @@ namespace AvalonDock.Commands
 		}
 
 		#endregion Public Constructors
+
+		#region Protected Constructors
+
+		/// <summary>
+		/// Initializes an empty instance of the WeakFunc class.
+		/// </summary>
+		protected WeakFunc()
+		{
+		}
+
+		#endregion Protected Constructors
 
 		#region Public Properties
 

@@ -28,7 +28,7 @@ namespace AvalonDock.Layout.Serialization
 		/// Class constructor from <see cref="DockingManager"/> instance.
 		/// </summary>
 		/// <param name="manager"></param>
-        protected LayoutSerializer(DockingManager manager)
+		public LayoutSerializer(DockingManager manager)
 		{
 			Manager = manager ?? throw new ArgumentNullException(nameof(manager));
 			_previousAnchorables = Manager.Layout.Descendents().OfType<LayoutAnchorable>().ToArray();

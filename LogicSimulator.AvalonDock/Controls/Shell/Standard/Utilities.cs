@@ -37,26 +37,26 @@ namespace Standard
 		private static readonly Version _osVersion = Environment.OSVersion.Version;
 		private static readonly Version _presentationFrameworkVersion = Assembly.GetAssembly(typeof(Window)).GetName().Version;
 
-		// This can be cached.  It's not going to change under reasonable circumstances.
-		private static int s_bitDepth; // = 0;
-
 		[SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
-		public static bool IsOSVistaOrNewer => _osVersion >= new Version(6, 0);
+		private static bool _MemCmp(IntPtr left, IntPtr right, long cb)
+		{
+			var offset = 0;
+			for (; offset < cb - sizeof(Int64); offset += sizeof(Int64))
+			{
+				var left64 = Marshal.ReadInt64(left, offset);
+				var right64 = Marshal.ReadInt64(right, offset);
+				if (left64 != right64) return false;
+			}
 
-		[SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
-		public static bool IsOSWindows7OrNewer => _osVersion >= new Version(6, 1);
+			for (; offset < cb; offset += sizeof(byte))
+			{
+				var left8 = Marshal.ReadByte(left, offset);
+				var right8 = Marshal.ReadByte(right, offset);
+				if (left8 != right8) return false;
+			}
 
-		[SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
-		public static bool IsOSWindows8OrNewer => _osVersion >= new Version(6, 2);
-
-		/// <summary>
-		/// Is this using WPF4?
-		/// </summary>
-		/// <remarks>
-		/// There are a few specific bugs in Window in 3.5SP1 and below that require workarounds
-		/// when handling WM_NCCALCSIZE on the HWND.
-		/// </remarks>
-		public static bool IsPresentationFrameworkVersionLessThan4 => _presentationFrameworkVersion < new Version(4, 0);
+			return true;
+		}
 
 		/// <summary>The native RGB macro.</summary>
 		/// <param name="c"></param>
@@ -173,6 +173,24 @@ namespace Standard
 		[SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
 		public static bool IsFlagSet(ulong value, ulong mask) => (value & mask) != 0;
 
+		[SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
+		public static bool IsOSVistaOrNewer => _osVersion >= new Version(6, 0);
+
+		[SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
+		public static bool IsOSWindows7OrNewer => _osVersion >= new Version(6, 1);
+
+		[SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
+		public static bool IsOSWindows8OrNewer => _osVersion >= new Version(6, 2);
+
+		/// <summary>
+		/// Is this using WPF4?
+		/// </summary>
+		/// <remarks>
+		/// There are a few specific bugs in Window in 3.5SP1 and below that require workarounds
+		/// when handling WM_NCCALCSIZE on the HWND.
+		/// </remarks>
+		public static bool IsPresentationFrameworkVersionLessThan4 => _presentationFrameworkVersion < new Version(4, 0);
+
 		// Caller is responsible for destroying the HICON
 		// Caller is responsible to ensure that GDI+ has been initialized.
 		[SuppressMessage("Microsoft.Usage", "CA2202:Do not dispose objects multiple times")]
@@ -245,6 +263,61 @@ namespace Standard
 		}
 
 		public static BitmapFrame GetBestMatch(IList<BitmapFrame> frames, int width, int height) => _GetBestMatch(frames, _GetBitDepth(), width, height);
+
+		private static int _MatchImage(BitmapFrame frame, int bitDepth, int width, int height, int bpp)
+		{
+			return 2 * _WeightedAbs(bpp, bitDepth, false) +
+							_WeightedAbs(frame.PixelWidth, width, true) +
+							_WeightedAbs(frame.PixelHeight, height, true);
+		}
+
+		private static int _WeightedAbs(int valueHave, int valueWant, bool fPunish)
+		{
+			var diff = valueHave - valueWant;
+			return diff >= 0 ? diff : (fPunish ? -2 : -1) * diff;
+		}
+
+		/// From a list of BitmapFrames find the one that best matches the requested dimensions.
+		/// The methods used here are copied from Win32 sources.  We want to be consistent with
+		/// system behaviors.
+		private static BitmapFrame _GetBestMatch(IList<BitmapFrame> frames, int bitDepth, int width, int height)
+		{
+			var bestScore = int.MaxValue;
+			var bestBpp = 0;
+			var bestIndex = 0;
+			var isBitmapIconDecoder = frames[0].Decoder is IconBitmapDecoder;
+			for (var i = 0; i < frames.Count && bestScore != 0; ++i)
+			{
+				var currentIconBitDepth = isBitmapIconDecoder ? frames[i].Thumbnail.Format.BitsPerPixel : frames[i].Format.BitsPerPixel;
+				if (currentIconBitDepth == 0) currentIconBitDepth = 8;
+				var score = _MatchImage(frames[i], bitDepth, width, height, currentIconBitDepth);
+				if (score < bestScore)
+				{
+					bestIndex = i;
+					bestBpp = currentIconBitDepth;
+					bestScore = score;
+				}
+				else if (score == bestScore)
+				{
+					// Tie breaker: choose the higher color depth.  If that fails, choose first one.
+					if (bestBpp >= currentIconBitDepth) continue;
+					bestIndex = i;
+					bestBpp = currentIconBitDepth;
+				}
+			}
+			return frames[bestIndex];
+		}
+
+		// This can be cached.  It's not going to change under reasonable circumstances.
+		private static int s_bitDepth; // = 0;
+
+		private static int _GetBitDepth()
+		{
+			if (s_bitDepth != 0) return s_bitDepth;
+			using (var dc = SafeDC.GetDesktop())
+				s_bitDepth = NativeMethods.GetDeviceCaps(dc, DeviceCap.BITSPIXEL) * NativeMethods.GetDeviceCaps(dc, DeviceCap.PLANES);
+			return s_bitDepth;
+		}
 
 		/// <summary>
 		/// Simple guard against the exceptions that File.Delete throws on null and empty strings.
@@ -446,6 +519,48 @@ namespace Standard
 			return fRet;
 		}
 
+		private class _UrlDecoder
+		{
+			private readonly Encoding _encoding;
+			private readonly char[] _charBuffer;
+			private readonly byte[] _byteBuffer;
+			private int _byteCount;
+			private int _charCount;
+
+			[SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
+			public _UrlDecoder(int size, Encoding encoding)
+			{
+				_encoding = encoding;
+				_charBuffer = new char[size];
+				_byteBuffer = new byte[size];
+			}
+
+			[SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
+			public void AddByte(byte b) => _byteBuffer[_byteCount++] = b;
+
+			[SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
+			public void AddChar(char ch)
+			{
+				_FlushBytes();
+				_charBuffer[_charCount++] = ch;
+			}
+
+			[SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
+			private void _FlushBytes()
+			{
+				if (_byteCount <= 0) return;
+				_charCount += _encoding.GetChars(_byteBuffer, 0, _byteCount, _charBuffer, _charCount);
+				_byteCount = 0;
+			}
+
+			[SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
+			public string GetString()
+			{
+				_FlushBytes();
+				return _charCount > 0 ? new string(_charBuffer, 0, _charCount) : "";
+			}
+		}
+
 		[SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
 		public static string UrlDecode(string url)
 		{
@@ -555,97 +670,6 @@ namespace Standard
 			return Encoding.ASCII.GetString(bytes);
 		}
 
-		public static void AddDependencyPropertyChangeListener(object component, DependencyProperty property, EventHandler listener)
-		{
-			if (component == null) return;
-			Assert.IsNotNull(property);
-			Assert.IsNotNull(listener);
-			var dpd = DependencyPropertyDescriptor.FromProperty(property, component.GetType());
-			dpd.AddValueChanged(component, listener);
-		}
-
-		public static void RemoveDependencyPropertyChangeListener(object component, DependencyProperty property, EventHandler listener)
-		{
-			if (component == null) return;
-			Assert.IsNotNull(property);
-			Assert.IsNotNull(listener);
-			var dpd = DependencyPropertyDescriptor.FromProperty(property, component.GetType());
-			dpd.RemoveValueChanged(component, listener);
-		}
-
-		[SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
-		private static bool _MemCmp(IntPtr left, IntPtr right, long cb)
-		{
-			var offset = 0;
-			for (; offset < cb - sizeof(Int64); offset += sizeof(Int64))
-			{
-				var left64 = Marshal.ReadInt64(left, offset);
-				var right64 = Marshal.ReadInt64(right, offset);
-				if (left64 != right64) return false;
-			}
-
-			for (; offset < cb; offset += sizeof(byte))
-			{
-				var left8 = Marshal.ReadByte(left, offset);
-				var right8 = Marshal.ReadByte(right, offset);
-				if (left8 != right8) return false;
-			}
-
-			return true;
-		}
-
-		private static int _MatchImage(BitmapFrame frame, int bitDepth, int width, int height, int bpp)
-		{
-			return 2 * _WeightedAbs(bpp, bitDepth, false) +
-							_WeightedAbs(frame.PixelWidth, width, true) +
-							_WeightedAbs(frame.PixelHeight, height, true);
-		}
-
-		private static int _WeightedAbs(int valueHave, int valueWant, bool fPunish)
-		{
-			var diff = valueHave - valueWant;
-			return diff >= 0 ? diff : (fPunish ? -2 : -1) * diff;
-		}
-
-		/// From a list of BitmapFrames find the one that best matches the requested dimensions.
-		/// The methods used here are copied from Win32 sources.  We want to be consistent with
-		/// system behaviors.
-		private static BitmapFrame _GetBestMatch(IList<BitmapFrame> frames, int bitDepth, int width, int height)
-		{
-			var bestScore = int.MaxValue;
-			var bestBpp = 0;
-			var bestIndex = 0;
-			var isBitmapIconDecoder = frames[0].Decoder is IconBitmapDecoder;
-			for (var i = 0; i < frames.Count && bestScore != 0; ++i)
-			{
-				var currentIconBitDepth = isBitmapIconDecoder ? frames[i].Thumbnail.Format.BitsPerPixel : frames[i].Format.BitsPerPixel;
-				if (currentIconBitDepth == 0) currentIconBitDepth = 8;
-				var score = _MatchImage(frames[i], bitDepth, width, height, currentIconBitDepth);
-				if (score < bestScore)
-				{
-					bestIndex = i;
-					bestBpp = currentIconBitDepth;
-					bestScore = score;
-				}
-				else if (score == bestScore)
-				{
-					// Tie breaker: choose the higher color depth.  If that fails, choose first one.
-					if (bestBpp >= currentIconBitDepth) continue;
-					bestIndex = i;
-					bestBpp = currentIconBitDepth;
-				}
-			}
-			return frames[bestIndex];
-		}
-
-		private static int _GetBitDepth()
-		{
-			if (s_bitDepth != 0) return s_bitDepth;
-			using (var dc = SafeDC.GetDesktop())
-				s_bitDepth = NativeMethods.GetDeviceCaps(dc, DeviceCap.BITSPIXEL) * NativeMethods.GetDeviceCaps(dc, DeviceCap.PLANES);
-			return s_bitDepth;
-		}
-
 		// HttpUtility's UrlEncode is slightly different from the RFC.
 		// RFC2396 describes unreserved characters as alphanumeric or
 		// the list "-" | "_" | "." | "!" | "~" | "*" | "'" | "(" | ")"
@@ -693,46 +717,22 @@ namespace Standard
 			return -1;
 		}
 
-		private class _UrlDecoder
+		public static void AddDependencyPropertyChangeListener(object component, DependencyProperty property, EventHandler listener)
 		{
-			private readonly Encoding _encoding;
-			private readonly char[] _charBuffer;
-			private readonly byte[] _byteBuffer;
-			private int _byteCount;
-			private int _charCount;
+			if (component == null) return;
+			Assert.IsNotNull(property);
+			Assert.IsNotNull(listener);
+			var dpd = DependencyPropertyDescriptor.FromProperty(property, component.GetType());
+			dpd.AddValueChanged(component, listener);
+		}
 
-			[SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
-			public _UrlDecoder(int size, Encoding encoding)
-			{
-				_encoding = encoding;
-				_charBuffer = new char[size];
-				_byteBuffer = new byte[size];
-			}
-
-			[SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
-			public void AddByte(byte b) => _byteBuffer[_byteCount++] = b;
-
-			[SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
-			public void AddChar(char ch)
-			{
-				_FlushBytes();
-				_charBuffer[_charCount++] = ch;
-			}
-
-			[SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
-			public string GetString()
-			{
-				_FlushBytes();
-				return _charCount > 0 ? new string(_charBuffer, 0, _charCount) : "";
-			}
-
-			[SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
-			private void _FlushBytes()
-			{
-				if (_byteCount <= 0) return;
-				_charCount += _encoding.GetChars(_byteBuffer, 0, _byteCount, _charBuffer, _charCount);
-				_byteCount = 0;
-			}
+		public static void RemoveDependencyPropertyChangeListener(object component, DependencyProperty property, EventHandler listener)
+		{
+			if (component == null) return;
+			Assert.IsNotNull(property);
+			Assert.IsNotNull(listener);
+			var dpd = DependencyPropertyDescriptor.FromProperty(property, component.GetType());
+			dpd.RemoveValueChanged(component, listener);
 		}
 
 		#region Extension Methods

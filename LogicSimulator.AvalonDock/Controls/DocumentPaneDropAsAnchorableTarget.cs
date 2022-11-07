@@ -21,43 +21,6 @@ namespace AvalonDock.Controls
 	/// </summary>
 	internal class DocumentPaneDropAsAnchorableTarget : DropTarget<LayoutDocumentPaneControl>
 	{
-		#region Private Methods
-
-		private bool FindParentLayoutDocumentPane(ILayoutDocumentPane documentPane, out LayoutDocumentPaneGroup containerPaneGroup, out LayoutPanel containerPanel)
-		{
-			containerPaneGroup = null;
-			containerPanel = null;
-
-			if (documentPane.Parent is LayoutPanel)
-			{
-				containerPaneGroup = null;
-				containerPanel = documentPane.Parent as LayoutPanel;
-				return true;
-			}
-			else if (documentPane.Parent is LayoutDocumentPaneGroup)
-			{
-				var currentDocumentPaneGroup = documentPane.Parent as LayoutDocumentPaneGroup;
-				while (!(currentDocumentPaneGroup.Parent is LayoutPanel))
-				{
-					currentDocumentPaneGroup = currentDocumentPaneGroup.Parent as LayoutDocumentPaneGroup;
-
-					if (currentDocumentPaneGroup == null)
-						break;
-				}
-
-				if (currentDocumentPaneGroup == null)
-					return false;
-
-				containerPaneGroup = currentDocumentPaneGroup;
-				containerPanel = currentDocumentPaneGroup.Parent as LayoutPanel;
-				return true;
-			}
-
-			return false;
-		}
-
-		#endregion Private Methods
-
 		#region fields
 
 		private LayoutDocumentPaneControl _targetPane;
@@ -322,5 +285,42 @@ namespace AvalonDock.Controls
 		}
 
 		#endregion Overrides
+
+		#region Private Methods
+
+		private bool FindParentLayoutDocumentPane(ILayoutDocumentPane documentPane, out LayoutDocumentPaneGroup containerPaneGroup, out LayoutPanel containerPanel)
+		{
+			containerPaneGroup = null;
+			containerPanel = null;
+
+			if (documentPane.Parent is LayoutPanel)
+			{
+				containerPaneGroup = null;
+				containerPanel = documentPane.Parent as LayoutPanel;
+				return true;
+			}
+			else if (documentPane.Parent is LayoutDocumentPaneGroup)
+			{
+				var currentDocumentPaneGroup = documentPane.Parent as LayoutDocumentPaneGroup;
+				while (!(currentDocumentPaneGroup.Parent is LayoutPanel))
+				{
+					currentDocumentPaneGroup = currentDocumentPaneGroup.Parent as LayoutDocumentPaneGroup;
+
+					if (currentDocumentPaneGroup == null)
+						break;
+				}
+
+				if (currentDocumentPaneGroup == null)
+					return false;
+
+				containerPaneGroup = currentDocumentPaneGroup;
+				containerPanel = currentDocumentPaneGroup.Parent as LayoutPanel;
+				return true;
+			}
+
+			return false;
+		}
+
+		#endregion Private Methods
 	}
 }

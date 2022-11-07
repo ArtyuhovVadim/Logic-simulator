@@ -29,6 +29,15 @@ namespace Standard
 	/// <summary>A static class for verifying assumptions.</summary>
 	internal static class Assert
 	{
+		private static void _Break()
+		{
+#if DEV_DEBUG
+			Debugger.Break();
+#else
+            Debug.Assert(false);
+#endif
+		}
+
 		/// <summary>A function signature for Assert.Evaluate.</summary>
 		public delegate void EvaluateFunction();
 
@@ -295,15 +304,6 @@ namespace Standard
 		public static void IsNotOnMainThread()
 		{
 			if (System.Windows.Application.Current.Dispatcher.CheckAccess()) _Break();
-		}
-
-		private static void _Break()
-		{
-#if DEV_DEBUG
-			Debugger.Break();
-#else
-            Debug.Assert(false);
-#endif
 		}
 	}
 }

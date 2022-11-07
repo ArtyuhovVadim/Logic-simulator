@@ -24,13 +24,13 @@ namespace AvalonDock.Themes
 	{
 		#region Constructors
 		/// <summary>Class constructor</summary>
-        protected DictionaryTheme()
+		public DictionaryTheme()
 		{
 		}
 
 		/// <summary>Class constructor from theme specific resource dictionary.</summary>
 		/// <param name="themeResourceDictionary"></param>
-        protected DictionaryTheme(ResourceDictionary themeResourceDictionary)
+		public DictionaryTheme(ResourceDictionary themeResourceDictionary)
 		{
 			this.ThemeResourceDictionary = themeResourceDictionary;
 		}

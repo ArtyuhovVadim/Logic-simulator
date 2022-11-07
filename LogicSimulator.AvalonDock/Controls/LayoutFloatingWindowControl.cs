@@ -36,16 +36,7 @@ namespace AvalonDock.Controls
 	/// <seealso cref="ILayoutControl"/>
 	public abstract class LayoutFloatingWindowControl : Window, ILayoutControl
 	{
-		public virtual void EnableBindings()
-		{
-		}
-
-		public virtual void DisableBindings()
-		{
-		}
-
 		#region fields
-
 		private ResourceDictionary currentThemeResourceDictionary; // = null
 		private bool _isInternalChange; //false
 		private readonly ILayoutElement _model;
@@ -61,7 +52,7 @@ namespace AvalonDock.Controls
 		/// </summary>
 		/// <see cref="TotalMargin"/>
 		private bool _isTotalMarginSet = false;
-
+		
 		#endregion fields
 
 		#region Constructors
@@ -298,7 +289,6 @@ namespace AvalonDock.Controls
 		#endregion Properties
 
 		#region Internal Methods
-
 		/// <summary>Is Invoked when AvalonDock's WPF Theme changes via the <see cref="DockingManager.OnThemeChanged()"/> method.</summary>
 		/// <param name="oldTheme"></param>
 		internal virtual void UpdateThemeResources(Theme oldTheme = null)
@@ -344,6 +334,7 @@ namespace AvalonDock.Controls
 			}
 			else
 			{
+				CaptureMouse();
 				var windowHandle = new WindowInteropHelper(this).Handle;
 				var lParam = new IntPtr(((int)Left & 0xFFFF) | ((int)Top << 16));
 				Win32Helper.SendMessage(windowHandle, Win32Helper.WM_NCLBUTTONDOWN, new IntPtr(Win32Helper.HT_CAPTION), lParam);
@@ -545,6 +536,26 @@ namespace AvalonDock.Controls
 			base.OnInitialized(e);
 		}
 
+		protected override void OnClosing(CancelEventArgs e)
+        	{
+            		base.OnClosing(e);
+            		AssureOwnerIsNotMinimized();
+        	}
+
+        	/// <summary>
+		/// Prevents a known bug in WPF, which wronlgy minimizes the parent window, when closing this control
+        	/// </summary>
+        	private void AssureOwnerIsNotMinimized()
+        	{
+            		try
+            		{
+                		Owner?.Activate();
+            		}
+            		catch (Exception)
+            		{
+            		}
+        	}
+
 		#endregion Overrides
 
 		#region Private Methods
@@ -684,10 +695,27 @@ namespace AvalonDock.Controls
 
 		#endregion Private Methods
 
+		public virtual void EnableBindings()
+		{
+		}
+
+		public virtual void DisableBindings()
+		{
+		}
+
 		#region Internal Classes
 
 		protected internal class FloatingWindowContentHost : HwndHost
 		{
+			#region fields
+
+			private readonly LayoutFloatingWindowControl _owner;
+			private HwndSource _wpfContentHost = null;
+			private Border _rootPresenter = null;
+			private DockingManager _manager = null;
+
+			#endregion fields
+
 			#region Constructors
 
 			public FloatingWindowContentHost(LayoutFloatingWindowControl owner)
@@ -698,28 +726,6 @@ namespace AvalonDock.Controls
 			}
 
 			#endregion Constructors
-
-			#region Methods
-
-			/// <summary>
-			/// Content_SizeChanged event handler.
-			/// </summary>
-			private void Content_SizeChanged(object sender, SizeChangedEventArgs e)
-			{
-				InvalidateMeasure();
-				InvalidateArrange();
-			}
-
-			#endregion Methods
-
-			#region fields
-
-			private readonly LayoutFloatingWindowControl _owner;
-			private HwndSource _wpfContentHost = null;
-			private Border _rootPresenter = null;
-			private DockingManager _manager = null;
-
-			#endregion fields
 
 			#region Properties
 
@@ -821,6 +827,19 @@ namespace AvalonDock.Controls
 			}
 
 			#endregion Overrides
+
+			#region Methods
+
+			/// <summary>
+			/// Content_SizeChanged event handler.
+			/// </summary>
+			private void Content_SizeChanged(object sender, SizeChangedEventArgs e)
+			{
+				InvalidateMeasure();
+				InvalidateArrange();
+			}
+
+			#endregion Methods
 		}
 
 		#endregion Internal Classes

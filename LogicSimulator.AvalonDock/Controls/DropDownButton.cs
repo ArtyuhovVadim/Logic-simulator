@@ -33,25 +33,6 @@ namespace AvalonDock.Controls
 
 		#endregion Constructors
 
-		#region Overrides
-
-		/// <inheritdoc />
-		protected override void OnClick()
-		{
-			if (DropDownContextMenu != null)
-			{
-				//IsChecked = true;
-				DropDownContextMenu.PlacementTarget = this;
-				DropDownContextMenu.Placement = PlacementMode.Bottom;
-				DropDownContextMenu.DataContext = DropDownContextMenuDataContext;
-				DropDownContextMenu.Closed += OnContextMenuClosed;
-				DropDownContextMenu.IsOpen = true;
-			}
-			base.OnClick();
-		}
-
-		#endregion Overrides
-
 		#region Properties
 
 		#region DropDownContextMenu
@@ -97,6 +78,25 @@ namespace AvalonDock.Controls
 		#endregion DropDownContextMenuDataContext
 
 		#endregion Properties
+
+		#region Overrides
+
+		/// <inheritdoc />
+		protected override void OnClick()
+		{
+			if (DropDownContextMenu != null)
+			{
+				//IsChecked = true;
+				DropDownContextMenu.PlacementTarget = this;
+				DropDownContextMenu.Placement = PlacementMode.Bottom;
+				DropDownContextMenu.DataContext = DropDownContextMenuDataContext;
+				DropDownContextMenu.Closed += OnContextMenuClosed;
+				DropDownContextMenu.IsOpen = true;
+			}
+			base.OnClick();
+		}
+
+		#endregion Overrides
 
 		#region Private Methods
 

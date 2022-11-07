@@ -64,14 +64,6 @@ namespace AvalonDock.Controls
 
 		#endregion Constructors
 
-		#region Properties
-
-		/// <summary>Gets the <see cref="FrameworkElement"/> that implements a drop target for a drag & drop (dock) operation.</summary>
-		[Bindable(false), Description("Gets the FrameworkElement that implements a drop target for a drag & drop (dock) operation."), Category("Other")]
-		public T AreaElement { get; }
-
-		#endregion Properties
-
 		#region IDropArea
 
 		/// <inheritdoc />
@@ -86,5 +78,13 @@ namespace AvalonDock.Controls
 		}
 
 		#endregion IDropArea
+
+		#region Properties
+
+		/// <summary>Gets the <see cref="FrameworkElement"/> that implements a drop target for a drag & drop (dock) operation.</summary>
+		[Bindable(false), Description("Gets the FrameworkElement that implements a drop target for a drag & drop (dock) operation."), Category("Other")]
+		public T AreaElement { get; }
+
+		#endregion Properties
 	}
 }

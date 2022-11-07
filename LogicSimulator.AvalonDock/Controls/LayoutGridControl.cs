@@ -33,6 +33,19 @@ namespace AvalonDock.Controls
 	/// <seealso cref="IAdjustableSizeLayout"/>
 	public abstract class LayoutGridControl<T> : Grid, ILayoutControl, IAdjustableSizeLayout where T : class, ILayoutPanelElement
 	{
+		#region fields
+
+		private readonly LayoutPositionableGroup<T> _model;
+		private readonly Orientation _orientation;
+		private bool _initialized;
+		private ChildrenTreeChange? _asyncRefreshCalled;
+		private readonly ReentrantFlag _fixingChildrenDockLengths = new ReentrantFlag();
+		private Border _resizerGhost = null;
+		private Window _resizerWindowHost = null;
+		private Vector _initialStartPoint;
+
+		#endregion fields
+
 		#region Constructors
 
 		/// <summary>
@@ -49,6 +62,16 @@ namespace AvalonDock.Controls
 		}
 
 		#endregion Constructors
+
+		#region Properties
+
+		public ILayoutElement Model => _model;
+
+		public Orientation Orientation => (_model as ILayoutOrientableGroup).Orientation;
+
+		private bool AsyncRefreshCalled => _asyncRefreshCalled != null;
+
+		#endregion Properties
 
 		#region Overrides
 
@@ -71,29 +94,6 @@ namespace AvalonDock.Controls
 		}
 
 		#endregion Overrides
-
-		#region fields
-
-		private readonly LayoutPositionableGroup<T> _model;
-		private readonly Orientation _orientation;
-		private bool _initialized;
-		private ChildrenTreeChange? _asyncRefreshCalled;
-		private readonly ReentrantFlag _fixingChildrenDockLengths = new ReentrantFlag();
-		private Border _resizerGhost = null;
-		private Window _resizerWindowHost = null;
-		private Vector _initialStartPoint;
-
-		#endregion fields
-
-		#region Properties
-
-		public ILayoutElement Model => _model;
-
-		public Orientation Orientation => (_model as ILayoutOrientableGroup).Orientation;
-
-		private bool AsyncRefreshCalled => _asyncRefreshCalled != null;
-
-		#endregion Properties
 
 		#region Internal Methods
 

@@ -24,16 +24,7 @@ namespace AvalonDock.Controls
 	/// </summary>
 	public class OverlayWindow : Window, IOverlayWindow
 	{
-		#region Properties.
-
-		/// <summary>Gets whether the window is hosted in a floating window.</summary>
-		[Bindable(false), Description("Gets whether the window is hosted in a floating window."), Category("FloatingWindow")]
-		public bool IsHostedInFloatingWindow => _host is LayoutDocumentFloatingWindowControl || _host is LayoutAnchorableFloatingWindowControl;
-
-		#endregion Properties.
-
 		#region fields
-
 		private ResourceDictionary currentThemeResourceDictionary; // = null
 
 		private Canvas _mainCanvasPanel;
@@ -114,6 +105,14 @@ namespace AvalonDock.Controls
 
 		#endregion Constructors
 
+		#region Properties.
+
+		/// <summary>Gets whether the window is hosted in a floating window.</summary>
+		[Bindable(false), Description("Gets whether the window is hosted in a floating window."), Category("FloatingWindow")]
+		public bool IsHostedInFloatingWindow => _host is LayoutDocumentFloatingWindowControl || _host is LayoutAnchorableFloatingWindowControl;
+
+		#endregion Properties.
+
 		#region Overrides
 
 		public override void OnApplyTemplate()
@@ -171,7 +170,6 @@ namespace AvalonDock.Controls
 		#endregion Overrides
 
 		#region Internal Methods
-
 		/// <summary>Is Invoked when AvalonDock's WPF Theme changes via the <see cref="DockingManager.OnThemeChanged()"/> method.</summary>
 		/// <param name="oldTheme"></param>
 		internal void UpdateThemeResources(Theme oldTheme = null)

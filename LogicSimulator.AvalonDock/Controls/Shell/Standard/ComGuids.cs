@@ -94,6 +94,8 @@ namespace Standard
 
 	internal static partial class CLSID
 	{
+		public static T CoCreateInstance<T>(string clsid) => (T)System.Activator.CreateInstance(System.Type.GetTypeFromCLSID(new System.Guid(clsid)));
+
 		/// <summary>CLSID_TaskbarList</summary>
 		/// <remarks>IID_ITaskbarList</remarks>
 		public const string TaskbarList = "56FDF344-FD6D-11d0-958A-006097C9A090";
@@ -105,8 +107,6 @@ namespace Standard
 		/// <summary>CLSID_ShellLink</summary>
 		/// <remarks>IID_IShellLink</remarks>
 		public const string ShellLink = "00021401-0000-0000-C000-000000000046";
-
-		public static T CoCreateInstance<T>(string clsid) => (T)System.Activator.CreateInstance(System.Type.GetTypeFromCLSID(new System.Guid(clsid)));
 
 		#region Win7 CLSIDs
 
