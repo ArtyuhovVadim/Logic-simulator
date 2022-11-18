@@ -24,10 +24,6 @@ public class SceneRenderer : IDisposable
     private Factory1 _factory;
     private TextFactory _textFactory;
 
-    private SharpDX.WIC.Bitmap _wicBitmap;
-    private ImagingFactory _wicFactory;
-    private WicRenderTarget _wicRenderTarget;
-
     private bool _isInitialized;
 
     internal RenderTarget RenderTarget => _renderTarget;
@@ -54,38 +50,6 @@ public class SceneRenderer : IDisposable
             if (RenderNotifier.IsRenderRequired(_scene))
                 RequestRender();
         };
-    }
-
-    public void RenderToStream(Stream stream)
-    {
-        var tmp = _renderTarget;
-
-        _wicRenderTarget.Transform = tmp.Transform;
-
-        _renderTarget = _wicRenderTarget;
-        ResourceCache.RequestUpdateInAllResources();
-        RenderScene(_scene, _wicRenderTarget);
-
-        _renderTarget = tmp;
-        ResourceCache.RequestUpdateInAllResources();
-
-        var wicStream = new WICStream(_wicFactory, stream);
-        var encoder = new BitmapEncoder(_wicFactory, ContainerFormatGuids.Png);
-        encoder.Initialize(wicStream);
-
-        var bitmapFrameEncode = new BitmapFrameEncode(encoder);
-        bitmapFrameEncode.Initialize();
-        bitmapFrameEncode.SetSize(3000, 3000);
-        var a = SharpDX.WIC.PixelFormat.FormatDontCare;
-        bitmapFrameEncode.SetPixelFormat(ref a);
-        bitmapFrameEncode.WriteSource(_wicBitmap);
-
-        bitmapFrameEncode.Commit();
-        encoder.Commit();
-
-        bitmapFrameEncode.Dispose();
-        encoder.Dispose();
-        wicStream.Dispose();
     }
 
     public void RequestRender() => _imageSource.RequestRender();
@@ -154,10 +118,6 @@ public class SceneRenderer : IDisposable
         Utilities.Dispose(ref _textFactory);
         Utilities.Dispose(ref _renderTarget);
 
-        Utilities.Dispose(ref _wicFactory);
-        Utilities.Dispose(ref _wicBitmap);
-        Utilities.Dispose(ref _wicRenderTarget);
-
         using var comObject = new ComObject(resourceHandle);
         using var resource = comObject.QueryInterface<SharpDX.DXGI.Resource>();
         using var texture = resource.QueryInterface<SharpDX.Direct3D11.Texture2D>();
@@ -184,13 +144,6 @@ public class SceneRenderer : IDisposable
             Transform = tempTransform
         };
 
-        _wicFactory = new ImagingFactory();
-        _wicBitmap = new SharpDX.WIC.Bitmap(_wicFactory, 3000, 3000, SharpDX.WIC.PixelFormat.Format32bppBGR, BitmapCreateCacheOption.CacheOnLoad);
-        _wicRenderTarget = new WicRenderTarget(_factory, _wicBitmap, properties with { PixelFormat = pixelFormat with { Format = Format.Unknown, AlphaMode = AlphaMode.Unknown } })
-        {
-            AntialiasMode = AntialiasMode.Aliased
-        };
-
         _isInitialized = true;
     }
 
@@ -206,6 +159,65 @@ public class SceneRenderer : IDisposable
         renderTarget.EndDraw();
 
         RenderNotifier.RenderEnd(_scene);
+    }
+
+    public void RenderToStream(Stream stream, int width, int height, bool isAliased = true, float scale = 1f, Vector2 translation = default)
+    {
+        if (width <= 0 || height <= 0)
+        {
+            throw new ArgumentException("Size can't be zero or less!");
+        }
+
+        var properties = new RenderTargetProperties
+        {
+            DpiX = 96,
+            DpiY = 96,
+            MinLevel = FeatureLevel.Level_DEFAULT,
+            PixelFormat = _renderTarget.PixelFormat with { Format = Format.Unknown, AlphaMode = AlphaMode.Unknown },
+            Type = RenderTargetType.Default,
+            Usage = RenderTargetUsage.None
+        };
+
+        var wicFactory = new ImagingFactory();
+        var wicBitmap = new SharpDX.WIC.Bitmap(wicFactory, width, height, SharpDX.WIC.PixelFormat.Format32bppBGR, BitmapCreateCacheOption.CacheOnLoad);
+        var wicRenderTarget = new WicRenderTarget(_factory, wicBitmap, properties)
+        {
+            AntialiasMode = isAliased ? AntialiasMode.Aliased : AntialiasMode.PerPrimitive,
+            Transform = new Matrix3x2 { ScaleVector = new Vector2(scale, scale), TranslationVector = translation }
+        };
+
+        var tmp = _renderTarget;
+        _renderTarget = wicRenderTarget;
+
+        ResourceCache.RequestUpdateInAllResources();
+        RenderScene(_scene, wicRenderTarget);
+
+        _renderTarget = tmp;
+        ResourceCache.RequestUpdateInAllResources();
+
+        var wicStream = new WICStream(wicFactory, stream);
+        var encoder = new BitmapEncoder(wicFactory, ContainerFormatGuids.Png);
+        var format = SharpDX.WIC.PixelFormat.FormatDontCare;
+
+        encoder.Initialize(wicStream);
+
+        var bitmapFrameEncode = new BitmapFrameEncode(encoder);
+
+        bitmapFrameEncode.Initialize();
+        bitmapFrameEncode.SetSize(width, height);
+        bitmapFrameEncode.SetPixelFormat(ref format);
+        bitmapFrameEncode.WriteSource(wicBitmap);
+        bitmapFrameEncode.Commit();
+
+        encoder.Commit();
+
+        bitmapFrameEncode.Dispose();
+        encoder.Dispose();
+        wicStream.Dispose();
+
+        Utilities.Dispose(ref wicFactory);
+        Utilities.Dispose(ref wicBitmap);
+        Utilities.Dispose(ref wicRenderTarget);
     }
 
     private void Dispose(bool disposing)

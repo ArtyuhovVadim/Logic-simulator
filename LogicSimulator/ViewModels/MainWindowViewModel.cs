@@ -23,6 +23,8 @@ public class MainWindowViewModel : BindableBase
         _schemeFileService = schemeFileService;
         _userDialogService = userDialogService;
 
+        propertiesViewModel.IsVisible = true;
+
         AnchorableViewModels.Add(propertiesViewModel);
         AnchorableViewModels.Add(projectExplorerViewModel);
 

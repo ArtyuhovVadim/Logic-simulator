@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.Specialized;
-using System.IO;
 using System.Linq;
 using System.Windows;
 using System.Windows.Input;
@@ -275,12 +274,6 @@ public class Scene2D : FrameworkElement
         base.OnKeyDown(e);
 
         CurrentTool?.KeyDown(this, e);
-
-        if (e.Key == Key.J)
-        {
-            using var stream = new FileStream(Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Desktop), "test.png"), FileMode.OpenOrCreate);
-            _renderer.RenderToStream(stream);
-        }
     }
 
     protected override void OnKeyUp(KeyEventArgs e)
