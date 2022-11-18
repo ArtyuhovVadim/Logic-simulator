@@ -1,6 +1,7 @@
 ﻿using System.Collections.ObjectModel;
 using LogicSimulator.Infrastructure.Services.Interfaces;
 using LogicSimulator.Models;
+using LogicSimulator.Scene;
 using LogicSimulator.Scene.Components.Base;
 using LogicSimulator.Scene.Components;
 using LogicSimulator.Scene.SceneObjects.Base;
@@ -70,7 +71,7 @@ public class SchemeViewModel : BindableBase
         _components = new ObservableCollection<BaseRenderingComponent>()
         {
             _gradientClearRenderingComponent,
-            _gridRenderingComponent, 
+            _gridRenderingComponent,
             _sceneObjectsRenderingComponent,
             _selectionRenderingComponent,
             _selectionRectangleRenderingComponent,
@@ -156,6 +157,18 @@ public class SchemeViewModel : BindableBase
     {
         get => _tools;
         set => Set(ref _tools, value);
+    }
+
+    #endregion
+
+    #region ScreenshotCreator
+
+    private ScreenshotCreator _screenshotCreator;
+
+    public ScreenshotCreator ScreenshotCreator
+    {
+        get => _screenshotCreator;
+        set => Set(ref _screenshotCreator, value);
     }
 
     #endregion

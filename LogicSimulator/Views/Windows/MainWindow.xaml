@@ -32,6 +32,7 @@
                     <MenuItem Header="Новый" />
                     <MenuItem Command="{Binding Path=LoadExampleCommand}" Header="Загрузить пример" />
                     <MenuItem Command="{Binding Path=SaveExampleCommand}" Header="Сохранить пример" />
+                    <MenuItem Command="{Binding Path=SaveScreenshotCommand}" Header="Сделать скриншот" />
                     <Separator />
                     <MenuItem Command="{StaticResource AppExitCommand}" Header="Выход" />
                 </MenuItem>

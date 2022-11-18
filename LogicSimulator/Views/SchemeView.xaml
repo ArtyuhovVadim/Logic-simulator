@@ -20,6 +20,7 @@
         <p:DataPiping.DataPipes>
             <p:DataPipeCollection>
                 <p:DataPipe Source="{Binding RelativeSource={RelativeSource AncestorType={x:Type scene:Scene2D}}, Path=MousePosition}" Target="{Binding Path=MousePosition, Mode=OneWayToSource}" />
+                <p:DataPipe Source="{Binding RelativeSource={RelativeSource AncestorType={x:Type scene:Scene2D}}, Path=ScreenshotCreator}" Target="{Binding Path=ScreenshotCreator, Mode=OneWayToSource}" />
             </p:DataPipeCollection>
         </p:DataPiping.DataPipes>
     </scene:Scene2D>

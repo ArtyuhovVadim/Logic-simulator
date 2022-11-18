@@ -1,4 +1,5 @@
-﻿using System.Collections.ObjectModel;
+﻿using System;
+using System.Collections.ObjectModel;
 using System.IO;
 using System.Windows.Input;
 using LogicSimulator.Infrastructure.Commands;
@@ -93,6 +94,22 @@ public class MainWindowViewModel : BindableBase
     public ICommand SaveExampleCommand => _saveExampleCommand ??= new LambdaCommand(_ =>
     {
     }, _ => true);
+
+    #endregion
+
+    #region SaveScreenshotCommand
+
+    private ICommand _saveScreenshotCommand;
+
+    public ICommand SaveScreenshotCommand => _saveScreenshotCommand ??= new LambdaCommand(_ =>
+    {
+        var schemeViewModel = (SchemeViewModel)ActiveContent;
+
+        using var fileStream =
+            new FileStream(Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Desktop), "test.png"), FileMode.OpenOrCreate);
+
+        schemeViewModel.ScreenshotCreator.Create(fileStream, 3000, 3000);
+    }, _ => ActiveContent is SchemeViewModel);
 
     #endregion
 }
