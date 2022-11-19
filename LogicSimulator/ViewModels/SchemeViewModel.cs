@@ -160,16 +160,4 @@ public class SchemeViewModel : BindableBase
     }
 
     #endregion
-
-    #region ScreenshotCreator
-
-    private ScreenshotCreator _screenshotCreator;
-
-    public ScreenshotCreator ScreenshotCreator
-    {
-        get => _screenshotCreator;
-        set => Set(ref _screenshotCreator, value);
-    }
-
-    #endregion
 }
