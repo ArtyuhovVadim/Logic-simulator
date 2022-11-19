@@ -58,7 +58,19 @@ public class Scene2D : FrameworkElement
 
     public static readonly DependencyProperty ComponentsProperty =
         DependencyProperty.Register(nameof(Components), typeof(IEnumerable<BaseRenderingComponent>), typeof(Scene2D),
-            new PropertyMetadata(Enumerable.Empty<BaseRenderingComponent>()));
+            new PropertyMetadata(Enumerable.Empty<BaseRenderingComponent>(), OnComponentsChanged));
+
+    private static void OnComponentsChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+    {
+        if (d is not Scene2D scene2D) return;
+
+        if (e.NewValue is not INotifyCollectionChanged collectionChanged) return;
+
+        collectionChanged.CollectionChanged += (_, _) =>
+        {
+            RenderNotifier.RequestRender(scene2D);
+        };
+    }
 
     #endregion
 
