@@ -122,21 +122,6 @@ public class Scene2D : FrameworkElement
 
     #endregion
 
-    #region ScreenshotCreator
-
-    private static readonly DependencyPropertyKey ScreenshotCreatorPropertyKey
-        = DependencyProperty.RegisterReadOnly(nameof(ScreenshotCreator), typeof(ScreenshotCreator), typeof(Scene2D), new PropertyMetadata(default(ScreenshotCreator)));
-
-    public static readonly DependencyProperty ScreenshotCreatorProperty = ScreenshotCreatorPropertyKey.DependencyProperty;
-
-    public ScreenshotCreator ScreenshotCreator
-    {
-        get => (ScreenshotCreator)GetValue(ScreenshotCreatorProperty);
-        private set => SetValue(ScreenshotCreatorPropertyKey, value);
-    }
-
-    #endregion
-
     public float Dpi => (float)VisualTreeHelper.GetDpi(this).PixelsPerInchX;
 
     internal ResourceFactory ResourceFactory { get; private set; }
@@ -164,7 +149,6 @@ public class Scene2D : FrameworkElement
         RenderNotifier.RegisterScene(this);
 
         _renderer = new SceneRenderer(this);
-        ScreenshotCreator = new ScreenshotCreator(_renderer);
 
         ResourceFactory = new ResourceFactory(_renderer);
 
