@@ -18,6 +18,11 @@ public class GridRenderingComponent : BaseRenderingComponent
     private Color4 _boldLineColor = Color4.Black;
     private Color4 _lineColor = Color4.Black;
     private Color4 _background = Color4.White;
+    private float _lineThickness = 1f;
+    private int _width = 100;
+    private int _height = 100;
+    private int _cellSize = 10;
+    private int _boldLineStep = 10;
 
     public Color4 Background
     {
@@ -37,15 +42,35 @@ public class GridRenderingComponent : BaseRenderingComponent
         set => SetAndUpdateResource(ref _boldLineColor, value, BoldLineBrushResource);
     }
 
-    public float LineThickness { get; set; } = 1f;
+    public float LineThickness
+    {
+        get => _lineThickness;
+        set => SetAndRequestRender(ref _lineThickness, value);
+    }
 
-    public int Width { get; set; } = 100;
+    public int Width
+    {
+        get => _width;
+        set => SetAndRequestRender(ref _width, value);
+    }
 
-    public int Height { get; set; } = 100;
+    public int Height
+    {
+        get => _height;
+        set => SetAndRequestRender(ref _height, value);
+    }
 
-    public int CellSize { get; set; } = 10;
+    public int CellSize
+    {
+        get => _cellSize;
+        set => SetAndRequestRender(ref _cellSize, value);
+    }
 
-    public int BoldLineStep { get; set; } = 10;
+    public int BoldLineStep
+    {
+        get => _boldLineStep;
+        set => SetAndRequestRender(ref _boldLineStep, value);
+    }
 
     protected override void OnInitialize(Scene2D scene)
     {
