@@ -1,5 +1,4 @@
-﻿using LogicSimulator.Scene.Components;
-using LogicSimulator.Scene.SceneObjects.Base;
+﻿using LogicSimulator.Scene.SceneObjects.Base;
 using LogicSimulator.Scene.Tools.Base;
 using LogicSimulator.Utils;
 using SharpDX;
@@ -8,27 +7,24 @@ namespace LogicSimulator.Scene.Tools;
 
 public class NodeDragTool : BaseTool
 {
-    private AbstractNode _nodeUnderCursor;
-    private EditableSceneObject _nodeUnderCursorOwner;
-    private float _snap;
+    private AbstractNode _node;
 
-    protected override void OnActivated(Scene2D scene)
+    private EditableSceneObject _owner;
+
+    public float GridSnap { get; set; } = 25f;
+
+    internal override void MouseLeftButtonDown(Scene2D scene, Vector2 pos)
     {
-        var selectionTool = scene.GetTool<SelectionTool>();
-
-        _nodeUnderCursor = selectionTool.NodeUnderCursor;
-        _nodeUnderCursorOwner = selectionTool.NodeUnderCursorOwner;
-
-        _snap = scene.GetComponent<GridRenderingComponent>().CellSize;
+        (_node, _owner) = scene.GetNodeThatIntersectPoint(pos);
     }
 
-    public override void MouseLeftButtonDragged(Scene2D scene, Vector2 pos)
+    internal override void MouseLeftButtonDragged(Scene2D scene, Vector2 pos)
     {
-        _nodeUnderCursor.ApplyMove(_nodeUnderCursorOwner, _nodeUnderCursor.UseGridSnap ? pos.Transform(scene.Transform).ApplyGrid(_snap) : pos.Transform(scene.Transform));
+        _node.ApplyMove(_owner, _node.UseGridSnap ? pos.Transform(scene.Transform).ApplyGrid(GridSnap) : pos.Transform(scene.Transform));
     }
 
-    public override void MouseLeftButtonUp(Scene2D scene, Vector2 pos)
+    internal override void MouseLeftButtonUp(Scene2D scene, Vector2 pos)
     {
-        scene.SwitchTool<SelectionTool>();
+        ToolsController.SwitchToDefaultTool();
     }
 }

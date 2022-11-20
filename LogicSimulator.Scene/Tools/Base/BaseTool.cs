@@ -6,42 +6,50 @@ namespace LogicSimulator.Scene.Tools.Base;
 public abstract class BaseTool
 {
     public bool CanSwitch { get; protected set; } = true;
-    
+
     public bool IsActive { get; private set; }
 
-    public void Activate(Scene2D scene)
+    protected ToolsController ToolsController { get; private set; }
+
+    internal void Activate(ToolsController toolsController)
     {
-        OnActivated(scene);
         IsActive = true;
+        ToolsController = toolsController;
+        OnActivated(toolsController);
     }
 
-    public void Deactivate(Scene2D scene)
+    internal void Deactivate(ToolsController toolsController)
     {
-        OnDeactivated(scene);
+        OnDeactivated(toolsController);
+        ToolsController = null;
         IsActive = false;
     }
 
-    public virtual void KeyDown(Scene2D scene, KeyEventArgs e) { }
+    protected virtual void OnActivated(ToolsController toolsController) { }
 
-    public virtual void KeyUp(Scene2D scene, KeyEventArgs e) { }
+    protected virtual void OnDeactivated(ToolsController toolsController) { }
 
-    public virtual void MouseMove(Scene2D scene, Vector2 pos) { }
+    internal virtual void KeyDown(Scene2D scene, KeyEventArgs args) { }
 
-    public virtual void MouseLeftButtonDown(Scene2D scene, Vector2 pos) { }
+    internal virtual void KeyUp(Scene2D scene, KeyEventArgs args) { }
 
-    public virtual void MouseLeftButtonDragged(Scene2D scene, Vector2 pos) { }
+    internal virtual void MouseMove(Scene2D scene, Vector2 pos) { }
 
-    public virtual void MouseLeftButtonUp(Scene2D scene, Vector2 pos) { }
+    internal virtual void MouseLeftButtonDown(Scene2D scene, Vector2 pos) { }
 
-    public virtual void MouseRightButtonDown(Scene2D scene, Vector2 pos) { }
+    internal virtual void MouseLeftButtonDragged(Scene2D scene, Vector2 pos) { }
 
-    public virtual void MouseRightButtonDragged(Scene2D scene, Vector2 pos) { }
+    internal virtual void MouseLeftButtonUp(Scene2D scene, Vector2 pos) { }
 
-    public virtual void MouseRightButtonUp(Scene2D scene, Vector2 pos) { }
+    internal virtual void MouseRightButtonDown(Scene2D scene, Vector2 pos) { }
 
-    public virtual void MouseMiddleButtonDragged(Scene2D scene, Vector2 pos) { }
+    internal virtual void MouseRightButtonDragged(Scene2D scene, Vector2 pos) { }
 
-    protected virtual void OnActivated(Scene2D scene) { }
+    internal virtual void MouseRightButtonUp(Scene2D scene, Vector2 pos) { }
 
-    protected virtual void OnDeactivated(Scene2D scene) { }
+    internal virtual void MouseMiddleButtonDown(Scene2D scene, Vector2 pos) { }
+
+    internal virtual void MouseMiddleButtonDragged(Scene2D scene, Vector2 pos) { }
+
+    internal virtual void MouseMiddleButtonUp(Scene2D scene, Vector2 pos) { }
 }

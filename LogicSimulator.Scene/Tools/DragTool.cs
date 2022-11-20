@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using LogicSimulator.Scene.Components;
 using LogicSimulator.Scene.SceneObjects.Base;
 using LogicSimulator.Scene.Tools.Base;
 using LogicSimulator.Utils;
@@ -10,23 +9,29 @@ namespace LogicSimulator.Scene.Tools;
 
 public class DragTool : BaseTool
 {
-    private List<BaseSceneObject> _objectsUnderCursor;
+    private ICollection<BaseSceneObject> _objectsUnderCursor;
 
-    private readonly List<BaseSceneObject> _draggingSceneObjects = new();
+    private ICollection<BaseSceneObject> _draggingSceneObjects;
 
-    private float _snap;
+    public float GridSnap { get; set; } = 25f;
 
-    protected override void OnActivated(Scene2D scene)
+    public float DragTolerance { get; set; } = 5f;
+
+    protected override void OnActivated(ToolsController toolsController)
     {
-        _objectsUnderCursor = scene.GetTool<SelectionTool>().ObjectsUnderCursor.ToList();
-        _snap = scene.GetComponent<GridRenderingComponent>().CellSize;
+        _draggingSceneObjects = new List<BaseSceneObject>();
     }
 
-    public override void MouseLeftButtonDragged(Scene2D scene, Vector2 pos)
+    internal override void MouseLeftButtonDown(Scene2D scene, Vector2 pos)
+    {
+        _objectsUnderCursor = scene.GetObjectsThatIntersectPoint(pos, DragTolerance).ToList();
+    }
+
+    internal override void MouseLeftButtonDragged(Scene2D scene, Vector2 pos)
     {
         if (!_objectsUnderCursor.Any()) return;
 
-        pos = pos.Transform(scene.Transform).ApplyGrid(_snap);
+        pos = pos.Transform(scene.Transform).ApplyGrid(GridSnap);
 
         var obj = _objectsUnderCursor.First();
 
@@ -51,12 +56,12 @@ public class DragTool : BaseTool
         UpdateDraggingPositions(pos);
     }
 
-    public override void MouseLeftButtonUp(Scene2D scene, Vector2 pos)
+    internal override void MouseLeftButtonUp(Scene2D scene, Vector2 pos)
     {
-        scene.SwitchTool<SelectionTool>();
+        ToolsController.SwitchToDefaultTool();
     }
 
-    protected override void OnDeactivated(Scene2D scene)
+    protected override void OnDeactivated(ToolsController toolsController)
     {
         EndDragObjects();
     }

@@ -4,54 +4,46 @@ using System.Linq;
 using System.Windows.Input;
 using LogicSimulator.Scene.SceneObjects.Base;
 using LogicSimulator.Scene.Tools.Base;
-using LogicSimulator.Utils;
 using SharpDX;
 
 namespace LogicSimulator.Scene.Tools;
 
 public class SelectionTool : BaseTool
 {
+    private IEnumerable<BaseSceneObject> _objectsUnderCursor;
+
     public event Action SelectionChanged;
 
     public float SelectionTolerance { get; set; } = 5f;
 
     public Key MultipleSelectionKey { get; set; } = Key.LeftShift;
 
-    public IEnumerable<BaseSceneObject> ObjectsUnderCursor { private set; get; } = Enumerable.Empty<BaseSceneObject>();
-
-    public AbstractNode NodeUnderCursor { private set; get; }
-
-    public EditableSceneObject NodeUnderCursorOwner { private set; get; }
-
-    public override void MouseLeftButtonDown(Scene2D scene, Vector2 pos)
+    internal override void MouseLeftButtonDown(Scene2D scene, Vector2 pos)
     {
-        var (node, obj) = GetNodeUnderCursor(scene, pos.Transform(scene.Transform));
-
-        if (node is not null)
+        if (scene.IsNodeThatIntersectPointExists(pos))
         {
-            NodeUnderCursor = node;
-            NodeUnderCursorOwner = obj;
-            scene.SwitchTool<NodeDragTool>();
+            ToolsController.SwitchTool<NodeDragTool>(tool => tool.MouseLeftButtonDown(scene, pos));
+            return;
         }
 
-        ObjectsUnderCursor = GetObjectsUnderCursor(scene, pos);
+        _objectsUnderCursor = scene.GetObjectsThatIntersectPoint(pos, SelectionTolerance).Reverse();
     }
 
-    public override void MouseLeftButtonDragged(Scene2D scene, Vector2 pos)
+    internal override void MouseLeftButtonDragged(Scene2D scene, Vector2 pos)
     {
-        if (ObjectsUnderCursor.Any())
+        if (_objectsUnderCursor.Any())
         {
-            scene.SwitchTool<DragTool>();
+            ToolsController.SwitchTool<DragTool>(tool => tool.MouseLeftButtonDown(scene, pos));
         }
         else
         {
-            scene.SwitchTool<RectangleSelectionTool>();
+            ToolsController.SwitchTool<RectangleSelectionTool>(tool => tool.MouseLeftButtonDown(scene, pos));
         }
     }
 
-    public override void MouseLeftButtonUp(Scene2D scene, Vector2 pos)
+    internal override void MouseLeftButtonUp(Scene2D scene, Vector2 pos)
     {
-        var objects = ObjectsUnderCursor.ToList();
+        var objects = _objectsUnderCursor.ToList();
 
         var isMultipleSelectionKeyPressed = Keyboard.IsKeyDown(MultipleSelectionKey);
 
@@ -112,25 +104,6 @@ public class SelectionTool : BaseTool
 
             SelectionChanged?.Invoke();
         }
-    }
-
-    private IEnumerable<BaseSceneObject> GetObjectsUnderCursor(Scene2D scene, Vector2 pos) =>
-        scene.Objects.Where(obj => obj.IsIntersectsPoint(pos, scene.Transform, SelectionTolerance)).Reverse();
-
-    private (AbstractNode nodeUnderCursor, EditableSceneObject nodeUnderCursorOwner) GetNodeUnderCursor(Scene2D scene, Vector2 pos)
-    {
-        foreach (var sceneObject in scene.Objects.Reverse())
-        {
-            if (sceneObject is not EditableSceneObject { IsSelected: true } obj) continue;
-
-            foreach (var node in obj.Nodes.Reverse())
-            {
-                if (pos.IsInRectangle(node.GetLocation(obj).RectangleRelativePointAsCenter(AbstractNode.NodeSize / scene.Scale)))
-                    return (node, obj);
-            }
-        }
-
-        return (null, null);
     }
 
     private void UnselectAllObjects(Scene2D scene)

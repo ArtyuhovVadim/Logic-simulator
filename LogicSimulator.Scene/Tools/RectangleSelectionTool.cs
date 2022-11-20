@@ -10,7 +10,6 @@ namespace LogicSimulator.Scene.Tools;
 
 public class RectangleSelectionTool : BaseTool
 {
-    private bool _isStartPositionInit;
     private bool _isSelectionChanged;
 
     private SelectionRectangleRenderingComponent _component;
@@ -21,35 +20,31 @@ public class RectangleSelectionTool : BaseTool
 
     public Vector2 EndPosition { get; private set; }
 
-    public bool IsSecant { get; private set; }
-
     public Key ManySelectionKey { get; set; } = Key.LeftShift;
 
-    protected override void OnActivated(Scene2D scene)
+    internal override void MouseLeftButtonDown(Scene2D scene, Vector2 pos)
     {
         _component = scene.GetComponent<SelectionRectangleRenderingComponent>();
+
+        pos = pos.Transform(scene.Transform);
+
+        StartPosition = pos;
+        EndPosition = pos;
+        
+        _component.StartPosition = pos;
+        _component.EndPosition = pos;
+        _component.IsVisible = true;
     }
 
-    public override void MouseLeftButtonDragged(Scene2D scene, Vector2 pos)
+    internal override void MouseLeftButtonDragged(Scene2D scene, Vector2 pos)
     {
         pos = pos.Transform(scene.Transform);
 
-        if (!_isStartPositionInit)
-        {
-            StartPosition = pos;
-            _component.StartPosition = pos;
-            _isStartPositionInit = true;
-            _component.IsVisible = true;
-        }
-
         EndPosition = pos;
         _component.EndPosition = pos;
-
-        IsSecant = EndPosition.X < StartPosition.X;
-        _component.IsSecant = IsSecant;
     }
 
-    public override void MouseLeftButtonUp(Scene2D scene, Vector2 pos)
+    internal override void MouseLeftButtonUp(Scene2D scene, Vector2 pos)
     {
         var size = EndPosition - StartPosition;
 
@@ -70,7 +65,7 @@ public class RectangleSelectionTool : BaseTool
             if (compareResult is GeometryRelation.Disjoint or GeometryRelation.Unknown)
                 continue;
 
-            switch (IsSecant)
+            switch (EndPosition.X < StartPosition.X)
             {
                 case true when compareResult is GeometryRelation.IsContained or GeometryRelation.Overlap:
                 case false when compareResult is GeometryRelation.IsContained:
@@ -83,12 +78,11 @@ public class RectangleSelectionTool : BaseTool
         if (_isSelectionChanged)
             SelectionChanged?.Invoke();
 
-        scene.SwitchTool<SelectionTool>();
+        ToolsController.SwitchToDefaultTool();
     }
 
-    protected override void OnDeactivated(Scene2D scene)
+    protected override void OnDeactivated(ToolsController toolsController)
     {
-        _isStartPositionInit = false;
         _component.IsVisible = false;
     }
 }

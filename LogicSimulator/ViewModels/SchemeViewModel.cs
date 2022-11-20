@@ -19,7 +19,7 @@ public class SchemeViewModel : BindableBase
 
     private readonly SelectionTool _selectionTool = new();
     private readonly RectangleSelectionTool _rectangleSelectionTool = new();
-    private readonly DragTool _dragTool = new();
+    private readonly DragTool _dragTool = new() { GridSnap = 25f };
     private readonly NodeDragTool _nodeDragTool = new();
 
     #endregion
@@ -66,6 +66,12 @@ public class SchemeViewModel : BindableBase
             _rectangleSelectionTool,
             _dragTool,
             _nodeDragTool
+        };
+
+        ToolsController = new ToolsController(_selectionTool)
+        {
+            Tools = _tools,
+            AlwaysUpdatingTools = new[] { new TransformTool() }
         };
 
         _components = new ObservableCollection<BaseRenderingComponent>()
@@ -157,6 +163,18 @@ public class SchemeViewModel : BindableBase
     {
         get => _tools;
         set => Set(ref _tools, value);
+    }
+
+    #endregion
+
+    #region ToolsController
+
+    private ToolsController _toolsController;
+
+    public ToolsController ToolsController
+    {
+        get => _toolsController;
+        set => Set(ref _toolsController, value);
     }
 
     #endregion

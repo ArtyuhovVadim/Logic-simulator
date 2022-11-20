@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Linq;
 using System.Windows;
@@ -7,8 +6,6 @@ using System.Windows.Input;
 using System.Windows.Media;
 using LogicSimulator.Scene.Components.Base;
 using LogicSimulator.Scene.SceneObjects.Base;
-using LogicSimulator.Scene.Tools;
-using LogicSimulator.Scene.Tools.Base;
 using LogicSimulator.Utils;
 using SharpDX;
 
@@ -17,8 +14,6 @@ namespace LogicSimulator.Scene;
 public class Scene2D : FrameworkElement
 {
     private readonly SceneRenderer _renderer;
-
-    private SceneTransformController _sceneTransformController;
 
     private bool _isLeftMouseButtonPressedOnScene;
 
@@ -74,24 +69,16 @@ public class Scene2D : FrameworkElement
 
     #endregion
 
-    #region Tools
+    #region ToolsController
 
-    public IEnumerable<BaseTool> Tools
+    public ToolsController ToolsController
     {
-        get => (IEnumerable<BaseTool>)GetValue(ToolsProperty);
-        set => SetValue(ToolsProperty, value);
+        get => (ToolsController)GetValue(ToolsControllerProperty);
+        set => SetValue(ToolsControllerProperty, value);
     }
 
-    public static readonly DependencyProperty ToolsProperty =
-        DependencyProperty.Register(nameof(Tools), typeof(IEnumerable<BaseTool>), typeof(Scene2D),
-            new PropertyMetadata(Enumerable.Empty<BaseTool>(), OnToolsChanged));
-
-    private static void OnToolsChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
-    {
-        if (d is not Scene2D scene) return;
-
-        scene.CurrentTool = ((IEnumerable<BaseTool>)e.NewValue).First();
-    }
+    public static readonly DependencyProperty ToolsControllerProperty =
+        DependencyProperty.Register(nameof(ToolsController), typeof(ToolsController), typeof(Scene2D), new PropertyMetadata(default(ToolsController)));
 
     #endregion
 
@@ -176,8 +163,6 @@ public class Scene2D : FrameworkElement
 
         RenderNotifier.RegisterScene(this);
 
-        _sceneTransformController = new SceneTransformController(this);
-
         _renderer = new SceneRenderer(this);
         ScreenshotCreator = new ScreenshotCreator(_renderer);
 
@@ -186,38 +171,9 @@ public class Scene2D : FrameworkElement
         Loaded += OnLoaded;
     }
 
-    public BaseTool CurrentTool { get; private set; }
-
     public T GetComponent<T>() where T : BaseRenderingComponent
     {
         return (T)Components.FirstOrDefault(x => x.GetType() == typeof(T));
-    }
-
-    public T GetTool<T>() where T : BaseTool
-    {
-        return (T)Tools.FirstOrDefault(x => x.GetType() == typeof(T));
-    }
-
-    public void SwitchTool<T>() where T : BaseTool
-    {
-        if (Tools is null)
-            throw new ApplicationException("There are no tools in the scene!");
-
-        var tool = Tools.FirstOrDefault(x => x.GetType() == typeof(T));
-
-        if (tool is null) return;
-
-        if (CurrentTool is null)
-        {
-            CurrentTool = tool;
-            return;
-        }
-
-        CurrentTool?.Deactivate(this);
-
-        CurrentTool = tool;
-
-        CurrentTool.Activate(this);
     }
 
     protected override void OnRender(DrawingContext drawingContext) => _renderer.WpfRender(drawingContext);
@@ -233,13 +189,13 @@ public class Scene2D : FrameworkElement
         MousePosition = pos.Transform(Transform);
 
         if (e.LeftButton == MouseButtonState.Pressed && _isLeftMouseButtonPressedOnScene)
-            CurrentTool?.MouseLeftButtonDragged(this, pos);
-        else if (e.RightButton == MouseButtonState.Pressed && _isLeftMouseButtonPressedOnScene)
-            CurrentTool?.MouseRightButtonDragged(this, pos);
-        else if (e.MiddleButton == MouseButtonState.Pressed && _isLeftMouseButtonPressedOnScene)
-            CurrentTool?.MouseMiddleButtonDragged(this, pos);
-        else
-            CurrentTool?.MouseMove(this, pos);
+            ToolsController?.MouseLeftButtonDragged(this, pos);
+        if (e.RightButton == MouseButtonState.Pressed)
+            ToolsController?.MouseRightButtonDragged(this, pos);
+        if (e.MiddleButton == MouseButtonState.Pressed)
+            ToolsController?.MouseMiddleButtonDragged(this, pos);
+
+        ToolsController?.MouseMove(this, pos);
     }
 
     protected override void OnMouseLeftButtonDown(MouseButtonEventArgs e)
@@ -248,7 +204,7 @@ public class Scene2D : FrameworkElement
 
         _isLeftMouseButtonPressedOnScene = true;
 
-        CurrentTool?.MouseLeftButtonDown(this, GetMousePosition());
+        ToolsController?.MouseLeftButtonDown(this, GetMousePosition());
     }
 
     protected override void OnMouseLeftButtonUp(MouseButtonEventArgs e)
@@ -256,7 +212,7 @@ public class Scene2D : FrameworkElement
         base.OnMouseLeftButtonUp(e);
 
         if (_isLeftMouseButtonPressedOnScene)
-            CurrentTool?.MouseLeftButtonUp(this, GetMousePosition());
+            ToolsController?.MouseLeftButtonUp(this, GetMousePosition());
 
         _isLeftMouseButtonPressedOnScene = false;
 
@@ -267,14 +223,14 @@ public class Scene2D : FrameworkElement
     {
         base.OnMouseRightButtonDown(e);
 
-        CurrentTool?.MouseRightButtonDown(this, GetMousePosition());
+        ToolsController?.MouseRightButtonDown(this, GetMousePosition());
     }
 
     protected override void OnMouseRightButtonUp(MouseButtonEventArgs e)
     {
         base.OnMouseRightButtonUp(e);
 
-        CurrentTool?.MouseRightButtonUp(this, GetMousePosition());
+        ToolsController?.MouseRightButtonUp(this, GetMousePosition());
 
         Mouse.Capture(null);
     }
@@ -282,6 +238,11 @@ public class Scene2D : FrameworkElement
     protected override void OnMouseDown(MouseButtonEventArgs e)
     {
         base.OnMouseDown(e);
+
+        if (e.MiddleButton == MouseButtonState.Pressed)
+        {
+            ToolsController?.MouseMiddleButtonDown(this, GetMousePosition());
+        }
 
         Mouse.Capture(this);
         Keyboard.Focus(this);
@@ -293,6 +254,7 @@ public class Scene2D : FrameworkElement
 
         if (e.ChangedButton == MouseButton.Middle)
         {
+            ToolsController?.MouseMiddleButtonUp(this, GetMousePosition());
             Mouse.Capture(null);
         }
     }
@@ -301,21 +263,14 @@ public class Scene2D : FrameworkElement
     {
         base.OnKeyDown(e);
 
-        CurrentTool?.KeyDown(this, e);
+        ToolsController?.KeyDown(this, e);
     }
 
     protected override void OnKeyUp(KeyEventArgs e)
     {
         base.OnKeyUp(e);
 
-        CurrentTool?.KeyUp(this, e);
-    }
-
-    protected override void OnLostKeyboardFocus(KeyboardFocusChangedEventArgs e)
-    {
-        base.OnLostKeyboardFocus(e);
-
-        SwitchTool<SelectionTool>();
+        ToolsController?.KeyUp(this, e);
     }
 
     private void OnLoaded(object sender, RoutedEventArgs e) => _renderer.SetOwnerWindow();

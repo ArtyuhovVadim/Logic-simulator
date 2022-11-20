@@ -46,8 +46,6 @@ public class SelectionRectangleRenderingComponent : BaseRenderingComponent
         set => SetAndUpdateResource(ref _normalColor, value, NormalBrushResource);
     }
 
-    public bool IsSecant { get; set; }
-
     protected override void OnInitialize(Scene2D scene)
     {
         InitializeResource(SecantBrushResource);
@@ -56,7 +54,7 @@ public class SelectionRectangleRenderingComponent : BaseRenderingComponent
 
     protected override void OnRender(Scene2D scene, RenderTarget renderTarget)
     {
-        var brush = ResourceCache.GetOrUpdate<SolidColorBrush>(this, IsSecant ? SecantBrushResource : NormalBrushResource, scene);
+        var brush = ResourceCache.GetOrUpdate<SolidColorBrush>(this, EndPosition.X < StartPosition.X ? SecantBrushResource : NormalBrushResource, scene);
 
         var location = StartPosition;
         var size = EndPosition - StartPosition;

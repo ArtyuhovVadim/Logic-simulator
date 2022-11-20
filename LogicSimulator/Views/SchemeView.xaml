@@ -16,7 +16,7 @@
         Objects="{Binding Path=Objects}"
         Scale="{Binding Path=Scale,
                         Mode=OneWayToSource}"
-        Tools="{Binding Path=Tools}">
+        ToolsController="{Binding Path=ToolsController}">
         <p:DataPiping.DataPipes>
             <p:DataPipeCollection>
                 <p:DataPipe Source="{Binding RelativeSource={RelativeSource AncestorType={x:Type scene:Scene2D}}, Path=MousePosition}" Target="{Binding Path=MousePosition, Mode=OneWayToSource}" />
