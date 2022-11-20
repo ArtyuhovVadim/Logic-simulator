@@ -1,5 +1,4 @@
-﻿using System;
-using System.Windows.Input;
+﻿using System.Windows.Input;
 using LogicSimulator.Scene.Components;
 using LogicSimulator.Scene.Tools.Base;
 using LogicSimulator.Utils;
@@ -13,8 +12,6 @@ public class RectangleSelectionTool : BaseTool
     private bool _isSelectionChanged;
 
     private SelectionRectangleRenderingComponent _component;
-
-    public event Action SelectionChanged;
 
     public Vector2 StartPosition { get; private set; }
 
@@ -76,7 +73,7 @@ public class RectangleSelectionTool : BaseTool
         }
 
         if (_isSelectionChanged)
-            SelectionChanged?.Invoke();
+            ToolsController.OnSelectedObjectsChanged();
 
         ToolsController.SwitchToDefaultTool();
     }

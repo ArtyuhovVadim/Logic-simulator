@@ -1,4 +1,5 @@
-﻿using LogicSimulator.Scene.SceneObjects;
+﻿using System;
+using LogicSimulator.Scene.SceneObjects;
 using LogicSimulator.Scene.Tools.Base;
 using SharpDX;
 
@@ -20,21 +21,21 @@ public class EllipsePlacingTool : BaseObjectPlacingTool<Ellipse>
 
     private void UpdateRadiusX(Scene2D scene, Vector2 pos)
     {
-        PlacingObject.RadiusX = pos.X - PlacingObject.Center.X;
+        PlacingObject.RadiusX = Math.Abs((pos - PlacingObject.Center).X);
     }
 
     private void SetRadiusX(Scene2D scene, Vector2 pos)
     {
-        PlacingObject.RadiusX = pos.X - PlacingObject.Center.X;
+        PlacingObject.RadiusX = Math.Abs((pos - PlacingObject.Center).X);
     }
 
     private void UpdateRadiusY(Scene2D scene, Vector2 pos)
     {
-        PlacingObject.RadiusY = pos.Y - PlacingObject.Center.Y;
+        PlacingObject.RadiusY = Math.Abs((pos - PlacingObject.Center).Y);
     }
 
     private void SetRadiusY(Scene2D scene, Vector2 pos)
     {
-        PlacingObject.RadiusY = pos.Y - PlacingObject.Center.Y;
+        PlacingObject.RadiusY = Math.Abs((pos - PlacingObject.Center).Y);
     }
 }

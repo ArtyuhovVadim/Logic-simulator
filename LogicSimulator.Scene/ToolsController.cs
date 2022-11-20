@@ -9,6 +9,8 @@ namespace LogicSimulator.Scene;
 
 public class ToolsController
 {
+    public event Action SelectedObjectsChanged;
+
     public BaseTool DefaultTool { get; set; }
 
     public BaseTool CurrentTool { get; private set; }
@@ -58,6 +60,11 @@ public class ToolsController
         CurrentTool.Activate(this);
 
         actionToNextToolAfterActivating?.Invoke((T)CurrentTool);
+    }
+
+    internal void OnSelectedObjectsChanged()
+    {
+        SelectedObjectsChanged?.Invoke();
     }
 
     internal void KeyDown(Scene2D scene, KeyEventArgs args) => ProvideEvents(tool => tool.KeyDown(scene, args));

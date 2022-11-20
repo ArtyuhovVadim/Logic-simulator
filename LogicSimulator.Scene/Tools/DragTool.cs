@@ -24,7 +24,7 @@ public class DragTool : BaseTool
 
     internal override void MouseLeftButtonDown(Scene2D scene, Vector2 pos)
     {
-        _objectsUnderCursor = scene.GetObjectsThatIntersectPoint(pos, DragTolerance).ToList();
+        _objectsUnderCursor = scene.GetObjectsThatIntersectPoint(pos, DragTolerance).Reverse().ToList();
     }
 
     internal override void MouseLeftButtonDragged(Scene2D scene, Vector2 pos)

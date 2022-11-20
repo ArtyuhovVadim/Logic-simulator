@@ -5,8 +5,8 @@ using LogicSimulator.Scene;
 using LogicSimulator.Scene.Components.Base;
 using LogicSimulator.Scene.Components;
 using LogicSimulator.Scene.SceneObjects.Base;
-using LogicSimulator.Scene.Tools.Base;
 using LogicSimulator.Scene.Tools;
+using LogicSimulator.Scene.Tools.Base;
 using LogicSimulator.ViewModels.Base;
 using Microsoft.Extensions.DependencyInjection;
 using SharpDX;
@@ -16,6 +16,8 @@ namespace LogicSimulator.ViewModels;
 public class SchemeViewModel : BindableBase
 {
     #region Tools
+
+    private readonly TransformTool _transformTool = new();
 
     private readonly SelectionTool _selectionTool = new();
     private readonly RectangleSelectionTool _rectangleSelectionTool = new();
@@ -63,6 +65,16 @@ public class SchemeViewModel : BindableBase
 
         Objects = new ObservableCollection<BaseSceneObject>(_scheme.Objects);
 
+        _components = new ObservableCollection<BaseRenderingComponent>()
+        {
+            _gradientClearRenderingComponent,
+            _gridRenderingComponent,
+            _sceneObjectsRenderingComponent,
+            _selectionRenderingComponent,
+            _selectionRectangleRenderingComponent,
+            _nodeRenderingComponent
+        };
+
         _tools = new ObservableCollection<BaseTool>
         {
             _selectionTool,
@@ -79,23 +91,12 @@ public class SchemeViewModel : BindableBase
             AlwaysUpdatingTools = new[] { new TransformTool() }
         };
 
-        _components = new ObservableCollection<BaseRenderingComponent>()
-        {
-            _gradientClearRenderingComponent,
-            _gridRenderingComponent,
-            _sceneObjectsRenderingComponent,
-            _selectionRenderingComponent,
-            _selectionRectangleRenderingComponent,
-            _nodeRenderingComponent
-        };
-
-        _selectionTool.SelectionChanged += OnSelectionChanged;
-        _rectangleSelectionTool.SelectionChanged += OnSelectionChanged;
+        ToolsController.SelectedObjectsChanged += OnSelectedObjectsChanged;
 
         _editorSelectionService = App.Host.Services.GetRequiredService<IEditorSelectionService>();
     }
 
-    private void OnSelectionChanged()
+    private void OnSelectedObjectsChanged()
     {
         _editorSelectionService.Select(this);
     }

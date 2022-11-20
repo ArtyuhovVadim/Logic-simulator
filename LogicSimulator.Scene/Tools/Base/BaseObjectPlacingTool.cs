@@ -7,6 +7,8 @@ namespace LogicSimulator.Scene.Tools.Base;
 
 public abstract class BaseObjectPlacingTool<T> : BaseTool where T : BaseSceneObject, new()
 {
+    public float GridSnap { get; set; } = 25f;
+
     protected T PlacingObject { get; private set; }
 
     protected List<PlacingStep> PlacingSteps { get; private set; } = new();
@@ -23,12 +25,16 @@ public abstract class BaseObjectPlacingTool<T> : BaseTool where T : BaseSceneObj
             _isStarted = true;
         }
 
-        PlacingSteps[_placingProgress++].Start(scene, pos.Transform(scene.Transform));
+        PlacingSteps[_placingProgress].Start(scene, PlacingSteps[_placingProgress].UseGrid ?
+            pos.Transform(scene.Transform).ApplyGrid(GridSnap) : pos.Transform(scene.Transform));
+
+        _placingProgress++;
 
         if (_placingProgress >= PlacingSteps.Count)
         {
             scene.UnselectAllObjects();
             PlacingObject.Select();
+            ToolsController.OnSelectedObjectsChanged();
             EndObjectPlacing();
         }
     }
@@ -50,7 +56,8 @@ public abstract class BaseObjectPlacingTool<T> : BaseTool where T : BaseSceneObj
     {
         if (_isStarted)
         {
-            PlacingSteps[_placingProgress].Update(scene, pos.Transform(scene.Transform));
+            PlacingSteps[_placingProgress].Start(scene, PlacingSteps[_placingProgress].UseGrid ?
+                pos.Transform(scene.Transform).ApplyGrid(GridSnap) : pos.Transform(scene.Transform));
         }
     }
 
