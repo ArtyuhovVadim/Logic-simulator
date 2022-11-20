@@ -13,6 +13,8 @@ public abstract class BaseObjectPlacingTool<T> : BaseTool where T : BaseSceneObj
 
     protected List<PlacingStep> PlacingSteps { get; private set; } = new();
 
+    private bool _isMouseRightButtonDragged;
+
     private bool _isStarted;
 
     private int _placingProgress;
@@ -39,8 +41,19 @@ public abstract class BaseObjectPlacingTool<T> : BaseTool where T : BaseSceneObj
         }
     }
 
-    internal override void MouseRightButtonDown(Scene2D scene, Vector2 pos)
+    internal override void MouseRightButtonDragged(Scene2D scene, Vector2 pos)
     {
+        _isMouseRightButtonDragged = true;
+    }
+
+    internal override void MouseRightButtonUp(Scene2D scene, Vector2 pos)
+    {
+        if (_isMouseRightButtonDragged)
+        {
+            _isMouseRightButtonDragged = false;
+            return;
+        }
+
         if (_placingProgress == 0)
         {
             EndObjectPlacing();
