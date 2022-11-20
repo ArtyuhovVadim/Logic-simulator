@@ -26,6 +26,7 @@ public class SchemeViewModel : BindableBase
 
     private readonly RectanglePlacingTool _rectanglePlacingTool = new();
     private readonly EllipsePlacingTool _ellipsePlacingTool = new();
+    private readonly TextBlockPlacingTool _textBlockPlacingTool = new();
 
     #endregion
 
@@ -81,14 +82,16 @@ public class SchemeViewModel : BindableBase
             _rectangleSelectionTool,
             _dragTool,
             _nodeDragTool,
+
             _rectanglePlacingTool,
-            _ellipsePlacingTool
+            _ellipsePlacingTool,
+            _textBlockPlacingTool
         };
 
         ToolsController = new ToolsController(_selectionTool)
         {
             Tools = _tools,
-            AlwaysUpdatingTools = new[] { new TransformTool() }
+            AlwaysUpdatingTools = new[] { _transformTool }
         };
 
         ToolsController.SelectedObjectsChanged += OnSelectedObjectsChanged;

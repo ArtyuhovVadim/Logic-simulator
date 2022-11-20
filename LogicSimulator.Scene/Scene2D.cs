@@ -259,6 +259,11 @@ public class Scene2D : FrameworkElement
         {
             ToolsController.SwitchTool<EllipsePlacingTool>();
         }
+
+        if (e.Key == Key.D3)
+        {
+            ToolsController.SwitchTool<TextBlockPlacingTool>();
+        }
     }
 
     protected override void OnKeyUp(KeyEventArgs e)

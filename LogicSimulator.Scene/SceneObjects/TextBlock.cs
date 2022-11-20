@@ -39,9 +39,9 @@ public class TextBlock : BaseSceneObject
         scene.ResourceFactory.CreateSolidColorBrush(((TextBlock)obj).TextColor));
 
     private Vector2 _location = Vector2.Zero;
-    private string _text = string.Empty;
-    private string _fontName;
-    private float _fontSize = 12f;
+    private string _text = "Text";
+    private string _fontName = "Times New Roman";
+    private float _fontSize = 24f;
     private Color4 _textColor = Color4.Black;
 
     private bool _isBold;
