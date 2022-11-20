@@ -6,6 +6,7 @@ using System.Windows.Input;
 using System.Windows.Media;
 using LogicSimulator.Scene.Components.Base;
 using LogicSimulator.Scene.SceneObjects.Base;
+using LogicSimulator.Scene.Tools;
 using LogicSimulator.Utils;
 using SharpDX;
 
@@ -248,6 +249,16 @@ public class Scene2D : FrameworkElement
         base.OnKeyDown(e);
 
         ToolsController?.KeyDown(this, e);
+
+        if (e.Key == Key.D1)
+        {
+            ToolsController.SwitchTool<RectanglePlacingTool>();
+        }
+
+        if (e.Key == Key.D2)
+        {
+            ToolsController.SwitchTool<EllipsePlacingTool>();
+        }
     }
 
     protected override void OnKeyUp(KeyEventArgs e)

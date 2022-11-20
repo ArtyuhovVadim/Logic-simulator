@@ -51,7 +51,7 @@ public class SelectionTool : BaseTool
         {
             if (!isMultipleSelectionKeyPressed)
             {
-                UnselectAllObjects(scene);
+                scene.UnselectAllObjects();
                 SelectionChanged?.Invoke();
             }
         }
@@ -64,7 +64,7 @@ public class SelectionTool : BaseTool
             {
                 if (!isMultipleSelectionKeyPressed)
                 {
-                    UnselectAllObjects(scene);
+                    scene.UnselectAllObjects();
                 }
 
                 obj.Select();
@@ -87,7 +87,7 @@ public class SelectionTool : BaseTool
 
             if (!isMultipleSelectionKeyPressed)
             {
-                UnselectAllObjects(scene);
+                scene.UnselectAllObjects();
             }
 
             if (selectedObjectIndex == -1)
@@ -104,11 +104,5 @@ public class SelectionTool : BaseTool
 
             SelectionChanged?.Invoke();
         }
-    }
-
-    private void UnselectAllObjects(Scene2D scene)
-    {
-        foreach (var sceneObject in scene.Objects)
-            sceneObject.Unselect();
     }
 }

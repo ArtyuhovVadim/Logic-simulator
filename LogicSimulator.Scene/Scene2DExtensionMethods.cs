@@ -38,4 +38,12 @@ public static class Scene2DExtensionMethods
 
         return (null, null);
     }
+
+    public static void UnselectAllObjects(this Scene2D scene)
+    {
+        foreach (var sceneObject in scene.Objects)
+        {
+            sceneObject.Unselect();
+        }
+    }
 }

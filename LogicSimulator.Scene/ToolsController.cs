@@ -51,6 +51,8 @@ public class ToolsController
             return;
         }
 
+        if (!CurrentTool.CanSwitch) return;
+
         CurrentTool.Deactivate(this);
         CurrentTool = tool;
         CurrentTool.Activate(this);

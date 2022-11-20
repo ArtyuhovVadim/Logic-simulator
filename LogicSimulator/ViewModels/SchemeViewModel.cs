@@ -22,6 +22,9 @@ public class SchemeViewModel : BindableBase
     private readonly DragTool _dragTool = new() { GridSnap = 25f };
     private readonly NodeDragTool _nodeDragTool = new();
 
+    private readonly RectanglePlacingTool _rectanglePlacingTool = new();
+    private readonly EllipsePlacingTool _ellipsePlacingTool = new();
+
     #endregion
 
     #region Components
@@ -65,7 +68,9 @@ public class SchemeViewModel : BindableBase
             _selectionTool,
             _rectangleSelectionTool,
             _dragTool,
-            _nodeDragTool
+            _nodeDragTool,
+            _rectanglePlacingTool,
+            _ellipsePlacingTool
         };
 
         ToolsController = new ToolsController(_selectionTool)
