@@ -273,6 +273,13 @@ public class Scene2D : FrameworkElement
         ToolsController?.KeyUp(this, e);
     }
 
+    protected override void OnMouseWheel(MouseWheelEventArgs e)
+    {
+        base.OnMouseWheel(e);
+
+        ToolsController?.MouseWheel(this, e);
+    }
+
     private void OnLoaded(object sender, RoutedEventArgs e) => _renderer.SetOwnerWindow();
 
     private Vector2 GetMousePosition() => Mouse.GetPosition(this).ToVector2().DpiCorrect(Dpi);

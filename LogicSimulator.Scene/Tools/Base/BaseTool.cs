@@ -52,4 +52,6 @@ public abstract class BaseTool
     internal virtual void MouseMiddleButtonDragged(Scene2D scene, Vector2 pos) { }
 
     internal virtual void MouseMiddleButtonUp(Scene2D scene, Vector2 pos) { }
+
+    internal virtual void MouseWheel(Scene2D scene, int delta) { }
 }

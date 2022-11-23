@@ -91,6 +91,8 @@ public class ToolsController
 
     internal void MouseMiddleButtonUp(Scene2D scene, Vector2 pos) => ProvideEvents(tool => tool.MouseMiddleButtonUp(scene, pos));
 
+    internal void MouseWheel(Scene2D scene, MouseWheelEventArgs e) => ProvideEvents(tool => tool.MouseWheel(scene, e.Delta));
+
     private void ProvideEvents(Action<BaseTool> action)
     {
         foreach (var alwaysUpdatingTool in AlwaysUpdatingTools)
