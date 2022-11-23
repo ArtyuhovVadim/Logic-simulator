@@ -19,7 +19,11 @@ public class TransformTool : BaseTool
 
     public float MinScale { get; set; } = 0.5f;
 
-    public float ScaleStep { get; set; } = 0.01f;
+    public float MouseScaleStep { get; set; } = 0.01f;
+
+    public float WheelScaleStep { get; set; } = 0.002f;
+
+    public Key WheelScaleButton { get; set; } = Key.LeftCtrl;
 
     internal override void MouseRightButtonDown(Scene2D scene, Vector2 pos)
     {
@@ -33,12 +37,21 @@ public class TransformTool : BaseTool
         _lastMiddleButtonDownPos = scene.PointToScreen(Mouse.GetPosition(scene));
     }
 
+    internal override void MouseWheel(Scene2D scene, Vector2 pos, int delta)
+    {
+        if (Mouse.MiddleButton == MouseButtonState.Pressed || Mouse.RightButton == MouseButtonState.Pressed) return;
+
+        if (!Keyboard.IsKeyDown(WheelScaleButton)) return;
+
+        RelativeScale(scene, pos, WheelScaleStep * delta, MaxScale, MinScale);
+    }
+
     internal override void MouseMove(Scene2D scene, Vector2 pos)
     {
         if (Mouse.MiddleButton == MouseButtonState.Pressed)
         {
             User32.SetCursorPos((int)_lastMiddleButtonDownPos.X, (int)_lastMiddleButtonDownPos.Y);
-            RelativeScale(scene, _lastMiddleButtonDownPosWithDpi, -ScaleStep * (pos.Y - _lastMiddleButtonDownPosWithDpi.Y), MaxScale, MinScale);
+            RelativeScale(scene, _lastMiddleButtonDownPosWithDpi, -MouseScaleStep * (pos.Y - _lastMiddleButtonDownPosWithDpi.Y), MaxScale, MinScale);
         }
         else if (Mouse.RightButton == MouseButtonState.Pressed)
         {
@@ -46,6 +59,7 @@ public class TransformTool : BaseTool
         }
     }
 
+    //TODO: Поработать с этой функцией
     private void RelativeScale(Scene2D scene, Vector2 pos, float delta, float max = 20f, float min = 0.5f)
     {
         var p = pos.Transform(scene.Transform);

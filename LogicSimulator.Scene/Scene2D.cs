@@ -277,7 +277,7 @@ public class Scene2D : FrameworkElement
     {
         base.OnMouseWheel(e);
 
-        ToolsController?.MouseWheel(this, e);
+        ToolsController?.MouseWheel(this, GetMousePosition(), e);
     }
 
     private void OnLoaded(object sender, RoutedEventArgs e) => _renderer.SetOwnerWindow();
