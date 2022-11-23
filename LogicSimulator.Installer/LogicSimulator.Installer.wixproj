@@ -56,18 +56,18 @@
 		<Error Text="The WiX Toolset v3.11 (or newer) build tools must be installed to build this project. To download the WiX Toolset, see http://wixtoolset.org/releases/" />
 	</Target>
 	<Target Name="BeforeBuild">
-		<GetAssemblyIdentity AssemblyFiles="..\..\Logic-simulator\LogicSimulator\bin\x64\Release\net6.0-windows\publish\win-x64\LogicSimulator.dll">
+		<GetAssemblyIdentity AssemblyFiles="..\..\Logic-simulator\LogicSimulator\bin\Release\publish\LogicSimulator.dll">
 			<Output TaskParameter="Assemblies" ItemName="AssemblyVersion" />
 		</GetAssemblyIdentity>
 		<PropertyGroup>
-			<DefineConstants>BuildVersion=%(AssemblyVersion.Version);BasePath=..\..\Logic-simulator\LogicSimulator\bin\x64\Release\net6.0-windows\publish\win-x64</DefineConstants>
+			<DefineConstants>BuildVersion=%(AssemblyVersion.Version);BasePath=..\..\Logic-simulator\LogicSimulator\bin\Release\publish</DefineConstants>
 		</PropertyGroup>
 		<HeatDirectory
 			OutputFile="ComponentsGenerated.wxs"
 			DirectoryRefId="INSTALLFOLDER"
 			ComponentGroupName="PublishedComponents"
 			SuppressCom="true"
-			Directory="..\..\Logic-simulator\LogicSimulator\bin\x64\Release\net6.0-windows\publish\win-x64"
+			Directory="..\..\Logic-simulator\LogicSimulator\bin\Release\publish"
 			SuppressFragments="true"
 			SuppressRegistry="true"
 			SuppressRootDirectory="true"

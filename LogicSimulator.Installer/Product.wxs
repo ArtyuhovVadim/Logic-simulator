@@ -2,7 +2,7 @@
 <Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
 
 	<!-- Нужно менять при выходе новой версии! -->
-	<?define ProductCode = "{14624217-65ED-4E4C-9AB9-B4B0A4F5FE52}" ?>
+	<?define ProductCode = "{91992ED9-C7D4-4F51-AB78-A22DC170203B}" ?>
 	<?define UpgradeCode = "{996BFE61-BE7F-4DD0-AD1A-2D2FC730A937}" ?>
 
 	<Product Id="$(var.ProductCode)"
