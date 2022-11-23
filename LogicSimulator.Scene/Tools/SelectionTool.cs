@@ -3,6 +3,7 @@ using System.Linq;
 using System.Windows.Input;
 using LogicSimulator.Scene.SceneObjects.Base;
 using LogicSimulator.Scene.Tools.Base;
+using LogicSimulator.Utils;
 using SharpDX;
 
 namespace LogicSimulator.Scene.Tools;
@@ -17,7 +18,7 @@ public class SelectionTool : BaseTool
 
     internal override void MouseLeftButtonDown(Scene2D scene, Vector2 pos)
     {
-        if (scene.IsNodeThatIntersectPointExists(pos))
+        if (scene.IsNodeThatIntersectPointExists(pos.Transform(scene.Transform)))
         {
             ToolsController.SwitchTool<NodeDragTool>(tool => tool.MouseLeftButtonDown(scene, pos));
             return;
