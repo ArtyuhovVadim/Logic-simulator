@@ -19,8 +19,12 @@
     <PackageId>Dirkster.AvalonDock</PackageId>
     <Authors>https://github.com/Dirkster99/AvalonDock</Authors>
     <PackageLicenseFile>LICENSE</PackageLicenseFile>
+    <Platforms>x64</Platforms>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net.5.0-windows|AnyCPU'">
+    <DefineConstants />
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net.5.0-windows|x64'">
     <DefineConstants />
   </PropertyGroup>
 
