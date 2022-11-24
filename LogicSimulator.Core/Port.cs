@@ -1,5 +1,9 @@
-﻿namespace LogicSimulator.Core;
+﻿using System.Diagnostics;
+using LogicSimulator.Core.LogicComponents.Gates.Base;
 
+namespace LogicSimulator.Core;
+
+[DebuggerDisplay("State: {State}")]
 public class Port
 {
     private readonly Gate _owner;

@@ -4,7 +4,11 @@
     <OutputType>Exe</OutputType>
     <TargetFramework>net7.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
-    <Nullable>enable</Nullable>
+    <Nullable>disable</Nullable>
   </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\LogicSimulator.Core\LogicSimulator.Core.csproj" />
+  </ItemGroup>
 
 </Project>
