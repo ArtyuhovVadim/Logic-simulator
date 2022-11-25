@@ -16,6 +16,18 @@ var outPort2 = nor2.GetPort(2);
 var wire1 = new Wire(outPort1, nor2.GetPort(0));
 var wire2 = new Wire(outPort2, nor1.GetPort(1));
 
+var outGate1 = new OutputGate();
+var outGate2 = new OutputGate();
+
+var outWire1 = new Wire(outGate1.GetPort(0), inPort1);
+var outWire2 = new Wire(outGate2.GetPort(0), inPort2);
+
+outGate1.GetPort(0).AddWire(outWire1);
+outGate2.GetPort(0).AddWire(outWire2);
+
+inPort1.AddWire(outWire1);
+inPort2.AddWire(outWire2);
+
 outPort1.AddWire(wire1);
 outPort2.AddWire(wire2);
 
@@ -30,13 +42,13 @@ Console.ReadLine();
 
 void Simulate(LogicState a, LogicState b)
 {
-    inPort1.State = a;
-    inPort2.State = b;
+    outGate1.State = a; 
+    outGate2.State = b;
 
-    nor1.GetPort(0).Update();
-    //nor2.GetPort(1).Update();
+    outGate1.Update();
+    outGate2.Update();
     Console.ForegroundColor = ConsoleColor.Blue;
-    Console.WriteLine("inPort1: " + inPort1.State + " inPort2: " + inPort2.State);
+    Console.WriteLine("outGate1: " + outGate1.State + " outGate2: " + outGate2.State);
     Console.WriteLine("outPort1: " + outPort1.State + " outPort2: " + outPort2.State);
     Console.ForegroundColor = ConsoleColor.White;
 }

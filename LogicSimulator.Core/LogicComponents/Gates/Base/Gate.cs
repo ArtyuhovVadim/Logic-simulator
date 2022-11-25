@@ -10,10 +10,10 @@ public abstract class Gate : LogicComponent
 
     protected Gate(int inputCount, int outputCount)
     {
-        if (inputCount <= 0)
+        if (inputCount < 0)
             throw new ArgumentOutOfRangeException(nameof(inputCount));
 
-        if (outputCount <= 0)
+        if (outputCount < 0)
             throw new ArgumentOutOfRangeException(nameof(inputCount));
 
         for (var i = 0; i < inputCount; i++)
