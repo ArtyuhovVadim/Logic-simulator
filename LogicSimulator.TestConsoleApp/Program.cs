@@ -34,6 +34,7 @@ void Simulate(LogicState a, LogicState b)
     inPort2.State = b;
 
     nor1.GetPort(0).Update();
+    //nor2.GetPort(1).Update();
     Console.ForegroundColor = ConsoleColor.Blue;
     Console.WriteLine("inPort1: " + inPort1.State + " inPort2: " + inPort2.State);
     Console.WriteLine("outPort1: " + outPort1.State + " outPort2: " + outPort2.State);

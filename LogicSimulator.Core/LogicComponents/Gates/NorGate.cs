@@ -4,6 +4,8 @@ namespace LogicSimulator.Core.LogicComponents.Gates;
 
 public class NorGate : Gate
 {
+    private bool _isFirstUpdated;
+
     public NorGate(int inputCount, int outputCount) : base(inputCount, outputCount)
     {
         if (outputCount != 1)
@@ -46,6 +48,11 @@ public class NorGate : Gate
         {
             outputState = LogicState.True;
         }
+
+        if (_isFirstUpdated && outputPort!.State == outputState)
+            return;
+
+        _isFirstUpdated = true;
 
         outputPort!.State = outputState;
         outputPort.Update();
