@@ -1,6 +1,6 @@
 ﻿namespace LogicSimulator.Core;
 
-public enum PortState
+public enum LogicState
 {
     Undefined,
     True,

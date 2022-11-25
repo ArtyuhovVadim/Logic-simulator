@@ -4,28 +4,31 @@ namespace LogicSimulator.Core.LogicComponents.Gates.Base;
 
 public abstract class Gate : LogicComponent
 {
-    protected Port[] InputPorts { get; }
+    public event Action Updated;
 
-    public int InputPortsCount => InputPorts.Length;
+    protected List<Port> Ports { get; private set; } = new();
 
-    protected Gate(int inputPortsCount)
+    protected Gate(int inputCount, int outputCount)
     {
-        if (inputPortsCount < 0)
-            throw new ArgumentOutOfRangeException(nameof(inputPortsCount));
+        if (inputCount <= 0)
+            throw new ArgumentOutOfRangeException(nameof(inputCount));
 
-        InputPorts = new Port[inputPortsCount];
+        if (outputCount <= 0)
+            throw new ArgumentOutOfRangeException(nameof(inputCount));
 
-        for (var i = 0; i < inputPortsCount; i++)
+        for (var i = 0; i < inputCount; i++)
         {
-            InputPorts[i] = new Port(this, PortType.Input);
+            Ports.Add(new Port(this, PortType.Input));
+        }
+
+        for (var i = 0; i < outputCount; i++)
+        {
+            Ports.Add(new Port(this, PortType.Output));
         }
     }
 
-    public override void SetInputPortState(int i, PortState state)
+    public Port GetPort(int index)
     {
-        if (i >= InputPortsCount || i < 0)
-            throw new ArgumentOutOfRangeException(nameof(i));
-
-        InputPorts[i].State = state;
+        return Ports[index];
     }
 }

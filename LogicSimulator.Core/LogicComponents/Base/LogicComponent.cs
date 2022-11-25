@@ -2,7 +2,20 @@
 
 public abstract class LogicComponent
 {
-    public abstract void Update();
+    private static uint _lastId;
 
-    public abstract void SetInputPortState(int i, PortState state);
+    public event Action<LogicComponent> Updated;
+
+    public uint Id { get; }
+
+    protected LogicComponent() => Id = _lastId++;
+
+    protected abstract void OnUpdate();
+
+    public void Update()
+    {Console.WriteLine($"{GetType().Name} Updated Id: {Id}");
+        OnUpdate();
+        
+        Updated?.Invoke(this);
+    }
 }
