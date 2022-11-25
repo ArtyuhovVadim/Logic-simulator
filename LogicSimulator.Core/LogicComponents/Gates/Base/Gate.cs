@@ -4,6 +4,8 @@ namespace LogicSimulator.Core.LogicComponents.Gates.Base;
 
 public abstract class Gate : LogicComponent
 {
+    public int PortsCount => Ports.Count;
+
     protected List<Port> Ports { get; private set; } = new();
 
     protected Gate(int inputCount, int outputCount)
