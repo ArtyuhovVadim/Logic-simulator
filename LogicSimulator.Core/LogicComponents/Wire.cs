@@ -12,6 +12,9 @@ public class Wire : LogicComponent
 
     public Wire(Port inputPort, Port outputPort)
     {
+        inputPort.AddWire(this);
+        outputPort.AddWire(this);
+
         InputPort = inputPort;
         OutputPort = outputPort;
     }
