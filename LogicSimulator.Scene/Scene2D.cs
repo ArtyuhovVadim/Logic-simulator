@@ -123,6 +123,19 @@ public class Scene2D : FrameworkElement
 
     #endregion
 
+    #region IsRequiredRenderingEnabled
+
+    public bool IsRequiredRenderingEnabled
+    {
+        get => (bool)GetValue(IsRequiredRenderingEnabledProperty);
+        set => SetValue(IsRequiredRenderingEnabledProperty, value);
+    }
+
+    public static readonly DependencyProperty IsRequiredRenderingEnabledProperty =
+        DependencyProperty.Register(nameof(IsRequiredRenderingEnabled), typeof(bool), typeof(Scene2D), new PropertyMetadata(true));
+
+    #endregion
+
     public float Dpi => (float)VisualTreeHelper.GetDpi(this).PixelsPerInchX;
 
     internal ResourceFactory ResourceFactory { get; private set; }

@@ -47,7 +47,7 @@ public class SceneRenderer : IDisposable
 
         CompositionTarget.Rendering += (_, _) =>
         {
-            if (RenderNotifier.IsRenderRequired(_scene))
+            if (!_scene.IsRequiredRenderingEnabled || RenderNotifier.IsRenderRequired(_scene))
                 RequestRender();
         };
     }
