@@ -29,6 +29,8 @@
         <Grid DockPanel.Dock="Top">
             <Menu IsMainMenu="True">
                 <MenuItem Header="Файл">
+                    <MenuItem Command="{Binding Path=TestCommand}" Header="Test" />
+                    <Separator />
                     <MenuItem Header="Новый" />
                     <MenuItem Command="{Binding Path=LoadExampleCommand}" Header="Загрузить пример" />
                     <MenuItem Command="{Binding Path=SaveExampleCommand}" Header="Сохранить пример" />

@@ -13,6 +13,7 @@
     mc:Ignorable="d">
     <scene:Scene2D
         Components="{Binding Path=Components}"
+        IsRequiredRenderingEnabled="False"
         Objects="{Binding Path=Objects}"
         Scale="{Binding Path=Scale,
                         Mode=OneWayToSource}"

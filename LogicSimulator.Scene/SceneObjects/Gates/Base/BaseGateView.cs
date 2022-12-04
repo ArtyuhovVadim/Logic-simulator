@@ -9,6 +9,62 @@ using SharpDX.Direct2D1;
 
 namespace LogicSimulator.Scene.SceneObjects.Gates.Base;
 
+public class InputGateView : BaseGateView<InputGate>
+{
+    public InputGateView(InputGate model) : base(model) { }
+
+    protected override void OnRender(Scene2D scene, RenderTarget renderTarget)
+    {
+        var strokeBrush = ResourceCache.GetOrUpdate<SolidColorBrush>(this, StrokeBrushResource, scene);
+        var fillBrush = ResourceCache.GetOrUpdate<SolidColorBrush>(this, FillBrushResource, scene);
+
+        renderTarget.FillRectangle(boundsBox, fillBrush);
+        renderTarget.DrawRectangle(boundsBox, strokeBrush, 3f);
+
+        var port1Pos1 = new Vector2(0, 0.5f * DefaultGateHeight) + Location;
+        var port1Pos2 = new Vector2(-DefaultPortLength, 0.5f * DefaultGateHeight) + Location;
+
+        renderTarget.DrawLine(port1Pos1, port1Pos2, strokeBrush, 3f);
+
+        DrawPortSignalState(renderTarget, port1Pos1, Model.GetPort(0).State);
+    }
+}
+
+public class OutputGateView : BaseGateView<OutputGate>
+{
+    public override void Select()
+    {
+        base.Select();
+
+        Model.State = Model.State switch
+        {
+            LogicState.True => LogicState.False,
+            LogicState.False => LogicState.True,
+            LogicState.Undefined => LogicState.False,
+        };
+
+        Model.Update();
+    }
+
+    public OutputGateView(OutputGate model) : base(model) { }
+
+    protected override void OnRender(Scene2D scene, RenderTarget renderTarget)
+    {
+        var strokeBrush = ResourceCache.GetOrUpdate<SolidColorBrush>(this, StrokeBrushResource, scene);
+        var fillBrush = ResourceCache.GetOrUpdate<SolidColorBrush>(this, FillBrushResource, scene);
+
+        renderTarget.FillRectangle(boundsBox, fillBrush);
+        renderTarget.DrawRectangle(boundsBox, strokeBrush, 3f);
+
+        var port1Pos1 = new Vector2(DefaultGateWidth, 0.5f * DefaultGateHeight) + Location;
+        var port1Pos2 = new Vector2(DefaultPortLength + DefaultGateWidth, 0.5f * DefaultGateHeight) + Location;
+
+        renderTarget.DrawLine(port1Pos1, port1Pos2, strokeBrush, 3f);
+
+        DrawPortSignalState(renderTarget, port1Pos1, Model.GetPort(0).State);
+    }
+}
+
 public class NorGateView : BaseGateView<NorGate>
 {
     public NorGateView(NorGate model) : base(model) { }
@@ -18,10 +74,8 @@ public class NorGateView : BaseGateView<NorGate>
         var strokeBrush = ResourceCache.GetOrUpdate<SolidColorBrush>(this, StrokeBrushResource, scene);
         var fillBrush = ResourceCache.GetOrUpdate<SolidColorBrush>(this, FillBrushResource, scene);
 
-        var roundedRect = new SharpDX.Direct2D1.RoundedRectangle { Rect = boundsBox, RadiusX = 10, RadiusY = 10 };
-
-        renderTarget.FillRoundedRectangle(roundedRect, fillBrush);
-        renderTarget.DrawRoundedRectangle(roundedRect, strokeBrush, 3f);
+        renderTarget.FillRectangle(boundsBox, fillBrush);
+        renderTarget.DrawRectangle(boundsBox, strokeBrush, 3f);
 
         var port1Pos1 = new Vector2(0, 0.25f * DefaultGateHeight) + Location;
         var port1Pos2 = new Vector2(-DefaultPortLength, 0.25f * DefaultGateHeight) + Location;
@@ -39,33 +93,6 @@ public class NorGateView : BaseGateView<NorGate>
         DrawPortSignalState(renderTarget, port1Pos1, Model.GetPort(0).State);
         DrawPortSignalState(renderTarget, port2Pos1, Model.GetPort(1).State);
         DrawPortSignalState(renderTarget, port3Pos1, Model.GetPort(2).State);
-    }
-
-    private void DrawPortSignalState(RenderTarget renderTarget, Vector2 pos, LogicState state)
-    {
-        var trueSignalBrush = new SolidColorBrush(renderTarget, new Color4(0, 1, 0, 1));
-        var falseSignalBrush = new SolidColorBrush(renderTarget, new Color4(1, 0, 0, 1));
-        var unknownSignalBrush = new SolidColorBrush(renderTarget, new Color4(0, 0, 1, 1));
-
-        var strokeBrush = new SolidColorBrush(renderTarget, Color4.Black);
-
-        var brush = state switch
-        {
-            LogicState.True => trueSignalBrush,
-            LogicState.False => falseSignalBrush,
-            LogicState.Undefined => unknownSignalBrush,
-            _ => throw new ArgumentOutOfRangeException(nameof(state), state, null)
-        };
-
-        var rect = pos.RectangleRelativePointAsCenter(5f);
-
-        renderTarget.FillRectangle(rect, brush);
-        renderTarget.DrawRectangle(rect, strokeBrush);
-
-        trueSignalBrush.Dispose();
-        falseSignalBrush.Dispose();
-        unknownSignalBrush.Dispose();
-        strokeBrush.Dispose();
     }
 }
 
@@ -169,5 +196,32 @@ public abstract class BaseGateView<T> : BaseSceneObject where T : BaseGate
         var geometry = ResourceCache.GetOrUpdate<RectangleGeometry>(this, BoundsBoxResource, scene);
 
         renderTarget.DrawGeometry(geometry, selectionBrush, 1f / scene.Scale, selectionStyle);
+    }
+
+    protected void DrawPortSignalState(RenderTarget renderTarget, Vector2 pos, LogicState state)
+    {
+        var trueSignalBrush = new SolidColorBrush(renderTarget, new Color4(0, 1, 0, 1));
+        var falseSignalBrush = new SolidColorBrush(renderTarget, new Color4(1, 0, 0, 1));
+        var unknownSignalBrush = new SolidColorBrush(renderTarget, new Color4(0, 0, 1, 1));
+
+        var strokeBrush = new SolidColorBrush(renderTarget, Color4.Black);
+
+        var brush = state switch
+        {
+            LogicState.True => trueSignalBrush,
+            LogicState.False => falseSignalBrush,
+            LogicState.Undefined => unknownSignalBrush,
+            _ => throw new ArgumentOutOfRangeException(nameof(state), state, null)
+        };
+
+        var rect = pos.RectangleRelativePointAsCenter(5f);
+
+        renderTarget.FillRectangle(rect, brush);
+        renderTarget.DrawRectangle(rect, strokeBrush);
+
+        trueSignalBrush.Dispose();
+        falseSignalBrush.Dispose();
+        unknownSignalBrush.Dispose();
+        strokeBrush.Dispose();
     }
 }
