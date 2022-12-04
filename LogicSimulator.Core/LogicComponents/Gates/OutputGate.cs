@@ -2,7 +2,7 @@
 
 namespace LogicSimulator.Core.LogicComponents.Gates;
 
-public class OutputGate : Gate
+public class OutputGate : BaseGate
 {
     public LogicState State { get; set; }
 

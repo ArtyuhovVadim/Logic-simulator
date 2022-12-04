@@ -1,9 +1,11 @@
-﻿using System;
-using System.Collections.ObjectModel;
+﻿using System.Collections.ObjectModel;
 using System.IO;
 using System.Windows.Input;
+using LogicSimulator.Core;
+using LogicSimulator.Core.LogicComponents.Gates;
 using LogicSimulator.Infrastructure.Commands;
 using LogicSimulator.Infrastructure.Services.Interfaces;
+using LogicSimulator.Scene.SceneObjects.Gates.Base;
 using LogicSimulator.ViewModels.AnchorableViewModels;
 using LogicSimulator.ViewModels.AnchorableViewModels.Base;
 using LogicSimulator.ViewModels.Base;
@@ -81,6 +83,12 @@ public class MainWindowViewModel : BindableBase
             _userDialogService.ShowErrorMessage("Ошибка загрузки файла", $"Не удалось загрузить файл: {path}");
             return;
         }
+
+        var model = new NorGate(2, 1);
+
+        model.GetPort(0).State = LogicState.True;
+
+        scheme.Objects.Add(new NorGateView(model));
 
         SchemeViewModels.Add(new SchemeViewModel(scheme));
     }, _ => true);

@@ -2,7 +2,7 @@
 
 namespace LogicSimulator.Core.LogicComponents.Gates;
 
-public class NorGate : Gate
+public class NorGate : BaseGate
 {
     private bool _isFirstUpdated;
 

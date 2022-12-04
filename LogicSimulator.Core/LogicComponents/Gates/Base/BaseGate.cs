@@ -2,13 +2,13 @@
 
 namespace LogicSimulator.Core.LogicComponents.Gates.Base;
 
-public abstract class Gate : LogicComponent
+public abstract class BaseGate : LogicComponent
 {
     public int PortsCount => Ports.Count;
 
     protected List<Port> Ports { get; private set; } = new();
 
-    protected Gate(int inputCount, int outputCount)
+    protected BaseGate(int inputCount, int outputCount)
     {
         if (inputCount < 0)
             throw new ArgumentOutOfRangeException(nameof(inputCount));

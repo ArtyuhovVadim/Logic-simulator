@@ -19,10 +19,12 @@
     </ItemGroup>
 
     <ItemGroup>
+        <Folder Include="SceneObjects\Gates\Base\" />
         <Folder Include="Tools\Base\" />
     </ItemGroup>
 
     <ItemGroup>
+      <ProjectReference Include="..\LogicSimulator.Core\LogicSimulator.Core.csproj" />
       <ProjectReference Include="..\LogicSimulator.Utils\LogicSimulator.Utils.csproj" />
       <ProjectReference Include="..\Microsoft.Wpf.Interop.DirectX\Microsoft.Wpf.Interop.DirectX.vcxproj" />
     </ItemGroup>

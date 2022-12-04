@@ -14,7 +14,6 @@ public abstract class LogicComponent
 
     public void Update()
     {
-        Console.WriteLine($"{GetType().Name} Updated Id: {Id}");
         OnUpdate();
         Updated?.Invoke(this);
     }

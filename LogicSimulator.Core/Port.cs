@@ -12,13 +12,13 @@ public class Port : LogicComponent
 
     public int ConnectedWiresCount => _wires.Count;
 
-    public Gate Owner { get; }
+    public BaseGate Owner { get; }
 
     public PortType Type { get; }
 
     public LogicState State { get; set; }
 
-    public Port(Gate owner, PortType type)
+    public Port(BaseGate owner, PortType type)
     {
         Owner = owner;
         Type = type;
