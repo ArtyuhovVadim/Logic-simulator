@@ -41,7 +41,7 @@ public class Port : LogicComponent
         }
         else if (Type == PortType.Input)
         {
-            Owner.Update();
+            Owner.IsDirty = true;
         }
     }
 }

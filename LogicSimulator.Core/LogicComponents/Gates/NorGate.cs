@@ -4,8 +4,6 @@ namespace LogicSimulator.Core.LogicComponents.Gates;
 
 public class NorGate : BaseGate
 {
-    private bool _isFirstUpdated;
-
     public NorGate(int inputCount, int outputCount) : base(inputCount, outputCount)
     {
         if (outputCount != 1)
@@ -17,44 +15,35 @@ public class NorGate : BaseGate
 
     protected override void OnUpdate()
     {
-        Port outputPort = null;
-        var outputState = LogicState.Undefined;
+        if (!IsDirty) return;
 
-        var hasUndefined = false;
+        var inputPort1 = Ports[0];
+        var inputPort2 = Ports[1];
+        var outputPort = Ports[2];
 
-        for (var i = 0; i < Ports.Count; i++)
+        LogicState newState;
+
+        if (inputPort1.State == LogicState.Undefined && inputPort2.State == LogicState.Undefined)
         {
-            if (Ports[i].Type == PortType.Output)
-            {
-                outputPort = Ports[i];
-                continue;
-            }
-
-            if (Ports[i].State == LogicState.True)
-            {
-                outputState = LogicState.False;
-                hasUndefined = false;
-                outputPort = Ports.First(x => x.Type == PortType.Output);
-                break;
-            }
-
-            if (Ports[i].State == LogicState.Undefined)
-            {
-                hasUndefined = true;
-            }
+            newState = LogicState.Undefined;
+        }
+        else if (inputPort1.State == LogicState.False && inputPort2.State == LogicState.False)
+        {
+            newState = LogicState.True;
+        }
+        else if (inputPort1.State == LogicState.True || inputPort2.State == LogicState.True)
+        {
+            newState = LogicState.False;
+        }
+        else
+        {
+            newState = LogicState.Undefined;
         }
 
-        if (!hasUndefined && outputState == LogicState.Undefined)
+        if (newState != outputPort.State || !isFirstUpdated)
         {
-            outputState = LogicState.True;
+            outputPort.State = newState;
+            outputPort.Update();
         }
-
-        if (_isFirstUpdated && outputPort!.State == outputState)
-            return;
-
-        _isFirstUpdated = true;
-
-        outputPort!.State = outputState;
-        outputPort.Update();
     }
 }
