@@ -2,11 +2,36 @@
 using LogicSimulator.Core.LogicComponents.Gates;
 using SharpDX;
 using SharpDX.Direct2D1;
+using SharpDX.DirectWrite;
 
 namespace LogicSimulator.Scene.SceneObjects.Gates.Base;
 
 public class OutputGateView : BaseGateView<OutputGate>
 {
+    private static readonly Resource TrueTextLayoutResource = ResourceCache.Register((scene, obj) =>
+    {
+        var textFormat = scene.ResourceFactory.CreateTextFormat("Calibry", FontWeight.Normal, FontStyle.Normal, FontStretch.Normal, 20f);
+        var textLayout = scene.ResourceFactory.CreateTextLayout("1", textFormat);
+        textFormat.Dispose();
+        return textLayout;
+    });
+
+    private static readonly Resource FalseTextLayoutResource = ResourceCache.Register((scene, obj) =>
+    {
+        var textFormat = scene.ResourceFactory.CreateTextFormat("Calibry", FontWeight.Normal, FontStyle.Normal, FontStretch.Normal, 20f);
+        var textLayout = scene.ResourceFactory.CreateTextLayout("0", textFormat);
+        textFormat.Dispose();
+        return textLayout;
+    });
+
+    private static readonly Resource UndefinedTextLayoutResource = ResourceCache.Register((scene, obj) =>
+    {
+        var textFormat = scene.ResourceFactory.CreateTextFormat("Calibry", FontWeight.Normal, FontStyle.Normal, FontStretch.Normal, 20f);
+        var textLayout = scene.ResourceFactory.CreateTextLayout("U", textFormat);
+        textFormat.Dispose();
+        return textLayout;
+    });
+
     protected static readonly Resource OutputGateGeometryResource = ResourceCache.Register((scene, obj) =>
     {
         var gate = (OutputGateView)obj;
@@ -25,6 +50,8 @@ public class OutputGateView : BaseGateView<OutputGate>
 
         return scene.ResourceFactory.EndPathGeometry();
     });
+
+    private LogicState _state;
 
     protected override Resource GateGeometryResource => OutputGateGeometryResource;
 
@@ -60,10 +87,22 @@ public class OutputGateView : BaseGateView<OutputGate>
         var fillBrush = ResourceCache.GetOrUpdate<SolidColorBrush>(this, FillBrushResource, scene);
         var geometry = ResourceCache.GetOrUpdate<PathGeometry>(this, OutputGateGeometryResource, scene);
 
+        var layout = Model.GetPort(0).State switch
+        {
+            LogicState.True => ResourceCache.GetOrUpdate<TextLayout>(this, TrueTextLayoutResource, scene),
+            LogicState.False => ResourceCache.GetOrUpdate<TextLayout>(this, FalseTextLayoutResource, scene),
+            LogicState.Undefined => ResourceCache.GetOrUpdate<TextLayout>(this, UndefinedTextLayoutResource, scene),
+            _ => null
+        };
+
+        var metrics = layout.Metrics;
+
         var strokeWidth = 2f / scene.Scale;
 
         renderTarget.FillGeometry(geometry, fillBrush);
         renderTarget.DrawGeometry(geometry, strokeBrush, strokeWidth);
+
+        renderTarget.DrawTextLayout(Location + new Vector2(-metrics.Width / 2f + Width / 2f, -metrics.Height / 2f + Height / 2f), layout, strokeBrush);
 
         RenderPort(renderTarget, strokeBrush, Direction.Right, 0.5f, 25f, strokeWidth);
         RenderPortState(renderTarget, Model.GetPort(0).State, Direction.Right, 0.5f, new Vector2(6,-7), 4f, 1f / scene.Scale);
