@@ -10,6 +10,9 @@ public class ResourceFactory
 {
     private readonly SceneRenderer _sceneRenderer;
 
+    private PathGeometry _tempPathGeometry;
+    private GeometrySink _tempGeometrySink;
+
     public ResourceFactory(SceneRenderer sceneRenderer)
     {
         _sceneRenderer = sceneRenderer;
@@ -98,5 +101,26 @@ public class ResourceFactory
     public TextLayout CreateTextLayout(in string text, TextFormat textFormat)
     {
         return new TextLayout(_sceneRenderer.TextFactory, text, textFormat, float.MaxValue, float.MaxValue);
+    }
+
+    public GeometrySink BeginPathGeometry()
+    {
+        _tempPathGeometry = new PathGeometry(_sceneRenderer.Factory);
+        _tempGeometrySink = _tempPathGeometry.Open();
+
+        return _tempGeometrySink;
+    }
+
+    public PathGeometry EndPathGeometry()
+    {
+        _tempGeometrySink.Close();
+        _tempGeometrySink.Dispose();
+
+        var tmp = _tempPathGeometry;
+
+        _tempGeometrySink = null;
+        _tempPathGeometry = null;
+
+        return tmp;
     }
 }

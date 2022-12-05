@@ -129,9 +129,10 @@ public class MainWindowViewModel : BindableBase
 
         scheme.Objects.Add(new NorGateView(nor1) { Location = new Vector2(200, 0) });
         scheme.Objects.Add(new NorGateView(nor2) { Location = new Vector2(200, 200) });
+
         scheme.Objects.Add(new OutputGateView(outGate1) { Location = new Vector2(0, 0) });
         scheme.Objects.Add(new OutputGateView(outGate2) { Location = new Vector2(0, 200) });
-
+        
         scheme.Objects.Add(new InputGateView(inputGate1) { Location = new Vector2(400, 0) });
         scheme.Objects.Add(new InputGateView(inputGate2) { Location = new Vector2(400, 200) });
 
