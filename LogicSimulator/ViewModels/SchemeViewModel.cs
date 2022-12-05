@@ -10,6 +10,7 @@ using LogicSimulator.Scene.Tools.Base;
 using LogicSimulator.ViewModels.Base;
 using Microsoft.Extensions.DependencyInjection;
 using SharpDX;
+using LogicSimulator.Scene.Tools.PlacingTools;
 
 namespace LogicSimulator.ViewModels;
 

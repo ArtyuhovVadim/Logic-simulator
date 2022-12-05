@@ -2,7 +2,7 @@
 using LogicSimulator.Scene.Tools.Base;
 using SharpDX;
 
-namespace LogicSimulator.Scene.Tools;
+namespace LogicSimulator.Scene.Tools.PlacingTools;
 
 public class TextBlockPlacingTool : BaseObjectPlacingTool<TextBlock>
 {

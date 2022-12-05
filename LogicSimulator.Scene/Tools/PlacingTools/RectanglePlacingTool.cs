@@ -2,7 +2,7 @@
 using SharpDX;
 using Rectangle = LogicSimulator.Scene.SceneObjects.Rectangle;
 
-namespace LogicSimulator.Scene.Tools;
+namespace LogicSimulator.Scene.Tools.PlacingTools;
 
 public class RectanglePlacingTool : BaseObjectPlacingTool<Rectangle>
 {

@@ -6,7 +6,7 @@ using System.Windows.Input;
 using System.Windows.Media;
 using LogicSimulator.Scene.Components.Base;
 using LogicSimulator.Scene.SceneObjects.Base;
-using LogicSimulator.Scene.Tools;
+using LogicSimulator.Scene.Tools.PlacingTools;
 using LogicSimulator.Utils;
 using SharpDX;
 
