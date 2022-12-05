@@ -40,7 +40,7 @@ public class NorGate : BaseGate
             newState = LogicState.Undefined;
         }
 
-        if (newState != outputPort.State || !isFirstUpdated)
+        if (newState != outputPort.State || !IsFirstUpdated)
         {
             outputPort.State = newState;
             outputPort.Update();

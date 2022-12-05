@@ -1,10 +1,12 @@
-﻿using LogicSimulator.Core;
+﻿using System.Collections.Generic;
+using LogicSimulator.Core;
 using LogicSimulator.Core.LogicComponents.Gates;
+using LogicSimulator.Scene.SceneObjects.Gates.Base;
 using SharpDX;
 using SharpDX.Direct2D1;
 using SharpDX.DirectWrite;
 
-namespace LogicSimulator.Scene.SceneObjects.Gates.Base;
+namespace LogicSimulator.Scene.SceneObjects.Gates;
 
 public class InputGateView : BaseGateView<InputGate>
 {
@@ -91,5 +93,18 @@ public class InputGateView : BaseGateView<InputGate>
 
         RenderPort(renderTarget, strokeBrush, Direction.Left, 0.5f, 25f, strokeWidth);
         RenderPortState(renderTarget, Model.GetPort(0).State, Direction.Left, 0.5f, new Vector2(-6, -7), 4f, 1f / scene.Scale);
+    }
+
+    public override IEnumerable<Vector2> GetPortsPositions()
+    {
+        return new[]
+        {
+            GetPortPosition(Direction.Left, 0.5f, 25f),
+        };
+    }
+
+    public override Port GetPort(int index)
+    {
+        return Model.GetPort(index);
     }
 }

@@ -277,6 +277,11 @@ public class Scene2D : FrameworkElement
         {
             ToolsController.SwitchTool<TextBlockPlacingTool>();
         }
+
+        if (e.Key == Key.D4)
+        {
+            ToolsController.SwitchTool<WirePlacingTool>();
+        }
     }
 
     protected override void OnKeyUp(KeyEventArgs e)

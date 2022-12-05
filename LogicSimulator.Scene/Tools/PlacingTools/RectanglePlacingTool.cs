@@ -1,4 +1,4 @@
-﻿using LogicSimulator.Scene.Tools.Base;
+﻿using LogicSimulator.Scene.Tools.PlacingTools.Base;
 using SharpDX;
 using Rectangle = LogicSimulator.Scene.SceneObjects.Rectangle;
 

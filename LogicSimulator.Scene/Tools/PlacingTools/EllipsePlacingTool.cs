@@ -1,6 +1,6 @@
 ﻿using System;
 using LogicSimulator.Scene.SceneObjects;
-using LogicSimulator.Scene.Tools.Base;
+using LogicSimulator.Scene.Tools.PlacingTools.Base;
 using SharpDX;
 
 namespace LogicSimulator.Scene.Tools.PlacingTools;

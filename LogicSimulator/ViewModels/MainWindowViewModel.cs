@@ -1,6 +1,5 @@
 ﻿using System.Collections.ObjectModel;
 using System.Diagnostics;
-using System.Linq;
 using System.Windows.Input;
 using LogicSimulator.Core;
 using LogicSimulator.Core.LogicComponents;
@@ -9,7 +8,7 @@ using LogicSimulator.Core.LogicComponents.Gates;
 using LogicSimulator.Infrastructure.Commands;
 using LogicSimulator.Infrastructure.Services.Interfaces;
 using LogicSimulator.Models;
-using LogicSimulator.Scene.SceneObjects.Gates.Base;
+using LogicSimulator.Scene.SceneObjects.Gates;
 using LogicSimulator.ViewModels.AnchorableViewModels;
 using LogicSimulator.ViewModels.AnchorableViewModels.Base;
 using LogicSimulator.ViewModels.Base;
@@ -108,14 +107,14 @@ public class MainWindowViewModel : BindableBase
         var outPort1 = nor1.GetPort(2);
         var outPort2 = nor2.GetPort(2);
 
-        var wire1 = new Wire(outPort1, nor2.GetPort(0));
-        var wire2 = new Wire(outPort2, nor1.GetPort(1));
-        
-        var outWire1 = new Wire(outGate1.GetPort(0), inPort1);
-        var outWire2 = new Wire(outGate2.GetPort(0), inPort2);
-        
-        new Wire(outPort1, inputGate1.GetPort(0));
-        new Wire(outPort2, inputGate2.GetPort(0));
+        //var wire1 = new Wire(outPort1, nor2.GetPort(0));
+        //var wire2 = new Wire(outPort2, nor1.GetPort(1));
+        //
+        //var outWire1 = new Wire(outGate1.GetPort(0), inPort1);
+        //var outWire2 = new Wire(outGate2.GetPort(0), inPort2);
+        //
+        //new Wire(outPort1, inputGate1.GetPort(0));
+        //new Wire(outPort2, inputGate2.GetPort(0));
 
         _simulator = new Simulator(new LogicComponent[]
         {
@@ -162,7 +161,7 @@ public class MainWindowViewModel : BindableBase
         _simulator.Simulate();
         var a = stopwatch.Elapsed;
 
-        _userDialogService.ShowInfoMessage("sssss",$"{a.TotalNanoseconds * 1e-6:0.#####}ms");
+        //_userDialogService.ShowInfoMessage("sssss",$"{a.TotalNanoseconds * 1e-6:0.#####}ms");
     }, _ => true);
 
     #endregion

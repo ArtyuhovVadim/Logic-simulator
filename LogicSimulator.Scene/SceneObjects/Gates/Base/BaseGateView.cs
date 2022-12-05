@@ -1,13 +1,12 @@
 ﻿using LogicSimulator.Core;
 using LogicSimulator.Core.LogicComponents.Gates.Base;
-using LogicSimulator.Scene.SceneObjects.Base;
 using LogicSimulator.Utils;
 using SharpDX;
 using SharpDX.Direct2D1;
 
 namespace LogicSimulator.Scene.SceneObjects.Gates.Base;
 
-public abstract class BaseGateView<T> : BaseSceneObject where T : BaseGate
+public abstract class BaseGateView<T> : AbstractGateView where T : BaseGate
 {
     protected static readonly Resource FillBrushResource = ResourceCache.Register((scene, obj) =>
         scene.ResourceFactory.CreateSolidColorBrush(((BaseGateView<T>)obj).FillColor));
@@ -173,5 +172,35 @@ public abstract class BaseGateView<T> : BaseSceneObject where T : BaseGate
         pos += Location;
 
         renderTarget.DrawLine(pos + dir * -additionalLength, pos + dir * portLength, brush, strokeWidth);
+    }
+
+    protected Vector2 GetPortPosition(Direction direction, float relativePos, float portLength)
+    {
+        var pos = Vector2.Zero;
+        var dir = Vector2.Zero;
+
+        switch (direction)
+        {
+            case Direction.Up:
+                pos = new Vector2(Width * relativePos, 0);
+                dir = new Vector2(0, -1);
+                break;
+            case Direction.Down:
+                pos = new Vector2(Width * relativePos, Height);
+                dir = new Vector2(0, 1);
+                break;
+            case Direction.Right:
+                pos = new Vector2(Width, Height * relativePos);
+                dir = new Vector2(1, 0);
+                break;
+            case Direction.Left:
+                pos = new Vector2(0, Height * relativePos);
+                dir = new Vector2(-1, 0);
+                break;
+        }
+
+        pos += Location;
+
+        return pos + dir * portLength;
     }
 }

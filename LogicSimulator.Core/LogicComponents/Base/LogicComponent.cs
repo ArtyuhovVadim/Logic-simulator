@@ -4,7 +4,7 @@ public abstract class LogicComponent
 {
     private static uint _lastId;
 
-    protected bool isFirstUpdated { get; private set; } = false;
+    protected bool IsFirstUpdated { get; private set; }
 
     public event Action<LogicComponent> Updated;
 
@@ -21,6 +21,6 @@ public abstract class LogicComponent
         OnUpdate();
         Updated?.Invoke(this);
         IsDirty = false;
-        isFirstUpdated = true;
+        IsFirstUpdated = true;
     }
 }

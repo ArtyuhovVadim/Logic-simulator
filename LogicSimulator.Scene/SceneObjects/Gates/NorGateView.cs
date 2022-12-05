@@ -1,8 +1,11 @@
-﻿using LogicSimulator.Core.LogicComponents.Gates;
+﻿using System.Collections.Generic;
+using LogicSimulator.Core;
+using LogicSimulator.Core.LogicComponents.Gates;
+using LogicSimulator.Scene.SceneObjects.Gates.Base;
 using SharpDX;
 using SharpDX.Direct2D1;
 
-namespace LogicSimulator.Scene.SceneObjects.Gates.Base;
+namespace LogicSimulator.Scene.SceneObjects.Gates;
 
 public class NorGateView : BaseGateView<NorGate>
 {
@@ -80,5 +83,20 @@ public class NorGateView : BaseGateView<NorGate>
         RenderPortState(renderTarget, Model.GetPort(0).State, Direction.Left, 0.3333333f, new Vector2(-7, -8), 4f, 1f / scene.Scale);
         RenderPortState(renderTarget, Model.GetPort(1).State, Direction.Left, 0.6666666f, new Vector2(-7, -8), 4f, 1f / scene.Scale);
         RenderPortState(renderTarget, Model.GetPort(2).State, Direction.Right, 0.5f, new Vector2(7, -9), 4f, 1f / scene.Scale);
+    }
+
+    public override IEnumerable<Vector2> GetPortsPositions()
+    {
+        return new[]
+        {
+            GetPortPosition(Direction.Left, 0.3333333f, 25f),
+            GetPortPosition(Direction.Left, 0.6666666f, 25f),
+            GetPortPosition(Direction.Right, 0.5f, 25f),
+        };
+    }
+
+    public override Port GetPort(int index)
+    {
+        return Model.GetPort(index);
     }
 }

@@ -1,4 +1,5 @@
 ﻿using System.Collections.ObjectModel;
+using LogicSimulator.Core.LogicComponents;
 using LogicSimulator.Infrastructure.Services.Interfaces;
 using LogicSimulator.Models;
 using LogicSimulator.Scene;
@@ -28,6 +29,7 @@ public class SchemeViewModel : BindableBase
     private readonly RectanglePlacingTool _rectanglePlacingTool = new();
     private readonly EllipsePlacingTool _ellipsePlacingTool = new();
     private readonly TextBlockPlacingTool _textBlockPlacingTool = new();
+    private readonly WirePlacingTool _wirePlacingTool = new();
 
     #endregion
 
@@ -86,7 +88,8 @@ public class SchemeViewModel : BindableBase
 
             _rectanglePlacingTool,
             _ellipsePlacingTool,
-            _textBlockPlacingTool
+            _textBlockPlacingTool,
+            _wirePlacingTool
         };
 
         ToolsController = new ToolsController(_selectionTool)

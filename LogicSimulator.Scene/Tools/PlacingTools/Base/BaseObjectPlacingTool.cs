@@ -1,9 +1,10 @@
 ﻿using System.Collections.Generic;
 using LogicSimulator.Scene.SceneObjects.Base;
+using LogicSimulator.Scene.Tools.Base;
 using LogicSimulator.Utils;
 using SharpDX;
 
-namespace LogicSimulator.Scene.Tools.Base;
+namespace LogicSimulator.Scene.Tools.PlacingTools.Base;
 
 public abstract class BaseObjectPlacingTool<T> : BaseTool where T : BaseSceneObject, new()
 {
@@ -74,12 +75,23 @@ public abstract class BaseObjectPlacingTool<T> : BaseTool where T : BaseSceneObj
         }
     }
 
+    protected virtual void OnStartObjectPlacing()
+    {
+
+    }
+
+    protected virtual void OnEndObjectPlacing()
+    {
+
+    }
+
     private void StartObjectPlacing(Scene2D scene)
     {
         if (scene.Objects is not ICollection<BaseSceneObject> objects) return;
         CanSwitch = false;
         PlacingObject = new T();
         objects.Add(PlacingObject);
+        OnStartObjectPlacing();
     }
 
     private void EndObjectPlacing()
@@ -89,6 +101,8 @@ public abstract class BaseObjectPlacingTool<T> : BaseTool where T : BaseSceneObj
         _isStarted = false;
 
         CanSwitch = true;
+
+        OnEndObjectPlacing();
     }
 
     private void CancelObjectPlacing(Scene2D scene)
