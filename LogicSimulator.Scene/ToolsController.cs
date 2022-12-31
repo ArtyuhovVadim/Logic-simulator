@@ -9,7 +9,11 @@ namespace LogicSimulator.Scene;
 
 public class ToolsController
 {
+    public delegate void ToolChangedEventArgs(BaseTool newTool, BaseTool oldTool);
+
     public event Action SelectedObjectsChanged;
+
+    public event ToolChangedEventArgs CurrentToolChanged;
 
     public BaseTool DefaultTool { get; set; }
 
@@ -32,17 +36,21 @@ public class ToolsController
         {
             DefaultTool.Activate(this);
             CurrentTool = DefaultTool;
+            CurrentToolChanged?.Invoke(DefaultTool, null);
             return;
         }
+
+        var oldTool = CurrentTool;
 
         CurrentTool.Deactivate(this);
         CurrentTool = DefaultTool;
         CurrentTool.Activate(this);
+        CurrentToolChanged?.Invoke(CurrentTool, oldTool);
     }
 
-    public void SwitchTool<T>(Action<T> actionToNextToolAfterActivating = null) where T : BaseTool
+    public void SwitchTool(Type type)
     {
-        var tool = Tools.FirstOrDefault(x => x.GetType() == typeof(T));
+        var tool = Tools.FirstOrDefault(x => x.GetType() == type);
 
         if (tool is null) return;
 
@@ -50,15 +58,24 @@ public class ToolsController
         {
             tool.Activate(this);
             CurrentTool = tool;
+            CurrentToolChanged?.Invoke(CurrentTool, null);
             return;
         }
 
         if (!CurrentTool.CanSwitch) return;
 
+        var oldTool = CurrentTool;
+
         CurrentTool.Deactivate(this);
         CurrentTool = tool;
         CurrentTool.Activate(this);
 
+        CurrentToolChanged?.Invoke(CurrentTool, oldTool);
+    }
+
+    public void SwitchTool<T>(Action<T> actionToNextToolAfterActivating = null) where T : BaseTool
+    {
+        SwitchTool(typeof(T));
         actionToNextToolAfterActivating?.Invoke((T)CurrentTool);
     }
 

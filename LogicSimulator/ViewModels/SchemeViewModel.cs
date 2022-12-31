@@ -1,5 +1,6 @@
-﻿using System.Collections.ObjectModel;
-using LogicSimulator.Core.LogicComponents;
+﻿using System;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using LogicSimulator.Infrastructure.Services.Interfaces;
 using LogicSimulator.Models;
 using LogicSimulator.Scene;
@@ -79,7 +80,7 @@ public class SchemeViewModel : BindableBase
             _nodeRenderingComponent
         };
 
-        _tools = new ObservableCollection<BaseTool>
+        var tools = new List<BaseTool>()
         {
             _selectionTool,
             _rectangleSelectionTool,
@@ -94,7 +95,7 @@ public class SchemeViewModel : BindableBase
 
         ToolsController = new ToolsController(_selectionTool)
         {
-            Tools = _tools,
+            Tools = tools,
             AlwaysUpdatingTools = new[] { _transformTool }
         };
 
@@ -165,17 +166,6 @@ public class SchemeViewModel : BindableBase
     {
         get => _components;
         set => Set(ref _components, value);
-    }
-
-    #endregion
-
-    #region Tools
-
-    private ObservableCollection<BaseTool> _tools;
-    public ObservableCollection<BaseTool> Tools
-    {
-        get => _tools;
-        set => Set(ref _tools, value);
     }
 
     #endregion
