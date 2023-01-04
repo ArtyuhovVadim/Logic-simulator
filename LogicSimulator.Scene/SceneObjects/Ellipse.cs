@@ -153,4 +153,11 @@ public class Ellipse : EditableSceneObject
         renderTarget.DrawLine(Center, Center + new Vector2(RadiusX, 0), selectionBrush, strokeWidth, selectionStyle);
         renderTarget.DrawLine(Center, Center + new Vector2(0, -RadiusY), selectionBrush, strokeWidth, selectionStyle);
     }
+
+    public override void Rotate(Vector2 offset)
+    {
+        var matrix = Matrix3x2.Transformation(1, 1, MathUtil.DegreesToRadians(90), offset.X, offset.Y);
+        Center = Matrix3x2.TransformPoint(matrix, Center - offset);
+        (RadiusX, RadiusY) = (RadiusY, RadiusX);
+    }
 }

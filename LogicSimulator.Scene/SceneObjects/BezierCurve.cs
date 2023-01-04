@@ -149,4 +149,13 @@ public class BezierCurve : EditableSceneObject
         renderTarget.DrawLine(Point1, Point2, selectionBrush, strokeWidth, selectionStyle);
         renderTarget.DrawLine(Point2, Point3, selectionBrush, strokeWidth, selectionStyle);
     }
+
+    public override void Rotate(Vector2 offset)
+    {
+        var matrix = Matrix3x2.Transformation(1, 1, MathUtil.DegreesToRadians(90), offset.X, offset.Y);
+        Point0 = Matrix3x2.TransformPoint(matrix, Point0 - offset);
+        Point1 = Matrix3x2.TransformPoint(matrix, Point1 - offset);
+        Point2 = Matrix3x2.TransformPoint(matrix, Point2 - offset);
+        Point3 = Matrix3x2.TransformPoint(matrix, Point3 - offset);
+    }
 }
