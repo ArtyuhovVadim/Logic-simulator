@@ -16,6 +16,21 @@ public class SelectionTool : BaseTool
 
     public Key MultipleSelectionKey { get; set; } = Key.LeftShift;
 
+    internal override void KeyDown(Scene2D scene, KeyEventArgs args, Vector2 pos)
+    {
+        if (args.Key == Key.Space)
+        {
+            pos = pos.Transform(scene.Transform).ApplyGrid(25f);
+
+            var sceneObjects = scene.Objects.Where(x => x.IsSelected).ToList();
+
+            foreach (var o in sceneObjects)
+            {
+                o.Rotate(pos);
+            }
+        }
+    }
+
     internal override void MouseLeftButtonDown(Scene2D scene, Vector2 pos)
     {
         if (scene.IsNodeThatIntersectPointExists(pos.Transform(scene.Transform)))

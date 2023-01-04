@@ -2,7 +2,7 @@
 using LogicSimulator.Scene.SceneObjects.Base;
 using SharpDX;
 
-namespace LogicSimulator.Scene;
+namespace LogicSimulator.Scene.Nodes;
 
 public class Node<T> : AbstractNode where T : EditableSceneObject
 {

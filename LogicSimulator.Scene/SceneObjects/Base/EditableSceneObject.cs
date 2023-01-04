@@ -1,4 +1,5 @@
-﻿using YamlDotNet.Serialization;
+﻿using LogicSimulator.Scene.Nodes;
+using YamlDotNet.Serialization;
 
 namespace LogicSimulator.Scene.SceneObjects.Base;
 

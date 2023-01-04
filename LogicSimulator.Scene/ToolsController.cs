@@ -84,9 +84,9 @@ public class ToolsController
         SelectedObjectsChanged?.Invoke();
     }
 
-    internal void KeyDown(Scene2D scene, KeyEventArgs args) => ProvideEvents(tool => tool.KeyDown(scene, args));
+    internal void KeyDown(Scene2D scene, KeyEventArgs args, Vector2 pos) => ProvideEvents(tool => tool.KeyDown(scene, args, pos));
 
-    internal void KeyUp(Scene2D scene, KeyEventArgs args) => ProvideEvents(tool => tool.KeyUp(scene, args));
+    internal void KeyUp(Scene2D scene, KeyEventArgs args, Vector2 pos) => ProvideEvents(tool => tool.KeyUp(scene, args, pos));
 
     internal void MouseMove(Scene2D scene, Vector2 pos) => ProvideEvents(tool => tool.MouseMove(scene, pos));
 

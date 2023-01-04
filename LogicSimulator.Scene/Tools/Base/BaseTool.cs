@@ -29,9 +29,9 @@ public abstract class BaseTool
 
     protected virtual void OnDeactivated(ToolsController toolsController) { }
 
-    internal virtual void KeyDown(Scene2D scene, KeyEventArgs args) { }
+    internal virtual void KeyDown(Scene2D scene, KeyEventArgs args, Vector2 pos) { }
 
-    internal virtual void KeyUp(Scene2D scene, KeyEventArgs args) { }
+    internal virtual void KeyUp(Scene2D scene, KeyEventArgs args, Vector2 pos) { }
 
     internal virtual void MouseMove(Scene2D scene, Vector2 pos) { }
 

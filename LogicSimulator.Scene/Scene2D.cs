@@ -261,7 +261,7 @@ public class Scene2D : FrameworkElement
     {
         base.OnKeyDown(e);
 
-        ToolsController?.KeyDown(this, e);
+        ToolsController?.KeyDown(this, e, GetMousePosition());
 
         if (e.Key == Key.D1)
         {
@@ -288,7 +288,7 @@ public class Scene2D : FrameworkElement
     {
         base.OnKeyUp(e);
 
-        ToolsController?.KeyUp(this, e);
+        ToolsController?.KeyUp(this, e, GetMousePosition());
     }
 
     protected override void OnMouseWheel(MouseWheelEventArgs e)

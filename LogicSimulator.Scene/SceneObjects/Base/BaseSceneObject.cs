@@ -43,7 +43,12 @@ public abstract class BaseSceneObject : ResourceDependentObject
         OnRender(scene, renderTarget);
     }
 
-    protected abstract void OnRender(Scene2D scene, RenderTarget renderTarget);
-
     public abstract void RenderSelection(Scene2D scene, RenderTarget renderTarget, SolidColorBrush selectionBrush, StrokeStyle selectionStyle);
+
+    public virtual void Rotate(Vector2 offset)
+    {
+
+    }
+
+    protected abstract void OnRender(Scene2D scene, RenderTarget renderTarget);
 }

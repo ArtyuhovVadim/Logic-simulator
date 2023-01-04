@@ -1,4 +1,5 @@
 ﻿using System;
+using LogicSimulator.Scene.Nodes;
 using LogicSimulator.Scene.SceneObjects.Base;
 using SharpDX;
 using SharpDX.Direct2D1;

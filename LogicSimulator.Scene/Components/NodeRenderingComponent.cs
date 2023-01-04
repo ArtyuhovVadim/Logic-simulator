@@ -4,6 +4,7 @@ using SharpDX;
 using SharpDX.Direct2D1;
 using System.Linq;
 using LogicSimulator.Utils;
+using LogicSimulator.Scene.Nodes;
 
 namespace LogicSimulator.Scene.Components;
 

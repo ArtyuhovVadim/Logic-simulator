@@ -1,7 +1,7 @@
 ﻿using LogicSimulator.Scene.SceneObjects.Base;
 using SharpDX;
 
-namespace LogicSimulator.Scene;
+namespace LogicSimulator.Scene.Nodes;
 
 public abstract class AbstractNode
 {
