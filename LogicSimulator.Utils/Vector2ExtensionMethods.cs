@@ -5,6 +5,12 @@ namespace LogicSimulator.Utils;
 
 public static class Vector2ExtensionMethods
 {
+    public static Vector2 RotateRelative(this in Vector2 vector, float angle, Vector2 offset)
+    {
+        var matrix = Matrix3x2.Transformation(1, 1, MathUtil.DegreesToRadians(angle), offset.X, offset.Y);
+        return Matrix3x2.TransformPoint(matrix, vector - offset);
+    }
+
     public static Vector2 Transform(this in Vector2 vector, Matrix3x2 matrix) =>
         new((vector.X - matrix.M31) / matrix.M11, (vector.Y - matrix.M32) / matrix.M11);
 
@@ -14,7 +20,7 @@ public static class Vector2ExtensionMethods
     public static Vector2 DpiCorrect(this in Vector2 vector, float dpi) =>
         vector / (96f / dpi);
 
-    public static System.Windows.Point ToPoint(this in Vector2 vector) => 
+    public static System.Windows.Point ToPoint(this in Vector2 vector) =>
         new(vector.X, vector.Y);
 
     public static bool IsInRectangle(this in Vector2 vector, RawRectangleF rect) =>

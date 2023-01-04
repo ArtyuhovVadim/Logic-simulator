@@ -1,6 +1,7 @@
 ﻿using System;
 using LogicSimulator.Scene.Nodes;
 using LogicSimulator.Scene.SceneObjects.Base;
+using LogicSimulator.Utils;
 using SharpDX;
 using SharpDX.Direct2D1;
 
@@ -156,8 +157,7 @@ public class Ellipse : EditableSceneObject
 
     public override void Rotate(Vector2 offset)
     {
-        var matrix = Matrix3x2.Transformation(1, 1, MathUtil.DegreesToRadians(90), offset.X, offset.Y);
-        Center = Matrix3x2.TransformPoint(matrix, Center - offset);
+        Center = Center.RotateRelative(90, offset);
         (RadiusX, RadiusY) = (RadiusY, RadiusX);
     }
 }

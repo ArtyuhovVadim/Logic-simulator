@@ -1,5 +1,6 @@
 ﻿using LogicSimulator.Scene.Nodes;
 using LogicSimulator.Scene.SceneObjects.Base;
+using LogicSimulator.Utils;
 using SharpDX;
 using SharpDX.Direct2D1;
 
@@ -172,9 +173,7 @@ public class Rectangle : EditableSceneObject
 
     public override void Rotate(Vector2 offset)
     {
-        var matrix = Matrix3x2.Transformation(1, 1, MathUtil.DegreesToRadians(90), offset.X, offset.Y);
-        Location = Matrix3x2.TransformPoint(matrix, Location + new Vector2(0, Height) - offset);
-
+        Location = (Location + new Vector2(0, Height)).RotateRelative(90, offset);
         (Width, Height) = (Height, Width);
     }
 }
