@@ -1,4 +1,7 @@
-﻿using LogicSimulator.Scene.SceneObjects.Base;
+﻿using System.Diagnostics;
+using System.Runtime.InteropServices;
+using LogicSimulator.Scene.SceneObjects.Base;
+using LogicSimulator.Utils;
 using SharpDX;
 using SharpDX.Direct2D1;
 using SharpDX.DirectWrite;
@@ -203,7 +206,16 @@ public class TextBlock : BaseSceneObject
     public override void RenderSelection(Scene2D scene, RenderTarget renderTarget, SolidColorBrush selectionBrush, StrokeStyle selectionStyle)
     {
         var geometry = ResourceCache.GetOrUpdate<RectangleGeometry>(this, TextGeometryResource, scene);
-
+        
         renderTarget.DrawGeometry(geometry, selectionBrush, 1f / scene.Scale, selectionStyle);
+    }
+
+    public override void Rotate(Vector2 offset)
+    {
+        Rotation = Utils.GetNextRotation(Rotation);
+
+        Location = Location.RotateRelative(90, offset);
+        
+        _rotationMatrix = Matrix3x2.Rotation(MathUtil.DegreesToRadians(Utils.RotationToInt(Rotation)), Location);
     }
 }

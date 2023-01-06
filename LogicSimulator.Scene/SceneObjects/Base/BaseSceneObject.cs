@@ -9,6 +9,9 @@ public abstract class BaseSceneObject : ResourceDependentObject
     private bool _isSelected;
     private bool _isDragging;
 
+    private Rotation _rotation = Rotation.Degrees0;
+    public Matrix3x2 _rotationMatrix = Matrix3x2.Identity;
+
     [YamlIgnore]
     public bool IsDragging
     {
@@ -21,6 +24,13 @@ public abstract class BaseSceneObject : ResourceDependentObject
     {
         get => _isSelected;
         protected set => SetAndRequestRender(ref _isSelected, value);
+    }
+
+    [Editable]
+    public Rotation Rotation
+    {
+        get => _rotation;
+        set => SetAndRequestRender(ref _rotation, value);
     }
 
     public abstract void StartDrag(Vector2 pos);
@@ -40,12 +50,25 @@ public abstract class BaseSceneObject : ResourceDependentObject
     public void Render(Scene2D scene, RenderTarget renderTarget)
     {
         Initialize(scene);
-        OnRender(scene, renderTarget);
+        if (_rotationMatrix == Matrix3x2.Identity)
+        {
+            OnRender(scene, renderTarget);
+        }
+        else
+        {
+            var tmp = renderTarget.Transform;
+            renderTarget.Transform = _rotationMatrix * renderTarget.Transform;
+            OnRender(scene, renderTarget);
+            renderTarget.Transform = tmp;
+        }
     }
 
     public abstract void RenderSelection(Scene2D scene, RenderTarget renderTarget, SolidColorBrush selectionBrush, StrokeStyle selectionStyle);
 
-    public virtual void Rotate(Vector2 offset) { }
+    public virtual void Rotate(Vector2 offset)
+    {
+
+    }
 
     protected abstract void OnRender(Scene2D scene, RenderTarget renderTarget);
 }
