@@ -20,7 +20,7 @@ public class SelectionTool : BaseTool
     {
         if (args.Key == Key.Space)
         {
-            pos = pos.Transform(scene.Transform).ApplyGrid(25f);
+            pos = pos.InvertAndTransform(scene.Transform).ApplyGrid(25f);
 
             var sceneObjects = scene.Objects.Where(x => x.IsSelected).ToList();
 
@@ -33,7 +33,7 @@ public class SelectionTool : BaseTool
 
     internal override void MouseLeftButtonDown(Scene2D scene, Vector2 pos)
     {
-        if (scene.IsNodeThatIntersectPointExists(pos.Transform(scene.Transform)))
+        if (scene.IsNodeThatIntersectPointExists(pos.InvertAndTransform(scene.Transform)))
         {
             ToolsController.SwitchTool<NodeDragTool>(tool => tool.MouseLeftButtonDown(scene, pos));
             return;

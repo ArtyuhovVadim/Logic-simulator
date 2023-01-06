@@ -46,7 +46,7 @@ public class WireView : BaseSceneObject
         renderTarget.DrawLine(FirstPoint, SecondPoint, brush, 3f);
     }
 
-    public override void RenderSelection(Scene2D scene, RenderTarget renderTarget, SolidColorBrush selectionBrush,
+    protected override void OnRenderSelection(Scene2D scene, RenderTarget renderTarget, SolidColorBrush selectionBrush,
         StrokeStyle selectionStyle)
     {
     }

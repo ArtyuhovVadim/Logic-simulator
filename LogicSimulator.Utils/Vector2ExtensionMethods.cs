@@ -12,7 +12,10 @@ public static class Vector2ExtensionMethods
     }
 
     public static Vector2 Transform(this in Vector2 vector, Matrix3x2 matrix) =>
-        new((vector.X - matrix.M31) / matrix.M11, (vector.Y - matrix.M32) / matrix.M11);
+        Matrix3x2.TransformPoint(matrix, vector);
+
+    public static Vector2 InvertAndTransform(this in Vector2 vector, Matrix3x2 matrix) =>
+         Matrix3x2.TransformPoint(Matrix3x2.Invert(matrix), vector);
 
     public static Vector2 ApplyGrid(this in Vector2 vector, float snap) =>
         new((int)(vector.X / snap + 0.5f) * snap, (int)(vector.Y / snap + 0.5f) * snap);

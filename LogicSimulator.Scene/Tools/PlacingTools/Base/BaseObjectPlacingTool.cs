@@ -29,7 +29,7 @@ public abstract class BaseObjectPlacingTool<T> : BaseTool where T : BaseSceneObj
         }
 
         PlacingSteps[_placingProgress].Start(scene, PlacingSteps[_placingProgress].UseGrid ?
-            pos.Transform(scene.Transform).ApplyGrid(GridSnap) : pos.Transform(scene.Transform));
+            pos.InvertAndTransform(scene.Transform).ApplyGrid(GridSnap) : pos.InvertAndTransform(scene.Transform));
 
         _placingProgress++;
 
@@ -71,7 +71,7 @@ public abstract class BaseObjectPlacingTool<T> : BaseTool where T : BaseSceneObj
         if (_isStarted)
         {
             PlacingSteps[_placingProgress].Start(scene, PlacingSteps[_placingProgress].UseGrid ?
-                pos.Transform(scene.Transform).ApplyGrid(GridSnap) : pos.Transform(scene.Transform));
+                pos.InvertAndTransform(scene.Transform).ApplyGrid(GridSnap) : pos.InvertAndTransform(scene.Transform));
         }
     }
 

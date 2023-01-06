@@ -62,7 +62,7 @@ public class TransformTool : BaseTool
     //TODO: Поработать с этой функцией
     private void RelativeScale(Scene2D scene, Vector2 pos, float delta, float max = 20f, float min = 0.5f)
     {
-        var p = pos.Transform(scene.Transform);
+        var p = pos.InvertAndTransform(scene.Transform);
 
         var newScaleCoefficient = 1 + delta / scene.Scale;
         var newScale = (float)Math.Round(scene.Scale * newScaleCoefficient, 2);

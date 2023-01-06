@@ -144,7 +144,8 @@ public class Ellipse : EditableSceneObject
         renderTarget.DrawGeometry(geometry, strokeBrush, StrokeThickness / scene.Scale);
     }
 
-    public override void RenderSelection(Scene2D scene, RenderTarget renderTarget, SolidColorBrush selectionBrush, StrokeStyle selectionStyle)
+    protected override void OnRenderSelection(Scene2D scene, RenderTarget renderTarget, SolidColorBrush selectionBrush,
+        StrokeStyle selectionStyle)
     {
         var geometry = ResourceCache.GetOrUpdate<EllipseGeometry>(this, EllipseGeometryResource, scene);
 

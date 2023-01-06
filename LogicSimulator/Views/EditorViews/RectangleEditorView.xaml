@@ -128,6 +128,16 @@
                             IsChecked="{Binding Path=IsFilled}"
                             IsValueUndefined="{Binding Path=UndefinedPropertiesMap[IsFilled]}" />
                     </Grid>
+
+                    <TextBlock
+                        Grid.Row="4"
+                        Grid.Column="0"
+                        Text="Поворот" />
+                    <controls:NumberBox
+                        Grid.Row="4"
+                        Grid.Column="1"
+                        IsValueUndefined="{Binding Path=UndefinedPropertiesMap[Rotation]}"
+                        Number="{Binding Path=Rotation}" />
                 </Grid>
             </Expander>
         </Grid>

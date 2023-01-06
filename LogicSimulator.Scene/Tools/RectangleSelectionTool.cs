@@ -23,7 +23,7 @@ public class RectangleSelectionTool : BaseTool
     {
         _component = scene.GetComponent<SelectionRectangleRenderingComponent>();
 
-        pos = pos.Transform(scene.Transform);
+        pos = pos.InvertAndTransform(scene.Transform);
 
         StartPosition = pos;
         EndPosition = pos;
@@ -35,7 +35,7 @@ public class RectangleSelectionTool : BaseTool
 
     internal override void MouseLeftButtonDragged(Scene2D scene, Vector2 pos)
     {
-        pos = pos.Transform(scene.Transform);
+        pos = pos.InvertAndTransform(scene.Transform);
 
         EndPosition = pos;
         _component.EndPosition = pos;

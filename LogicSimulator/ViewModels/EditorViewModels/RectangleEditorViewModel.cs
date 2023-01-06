@@ -1,4 +1,5 @@
-﻿using LogicSimulator.ViewModels.EditorViewModels.Base;
+﻿using LogicSimulator.Scene;
+using LogicSimulator.ViewModels.EditorViewModels.Base;
 using SharpDX;
 using Rectangle = LogicSimulator.Scene.SceneObjects.Rectangle;
 
@@ -12,6 +13,16 @@ public class RectangleEditorViewModel : BaseEditorViewModel<Rectangle>
     {
         get => Get<Vector2>();
         set => Set(value);
+    }
+
+    #endregion
+
+    #region Rotation
+
+    public float Rotation
+    {
+        get => Scene.Utils.RotationToInt(Get<Rotation>());
+        set => Set(Scene.Utils.IntToRotation((int)value));
     }
 
     #endregion

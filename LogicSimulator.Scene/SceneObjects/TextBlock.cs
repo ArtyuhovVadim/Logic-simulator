@@ -203,7 +203,7 @@ public class TextBlock : BaseSceneObject
         renderTarget.DrawTextLayout(Location, textLayout, textBrush, DrawTextOptions.None);
     }
 
-    public override void RenderSelection(Scene2D scene, RenderTarget renderTarget, SolidColorBrush selectionBrush, StrokeStyle selectionStyle)
+    protected override void OnRenderSelection(Scene2D scene, RenderTarget renderTarget, SolidColorBrush selectionBrush, StrokeStyle selectionStyle)
     {
         var geometry = ResourceCache.GetOrUpdate<RectangleGeometry>(this, TextGeometryResource, scene);
         
@@ -212,10 +212,10 @@ public class TextBlock : BaseSceneObject
 
     public override void Rotate(Vector2 offset)
     {
-        Rotation = Utils.GetNextRotation(Rotation);
-
-        Location = Location.RotateRelative(90, offset);
-        
-        _rotationMatrix = Matrix3x2.Rotation(MathUtil.DegreesToRadians(Utils.RotationToInt(Rotation)), Location);
+        // Rotation = Utils.GetNextRotation(Rotation);
+        //
+        // Location = Location.RotateRelative(90, Vector2.Zero);
+        //
+        // _rotationMatrix = Matrix3x2.Rotation(MathUtil.DegreesToRadians(Utils.RotationToInt(Rotation)), Location);
     }
 }

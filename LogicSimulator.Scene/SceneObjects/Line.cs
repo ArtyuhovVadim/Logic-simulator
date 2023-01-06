@@ -174,7 +174,8 @@ public class Line : EditableSceneObject
         renderTarget.DrawGeometry(geometry, brush, StrokeThickness / scene.Scale, strokeStyle);
     }
 
-    public override void RenderSelection(Scene2D scene, RenderTarget renderTarget, SolidColorBrush selectionBrush, StrokeStyle selectionStyle)
+    protected override void OnRenderSelection(Scene2D scene, RenderTarget renderTarget, SolidColorBrush selectionBrush,
+        StrokeStyle selectionStyle)
     {
         if (_vertices.Count == 0) return;
 

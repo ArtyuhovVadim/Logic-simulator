@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using SharpDX;
 
 namespace LogicSimulator.Scene;
@@ -107,6 +108,8 @@ public static class ResourceCache
         }
 
         var value = resource.Update(scene, obj);
+
+        Debug.WriteLine($"Resource updated [Type:{typeof(T).Name}] [Id:{id}] [Obj:{obj.GetType().Name}]");
 
         Cache[id] = value;
 

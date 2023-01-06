@@ -184,7 +184,7 @@ public class Scene2D : FrameworkElement
 
         var pos = GetMousePosition();
 
-        MousePosition = pos.Transform(Transform);
+        MousePosition = pos.InvertAndTransform(Transform);
 
         if (e.LeftButton == MouseButtonState.Pressed && _isLeftMouseButtonPressedOnScene)
             ToolsController?.MouseLeftButtonDragged(this, pos);

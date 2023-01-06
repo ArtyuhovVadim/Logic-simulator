@@ -100,7 +100,8 @@ public abstract class BaseGateView<T> : AbstractGateView where T : BaseGate
         return geometry.FillContainsPoint(pos, matrix, tolerance);
     }
 
-    public override void RenderSelection(Scene2D scene, RenderTarget renderTarget, SolidColorBrush selectionBrush, StrokeStyle selectionStyle)
+    protected override void OnRenderSelection(Scene2D scene, RenderTarget renderTarget, SolidColorBrush selectionBrush,
+        StrokeStyle selectionStyle)
     {
         var geometry = ResourceCache.GetOrUpdate<PathGeometry>(this, GateGeometryResource, scene);
 

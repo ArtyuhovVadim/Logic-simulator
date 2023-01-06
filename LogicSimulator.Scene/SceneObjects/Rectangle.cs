@@ -16,12 +16,11 @@ public class Rectangle : EditableSceneObject
     {
         var rect = (Rectangle)obj;
 
-        return scene.ResourceFactory.CreateRectangleGeometry(new RectangleF(rect.Location.X, rect.Location.Y, rect.Width, rect.Height));
+        return scene.ResourceFactory.CreateRectangleGeometry(new RectangleF(0, 0, rect.Width, rect.Height));
     });
 
     private Color4 _fillColor = Color4.White;
     private Color4 _strokeColor = Color4.Black;
-    private Vector2 _location = Vector2.Zero;
     private float _width;
     private float _height;
     private float _strokeThickness = 1f;
@@ -32,40 +31,40 @@ public class Rectangle : EditableSceneObject
 
     private static readonly AbstractNode[] AbstractNodes =
     {
-        new Node<Rectangle>(o => o.Location, (o, p)=>
+        new Node<Rectangle>(o => Vector2.Zero.Transform(o.TransformMatrix), (o, p)=>
         {
-            o.Width += (o.Location - p).X;
-            o.Height += (o.Location - p).Y;
-            o.Location = p;
+            p = p.InvertAndTransform(o.TransformMatrix);
+
+            o.Location += p;
+            o.Width -= p.X;
+            o.Height -= p.Y;
         }),
-        new Node<Rectangle>(o => o.Location + new Vector2(o.Width, 0), (o, p) =>
+        new Node<Rectangle>(o => new Vector2(o.Width, 0).Transform(o.TransformMatrix), (o, p) =>
         {
-            o.Width = p.X - o.Location.X;
-            o.Height = o.Location.Y + o.Height - p.Y;
-            o.Location = new Vector2(o.Location.X, p.Y);
+            p = p.InvertAndTransform(o.TransformMatrix);
+
+            o.Width = p.X;
+            o.Height -= p.Y;
+            o.Location += new Vector2(0, p.Y);
         }),
-        new Node<Rectangle>(o => o.Location + new Vector2(o.Width, o.Height), (o, p) =>
+        new Node<Rectangle>(o => new Vector2(o.Width, o.Height).Transform(o.TransformMatrix), (o, p) =>
         {
-            var size = p - o.Location;
-            o.Width = size.X;
-            o.Height = size.Y;
+            p = p.InvertAndTransform(o.TransformMatrix);
+
+            o.Width = p.X;
+            o.Height = p.Y;
         }),
-        new Node<Rectangle>(o => o.Location + new Vector2(0, o.Height), (o, p) =>
+        new Node<Rectangle>(o => new Vector2(0, o.Height).Transform(o.TransformMatrix), (o, p) =>
         {
-            o.Width = o.Location.X + o.Width- p.X;
-            o.Height = p.Y - o.Location.Y;
-            o.Location = new Vector2(p.X, o.Location.Y);
+            p = p.InvertAndTransform(o.TransformMatrix);
+
+            o.Height = p.Y;
+            o.Width -= p.X;
+            o.Location += new Vector2(p.X, 0);
         })
     };
 
     public override AbstractNode[] Nodes => AbstractNodes;
-
-    [Editable]
-    public Vector2 Location
-    {
-        get => _location;
-        set => SetAndUpdateResource(ref _location, value, RectangleGeometryResource);
-    }
 
     [Editable]
     public float Width
@@ -138,15 +137,15 @@ public class Rectangle : EditableSceneObject
     {
         var geometry = ResourceCache.GetCached<RectangleGeometry>(this, RectangleGeometryResource);
 
-        return IsFilled ? geometry.FillContainsPoint(pos, matrix, tolerance) :
-                            geometry.StrokeContainsPoint(pos, StrokeThickness, null, matrix, tolerance);
+        return IsFilled ? geometry.FillContainsPoint(pos, TransformMatrix * matrix, tolerance) :
+                            geometry.StrokeContainsPoint(pos, StrokeThickness, null, TransformMatrix * matrix, tolerance);
     }
 
     public override GeometryRelation CompareWithRectangle(RectangleGeometry rectGeometry, Matrix3x2 matrix, float tolerance = 0.25f)
     {
         var geometry = ResourceCache.GetCached<RectangleGeometry>(this, RectangleGeometryResource);
 
-        return geometry.Compare(rectGeometry, matrix, tolerance);
+        return geometry.Compare(rectGeometry, Matrix3x2.Invert(TransformMatrix) * matrix, tolerance);
     }
 
     protected override void OnRender(Scene2D scene, RenderTarget renderTarget)
@@ -162,9 +161,15 @@ public class Rectangle : EditableSceneObject
         }
 
         renderTarget.DrawGeometry(geometry, strokeBrush, StrokeThickness / scene.Scale);
+
+        var green = new SolidColorBrush(renderTarget, new Color4(0, 1, 0, 1));
+        var blue = new SolidColorBrush(renderTarget, new Color4(0, 0, 1, 1));
+
+        renderTarget.DrawLine(new Vector2(0, 0), new Vector2(50, 0), green, 3);
+        renderTarget.DrawLine(new Vector2(0, 0), new Vector2(0, 50), blue, 3);
     }
 
-    public override void RenderSelection(Scene2D scene, RenderTarget renderTarget, SolidColorBrush selectionBrush, StrokeStyle selectionStyle)
+    protected override void OnRenderSelection(Scene2D scene, RenderTarget renderTarget, SolidColorBrush selectionBrush, StrokeStyle selectionStyle)
     {
         var geometry = ResourceCache.GetOrUpdate<RectangleGeometry>(this, RectangleGeometryResource, scene);
 

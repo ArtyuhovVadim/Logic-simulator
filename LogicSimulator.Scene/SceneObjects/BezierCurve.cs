@@ -138,7 +138,8 @@ public class BezierCurve : EditableSceneObject
         renderTarget.DrawGeometry(geometry, brush, StrokeThickness / scene.Scale, style);
     }
 
-    public override void RenderSelection(Scene2D scene, RenderTarget renderTarget, SolidColorBrush selectionBrush, StrokeStyle selectionStyle)
+    protected override void OnRenderSelection(Scene2D scene, RenderTarget renderTarget, SolidColorBrush selectionBrush,
+        StrokeStyle selectionStyle)
     {
         var geometry = ResourceCache.GetOrUpdate<PathGeometry>(this, BezierCurveGeometryResource, scene);
 

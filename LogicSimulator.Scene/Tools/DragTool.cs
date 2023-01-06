@@ -31,7 +31,7 @@ public class DragTool : BaseTool
     {
         if (!_objectsUnderCursor.Any()) return;
 
-        pos = pos.Transform(scene.Transform).ApplyGrid(GridSnap);
+        pos = pos.InvertAndTransform(scene.Transform).ApplyGrid(GridSnap);
 
         var obj = _objectsUnderCursor.First();
 
