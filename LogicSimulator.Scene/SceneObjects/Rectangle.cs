@@ -27,7 +27,6 @@ public class Rectangle : EditableSceneObject
     private bool _isFilled = true;
 
     private Vector2 _startDragPosition = Vector2.Zero;
-    private Vector2 _startDragLocation = Vector2.Zero;
 
     private static readonly AbstractNode[] AbstractNodes =
     {
@@ -115,17 +114,19 @@ public class Rectangle : EditableSceneObject
         InitializeResource(FillBrushResource);
     }
 
+    //TODO: Перенести в BaseSceneObject и не забыть про Debug
     public override void StartDrag(Vector2 pos)
     {
         IsDragging = true;
 
+        pos = pos.InvertAndTransform(TransformMatrix);
         _startDragPosition = pos;
-        _startDragLocation = Location;
     }
 
     public override void Drag(Vector2 pos)
     {
-        Location = _startDragLocation - _startDragPosition + pos;
+        pos = pos.InvertAndTransform(TransformMatrix);
+        Location += pos - _startDragPosition;
     }
 
     public override void EndDrag()
