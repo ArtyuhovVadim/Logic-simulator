@@ -109,6 +109,7 @@ public static class ResourceCache
 
         var value = resource.Update(scene, obj);
 
+        //TODO: Убрать
         Debug.WriteLine($"Resource updated [Type:{typeof(T).Name}] [Id:{id}] [Obj:{obj.GetType().Name}]");
 
         Cache[id] = value;

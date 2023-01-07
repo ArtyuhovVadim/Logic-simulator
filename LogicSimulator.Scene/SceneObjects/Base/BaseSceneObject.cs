@@ -15,13 +15,16 @@ public abstract class BaseSceneObject : ResourceDependentObject
     private Matrix3x2 _translateMatrix = Matrix3x2.Identity;
     private Matrix3x2 _rotationMatrix = Matrix3x2.Identity;
 
+    private Vector2 _startDragPosition = Vector2.Zero;
+    private Vector2 _startDragLocation;
+
     [Editable]
     public Vector2 Location
     {
         get => _location;
         set
         {
-            _translateMatrix.TranslationVector = value;
+            _translateMatrix = Matrix3x2.Translation(value);
             SetAndRequestRender(ref _location, value);
         }
     }
@@ -51,13 +54,25 @@ public abstract class BaseSceneObject : ResourceDependentObject
         protected set => SetAndRequestRender(ref _isSelected, value);
     }
 
-    protected Matrix3x2 TransformMatrix => _translateMatrix * _rotationMatrix;
+    protected Matrix3x2 TransformMatrix => Matrix3x2.Transformation(1, 1, MathUtil.DegreesToRadians(Utils.RotationToInt(Rotation)), Location.X, Location.Y);
 
-    public abstract void StartDrag(Vector2 pos);
+    public virtual void StartDrag(Vector2 pos)
+    {
+        IsDragging = true;
 
-    public abstract void Drag(Vector2 pos);
+        _startDragLocation = Location;
+        _startDragPosition = pos;
+    }
 
-    public abstract void EndDrag();
+    public virtual void Drag(Vector2 pos)
+    {
+        Location = _startDragLocation - _startDragPosition + pos;
+    }
+
+    public virtual void EndDrag()
+    {
+        IsDragging = false;
+    }
 
     public virtual void Select() => IsSelected = true;
 
@@ -72,7 +87,9 @@ public abstract class BaseSceneObject : ResourceDependentObject
         Initialize(scene);
 
         var tmp = renderTarget.Transform;
-        renderTarget.Transform = TransformMatrix * renderTarget.Transform;
+        //renderTarget.Transform = Matrix3x2.Transformation(1, 1, MathUtil.DegreesToRadians(Utils.RotationToInt(Rotation)), Location.X, Location.Y);
+
+        renderTarget.Transform = TransformMatrix * tmp;
         OnRender(scene, renderTarget);
         renderTarget.Transform = tmp;
     }
@@ -80,7 +97,11 @@ public abstract class BaseSceneObject : ResourceDependentObject
     public void RenderSelection(Scene2D scene, RenderTarget renderTarget, SolidColorBrush selectionBrush, StrokeStyle selectionStyle)
     {
         var tmp = renderTarget.Transform;
-        renderTarget.Transform = TransformMatrix * renderTarget.Transform;
+        //renderTarget.Transform = Matrix3x2.Transformation(1, 1, MathUtil.DegreesToRadians(Utils.RotationToInt(Rotation)), Location.X, Location.Y);
+
+
+
+        renderTarget.Transform = TransformMatrix * tmp;
         OnRenderSelection(scene, renderTarget, selectionBrush, selectionStyle);
         renderTarget.Transform = tmp;
     }

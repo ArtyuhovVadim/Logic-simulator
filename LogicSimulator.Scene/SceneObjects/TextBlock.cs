@@ -1,7 +1,4 @@
-﻿using System.Diagnostics;
-using System.Runtime.InteropServices;
-using LogicSimulator.Scene.SceneObjects.Base;
-using LogicSimulator.Utils;
+﻿using LogicSimulator.Scene.SceneObjects.Base;
 using SharpDX;
 using SharpDX.Direct2D1;
 using SharpDX.DirectWrite;

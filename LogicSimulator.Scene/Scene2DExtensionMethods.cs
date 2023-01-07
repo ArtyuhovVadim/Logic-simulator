@@ -21,7 +21,7 @@ public static class Scene2DExtensionMethods
             .Objects
             .OfType<EditableSceneObject>()
             .Any(obj =>
-                obj.Nodes.Any(node => point.IsInRectangle(node.GetLocation(obj).RectangleRelativePointAsCenter(AbstractNode.NodeSize))));
+                obj.Nodes.Any(node => obj.IsSelected && point.IsInRectangle(node.GetLocation(obj).RectangleRelativePointAsCenter(AbstractNode.NodeSize))));
     }
 
     public static (AbstractNode node, EditableSceneObject owner) GetNodeThatIntersectPoint(this Scene2D scene, Vector2 point)
