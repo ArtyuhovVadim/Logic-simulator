@@ -21,7 +21,15 @@ public class NodeDragTool : BaseTool
 
     internal override void MouseLeftButtonDragged(Scene2D scene, Vector2 pos)
     {
-        _node.ApplyMove(_owner, _node.UseGridSnap ? pos.InvertAndTransform(scene.Transform).ApplyGrid(GridSnap) : pos.InvertAndTransform(scene.Transform));
+        if(_node is null || _owner is null) return;
+
+        pos = _node.UseGridSnap
+            ? pos.InvertAndTransform(scene.Transform).ApplyGrid(GridSnap)
+            : pos.InvertAndTransform(scene.Transform);
+
+        if (_node.GetLocation(_owner) == pos) return;
+
+        _node.ApplyMove(_owner, pos);
     }
 
     internal override void MouseLeftButtonUp(Scene2D scene, Vector2 pos)

@@ -1,12 +1,8 @@
-﻿using System;
-using System.DirectoryServices;
-using LogicSimulator.Scene.Nodes;
+﻿using LogicSimulator.Scene.Nodes;
 using LogicSimulator.Scene.SceneObjects.Base;
 using LogicSimulator.Utils;
 using SharpDX;
 using SharpDX.Direct2D1;
-using Matrix3x2 = SharpDX.Matrix3x2;
-using Vector2 = SharpDX.Vector2;
 
 namespace LogicSimulator.Scene.SceneObjects;
 
@@ -32,49 +28,21 @@ public class Rectangle : EditableSceneObject
 
     private static readonly AbstractNode[] AbstractNodes =
     {
-        new Node<Rectangle>(o => o.Location, (o, p)=>
+        new Node<Rectangle>(o => Vector2.Zero.Transform(o.TransformMatrix), (o, p)=>
         {
-            var diff = o.Location - p;
+            var p1 = p.InvertAndTransform(o.TransformMatrix);
 
-            diff = diff.RotateRelative(Utils.RotationToInt(o.Rotation), Vector2.Zero)
-                   * (o.Rotation is Rotation.Degrees180 or Rotation.Degrees0 ? 1 : -1);
-
-            o.Width += diff.X;
-            o.Height += diff.Y;
             o.Location = p;
+            o.Width -= p1.X;
+            o.Height -= p1.Y;
         }),
-        //new Node<Rectangle>(o => Vector2.Zero.Transform(o.TransformMatrix), (o, p)=>
-        //{
-        //    var a = p;
-        //    var b = p.Transform(o.TransformMatrix);
-        //    var c = p.InvertAndTransform(o.TransformMatrix);
-        //    //p = p.InvertAndTransform(o.TransformMatrix);
-        //
-        //    var d = c.RotateRelative(Utils.RotationToInt(o.Rotation), Vector2.Zero);
-        //
-        //
-        //
-        //    if (p.InvertAndTransform(o.TransformMatrix).Length() > 0)
-        //    {
-        //
-        //    }
-        //
-        //
-        //    o.Location += d;
-        //    o.Width -= d.X;
-        //    o.Height -= d.Y;
-        //
-        //    //o.Width += p.X;
-        //    //o.Height += p.Y;
-        //    //o.Location -= p;
-        //}),
         new Node<Rectangle>(o => new Vector2(o.Width, 0).Transform(o.TransformMatrix), (o, p) =>
         {
-            p = p.InvertAndTransform(o.TransformMatrix);
+            var p1 = p.InvertAndTransform(o.TransformMatrix);
 
-            o.Width = p.X;
-            o.Height -= p.Y;
-            o.Location += new Vector2(0, p.Y);
+            o.Location = new Vector2(0, p1.Y).Transform(o.TransformMatrix);
+            o.Width = p1.X;
+            o.Height -= p1.Y;
         }),
         new Node<Rectangle>(o => new Vector2(o.Width, o.Height).Transform(o.TransformMatrix), (o, p) =>
         {
@@ -85,11 +53,11 @@ public class Rectangle : EditableSceneObject
         }),
         new Node<Rectangle>(o => new Vector2(0, o.Height).Transform(o.TransformMatrix), (o, p) =>
         {
-            p = p.InvertAndTransform(o.TransformMatrix);
+            var p1 = p.InvertAndTransform(o.TransformMatrix);
 
-            o.Height = p.Y;
-            o.Width -= p.X;
-            o.Location += new Vector2(p.X, 0);
+            o.Location = new Vector2(p1.X, 0).Transform(o.TransformMatrix);
+            o.Width -= p1.X;
+            o.Height = p1.Y;
         })
     };
 
@@ -176,9 +144,8 @@ public class Rectangle : EditableSceneObject
         var green = new SolidColorBrush(renderTarget, new Color4(0, 1, 0, 1));
         var blue = new SolidColorBrush(renderTarget, new Color4(0, 0, 1, 1));
 
-        //renderTarget.DrawLine(new Vector2(0, 0), new RawVector2(Math.Sign(Location.X) * 50, 0), green, 3);
-        //renderTarget.DrawLine(new Vector2(0, 0), new RawVector2(0, Math.Sign(Location.Y) * 50), blue, 3);
-        renderTarget.DrawLine(new Vector2(0, 0), Vector2.Normalize(Location) * 100, blue, 3);
+        renderTarget.DrawLine(new Vector2(0, 0), new Vector2(50, 0), green, 3);
+        renderTarget.DrawLine(new Vector2(0, 0), new Vector2(0, 50), blue, 3);
     }
 
     protected override void OnRenderSelection(Scene2D scene, RenderTarget renderTarget, SolidColorBrush selectionBrush, StrokeStyle selectionStyle)

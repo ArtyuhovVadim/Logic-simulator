@@ -1,4 +1,5 @@
-﻿using SharpDX;
+﻿using System;
+using SharpDX;
 using SharpDX.Direct2D1;
 using YamlDotNet.Serialization;
 
@@ -35,7 +36,7 @@ public abstract class BaseSceneObject : ResourceDependentObject
         get => _rotation;
         set
         {
-            _rotationMatrix = Matrix3x2.Rotation(MathUtil.DegreesToRadians(Utils.RotationToInt(value)), Location);
+            _rotationMatrix = Matrix3x2.Rotation(MathUtil.DegreesToRadians(Utils.RotationToInt(value)), Vector2.Zero);
             SetAndRequestRender(ref _rotation, value);
         }
     }
@@ -54,7 +55,8 @@ public abstract class BaseSceneObject : ResourceDependentObject
         protected set => SetAndRequestRender(ref _isSelected, value);
     }
 
-    protected Matrix3x2 TransformMatrix => Matrix3x2.Transformation(1, 1, MathUtil.DegreesToRadians(Utils.RotationToInt(Rotation)), Location.X, Location.Y);
+    //https://stackoverflow.com/a/45392997
+    protected Matrix3x2 TransformMatrix => _rotationMatrix * _translateMatrix;
 
     public virtual void StartDrag(Vector2 pos)
     {
@@ -87,8 +89,6 @@ public abstract class BaseSceneObject : ResourceDependentObject
         Initialize(scene);
 
         var tmp = renderTarget.Transform;
-        //renderTarget.Transform = Matrix3x2.Transformation(1, 1, MathUtil.DegreesToRadians(Utils.RotationToInt(Rotation)), Location.X, Location.Y);
-
         renderTarget.Transform = TransformMatrix * tmp;
         OnRender(scene, renderTarget);
         renderTarget.Transform = tmp;
@@ -97,10 +97,6 @@ public abstract class BaseSceneObject : ResourceDependentObject
     public void RenderSelection(Scene2D scene, RenderTarget renderTarget, SolidColorBrush selectionBrush, StrokeStyle selectionStyle)
     {
         var tmp = renderTarget.Transform;
-        //renderTarget.Transform = Matrix3x2.Transformation(1, 1, MathUtil.DegreesToRadians(Utils.RotationToInt(Rotation)), Location.X, Location.Y);
-
-
-
         renderTarget.Transform = TransformMatrix * tmp;
         OnRenderSelection(scene, renderTarget, selectionBrush, selectionStyle);
         renderTarget.Transform = tmp;
