@@ -27,8 +27,6 @@ public class SelectionTool : BaseTool
             foreach (var o in sceneObjects)
             {
                 o.Rotation = Utils.GetNextRotation(o.Rotation);
-
-                //   o.Rotate(pos);
             }
         }
     }

@@ -1,6 +1,5 @@
 ﻿using LogicSimulator.Scene.Nodes;
 using LogicSimulator.Scene.SceneObjects.Base;
-using LogicSimulator.Utils;
 using SharpDX;
 using SharpDX.Direct2D1;
 
@@ -28,36 +27,36 @@ public class Rectangle : EditableSceneObject
 
     private static readonly AbstractNode[] AbstractNodes =
     {
-        new Node<Rectangle>(o => Vector2.Zero.Transform(o.TransformMatrix), (o, p)=>
+        new Node<Rectangle>(o => o.LocalToWorldSpace(Vector2.Zero), (o, p)=>
         {
-            var p1 = p.InvertAndTransform(o.TransformMatrix);
+            var localPos = o.WorldToLocalSpace(p);
 
             o.Location = p;
-            o.Width -= p1.X;
-            o.Height -= p1.Y;
+            o.Width -= localPos.X;
+            o.Height -= localPos.Y;
         }),
-        new Node<Rectangle>(o => new Vector2(o.Width, 0).Transform(o.TransformMatrix), (o, p) =>
+        new Node<Rectangle>(o => o.LocalToWorldSpace(new Vector2(o.Width, 0)), (o, p) =>
         {
-            var p1 = p.InvertAndTransform(o.TransformMatrix);
+            var localPos = o.WorldToLocalSpace(p);
 
-            o.Location = new Vector2(0, p1.Y).Transform(o.TransformMatrix);
-            o.Width = p1.X;
-            o.Height -= p1.Y;
+            o.Location = o.LocalToWorldSpace(new Vector2(0, localPos.Y));
+            o.Width = localPos.X;
+            o.Height -= localPos.Y;
         }),
-        new Node<Rectangle>(o => new Vector2(o.Width, o.Height).Transform(o.TransformMatrix), (o, p) =>
+        new Node<Rectangle>(o => o.LocalToWorldSpace(new Vector2(o.Width, o.Height)), (o, p) =>
         {
-            p = p.InvertAndTransform(o.TransformMatrix);
+            var localPos = o.WorldToLocalSpace(p);
 
-            o.Width = p.X;
-            o.Height = p.Y;
+            o.Width = localPos.X;
+            o.Height = localPos.Y;
         }),
-        new Node<Rectangle>(o => new Vector2(0, o.Height).Transform(o.TransformMatrix), (o, p) =>
+        new Node<Rectangle>(o => o.LocalToWorldSpace(new Vector2(0, o.Height)), (o, p) =>
         {
-            var p1 = p.InvertAndTransform(o.TransformMatrix);
+            var localPos = o.WorldToLocalSpace(p);
 
-            o.Location = new Vector2(p1.X, 0).Transform(o.TransformMatrix);
-            o.Width -= p1.X;
-            o.Height = p1.Y;
+            o.Location = o.LocalToWorldSpace(new Vector2(localPos.X, 0));
+            o.Width -= localPos.X;
+            o.Height = localPos.Y;
         })
     };
 
@@ -140,12 +139,6 @@ public class Rectangle : EditableSceneObject
         }
 
         renderTarget.DrawGeometry(geometry, strokeBrush, StrokeThickness / scene.Scale);
-
-        var green = new SolidColorBrush(renderTarget, new Color4(0, 1, 0, 1));
-        var blue = new SolidColorBrush(renderTarget, new Color4(0, 0, 1, 1));
-
-        renderTarget.DrawLine(new Vector2(0, 0), new Vector2(50, 0), green, 3);
-        renderTarget.DrawLine(new Vector2(0, 0), new Vector2(0, 50), blue, 3);
     }
 
     protected override void OnRenderSelection(Scene2D scene, RenderTarget renderTarget, SolidColorBrush selectionBrush, StrokeStyle selectionStyle)

@@ -1,4 +1,4 @@
-﻿using System;
+﻿using LogicSimulator.Utils;
 using SharpDX;
 using SharpDX.Direct2D1;
 using YamlDotNet.Serialization;
@@ -17,7 +17,7 @@ public abstract class BaseSceneObject : ResourceDependentObject
     private Matrix3x2 _rotationMatrix = Matrix3x2.Identity;
 
     private Vector2 _startDragPosition = Vector2.Zero;
-    private Vector2 _startDragLocation;
+    private Vector2 _startDragLocation = Vector2.Zero;
 
     [Editable]
     public Vector2 Location
@@ -105,6 +105,10 @@ public abstract class BaseSceneObject : ResourceDependentObject
     protected abstract void OnRenderSelection(Scene2D scene, RenderTarget renderTarget, SolidColorBrush selectionBrush, StrokeStyle selectionStyle);
 
     protected abstract void OnRender(Scene2D scene, RenderTarget renderTarget);
+
+    protected Vector2 WorldToLocalSpace(Vector2 worldPos) => worldPos.InvertAndTransform(TransformMatrix);
+
+    protected Vector2 LocalToWorldSpace(Vector2 localPos) => localPos.Transform(TransformMatrix);
 
     public virtual void Rotate(Vector2 offset)
     {
