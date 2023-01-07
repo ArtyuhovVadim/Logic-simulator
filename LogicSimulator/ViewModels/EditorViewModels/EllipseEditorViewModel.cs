@@ -6,9 +6,9 @@ namespace LogicSimulator.ViewModels.EditorViewModels;
 
 public class EllipseEditorViewModel : BaseEditorViewModel<Ellipse>
 {
-    #region Center
+    #region Location
 
-    public Vector2 Center
+    public Vector2 Location
     {
         get => Get<Vector2>();
         set => Set(value);

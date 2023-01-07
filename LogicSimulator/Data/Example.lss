@@ -25,7 +25,7 @@ Objects:
   StrokeThickness: 1
   IsFilled: true
 - !Ellipse
-  Center: [125, 625]
+  Location: [125, 625]
   RadiusX: 100
   RadiusY: 100
   FillColor: [1, 1, 1, 1]
@@ -33,7 +33,7 @@ Objects:
   StrokeThickness: 3
   IsFilled: true
 - !Ellipse
-  Center: [625, 625]
+  Location: [625, 625]
   RadiusX: 100
   RadiusY: 100
   FillColor: [1, 1, 1, 1]
@@ -41,7 +41,7 @@ Objects:
   StrokeThickness: 3
   IsFilled: true
 - !Ellipse
-  Center: [375, 625]
+  Location: [375, 625]
   RadiusX: 100
   RadiusY: 100
   FillColor: [1, 1, 1, 1]

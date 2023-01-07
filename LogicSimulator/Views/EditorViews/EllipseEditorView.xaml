@@ -47,9 +47,9 @@
                 IsExpanded="True">
                 <controls:Vector2Box
                     Margin="8"
-                    IsVectorXUndefined="{Binding Path=UndefinedPropertiesMap[CenterX]}"
-                    IsVectorYUndefined="{Binding Path=UndefinedPropertiesMap[CenterY]}"
-                    Vector="{Binding Path=Center}" />
+                    IsVectorXUndefined="{Binding Path=UndefinedPropertiesMap[LocationX]}"
+                    IsVectorYUndefined="{Binding Path=UndefinedPropertiesMap[LocationY]}"
+                    Vector="{Binding Path=Location}" />
             </Expander>
             <Expander
                 Grid.Row="2"

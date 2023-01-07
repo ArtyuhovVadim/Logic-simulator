@@ -147,10 +147,4 @@ public class Rectangle : EditableSceneObject
 
         renderTarget.DrawGeometry(geometry, selectionBrush, 1f / scene.Scale, selectionStyle);
     }
-
-    public override void Rotate(Vector2 offset)
-    {
-        //Location = (Location + new Vector2(0, Height)).RotateRelative(90, offset);
-        //(Width, Height) = (Height, Width);
-    }
 }

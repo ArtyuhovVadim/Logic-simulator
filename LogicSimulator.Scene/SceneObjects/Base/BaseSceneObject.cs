@@ -109,9 +109,4 @@ public abstract class BaseSceneObject : ResourceDependentObject
     protected Vector2 WorldToLocalSpace(Vector2 worldPos) => worldPos.InvertAndTransform(TransformMatrix);
 
     protected Vector2 LocalToWorldSpace(Vector2 localPos) => localPos.Transform(TransformMatrix);
-
-    public virtual void Rotate(Vector2 offset)
-    {
-
-    }
 }

@@ -183,18 +183,4 @@ public class Line : EditableSceneObject
 
         renderTarget.DrawGeometry(geometry, selectionBrush, 1f / scene.Scale, selectionStyle);
     }
-
-    public override void Rotate(Vector2 offset)
-    {
-        var matrix = Matrix3x2.Transformation(1, 1, MathUtil.DegreesToRadians(90), offset.X, offset.Y);
-
-        for (var i = 0; i < _vertices.Count; i++)
-        {
-            _vertices[i] = Matrix3x2.TransformPoint(matrix, _vertices[i] - offset);
-        }
-
-        ResourceCache.RequestUpdate(this, PathGeometryResource);
-        RequestRender();
-        OnPropertyChanged(nameof(Vertexes));
-    }
 }

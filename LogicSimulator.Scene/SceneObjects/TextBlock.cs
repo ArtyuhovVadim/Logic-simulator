@@ -206,13 +206,4 @@ public class TextBlock : BaseSceneObject
         
         renderTarget.DrawGeometry(geometry, selectionBrush, 1f / scene.Scale, selectionStyle);
     }
-
-    public override void Rotate(Vector2 offset)
-    {
-        // Rotation = Utils.GetNextRotation(Rotation);
-        //
-        // Location = Location.RotateRelative(90, Vector2.Zero);
-        //
-        // _rotationMatrix = Matrix3x2.Rotation(MathUtil.DegreesToRadians(Utils.RotationToInt(Rotation)), Location);
-    }
 }

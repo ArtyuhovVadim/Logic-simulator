@@ -16,26 +16,26 @@ public class EllipsePlacingTool : BaseObjectPlacingTool<Ellipse>
 
     private void SetCenter(Scene2D scene, Vector2 pos)
     {
-        PlacingObject.Center = pos;
+        PlacingObject.Location = pos;
     }
 
     private void UpdateRadiusX(Scene2D scene, Vector2 pos)
     {
-        PlacingObject.RadiusX = Math.Abs((pos - PlacingObject.Center).X);
+        PlacingObject.RadiusX = Math.Abs((pos - PlacingObject.Location).X);
     }
 
     private void SetRadiusX(Scene2D scene, Vector2 pos)
     {
-        PlacingObject.RadiusX = Math.Abs((pos - PlacingObject.Center).X);
+        PlacingObject.RadiusX = Math.Abs((pos - PlacingObject.Location).X);
     }
 
     private void UpdateRadiusY(Scene2D scene, Vector2 pos)
     {
-        PlacingObject.RadiusY = Math.Abs((pos - PlacingObject.Center).Y);
+        PlacingObject.RadiusY = Math.Abs((pos - PlacingObject.Location).Y);
     }
 
     private void SetRadiusY(Scene2D scene, Vector2 pos)
     {
-        PlacingObject.RadiusY = Math.Abs((pos - PlacingObject.Center).Y);
+        PlacingObject.RadiusY = Math.Abs((pos - PlacingObject.Location).Y);
     }
 }
