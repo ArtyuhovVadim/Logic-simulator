@@ -12,6 +12,8 @@ public abstract class AbstractEditorViewModel : BindableBase
 
     public EditorLayout Layout => _layout ??= CreateLayout();
 
+    public Dictionary<string, bool> UndefinedPropertiesMap { get; } = new();
+
     public abstract void SetObjectsToEdit(IEnumerable<BaseSceneObject> objects);
 
     protected void OnPropertyChanged(object sender, PropertyChangedEventArgs e) => OnPropertyChanged(e.PropertyName);
@@ -19,6 +21,5 @@ public abstract class AbstractEditorViewModel : BindableBase
     protected abstract EditorLayout CreateLayout();
 
     protected ObjectProperty CreateObjectPropertyViewModel<T>(string name) =>
-        //new(name, typeof(T), s => Get<T>(s), (v, s) => Set((T)v, s));
         new(name, typeof(T));
 }

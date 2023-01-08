@@ -27,8 +27,6 @@ public abstract class BaseEditorViewModel<T> : AbstractEditorViewModel where T :
 
     public T FirstObject { get; private set; }
 
-    public Dictionary<string, bool> UndefinedPropertiesMap { get; } = new();
-
     public override void SetObjectsToEdit(IEnumerable<BaseSceneObject> objects)
     {
         if (Objects is not null && Objects.Any())

@@ -7,6 +7,14 @@ namespace LogicSimulator.ViewModels.EditorViewModels;
 
 public class RectangleEditorViewModel : BaseEditorViewModel<Rectangle>
 {
+    public Vector2 Location { get => Get<Vector2>(); set => Set(value); }
+    public float Width { get => Get<float>(); set => Set(value); }
+    public float Height { get => Get<float>(); set => Set(value); }
+    public float StrokeThickness { get => Get<float>(); set => Set(value); }
+    public Color4 StrokeColor { get => Get<Color4>(); set => Set(value); }
+    public bool IsFilled { get => Get<bool>(); set => Set(value); }
+    public Color4 FillColor { get => Get<Color4>(); set => Set(value); }
+
     protected override EditorLayout CreateLayout() => new("Прямоугольник", new[]
     {
         new EditorGroup("Расположение", new []
