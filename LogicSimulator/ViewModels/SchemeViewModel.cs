@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using LogicSimulator.Infrastructure.Services.Interfaces;
 using LogicSimulator.Models;

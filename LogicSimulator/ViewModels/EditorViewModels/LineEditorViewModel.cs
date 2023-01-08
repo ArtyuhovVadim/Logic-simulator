@@ -5,12 +5,30 @@ using System.Windows.Input;
 using LogicSimulator.Infrastructure.Commands;
 using LogicSimulator.Scene.SceneObjects;
 using LogicSimulator.ViewModels.EditorViewModels.Base;
+using LogicSimulator.ViewModels.EditorViewModels.Layout;
 using SharpDX;
 
 namespace LogicSimulator.ViewModels.EditorViewModels;
 
+//TODO: !!!
 public class LineEditorViewModel : BaseEditorViewModel<Line>
 {
+    protected override EditorLayout CreateLayout() => new("Ломаная линия", new[]
+    {
+        new EditorGroup("Расположение", new []
+        {
+            new EditorRow(CreateObjectPropertyViewModel<Vector2>(nameof(Line.Location))),
+        }),
+        new EditorGroup("Свойства", new []
+        {
+            new EditorRow("Граница", new[]
+            {
+                CreateObjectPropertyViewModel<float>(nameof(Line.StrokeThickness)),
+                CreateObjectPropertyViewModel<Color4>(nameof(Line.StrokeColor))
+            })
+        })
+    });
+
     public LineEditorViewModel()
     {
         PropertyChanged += (_, args) =>
@@ -21,16 +39,6 @@ public class LineEditorViewModel : BaseEditorViewModel<Line>
             }
         };
     }
-
-    #region Location
-
-    public Vector2 Location
-    {
-        get => Get<Vector2>();
-        set => Set(value);
-    }
-
-    #endregion
 
     #region Vertexes
 
@@ -54,26 +62,6 @@ public class LineEditorViewModel : BaseEditorViewModel<Line>
     {
         get => _selectedVertexIndex;
         set => Set(ref _selectedVertexIndex, value);
-    }
-
-    #endregion
-
-    #region StrokeThickness
-
-    public float StrokeThickness
-    {
-        get => Get<float>();
-        set => Set(value);
-    }
-
-    #endregion
-
-    #region StrokeColor
-
-    public Color4 StrokeColor
-    {
-        get => Get<Color4>();
-        set => Set(value);
     }
 
     #endregion

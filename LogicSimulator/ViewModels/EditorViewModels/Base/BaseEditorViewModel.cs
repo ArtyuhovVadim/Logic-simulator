@@ -11,6 +11,8 @@ namespace LogicSimulator.ViewModels.EditorViewModels.Base;
 
 public abstract class BaseEditorViewModel<T> : AbstractEditorViewModel where T : BaseSceneObject
 {
+    private readonly List<string> _propertyNames = new();
+
     #region Objects
 
     private ObservableCollection<T> _objects;
@@ -23,11 +25,9 @@ public abstract class BaseEditorViewModel<T> : AbstractEditorViewModel where T :
 
     #endregion
 
-    public Dictionary<string, bool> UndefinedPropertiesMap { get; } = new();
-
-    private readonly List<string> _propertyNames = new();
-
     public T FirstObject { get; private set; }
+
+    public Dictionary<string, bool> UndefinedPropertiesMap { get; } = new();
 
     public override void SetObjectsToEdit(IEnumerable<BaseSceneObject> objects)
     {

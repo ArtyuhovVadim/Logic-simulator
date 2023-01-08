@@ -1,11 +1,21 @@
 ﻿using LogicSimulator.Scene.SceneObjects;
 using LogicSimulator.ViewModels.EditorViewModels.Base;
+using LogicSimulator.ViewModels.EditorViewModels.Layout;
 using SharpDX;
 
 namespace LogicSimulator.ViewModels.EditorViewModels;
 
+//TODO: !!!
 public class TextBlockEditorViewModel : BaseEditorViewModel<TextBlock>
 {
+    protected override EditorLayout CreateLayout() => new("Текст", new[]
+    {
+        new EditorGroup("Расположение", new []
+        {
+            new EditorRow(CreateObjectPropertyViewModel<Vector2>(nameof(TextBlock.Location))),
+        })
+    });
+
     #region Location
 
     public Vector2 Location

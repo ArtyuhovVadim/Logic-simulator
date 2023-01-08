@@ -1,7 +1,7 @@
-﻿using LogicSimulator.ViewModels.EditorViewModels;
-using System.Windows;
+﻿using System.Windows;
 using System.Windows.Controls;
 using SharpDX;
+using LogicSimulator.ViewModels.EditorViewModels.Layout;
 
 namespace LogicSimulator.Infrastructure;
 
@@ -9,7 +9,7 @@ public class EditorPropertiesDataTemplateSelector : DataTemplateSelector
 {
     public override DataTemplate SelectTemplate(object item, DependencyObject container)
     {
-        if (item is not ObjectPropertyViewModel prop) return null;
+        if (item is not ObjectProperty prop) return null;
 
         if (prop.ObjectPropertyType == typeof(float))
         {
