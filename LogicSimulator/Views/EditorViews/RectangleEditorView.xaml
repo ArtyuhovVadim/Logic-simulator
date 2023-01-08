@@ -2,18 +2,105 @@
     x:Class="LogicSimulator.Views.EditorViews.RectangleEditorView"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:c="clr-namespace:LogicSimulator.Infrastructure.Converters"
     xmlns:controls="clr-namespace:LogicSimulator.Controls;assembly=LogicSimulator.Controls"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:dx="clr-namespace:SharpDX;assembly=SharpDX.Mathematics"
     xmlns:evm="clr-namespace:LogicSimulator.ViewModels.EditorViewModels"
+    xmlns:i="clr-namespace:LogicSimulator.Infrastructure"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    d:DataContext="{d:DesignInstance Type=evm:RectangleEditorViewModel}"
+    xmlns:sys="clr-namespace:System;assembly=System.Runtime"
+    d:DataContext="{d:DesignInstance Type=evm:RectangleEditorViewModel,
+                                     IsDesignTimeCreatable=True}"
     d:DesignHeight="450"
     d:DesignWidth="400"
     mc:Ignorable="d">
-    <UserControl.Resources>
-        <ResourceDictionary Source="/LogicSimulator.Controls;component/Styles/PropertiesEditorStyles.xaml" />
-    </UserControl.Resources>
     <ScrollViewer HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Auto">
+        <ScrollViewer.Resources>
+            <ResourceDictionary Source="/LogicSimulator.Controls;component/Styles/PropertiesEditorStyles.xaml" />
+        </ScrollViewer.Resources>
+        <Grid Margin="5" Background="#404040">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
+            <TextBlock
+                Grid.Row="0"
+                Margin="4,4"
+                HorizontalAlignment="Left"
+                Text="{Binding Path=Layout.ObjectName}" />
+            <ItemsControl
+                Grid.Row="1"
+                Grid.IsSharedSizeScope="True"
+                ItemsSource="{Binding Path=Layout.Groups}">
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+                        <Expander Header="{Binding Path=Name}">
+                            <ItemsControl Margin="3" ItemsSource="{Binding Path=EditorRows}">
+                                <ItemsControl.ItemTemplate>
+                                    <DataTemplate>
+                                        <DataTemplate.Resources>
+                                            <Style BasedOn="{StaticResource {x:Type TextBlock}}" TargetType="{x:Type TextBlock}">
+                                                <Setter Property="Margin" Value="5" />
+                                                <Setter Property="VerticalAlignment" Value="Center" />
+                                                <Setter Property="HorizontalAlignment" Value="Right" />
+                                            </Style>
+                                        </DataTemplate.Resources>
+                                        <Grid>
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="Auto" SharedSizeGroup="A" />
+                                                <ColumnDefinition />
+                                            </Grid.ColumnDefinitions>
+                                            <TextBlock
+                                                Grid.Column="0"
+                                                HorizontalAlignment="Right"
+                                                VerticalAlignment="Center"
+                                                Text="{Binding Path=Name}" />
+                                            <ItemsControl
+                                                x:Name="Properties"
+                                                Grid.Column="1"
+                                                ItemsSource="{Binding Path=ObjectProperties}">
+                                                <ItemsControl.Resources>
+
+                                                    <DataTemplate x:Key="NumberBox" DataType="{x:Type sys:Single}">
+                                                        <controls:NumberBox />
+                                                    </DataTemplate>
+                                                    <DataTemplate x:Key="Vector2Box" DataType="{x:Type dx:Vector2}">
+                                                        <controls:Vector2Box Content="" />
+                                                    </DataTemplate>
+                                                    <DataTemplate x:Key="ColorPicker" DataType="{x:Type dx:Color4}">
+                                                        <controls:ColorPicker />
+                                                    </DataTemplate>
+                                                    <DataTemplate x:Key="CheckBoxEx" DataType="{x:Type sys:Boolean}">
+                                                        <controls:CheckBoxEx />
+                                                    </DataTemplate>
+                                                </ItemsControl.Resources>
+                                                <ItemsControl.ItemTemplateSelector>
+                                                    <i:EditorPropertiesDataTemplateSelector />
+                                                </ItemsControl.ItemTemplateSelector>
+                                                <ItemsControl.ItemsPanel>
+                                                    <ItemsPanelTemplate>
+                                                        <UniformGrid Columns="{Binding Path=ObjectProperties, Converter={c:CollectionToElementsCountConverter}}" Rows="1" />
+                                                    </ItemsPanelTemplate>
+                                                </ItemsControl.ItemsPanel>
+                                            </ItemsControl>
+                                        </Grid>
+                                        <DataTemplate.Triggers>
+                                            <DataTrigger Binding="{Binding Path=Name}" Value="">
+                                                <Setter TargetName="Properties" Property="Grid.ColumnSpan" Value="2" />
+                                                <Setter TargetName="Properties" Property="Grid.Column" Value="0" />
+                                            </DataTrigger>
+                                        </DataTemplate.Triggers>
+                                    </DataTemplate>
+                                </ItemsControl.ItemTemplate>
+                            </ItemsControl>
+                        </Expander>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
+        </Grid>
+    </ScrollViewer>
+    <!--<ScrollViewer HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Auto">
         <Grid Margin="5" Background="#404040">
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto" />
@@ -108,5 +195,5 @@
                 </Grid>
             </Expander>
         </Grid>
-    </ScrollViewer>
+    </ScrollViewer>-->
 </UserControl>
