@@ -10,26 +10,11 @@
     d:DesignHeight="450"
     d:DesignWidth="400"
     mc:Ignorable="d">
+    <UserControl.Resources>
+        <ResourceDictionary Source="/LogicSimulator.Controls;component/Styles/PropertiesEditorStyles.xaml" />
+    </UserControl.Resources>
     <ScrollViewer HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Auto">
         <Grid Margin="5" Background="#404040">
-            <Grid.Resources>
-                <Style BasedOn="{StaticResource {x:Type TextBlock}}" TargetType="{x:Type TextBlock}">
-                    <Setter Property="Margin" Value="5" />
-                    <Setter Property="VerticalAlignment" Value="Center" />
-                    <Setter Property="HorizontalAlignment" Value="Right" />
-                </Style>
-                <Style BasedOn="{StaticResource {x:Type controls:NumberBox}}" TargetType="{x:Type controls:NumberBox}">
-                    <Setter Property="Margin" Value="5" />
-                    <Setter Property="VerticalAlignment" Value="Center" />
-                    <Setter Property="RoundNumber" Value="True" />
-                    <Setter Property="DecimalPlaces" Value="3" />
-                    <Setter Property="SelectAllTextOnFocus" Value="True" />
-                </Style>
-                <Style BasedOn="{StaticResource {x:Type controls:ColorPicker}}" TargetType="{x:Type controls:ColorPicker}">
-                    <Setter Property="Margin" Value="5" />
-                    <Setter Property="VerticalAlignment" Value="Center" />
-                </Style>
-            </Grid.Resources>
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto" />
                 <RowDefinition Height="Auto" />
@@ -40,25 +25,17 @@
                 Margin="4,4"
                 HorizontalAlignment="Left"
                 Text="Прямоугольник" />
-            <Expander
-                Grid.Row="1"
-                Margin="0,4"
-                Header="Расположение"
-                IsExpanded="True">
-                <controls:Vector2Box
-                    Margin="8"
-                    IsVectorXUndefined="{Binding Path=UndefinedPropertiesMap[LocationX]}"
-                    IsVectorYUndefined="{Binding Path=UndefinedPropertiesMap[LocationY]}"
-                    Vector="{Binding Path=Location}" />
+            <Expander Grid.Row="1" Header="Расположение">
+                <Grid Margin="3">
+                    <controls:Vector2Box
+                        IsVectorXUndefined="{Binding Path=UndefinedPropertiesMap[LocationX]}"
+                        IsVectorYUndefined="{Binding Path=UndefinedPropertiesMap[LocationY]}"
+                        Vector="{Binding Path=Location}" />
+                </Grid>
             </Expander>
-            <Expander
-                Grid.Row="2"
-                Margin="0,4"
-                Header="Свойства"
-                IsExpanded="True">
+            <Expander Grid.Row="2" Header="Свойства">
                 <Grid Margin="3">
                     <Grid.RowDefinitions>
-                        <RowDefinition Height="*" />
                         <RowDefinition Height="*" />
                         <RowDefinition Height="*" />
                         <RowDefinition Height="*" />
@@ -128,16 +105,6 @@
                             IsChecked="{Binding Path=IsFilled}"
                             IsValueUndefined="{Binding Path=UndefinedPropertiesMap[IsFilled]}" />
                     </Grid>
-
-                    <TextBlock
-                        Grid.Row="4"
-                        Grid.Column="0"
-                        Text="Поворот" />
-                    <controls:NumberBox
-                        Grid.Row="4"
-                        Grid.Column="1"
-                        IsValueUndefined="{Binding Path=UndefinedPropertiesMap[Rotation]}"
-                        Number="{Binding Path=Rotation}" />
                 </Grid>
             </Expander>
         </Grid>

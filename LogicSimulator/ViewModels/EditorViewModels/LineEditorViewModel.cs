@@ -22,6 +22,16 @@ public class LineEditorViewModel : BaseEditorViewModel<Line>
         };
     }
 
+    #region Location
+
+    public Vector2 Location
+    {
+        get => Get<Vector2>();
+        set => Set(value);
+    }
+
+    #endregion
+
     #region Vertexes
 
     private readonly ObservableCollection<VertexViewModel> _vertexes = new();
