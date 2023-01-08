@@ -1,6 +1,5 @@
 ﻿using LogicSimulator.Scene.Nodes;
 using LogicSimulator.Scene.SceneObjects.Base;
-using LogicSimulator.Utils;
 using SharpDX;
 using SharpDX.Direct2D1;
 
@@ -8,10 +7,10 @@ namespace LogicSimulator.Scene.SceneObjects;
 
 public class RoundedRectangle : EditableSceneObject
 {
-    private static readonly Resource FillBrushResource = ResourceCache.Register((scene, obj) => 
+    private static readonly Resource FillBrushResource = ResourceCache.Register((scene, obj) =>
         scene.ResourceFactory.CreateSolidColorBrush(((RoundedRectangle)obj).FillColor));
 
-    private static readonly Resource StrokeBrushResource = ResourceCache.Register((scene, obj) => 
+    private static readonly Resource StrokeBrushResource = ResourceCache.Register((scene, obj) =>
         scene.ResourceFactory.CreateSolidColorBrush(((RoundedRectangle)obj).StrokeColor));
 
     private static readonly Resource RectangleGeometryResource = ResourceCache.Register((scene, obj) =>
@@ -20,7 +19,7 @@ public class RoundedRectangle : EditableSceneObject
 
         var rectStruct = new SharpDX.Direct2D1.RoundedRectangle
         {
-            Rect = new RectangleF(rect.Location.X, rect.Location.Y, rect.Width, rect.Height),
+            Rect = new RectangleF(0, 0, rect.Width, rect.Height),
             RadiusX = rect._radiusX,
             RadiusY = rect._radiusY
         };
@@ -30,7 +29,6 @@ public class RoundedRectangle : EditableSceneObject
 
     private Color4 _fillColor = Color4.White;
     private Color4 _strokeColor = Color4.Black;
-    private Vector2 _location = Vector2.Zero;
     private float _width;
     private float _height;
     private float _radiusX;
@@ -38,38 +36,42 @@ public class RoundedRectangle : EditableSceneObject
     private float _strokeThickness = 1f;
     private bool _isFilled = true;
 
-    private Vector2 _startDragPosition = Vector2.Zero;
-    private Vector2 _startDragLocation = Vector2.Zero;
-
     private static readonly AbstractNode[] AbstractNodes =
     {
-        new Node<RoundedRectangle>(o => o.Location, (o, p)=>
+        new Node<RoundedRectangle>(o => o.LocalToWorldSpace(Vector2.Zero), (o, p)=>
         {
-            o.Width += (o.Location - p).X;
-            o.Height += (o.Location - p).Y;
+            var localPos = o.WorldToLocalSpace(p);
+
             o.Location = p;
+            o.Width -= localPos.X;
+            o.Height -= localPos.Y;
         }),
-        new Node<RoundedRectangle>(o => o.Location + new Vector2(o.Width, 0), (o, p) =>
+        new Node<RoundedRectangle>(o => o.LocalToWorldSpace(new Vector2(o.Width, 0)), (o, p) =>
         {
-            o.Width = p.X - o.Location.X;
-            o.Height = o.Location.Y + o.Height - p.Y;
-            o.Location = new Vector2(o.Location.X, p.Y);
+            var localPos = o.WorldToLocalSpace(p);
+
+            o.Location = o.LocalToWorldSpace(new Vector2(0, localPos.Y));
+            o.Width = localPos.X;
+            o.Height -= localPos.Y;
         }),
-        new Node<RoundedRectangle>(o => o.Location + new Vector2(o.Width, o.Height), (o, p) =>
+        new Node<RoundedRectangle>(o => o.LocalToWorldSpace(new Vector2(o.Width, o.Height)), (o, p) =>
         {
-            var size = p - o.Location;
-            o.Width = size.X;
-            o.Height = size.Y;
+            var localPos = o.WorldToLocalSpace(p);
+
+            o.Width = localPos.X;
+            o.Height = localPos.Y;
         }),
-        new Node<RoundedRectangle>(o => o.Location + new Vector2(0, o.Height), (o, p) =>
+        new Node<RoundedRectangle>(o => o.LocalToWorldSpace(new Vector2(0, o.Height)), (o, p) =>
         {
-            o.Width = o.Location.X + o.Width- p.X;
-            o.Height = p.Y - o.Location.Y;
-            o.Location = new Vector2(p.X, o.Location.Y);
+            var localPos = o.WorldToLocalSpace(p);
+
+            o.Location = o.LocalToWorldSpace(new Vector2(localPos.X, 0));
+            o.Width -= localPos.X;
+            o.Height = localPos.Y;
         }),
-        new Node<RoundedRectangle>(o => o.Location + new Vector2(o.RadiusX, o.RadiusY), (o, p) =>
+        new Node<RoundedRectangle>(o => o.LocalToWorldSpace(new Vector2(o.RadiusX, o.RadiusY)), (o, p) =>
         {
-            var radius =  p - o.Location;
+            var radius =  o.WorldToLocalSpace(p);
 
             o.RadiusX = radius.X;
             o.RadiusY = radius.Y;
@@ -77,13 +79,6 @@ public class RoundedRectangle : EditableSceneObject
     };
 
     public override AbstractNode[] Nodes => AbstractNodes;
-
-    [Editable]
-    public Vector2 Location
-    {
-        get => _location;
-        set => SetAndUpdateResource(ref _location, value, RectangleGeometryResource);
-    }
 
     [Editable]
     public float Width
@@ -148,37 +143,19 @@ public class RoundedRectangle : EditableSceneObject
         InitializeResource(FillBrushResource);
     }
 
-    public override void StartDrag(Vector2 pos)
-    {
-        IsDragging = true;
-
-        _startDragPosition = pos;
-        _startDragLocation = Location;
-    }
-
-    public override void Drag(Vector2 pos)
-    {
-        Location = _startDragLocation - _startDragPosition + pos;
-    }
-
-    public override void EndDrag()
-    {
-        IsDragging = false;
-    }
-
     public override bool IsIntersectsPoint(Vector2 pos, Matrix3x2 matrix, float tolerance = 0.25f)
     {
         var geometry = ResourceCache.GetCached<RoundedRectangleGeometry>(this, RectangleGeometryResource);
 
-        return IsFilled ? geometry.FillContainsPoint(pos, matrix, tolerance) :
-                            geometry.StrokeContainsPoint(pos, StrokeThickness, null, matrix, tolerance);
+        return IsFilled ? geometry.FillContainsPoint(pos, TransformMatrix * matrix, tolerance) :
+                            geometry.StrokeContainsPoint(pos, StrokeThickness, null, TransformMatrix * matrix, tolerance);
     }
 
     public override GeometryRelation CompareWithRectangle(RectangleGeometry rectGeometry, Matrix3x2 matrix, float tolerance = 0.25f)
     {
         var geometry = ResourceCache.GetCached<RoundedRectangleGeometry>(this, RectangleGeometryResource);
 
-        return geometry.Compare(rectGeometry, matrix, tolerance);
+        return geometry.Compare(rectGeometry, Matrix3x2.Invert(TransformMatrix) * matrix, tolerance);
     }
 
     protected override void OnRender(Scene2D scene, RenderTarget renderTarget)

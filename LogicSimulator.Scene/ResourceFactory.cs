@@ -49,14 +49,14 @@ public class ResourceFactory
         return new EllipseGeometry(_sceneRenderer.Factory, ellipse);
     }
 
-    public PathGeometry CreatePolylineGeometry(List<Vector2> vertices)
+    public PathGeometry CreatePolylineGeometry(Vector2 location, List<Vector2> vertices)
     {
         var path = new PathGeometry(_sceneRenderer.Factory);
 
         var sink = path.Open();
-        sink.BeginFigure(vertices.First(), FigureBegin.Hollow);
+        sink.BeginFigure(location, FigureBegin.Hollow);
 
-        for (var i = 1; i < vertices.Count; i++)
+        for (var i = 0; i < vertices.Count; i++)
         {
             sink.AddLine(vertices[i]);
         }

@@ -32,13 +32,12 @@ public class TextBlock : BaseSceneObject
 
         var metrics = textLayout.Metrics;
 
-        return scene.ResourceFactory.CreateRectangleGeometry(new RectangleF { Location = ((TextBlock)obj).Location, Width = metrics.Width, Height = metrics.Height });
+        return scene.ResourceFactory.CreateRectangleGeometry(new RectangleF { Location = Vector2.Zero, Width = metrics.Width, Height = metrics.Height });
     });
 
     private static readonly Resource TextBrushResource = ResourceCache.Register((scene, obj) =>
         scene.ResourceFactory.CreateSolidColorBrush(((TextBlock)obj).TextColor));
 
-    private Vector2 _location = Vector2.Zero;
     private string _text = "Text";
     private string _fontName = "Times New Roman";
     private float _fontSize = 24f;
@@ -48,16 +47,6 @@ public class TextBlock : BaseSceneObject
     private bool _isItalic;
     private bool _isUnderlined;
     private bool _isCross;
-
-    private Vector2 _startDragPosition;
-    private Vector2 _startDragLocation;
-
-    [Editable]
-    public Vector2 Location
-    {
-        get => _location;
-        set => SetAndUpdateResource(ref _location, value, TextGeometryResource);
-    }
 
     [Editable]
     public string Text
@@ -157,36 +146,18 @@ public class TextBlock : BaseSceneObject
         InitializeResource(TextGeometryResource);
     }
 
-    public override void StartDrag(Vector2 pos)
-    {
-        IsDragging = true;
-
-        _startDragPosition = pos;
-        _startDragLocation = Location;
-    }
-
-    public override void Drag(Vector2 pos)
-    {
-        Location = _startDragLocation - _startDragPosition + pos;
-    }
-
-    public override void EndDrag()
-    {
-        IsDragging = false;
-    }
-
     public override bool IsIntersectsPoint(Vector2 pos, Matrix3x2 matrix, float tolerance = 0.25f)
     {
         var geometry = GetOrUpdateResource<RectangleGeometry>(TextGeometryResource);
 
-        return geometry.FillContainsPoint(pos, matrix, tolerance);
+        return geometry.FillContainsPoint(pos, TransformMatrix * matrix, tolerance);
     }
 
     public override GeometryRelation CompareWithRectangle(RectangleGeometry rectGeometry, Matrix3x2 matrix, float tolerance = 0.25f)
     {
         var geometry = GetOrUpdateResource<RectangleGeometry>(TextGeometryResource);
 
-        return geometry.Compare(rectGeometry, matrix, tolerance);
+        return geometry.Compare(rectGeometry, Matrix3x2.Invert(TransformMatrix) * matrix, tolerance);
     }
 
     protected override void OnRender(Scene2D scene, RenderTarget renderTarget)
@@ -197,13 +168,13 @@ public class TextBlock : BaseSceneObject
         textLayout.SetUnderline(IsUnderlined, new TextRange(0, Text.Length));
         textLayout.SetStrikethrough(IsCross, new TextRange(0, Text.Length));
 
-        renderTarget.DrawTextLayout(Location, textLayout, textBrush, DrawTextOptions.None);
+        renderTarget.DrawTextLayout(Vector2.Zero, textLayout, textBrush, DrawTextOptions.None);
     }
 
     protected override void OnRenderSelection(Scene2D scene, RenderTarget renderTarget, SolidColorBrush selectionBrush, StrokeStyle selectionStyle)
     {
         var geometry = ResourceCache.GetOrUpdate<RectangleGeometry>(this, TextGeometryResource, scene);
-        
+
         renderTarget.DrawGeometry(geometry, selectionBrush, 1f / scene.Scale, selectionStyle);
     }
 }

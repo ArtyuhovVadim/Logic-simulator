@@ -27,6 +27,11 @@ public class LineYamlConverter : IYamlTypeConverter
 
         parser.TryConsume<MappingStart>(out _);
 
+        if (!parser.TryConsume<Scalar>(out var locationScalar) || locationScalar.Value != nameof(Line.Location))
+            throw new YamlException(locationScalar!.Start, locationScalar.End, $"Expected a scalar named '{nameof(Line.Location)}'");
+
+        line.Location = (Vector2)ValueDeserializer.DeserializeValue(parser, typeof(Vector2), new SerializerState(), ValueDeserializer)!;
+
         if (!parser.TryConsume<Scalar>(out var strokeThicknessScalar) || strokeThicknessScalar.Value != nameof(Line.StrokeThickness))
             throw new YamlException(strokeThicknessScalar!.Start, strokeThicknessScalar.End, $"Expected a scalar named '{nameof(Line.StrokeThickness)}'");
 

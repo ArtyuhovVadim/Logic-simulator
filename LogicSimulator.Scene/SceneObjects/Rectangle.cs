@@ -118,7 +118,7 @@ public class Rectangle : EditableSceneObject
         return IsFilled ? geometry.FillContainsPoint(pos, TransformMatrix * matrix, tolerance) :
                             geometry.StrokeContainsPoint(pos, StrokeThickness, null, TransformMatrix * matrix, tolerance);
     }
-
+    
     public override GeometryRelation CompareWithRectangle(RectangleGeometry rectGeometry, Matrix3x2 matrix, float tolerance = 0.25f)
     {
         var geometry = ResourceCache.GetCached<RectangleGeometry>(this, RectangleGeometryResource);

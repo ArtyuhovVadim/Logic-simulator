@@ -58,9 +58,9 @@
                     </Grid.RowDefinitions>
                     <controls:Vector2Box
                         Grid.Row="0"
-                        IsVectorXUndefined="{Binding Path=UndefinedPropertiesMap[Point0X]}"
-                        IsVectorYUndefined="{Binding Path=UndefinedPropertiesMap[Point0Y]}"
-                        Vector="{Binding Path=Point0}" />
+                        IsVectorXUndefined="{Binding Path=UndefinedPropertiesMap[LocationX]}"
+                        IsVectorYUndefined="{Binding Path=UndefinedPropertiesMap[LocationY]}"
+                        Vector="{Binding Path=Location}" />
                     <controls:Vector2Box
                         Grid.Row="1"
                         IsVectorXUndefined="{Binding Path=UndefinedPropertiesMap[Point1X]}"

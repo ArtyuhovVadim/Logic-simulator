@@ -6,9 +6,9 @@ namespace LogicSimulator.ViewModels.EditorViewModels;
 
 public class BezierCurveEditorViewModel : BaseEditorViewModel<BezierCurve>
 {
-    #region Point0
+    #region Location
 
-    public Vector2 Point0
+    public Vector2 Location
     {
         get => Get<Vector2>();
         set => Set(value);

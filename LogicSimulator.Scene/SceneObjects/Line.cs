@@ -9,7 +9,7 @@ namespace LogicSimulator.Scene.SceneObjects;
 public class Line : EditableSceneObject
 {
     private static readonly Resource PathGeometryResource = ResourceCache.Register((scene, obj) =>
-        scene.ResourceFactory.CreatePolylineGeometry(((Line)obj)._vertices));
+        scene.ResourceFactory.CreatePolylineGeometry(Vector2.Zero, ((Line)obj)._vertices));
 
     private static readonly Resource StrokeBrushResource = ResourceCache.Register((scene, obj) =>
         scene.ResourceFactory.CreateSolidColorBrush(((Line)obj).StrokeColor));
@@ -20,21 +20,34 @@ public class Line : EditableSceneObject
     private Color4 _strokeColor = Color4.Black;
     private float _strokeThickness = 1f;
 
-    private Vector2 _startDragPosition;
-    private Vector2[] _starDragPositions;
     private readonly List<Vector2> _vertices = new();
 
     public override AbstractNode[] Nodes
     {
         get
         {
-            var nodes = new AbstractNode[_vertices.Count];
+            var nodes = new AbstractNode[_vertices.Count + 1];
 
-            for (var i = 0; i < _vertices.Count; i++)
+            nodes[0] = new Node<Line>(o => o.LocalToWorldSpace(Vector2.Zero), (o, p) =>
             {
-                var index = i;
+                var localPos = o.WorldToLocalSpace(p);
+                o.Location = p;
 
-                nodes[i] = new Node<Line>(o => o._vertices[index], (o, p) => o.ModifyVertex(index, p));
+                for (var i = 0; i < o._vertices.Count; i++)
+                {
+                    _vertices[i] -= localPos;
+                }
+
+                ResourceCache.RequestUpdate(this, PathGeometryResource);
+                RequestRender();
+                OnPropertyChanged(nameof(Vertexes));
+            });
+
+            for (var i = 1; i < nodes.Length; i++)
+            {
+                var index = i - 1;
+
+                nodes[i] = new Node<Line>(o => o.LocalToWorldSpace(o._vertices[index]), (o, p) => o.ModifyVertex(index, o.WorldToLocalSpace(p)));
             }
 
             return nodes;
@@ -108,50 +121,13 @@ public class Line : EditableSceneObject
         return true;
     }
 
-    public override void StartDrag(Vector2 pos)
-    {
-        IsDragging = true;
-
-        _starDragPositions = new Vector2[_vertices.Count];
-
-        _startDragPosition = pos;
-        _vertices.CopyTo(_starDragPositions);
-    }
-
-    public override void Drag(Vector2 pos)
-    {
-        var isModified = false;
-
-        for (var i = 0; i < _starDragPositions.Length; i++)
-        {
-            var newValue = _starDragPositions[i] - _startDragPosition + pos;
-
-            if (newValue != _vertices[i])
-            {
-                _vertices[i] = newValue;
-                isModified = true;
-            }
-        }
-
-        if (!isModified) return;
-
-        ResourceCache.RequestUpdate(this, PathGeometryResource);
-        RequestRender();
-        OnPropertyChanged(nameof(Vertexes));
-    }
-
-    public override void EndDrag()
-    {
-        IsDragging = false;
-    }
-
     public override bool IsIntersectsPoint(Vector2 pos, Matrix3x2 matrix, float tolerance = 0.25f)
     {
         if (_vertices.Count == 0) return false;
 
         var geometry = ResourceCache.GetCached<PathGeometry>(this, PathGeometryResource);
 
-        return geometry.StrokeContainsPoint(pos, StrokeThickness, null, matrix, tolerance);
+        return geometry.StrokeContainsPoint(pos, StrokeThickness, null, TransformMatrix * matrix, tolerance);
     }
 
     public override GeometryRelation CompareWithRectangle(RectangleGeometry rectGeometry, Matrix3x2 matrix, float tolerance = 0.25f)
@@ -160,7 +136,7 @@ public class Line : EditableSceneObject
 
         var geometry = ResourceCache.GetCached<PathGeometry>(this, PathGeometryResource);
 
-        return geometry.Compare(rectGeometry, matrix, tolerance);
+        return geometry.Compare(rectGeometry, Matrix3x2.Invert(TransformMatrix) * matrix, tolerance);
     }
 
     protected override void OnRender(Scene2D scene, RenderTarget renderTarget)
