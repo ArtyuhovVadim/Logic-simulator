@@ -1,22 +1,14 @@
-﻿using System.Collections.ObjectModel;
+﻿using System.Collections.Generic;
+using System.Windows;
 using LogicSimulator.ViewModels.Base;
 
 namespace LogicSimulator.ViewModels.EditorViewModels.Layout;
 
 public class EditorRow : BindableBase
 {
-    private string _name = string.Empty;
-    private ObservableCollection<ObjectProperty> _objectProperties = new();
+    public string Name { get; set; } = string.Empty;
 
-    public string Name
-    {
-        get => _name;
-        set => Set(ref _name, value);
-    }
+    public List<ObjectProperty> ObjectProperties { get; set; } = new();
 
-    public ObservableCollection<ObjectProperty> ObjectProperties
-    {
-        get => _objectProperties;
-        set => Set(ref _objectProperties, value);
-    }
+    public List<GridLength> Layout { get; set; } = new();
 }

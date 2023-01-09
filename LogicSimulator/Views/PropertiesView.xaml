@@ -133,7 +133,8 @@
                                                 </ItemsControl.ItemTemplateSelector>
                                                 <ItemsControl.ItemsPanel>
                                                     <ItemsPanelTemplate>
-                                                        <UniformGrid Columns="{Binding Path=ObjectProperties, Converter={c:CollectionToElementsCountConverter}}" Rows="1" />
+                                                        <!--<UniformGrid Columns="{Binding Path=ObjectProperties, Converter={c:CollectionToElementsCountConverter}}" Rows="1" />-->
+                                                        <cont:GridEx ColumnsLayout="{Binding Path=Layout}" />
                                                     </ItemsPanelTemplate>
                                                 </ItemsControl.ItemsPanel>
                                             </ItemsControl>

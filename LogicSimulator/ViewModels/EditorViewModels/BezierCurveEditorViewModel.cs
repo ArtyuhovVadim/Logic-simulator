@@ -31,6 +31,9 @@ public class BezierCurveEditorViewModel : BaseEditorViewModel<BezierCurve>
             .WithRow(rowBuilder => rowBuilder
                 .WithRowName("Граница")
                 .WithProperty<float>(nameof(BezierCurve.StrokeThickness))
-                .WithProperty<Color4>(nameof(BezierCurve.StrokeColor))))
+                .WithProperty<Color4>(nameof(BezierCurve.StrokeColor))
+                .WithLayout(layoutBuilder => layoutBuilder
+                    .WithRelativeSize(1)
+                    .WithAutoSize())))
         .Build();
 }

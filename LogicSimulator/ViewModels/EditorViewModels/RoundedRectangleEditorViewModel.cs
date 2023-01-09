@@ -42,10 +42,16 @@ public class RoundedRectangleEditorViewModel : BaseEditorViewModel<RoundedRectan
             .WithRow(rowBuilder => rowBuilder
                 .WithRowName("Граница")
                 .WithProperty<float>(nameof(RoundedRectangle.StrokeThickness))
-                .WithProperty<Color4>(nameof(RoundedRectangle.StrokeColor)))
+                .WithProperty<Color4>(nameof(RoundedRectangle.StrokeColor))
+                .WithLayout(layoutBuilder => layoutBuilder
+                    .WithRelativeSize(1)
+                    .WithAutoSize()))
         .WithRow(rowBuilder => rowBuilder
                 .WithRowName("Цвет заливки")
                 .WithProperty<Color4>(nameof(RoundedRectangle.FillColor))
-                .WithProperty<bool>(nameof(RoundedRectangle.IsFilled))))
+                .WithProperty<bool>(nameof(RoundedRectangle.IsFilled))
+                .WithLayout(layoutBuilder => layoutBuilder
+                    .WithAutoSize()
+                    .WithAutoSize())))
         .Build();
 }

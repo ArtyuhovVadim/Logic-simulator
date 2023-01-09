@@ -34,10 +34,16 @@ public class EllipseEditorViewModel : BaseEditorViewModel<Ellipse>
             .WithRow(rowBuilder => rowBuilder
                 .WithRowName("Граница")
                 .WithProperty<float>(nameof(Ellipse.StrokeThickness))
-                .WithProperty<Color4>(nameof(Ellipse.StrokeColor)))
+                .WithProperty<Color4>(nameof(Ellipse.StrokeColor))
+                .WithLayout(layoutBuilder => layoutBuilder
+                    .WithRelativeSize(1)
+                    .WithAutoSize()))
             .WithRow(rowBuilder => rowBuilder
                 .WithRowName("Цвет заливки")
                 .WithProperty<Color4>(nameof(Ellipse.FillColor))
-                .WithProperty<bool>(nameof(Ellipse.IsFilled))))
+                .WithProperty<bool>(nameof(Ellipse.IsFilled))
+                .WithLayout(layoutBuilder => layoutBuilder
+                    .WithAutoSize()
+                    .WithAutoSize())))
         .Build();
 }

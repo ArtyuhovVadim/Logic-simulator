@@ -7,17 +7,20 @@
         <Setter Property="IsExpanded" Value="True" />
     </Style>
     <Style BasedOn="{StaticResource {x:Type controls:NumberBox}}" TargetType="{x:Type controls:NumberBox}">
-        <Setter Property="Margin" Value="5" />
+        <Setter Property="Margin" Value="4" />
         <Setter Property="VerticalAlignment" Value="Center" />
         <Setter Property="RoundNumber" Value="True" />
         <Setter Property="DecimalPlaces" Value="3" />
         <Setter Property="SelectAllTextOnFocus" Value="True" />
     </Style>
     <Style BasedOn="{StaticResource {x:Type controls:ColorPicker}}" TargetType="{x:Type controls:ColorPicker}">
-        <Setter Property="Margin" Value="5" />
+        <Setter Property="Margin" Value="4" />
         <Setter Property="VerticalAlignment" Value="Center" />
     </Style>
     <Style BasedOn="{StaticResource {x:Type controls:Vector2Box}}" TargetType="{x:Type controls:Vector2Box}">
-        <Setter Property="Margin" Value="5" />
+        <Setter Property="Margin" Value="4" />
+    </Style>
+    <Style BasedOn="{StaticResource {x:Type controls:CheckBoxEx}}" TargetType="{x:Type controls:CheckBoxEx}">
+        <Setter Property="Margin" Value="4" />
     </Style>
 </ResourceDictionary>

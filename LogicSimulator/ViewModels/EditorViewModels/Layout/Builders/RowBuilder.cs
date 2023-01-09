@@ -1,4 +1,6 @@
-﻿namespace LogicSimulator.ViewModels.EditorViewModels.Layout.Builders;
+﻿using System;
+
+namespace LogicSimulator.ViewModels.EditorViewModels.Layout.Builders;
 
 public class RowBuilder
 {
@@ -15,6 +17,14 @@ public class RowBuilder
     public RowBuilder WithProperty<T>(string name)
     {
         _row.ObjectProperties.Add(new ObjectProperty(name, typeof(T)));
+        return this;
+    }
+
+    public RowBuilder WithLayout(Action<RowLayoutBuilder> configureAction)
+    {
+        var builder = new RowLayoutBuilder();
+        configureAction(builder);
+        _row.Layout = builder.Build();
         return this;
     }
 

@@ -30,7 +30,10 @@ public class LineEditorViewModel : BaseEditorViewModel<Line>
             .WithRow(rowBuilder => rowBuilder
                 .WithRowName("Граница")
                 .WithProperty<float>(nameof(Line.StrokeThickness))
-                .WithProperty<Color4>(nameof(Line.StrokeColor))))
+                .WithProperty<Color4>(nameof(Line.StrokeColor))
+                .WithLayout(layoutBuilder => layoutBuilder
+                    .WithRelativeSize(1)
+                    .WithAutoSize())))
         .Build();
     public LineEditorViewModel()
     {
