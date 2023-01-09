@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Collections.ObjectModel;
+﻿using System.Collections.ObjectModel;
 using LogicSimulator.ViewModels.Base;
 
 namespace LogicSimulator.ViewModels.EditorViewModels.Layout;

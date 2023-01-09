@@ -6,6 +6,7 @@ using LogicSimulator.Infrastructure.Commands;
 using LogicSimulator.Scene.SceneObjects;
 using LogicSimulator.ViewModels.EditorViewModels.Base;
 using LogicSimulator.ViewModels.EditorViewModels.Layout;
+using LogicSimulator.ViewModels.EditorViewModels.Layout.Builders;
 using SharpDX;
 
 namespace LogicSimulator.ViewModels.EditorViewModels;

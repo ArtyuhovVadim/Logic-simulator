@@ -1,82 +1,10 @@
-﻿using System;
-using LogicSimulator.ViewModels.EditorViewModels.Base;
+﻿using LogicSimulator.ViewModels.EditorViewModels.Base;
 using LogicSimulator.ViewModels.EditorViewModels.Layout;
+using LogicSimulator.ViewModels.EditorViewModels.Layout.Builders;
 using SharpDX;
 using Rectangle = LogicSimulator.Scene.SceneObjects.Rectangle;
 
 namespace LogicSimulator.ViewModels.EditorViewModels;
-
-public class RowBuilder
-{
-    private readonly EditorRow _row;
-
-    public RowBuilder() => _row = new EditorRow();
-
-    public RowBuilder WithRowName(string name)
-    {
-        _row.Name = name;
-        return this;
-    }
-
-    public RowBuilder WithProperty<T>(string name)
-    {
-        _row.ObjectProperties.Add(new ObjectProperty(name, typeof(T)));
-        return this;
-    }
-
-    public EditorRow Build() => _row;
-}
-
-public class GroupBuilder
-{
-    private readonly EditorGroup _group;
-
-    public GroupBuilder() => _group = new EditorGroup();
-
-    public GroupBuilder WithGroupName(string name)
-    {
-        _group.Name = name;
-        return this;
-    }
-
-    public GroupBuilder WithRow(Action<RowBuilder> configureAction)
-    {
-        var rowBuilder = new RowBuilder();
-        configureAction(rowBuilder);
-        _group.EditorRows.Add(rowBuilder.Build());
-        return this;
-    }
-
-    public EditorGroup Build() => _group;
-}
-
-public class LayoutBuilder
-{
-    private readonly EditorLayout _layout;
-
-    private LayoutBuilder() => _layout = new EditorLayout
-    {
-        ObjectName = string.Empty,
-    };
-
-    public static LayoutBuilder Create() => new();
-
-    public LayoutBuilder WithName(string name)
-    {
-        _layout.ObjectName = name;
-        return this;
-    }
-
-    public LayoutBuilder WithGroup(Action<GroupBuilder> configureAction)
-    {
-        var groupBuilder = new GroupBuilder();
-        configureAction.Invoke(groupBuilder);
-        _layout.Groups.Add(groupBuilder.Build());
-        return this;
-    }
-
-    public EditorLayout Build() => _layout;
-}
 
 public class RectangleEditorViewModel : BaseEditorViewModel<Rectangle>
 {
