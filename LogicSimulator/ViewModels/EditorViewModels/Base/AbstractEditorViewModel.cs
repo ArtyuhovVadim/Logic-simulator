@@ -19,7 +19,4 @@ public abstract class AbstractEditorViewModel : BindableBase
     protected void OnPropertyChanged(object sender, PropertyChangedEventArgs e) => OnPropertyChanged(e.PropertyName);
 
     protected abstract EditorLayout CreateLayout();
-
-    protected ObjectProperty CreateObjectPropertyViewModel<T>(string name) =>
-        new(name, typeof(T));
 }

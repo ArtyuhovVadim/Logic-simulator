@@ -69,12 +69,13 @@ public class PropertyEditorBehavior : Behavior<FrameworkElement>
         var prop = ObjectProperty;
 
         var propertyBinding = new Binding(prop.ObjectPropertyName) { Source = EditorViewModel };
+        //BindingOperations.ClearAllBindings(AssociatedObject);
         AssociatedObject.SetBinding(EditorDependencyProperty, propertyBinding);
 
-        foreach (var undefinedProperty in UndefinedProperties)
-        {
-            var undefinedMapBinding = new Binding($"UndefinedPropertiesMap[{prop.ObjectPropertyName}{undefinedProperty.Suffix}]") { Source = EditorViewModel };
-            AssociatedObject.SetBinding(undefinedProperty.DependencyProperty, undefinedMapBinding);
-        }
+        //foreach (var undefinedProperty in UndefinedProperties)
+        //{
+        //    var undefinedMapBinding = new Binding($"UndefinedPropertiesMap[{prop.ObjectPropertyName}{undefinedProperty.Suffix}]") { Source = EditorViewModel };
+        //    AssociatedObject.SetBinding(undefinedProperty.DependencyProperty, undefinedMapBinding);
+        //}
     }
 }

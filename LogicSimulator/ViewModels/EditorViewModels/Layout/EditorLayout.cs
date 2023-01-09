@@ -4,13 +4,7 @@ namespace LogicSimulator.ViewModels.EditorViewModels.Layout;
 
 public class EditorLayout
 {
-    public string ObjectName { get; }
+    public string ObjectName { get; set; }
 
-    public IEnumerable<EditorGroup> Groups { get; }
-
-    public EditorLayout(string objectName, IEnumerable<EditorGroup> groups)
-    {
-        ObjectName = objectName;
-        Groups = groups;
-    }
+    public List<EditorGroup> Groups { get; set; } = new();
 }

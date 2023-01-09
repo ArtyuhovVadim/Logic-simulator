@@ -5,7 +5,7 @@ using SharpDX;
 
 namespace LogicSimulator.ViewModels.EditorViewModels;
 
-public class RoundedRectangleEditorViewModel : BaseEditorViewModel<RoundedRectangle> 
+public class RoundedRectangleEditorViewModel : BaseEditorViewModel<RoundedRectangle>
 {
     public Vector2 Location { get => Get<Vector2>(); set => Set(value); }
     public float Width { get => Get<float>(); set => Set(value); }
@@ -17,28 +17,34 @@ public class RoundedRectangleEditorViewModel : BaseEditorViewModel<RoundedRectan
     public bool IsFilled { get => Get<bool>(); set => Set(value); }
     public Color4 FillColor { get => Get<Color4>(); set => Set(value); }
 
-    protected override EditorLayout CreateLayout() => new("Закругленный прямоугольник", new[]
-    {
-        new EditorGroup("Расположение", new []
-        {
-            new EditorRow(CreateObjectPropertyViewModel<Vector2>(nameof(RoundedRectangle.Location))),
-        }),
-        new EditorGroup("Свойства", new []
-        {
-            new EditorRow("Ширина", CreateObjectPropertyViewModel<float>(nameof(RoundedRectangle.Width))),
-            new EditorRow("Высота", CreateObjectPropertyViewModel<float>(nameof(RoundedRectangle.Height))),
-            new EditorRow("Радиус X", CreateObjectPropertyViewModel<float>(nameof(RoundedRectangle.RadiusX))),
-            new EditorRow("Радиус Y", CreateObjectPropertyViewModel<float>(nameof(RoundedRectangle.RadiusY))),
-            new EditorRow("Граница", new[]
-            {
-                CreateObjectPropertyViewModel<float>(nameof(RoundedRectangle.StrokeThickness)),
-                CreateObjectPropertyViewModel<Color4>(nameof(RoundedRectangle.StrokeColor))
-            }),
-            new EditorRow("Цвет заливки", new[]
-            {
-                CreateObjectPropertyViewModel<Color4>(nameof(RoundedRectangle.FillColor)),
-                CreateObjectPropertyViewModel<bool>(nameof(RoundedRectangle.IsFilled))
-            })
-        })
-    });
+    protected override EditorLayout CreateLayout() => LayoutBuilder
+        .Create()
+        .WithName("Закругленный прямоугольник")
+        .WithGroup(groupBuilder => groupBuilder
+            .WithGroupName("Расположение")
+            .WithRow(rowBuilder => rowBuilder
+                .WithProperty<Vector2>(nameof(RoundedRectangle.Location))))
+        .WithGroup(groupBuilder => groupBuilder
+            .WithGroupName("Свойства")
+            .WithRow(rowBuilder => rowBuilder
+                .WithRowName("Ширина")
+                .WithProperty<float>(nameof(RoundedRectangle.Width)))
+            .WithRow(rowBuilder => rowBuilder
+                .WithRowName("Высота")
+                .WithProperty<float>(nameof(RoundedRectangle.Height)))
+            .WithRow(rowBuilder => rowBuilder
+                .WithRowName("Радиус X")
+                .WithProperty<float>(nameof(RoundedRectangle.RadiusX)))
+            .WithRow(rowBuilder => rowBuilder
+                .WithRowName("Радиус Y")
+                .WithProperty<float>(nameof(RoundedRectangle.RadiusY)))
+            .WithRow(rowBuilder => rowBuilder
+                .WithRowName("Граница")
+                .WithProperty<float>(nameof(RoundedRectangle.StrokeThickness))
+                .WithProperty<Color4>(nameof(RoundedRectangle.StrokeColor)))
+        .WithRow(rowBuilder => rowBuilder
+                .WithRowName("Цвет заливки")
+                .WithProperty<Color4>(nameof(RoundedRectangle.FillColor))
+                .WithProperty<bool>(nameof(RoundedRectangle.IsFilled))))
+        .Build();
 }

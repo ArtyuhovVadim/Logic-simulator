@@ -13,22 +13,24 @@ namespace LogicSimulator.ViewModels.EditorViewModels;
 //TODO: !!!
 public class LineEditorViewModel : BaseEditorViewModel<Line>
 {
-    protected override EditorLayout CreateLayout() => new("Ломаная линия", new[]
-    {
-        new EditorGroup("Расположение", new []
-        {
-            new EditorRow(CreateObjectPropertyViewModel<Vector2>(nameof(Line.Location))),
-        }),
-        new EditorGroup("Свойства", new []
-        {
-            new EditorRow("Граница", new[]
-            {
-                CreateObjectPropertyViewModel<float>(nameof(Line.StrokeThickness)),
-                CreateObjectPropertyViewModel<Color4>(nameof(Line.StrokeColor))
-            })
-        })
-    });
+    public Vector2 Location { get => Get<Vector2>(); set => Set(value); }
+    public float StrokeThickness { get => Get<float>(); set => Set(value); }
+    public Color4 StrokeColor { get => Get<Color4>(); set => Set(value); }
 
+    protected override EditorLayout CreateLayout() => LayoutBuilder
+        .Create()
+        .WithName("Ломаная линия")
+        .WithGroup(groupBuilder => groupBuilder
+            .WithGroupName("Расположение")
+            .WithRow(rowBuilder => rowBuilder
+                .WithProperty<Vector2>(nameof(Line.Location))))
+        .WithGroup(groupBuilder => groupBuilder
+            .WithGroupName("Свойства")
+            .WithRow(rowBuilder => rowBuilder
+                .WithRowName("Граница")
+                .WithProperty<float>(nameof(Line.StrokeThickness))
+                .WithProperty<Color4>(nameof(Line.StrokeColor))))
+        .Build();
     public LineEditorViewModel()
     {
         PropertyChanged += (_, args) =>

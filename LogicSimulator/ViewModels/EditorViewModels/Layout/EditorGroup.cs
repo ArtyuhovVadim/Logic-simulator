@@ -1,16 +1,11 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 
 namespace LogicSimulator.ViewModels.EditorViewModels.Layout;
 
 public class EditorGroup
 {
-    public string Name { get; }
+    public string Name { get; set; }
 
-    public IEnumerable<EditorRow> EditorRows { get; }
-
-    public EditorGroup(string name, IEnumerable<EditorRow> editorRows)
-    {
-        Name = name;
-        EditorRows = editorRows;
-    }
+    public List<EditorRow> EditorRows { get; set; } = new();
 }

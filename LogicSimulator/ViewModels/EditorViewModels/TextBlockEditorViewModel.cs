@@ -8,13 +8,14 @@ namespace LogicSimulator.ViewModels.EditorViewModels;
 //TODO: !!!
 public class TextBlockEditorViewModel : BaseEditorViewModel<TextBlock>
 {
-    protected override EditorLayout CreateLayout() => new("Текст", new[]
-    {
-        new EditorGroup("Расположение", new []
-        {
-            new EditorRow(CreateObjectPropertyViewModel<Vector2>(nameof(TextBlock.Location))),
-        })
-    });
+    protected override EditorLayout CreateLayout() => LayoutBuilder
+        .Create()
+        .WithName("Текст")
+            .WithGroup(groupBuilder => groupBuilder
+            .WithGroupName("Расположение")
+                .WithRow(rowBuilder => rowBuilder
+                .WithProperty<Vector2>(nameof(Line.Location))))
+        .Build();
 
     #region Location
 
