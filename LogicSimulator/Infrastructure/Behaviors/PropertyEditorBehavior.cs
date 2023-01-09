@@ -1,28 +1,21 @@
-﻿using System.Windows;
+﻿using System.Collections.ObjectModel;
+using System.Windows;
 using System.Windows.Data;
-using LogicSimulator.Controls;
 using Microsoft.Xaml.Behaviors;
 using LogicSimulator.ViewModels.EditorViewModels.Base;
 using LogicSimulator.ViewModels.EditorViewModels.Layout;
-using SharpDX;
 
 namespace LogicSimulator.Infrastructure.Behaviors;
 
+public class UndefinedProperty
+{
+    public DependencyProperty DependencyProperty { get; set; }
+
+    public string Suffix { get; set; } = string.Empty;
+}
+
 public class PropertyEditorBehavior : Behavior<FrameworkElement>
 {
-    #region IsUndefinedValueDependencyProperty
-
-    public DependencyProperty IsUndefinedValueDependencyProperties
-    {
-        get => (DependencyProperty) GetValue(IsUndefinedValueDependencyPropertiesProperty);
-        set => SetValue(IsUndefinedValueDependencyPropertiesProperty, value);
-    }
-
-    public static readonly DependencyProperty IsUndefinedValueDependencyPropertiesProperty =
-        DependencyProperty.Register(nameof(IsUndefinedValueDependencyProperties), typeof(DependencyProperty), typeof(PropertyEditorBehavior), new PropertyMetadata(null));
-
-    #endregion
-
     #region EditorDependencyProperty
 
     public DependencyProperty EditorDependencyProperty
@@ -63,26 +56,25 @@ public class PropertyEditorBehavior : Behavior<FrameworkElement>
     private static void OnEditorViewModelChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
     {
         if (d is not PropertyEditorBehavior behavior) return;
-        
-        var prop = behavior.ObjectProperty;
-        var vm = e.NewValue as AbstractEditorViewModel;
-        
-        var propertyBinding = new Binding(prop.ObjectPropertyName) { Source = vm };
-        behavior.AssociatedObject.SetBinding(behavior.EditorDependencyProperty, propertyBinding);
 
-        if (prop.ObjectPropertyType == typeof(Vector2))
-        {
-            var undefinedMapBinding1 = new Binding($"UndefinedPropertiesMap[{prop.ObjectPropertyName + "X"}]") { Source = vm };
-            behavior.AssociatedObject.SetBinding(Vector2Box.IsVectorXUndefinedProperty, undefinedMapBinding1);
-            var undefinedMapBinding2 = new Binding($"UndefinedPropertiesMap[{prop.ObjectPropertyName + "Y"}]") { Source = vm };
-            behavior.AssociatedObject.SetBinding(Vector2Box.IsVectorYUndefinedProperty, undefinedMapBinding2);
-        }
-        else
-        {
-            var undefinedMapBinding = new Binding($"UndefinedPropertiesMap[{prop.ObjectPropertyName}]") { Source = vm };
-            behavior.AssociatedObject.SetBinding(behavior.IsUndefinedValueDependencyProperties, undefinedMapBinding);
-        }
+        behavior.SetBindings();
     }
 
     #endregion
+
+    public Collection<UndefinedProperty> UndefinedProperties { get; set; } = new();
+
+    private void SetBindings()
+    {
+        var prop = ObjectProperty;
+
+        var propertyBinding = new Binding(prop.ObjectPropertyName) { Source = EditorViewModel };
+        AssociatedObject.SetBinding(EditorDependencyProperty, propertyBinding);
+
+        foreach (var undefinedProperty in UndefinedProperties)
+        {
+            var undefinedMapBinding = new Binding($"UndefinedPropertiesMap[{prop.ObjectPropertyName}{undefinedProperty.Suffix}]") { Source = EditorViewModel };
+            AssociatedObject.SetBinding(undefinedProperty.DependencyProperty, undefinedMapBinding);
+        }
+    }
 }

@@ -72,8 +72,11 @@
                                                                     EditorDependencyProperty="{x:Static cont:NumberBox.NumberProperty}"
                                                                     EditorViewModel="{Binding Path=DataContext,
                                                                                               RelativeSource={RelativeSource AncestorType={x:Type ScrollViewer}}}"
-                                                                    IsUndefinedValueDependencyProperties="{x:Static cont:NumberBox.IsValueUndefinedProperty}"
-                                                                    ObjectProperty="{Binding}" />
+                                                                    ObjectProperty="{Binding}">
+                                                                    <b:PropertyEditorBehavior.UndefinedProperties>
+                                                                        <b:UndefinedProperty DependencyProperty="{x:Static cont:NumberBox.IsValueUndefinedProperty}" />
+                                                                    </b:PropertyEditorBehavior.UndefinedProperties>
+                                                                </b:PropertyEditorBehavior>
                                                             </i:Interaction.Behaviors>
                                                         </cont:NumberBox>
                                                     </DataTemplate>
@@ -84,7 +87,12 @@
                                                                     EditorDependencyProperty="{x:Static cont:Vector2Box.VectorProperty}"
                                                                     EditorViewModel="{Binding Path=DataContext,
                                                                                               RelativeSource={RelativeSource AncestorType={x:Type ScrollViewer}}}"
-                                                                    ObjectProperty="{Binding}" />
+                                                                    ObjectProperty="{Binding}">
+                                                                    <b:PropertyEditorBehavior.UndefinedProperties>
+                                                                        <b:UndefinedProperty DependencyProperty="{x:Static cont:Vector2Box.IsVectorXUndefinedProperty}" Suffix="X" />
+                                                                        <b:UndefinedProperty DependencyProperty="{x:Static cont:Vector2Box.IsVectorYUndefinedProperty}" Suffix="Y" />
+                                                                    </b:PropertyEditorBehavior.UndefinedProperties>
+                                                                </b:PropertyEditorBehavior>
                                                             </i:Interaction.Behaviors>
                                                         </cont:Vector2Box>
                                                     </DataTemplate>
@@ -95,8 +103,11 @@
                                                                     EditorDependencyProperty="{x:Static cont:ColorPicker.ColorProperty}"
                                                                     EditorViewModel="{Binding Path=DataContext,
                                                                                               RelativeSource={RelativeSource AncestorType={x:Type ScrollViewer}}}"
-                                                                    IsUndefinedValueDependencyProperties="{x:Static cont:ColorPicker.IsValueUndefinedProperty}"
-                                                                    ObjectProperty="{Binding}" />
+                                                                    ObjectProperty="{Binding}">
+                                                                    <b:PropertyEditorBehavior.UndefinedProperties>
+                                                                        <b:UndefinedProperty DependencyProperty="{x:Static cont:ColorPicker.IsValueUndefinedProperty}" />
+                                                                    </b:PropertyEditorBehavior.UndefinedProperties>
+                                                                </b:PropertyEditorBehavior>
                                                             </i:Interaction.Behaviors>
                                                         </cont:ColorPicker>
                                                     </DataTemplate>
@@ -107,8 +118,11 @@
                                                                     EditorDependencyProperty="{x:Static cont:CheckBoxEx.IsCheckedProperty}"
                                                                     EditorViewModel="{Binding Path=DataContext,
                                                                                               RelativeSource={RelativeSource AncestorType={x:Type ScrollViewer}}}"
-                                                                    IsUndefinedValueDependencyProperties="{x:Static cont:CheckBoxEx.IsValueUndefinedProperty}"
-                                                                    ObjectProperty="{Binding}" />
+                                                                    ObjectProperty="{Binding}">
+                                                                    <b:PropertyEditorBehavior.UndefinedProperties>
+                                                                        <b:UndefinedProperty DependencyProperty="{x:Static cont:CheckBoxEx.IsValueUndefinedProperty}" />
+                                                                    </b:PropertyEditorBehavior.UndefinedProperties>
+                                                                </b:PropertyEditorBehavior>
                                                             </i:Interaction.Behaviors>
                                                         </cont:CheckBoxEx>
                                                     </DataTemplate>
