@@ -81,6 +81,7 @@ public abstract class BaseEditorViewModel<T> : AbstractEditorViewModel where T :
         }
 
         OnPropertyChanged(nameof(UndefinedPropertiesMap));
+        OnPropertyChanged(nameof(Layout));
     }
 
     protected TProp Get<TProp>([CallerMemberName] string propertyName = null)

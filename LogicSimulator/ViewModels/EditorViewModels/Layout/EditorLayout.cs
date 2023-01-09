@@ -1,10 +1,23 @@
 ﻿using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using LogicSimulator.ViewModels.Base;
 
 namespace LogicSimulator.ViewModels.EditorViewModels.Layout;
 
-public class EditorLayout
+public class EditorLayout : BindableBase
 {
-    public string ObjectName { get; set; }
+    private string _objectName;
+    private ObservableCollection<EditorGroup> _groups = new();
 
-    public List<EditorGroup> Groups { get; set; } = new();
+    public string ObjectName
+    {
+        get => _objectName;
+        set => Set(ref _objectName, value);
+    }
+
+    public ObservableCollection<EditorGroup> Groups
+    {
+        get => _groups;
+        set => Set(ref _groups, value);
+    }
 }

@@ -1,12 +1,24 @@
 ﻿using System;
+using LogicSimulator.ViewModels.Base;
 
 namespace LogicSimulator.ViewModels.EditorViewModels.Layout;
 
-public class ObjectProperty
+public class ObjectProperty : BindableBase
 {
-    public string ObjectPropertyName { get; }
+    private Type _objectPropertyType;
+    private string _objectPropertyName;
 
-    public Type ObjectPropertyType { get; }
+    public string ObjectPropertyName
+    {
+        get => _objectPropertyName;
+        set => Set(ref _objectPropertyName, value);
+    }
+
+    public Type ObjectPropertyType
+    {
+        get => _objectPropertyType;
+        set => Set(ref _objectPropertyType, value);
+    }
 
     public ObjectProperty(string objectPropertyObjectPropertyName, Type objectPropertyType)
     {

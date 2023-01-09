@@ -3,7 +3,6 @@ using System.Windows;
 using System.Windows.Data;
 using Microsoft.Xaml.Behaviors;
 using LogicSimulator.ViewModels.EditorViewModels.Base;
-using LogicSimulator.ViewModels.EditorViewModels.Layout;
 
 namespace LogicSimulator.Infrastructure.Behaviors;
 
@@ -29,16 +28,16 @@ public class PropertyEditorBehavior : Behavior<FrameworkElement>
 
     #endregion
 
-    #region ObjectProperty
+    #region ObjectPropertyName
 
-    public ObjectProperty ObjectProperty
+    public string ObjectPropertyName
     {
-        get => (ObjectProperty)GetValue(ObjectPropertyProperty);
-        set => SetValue(ObjectPropertyProperty, value);
+        get => (string)GetValue(ObjectPropertyNameProperty);
+        set => SetValue(ObjectPropertyNameProperty, value);
     }
 
-    public static readonly DependencyProperty ObjectPropertyProperty =
-        DependencyProperty.Register(nameof(ObjectProperty), typeof(ObjectProperty), typeof(PropertyEditorBehavior), new PropertyMetadata(default(ObjectProperty)));
+    public static readonly DependencyProperty ObjectPropertyNameProperty =
+        DependencyProperty.Register(nameof(ObjectPropertyName), typeof(string), typeof(PropertyEditorBehavior), new PropertyMetadata(default(string)));
 
     #endregion
 
@@ -57,7 +56,10 @@ public class PropertyEditorBehavior : Behavior<FrameworkElement>
     {
         if (d is not PropertyEditorBehavior behavior) return;
 
-        behavior.SetBindings();
+        if (e.NewValue != e.OldValue)
+        {
+            behavior.SetBindings();
+        }
     }
 
     #endregion
@@ -66,16 +68,17 @@ public class PropertyEditorBehavior : Behavior<FrameworkElement>
 
     private void SetBindings()
     {
-        var prop = ObjectProperty;
+        if (ObjectPropertyName is null) return;
 
-        var propertyBinding = new Binding(prop.ObjectPropertyName) { Source = EditorViewModel };
-        //BindingOperations.ClearAllBindings(AssociatedObject);
+        var propertyBinding = new Binding(ObjectPropertyName) { Source = EditorViewModel };
         AssociatedObject.SetBinding(EditorDependencyProperty, propertyBinding);
 
-        //foreach (var undefinedProperty in UndefinedProperties)
-        //{
-        //    var undefinedMapBinding = new Binding($"UndefinedPropertiesMap[{prop.ObjectPropertyName}{undefinedProperty.Suffix}]") { Source = EditorViewModel };
-        //    AssociatedObject.SetBinding(undefinedProperty.DependencyProperty, undefinedMapBinding);
-        //}
+        foreach (var undefinedProperty in UndefinedProperties)
+        {
+            var undefinedMapBinding = new Binding($"UndefinedPropertiesMap[{ObjectPropertyName}{undefinedProperty.Suffix}]") { Source = EditorViewModel };
+            AssociatedObject.SetBinding(undefinedProperty.DependencyProperty, undefinedMapBinding);
+        }
+
+        ObjectPropertyName = null;
     }
 }
