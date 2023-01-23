@@ -11,15 +11,19 @@ public class BezierCurveEditorViewModel : EditorViewModel
         .Create(this)
         .WithName("Кривая Безье")
         .WithGroup(groupBuilder => groupBuilder
+            .WithGroupName("Расположение")
             .WithRow(rowBuilder => rowBuilder
                 .WithProperty<Vector2PropertyViewModel>(nameof(BezierCurve.Location))))
         .WithGroup(groupBuilder => groupBuilder
-            .WithGroupName("Вершины (TODO: Название)")
+            .WithGroupName("Вершины")
             .WithRow(rowBuilder => rowBuilder
-                .WithProperty<Vector2PropertyViewModel>(nameof(BezierCurve.Point1))
-                .WithProperty<Vector2PropertyViewModel>(nameof(BezierCurve.Point2))
+                .WithProperty<Vector2PropertyViewModel>(nameof(BezierCurve.Point1)))
+            .WithRow(rowBuilder => rowBuilder
+                .WithProperty<Vector2PropertyViewModel>(nameof(BezierCurve.Point2)))
+            .WithRow(rowBuilder => rowBuilder
                 .WithProperty<Vector2PropertyViewModel>(nameof(BezierCurve.Point3))))
         .WithGroup(groupBuilder => groupBuilder
+            .WithGroupName("Свойства")
             .WithRow(rowBuilder => rowBuilder
                 .WithRowName("Граница")
                 .WithProperty<FloatPropertyViewModel>(nameof(BezierCurve.StrokeThickness))
