@@ -394,6 +394,8 @@ public class ColorPicker : Control
 
     private void UpdateRgbTextBoxes()
     {
+        if (_redTextBoxEx is null || _greenTextBoxEx is null || _blueTextBoxEx is null) return;
+
         _redTextBoxEx.Text = TempColor.R.ToString();
         _greenTextBoxEx.Text = TempColor.G.ToString();
         _blueTextBoxEx.Text = TempColor.B.ToString();
