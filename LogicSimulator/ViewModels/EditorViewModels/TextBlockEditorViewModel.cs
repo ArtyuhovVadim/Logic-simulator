@@ -2,23 +2,22 @@
 using LogicSimulator.ViewModels.EditorViewModels.Base;
 using LogicSimulator.ViewModels.EditorViewModels.Layout;
 using LogicSimulator.ViewModels.EditorViewModels.Layout.Builders;
-using SharpDX;
 
 namespace LogicSimulator.ViewModels.EditorViewModels;
 
 //TODO: !!!
-public class TextBlockEditorViewModel : BaseEditorViewModel<TextBlock>
+public class TextBlockEditorViewModel : EditorViewModel
 {
     protected override EditorLayout CreateLayout() => LayoutBuilder
-        .Create()
+        .Create(this)
         .WithName("Текст")
             .WithGroup(groupBuilder => groupBuilder
             .WithGroupName("Расположение")
                 .WithRow(rowBuilder => rowBuilder
-                .WithProperty<Vector2>(nameof(Line.Location))))
+                .WithProperty<Vector2PropertyViewModel>(nameof(Line.Location))))
         .Build();
 
-    #region Location
+    /*#region Location
 
     public Vector2 Location
     {
@@ -106,5 +105,5 @@ public class TextBlockEditorViewModel : BaseEditorViewModel<TextBlock>
         set => Set(value);
     }
 
-    #endregion
+    #endregion*/
 }

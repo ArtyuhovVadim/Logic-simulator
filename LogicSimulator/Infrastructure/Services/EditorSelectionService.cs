@@ -15,14 +15,14 @@ public class EditorSelectionService : IEditorSelectionService
 {
     private readonly PropertiesViewModel _propertiesViewModel;
 
-    private readonly Dictionary<Type, AbstractEditorViewModel> _editorsMap = new()
+    private readonly Dictionary<Type, EditorViewModel> _editorsMap = new()
     {
-        { typeof(Rectangle), new RectangleEditorViewModel() },
-        { typeof(RoundedRectangle), new RoundedRectangleEditorViewModel() },
-        { typeof(Ellipse), new EllipseEditorViewModel() },
-        { typeof(Line), new LineEditorViewModel() },
-        { typeof(BezierCurve), new BezierCurveEditorViewModel() },
-        { typeof(TextBlock), new TextBlockEditorViewModel() },
+         { typeof(Rectangle), new RectangleEditorViewModel() },
+         { typeof(RoundedRectangle), new RoundedRectangleEditorViewModel() },
+         { typeof(Ellipse), new EllipseEditorViewModel() },
+         { typeof(Line), new LineEditorViewModel() },
+         { typeof(BezierCurve), new BezierCurveEditorViewModel() },
+         { typeof(TextBlock), new TextBlockEditorViewModel() },
     };
 
     public EditorSelectionService(PropertiesViewModel propertiesViewModel)

@@ -4,8 +4,6 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:c="clr-namespace:LogicSimulator.Controls;assembly=LogicSimulator.Controls"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-    xmlns:fa5="http://schemas.fontawesome.com/icons/"
-    xmlns:local="clr-namespace:LogicSimulator.Views.Windows.UserDialogWindows"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:r="clr-namespace:LogicSimulator.Controls.Themes;assembly=LogicSimulator.Controls"
     xmlns:fa="http://schemas.fontawesome.io/icons/"

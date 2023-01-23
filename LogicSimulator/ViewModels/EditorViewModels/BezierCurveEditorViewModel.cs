@@ -2,36 +2,28 @@
 using LogicSimulator.ViewModels.EditorViewModels.Base;
 using LogicSimulator.ViewModels.EditorViewModels.Layout;
 using LogicSimulator.ViewModels.EditorViewModels.Layout.Builders;
-using SharpDX;
 
 namespace LogicSimulator.ViewModels.EditorViewModels;
 
-public class BezierCurveEditorViewModel : BaseEditorViewModel<BezierCurve>
+public class BezierCurveEditorViewModel : EditorViewModel
 {
-    public Vector2 Location { get => Get<Vector2>(); set => Set(value); }
-    public Vector2 Point1 { get => Get<Vector2>(); set => Set(value); }
-    public Vector2 Point2 { get => Get<Vector2>(); set => Set(value); }
-    public Vector2 Point3 { get => Get<Vector2>(); set => Set(value); }
-    public float StrokeThickness { get => Get<float>(); set => Set(value); }
-    public Color4 StrokeColor { get => Get<Color4>(); set => Set(value); }
-
     protected override EditorLayout CreateLayout() => LayoutBuilder
-        .Create()
+        .Create(this)
         .WithName("Кривая Безье")
         .WithGroup(groupBuilder => groupBuilder
             .WithRow(rowBuilder => rowBuilder
-                .WithProperty<Vector2>(nameof(BezierCurve.Location))))
+                .WithProperty<Vector2PropertyViewModel>(nameof(BezierCurve.Location))))
         .WithGroup(groupBuilder => groupBuilder
             .WithGroupName("Вершины (TODO: Название)")
             .WithRow(rowBuilder => rowBuilder
-                .WithProperty<Vector2>(nameof(BezierCurve.Point1))
-                .WithProperty<Vector2>(nameof(BezierCurve.Point2))
-                .WithProperty<Vector2>(nameof(BezierCurve.Point3))))
+                .WithProperty<Vector2PropertyViewModel>(nameof(BezierCurve.Point1))
+                .WithProperty<Vector2PropertyViewModel>(nameof(BezierCurve.Point2))
+                .WithProperty<Vector2PropertyViewModel>(nameof(BezierCurve.Point3))))
         .WithGroup(groupBuilder => groupBuilder
             .WithRow(rowBuilder => rowBuilder
                 .WithRowName("Граница")
-                .WithProperty<float>(nameof(BezierCurve.StrokeThickness))
-                .WithProperty<Color4>(nameof(BezierCurve.StrokeColor))
+                .WithProperty<FloatPropertyViewModel>(nameof(BezierCurve.StrokeThickness))
+                .WithProperty<Color4PropertyViewModel>(nameof(BezierCurve.StrokeColor))
                 .WithLayout(layoutBuilder => layoutBuilder
                     .WithRelativeSize(1)
                     .WithAutoSize())))

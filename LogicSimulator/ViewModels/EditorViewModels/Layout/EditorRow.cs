@@ -1,6 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using LogicSimulator.ViewModels.EditorViewModels.Base;
+using System.Collections.Generic;
 using System.Windows;
-using LogicSimulator.ViewModels.Base;
 
 namespace LogicSimulator.ViewModels.EditorViewModels.Layout;
 
@@ -11,6 +11,8 @@ public class EditorRow
     public List<PropertyViewModel> ObjectProperties { get; set; } = new();
 
     public List<GridLength> Layout { get; set; } = new();
+
+    public EditorViewModel EditorViewModel { get; set; }
 
     public void PropertyChange(string propName)
     {

@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using LogicSimulator.ViewModels.EditorViewModels.Base;
+using System.Collections.Generic;
 
 namespace LogicSimulator.ViewModels.EditorViewModels.Layout;
 
@@ -7,6 +8,8 @@ public class EditorGroup
     public string Name { get; set; }
 
     public List<EditorRow> EditorRows { get; set; } = new();
+
+    public EditorViewModel EditorViewModel { get; set; }
 
     public void PropertyChange(string propName)
     {

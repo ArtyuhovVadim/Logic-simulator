@@ -12,9 +12,9 @@ public class PropertiesViewModel : BaseAnchorableViewModel
 
     #region CurrentEditorViewModel
 
-    private AbstractEditorViewModel _currentEditorViewModel;
+    private EditorViewModel _currentEditorViewModel;
 
-    public AbstractEditorViewModel CurrentEditorViewModel
+    public EditorViewModel CurrentEditorViewModel
     {
         get => _currentEditorViewModel;
         set => Set(ref _currentEditorViewModel, value);

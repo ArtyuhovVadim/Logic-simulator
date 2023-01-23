@@ -1,4 +1,5 @@
 ﻿using System;
+using LogicSimulator.ViewModels.EditorViewModels.Base;
 
 namespace LogicSimulator.ViewModels.EditorViewModels.Layout.Builders;
 
@@ -6,7 +7,7 @@ public class GroupBuilder
 {
     private readonly EditorGroup _group;
 
-    public GroupBuilder() => _group = new EditorGroup();
+    public GroupBuilder(EditorViewModel editorViewModel) => _group = new EditorGroup { EditorViewModel = editorViewModel };
 
     public GroupBuilder WithGroupName(string name)
     {
@@ -16,7 +17,7 @@ public class GroupBuilder
 
     public GroupBuilder WithRow(Action<RowBuilder> configureAction)
     {
-        var rowBuilder = new RowBuilder();
+        var rowBuilder = new RowBuilder(_group.EditorViewModel);
         configureAction(rowBuilder);
         _group.EditorRows.Add(rowBuilder.Build());
         return this;

@@ -1,41 +1,32 @@
-﻿using System;
-using System.Collections.ObjectModel;
-using System.Linq;
-using System.Windows.Input;
-using LogicSimulator.Infrastructure.Commands;
-using LogicSimulator.Scene.SceneObjects;
+﻿using LogicSimulator.Scene.SceneObjects;
 using LogicSimulator.ViewModels.EditorViewModels.Base;
 using LogicSimulator.ViewModels.EditorViewModels.Layout;
 using LogicSimulator.ViewModels.EditorViewModels.Layout.Builders;
-using SharpDX;
 
 namespace LogicSimulator.ViewModels.EditorViewModels;
 
 //TODO: !!!
-public class LineEditorViewModel : BaseEditorViewModel<Line>
+public class LineEditorViewModel : EditorViewModel
 {
-    public Vector2 Location { get => Get<Vector2>(); set => Set(value); }
-    public float StrokeThickness { get => Get<float>(); set => Set(value); }
-    public Color4 StrokeColor { get => Get<Color4>(); set => Set(value); }
-
     protected override EditorLayout CreateLayout() => LayoutBuilder
-        .Create()
+        .Create(this)
         .WithName("Ломаная линия")
         .WithGroup(groupBuilder => groupBuilder
             .WithGroupName("Расположение")
             .WithRow(rowBuilder => rowBuilder
-                .WithProperty<Vector2>(nameof(Line.Location))))
+                .WithProperty<Vector2PropertyViewModel>(nameof(Line.Location))))
         .WithGroup(groupBuilder => groupBuilder
             .WithGroupName("Свойства")
             .WithRow(rowBuilder => rowBuilder
                 .WithRowName("Граница")
-                .WithProperty<float>(nameof(Line.StrokeThickness))
-                .WithProperty<Color4>(nameof(Line.StrokeColor))
+                .WithProperty<FloatPropertyViewModel>(nameof(Line.StrokeThickness))
+                .WithProperty<Color4PropertyViewModel>(nameof(Line.StrokeColor))
                 .WithLayout(layoutBuilder => layoutBuilder
                     .WithRelativeSize(1)
                     .WithAutoSize())))
         .Build();
-    public LineEditorViewModel()
+
+    /*public LineEditorViewModel()
     {
         PropertyChanged += (_, args) =>
         {
@@ -137,5 +128,5 @@ public class LineEditorViewModel : BaseEditorViewModel<Line>
         }
 
         return _vertexes;
-    }
+    }*/
 }

@@ -1,4 +1,5 @@
 ﻿using System;
+using LogicSimulator.ViewModels.EditorViewModels.Base;
 
 namespace LogicSimulator.ViewModels.EditorViewModels.Layout.Builders;
 
@@ -6,7 +7,7 @@ public class RowBuilder
 {
     private readonly EditorRow _row;
 
-    public RowBuilder() => _row = new EditorRow();
+    public RowBuilder(EditorViewModel editorViewModel) => _row = new EditorRow { EditorViewModel = editorViewModel };
 
     public RowBuilder WithRowName(string name)
     {
@@ -14,15 +15,13 @@ public class RowBuilder
         return this;
     }
 
-    public RowBuilder WithConcreteProperty(string name, Func<string, PropertyViewModel> viewModelCreationFunc)
+    public RowBuilder WithProperty<T>(string name) where T : PropertyViewModel, new()
     {
-        _row.ObjectProperties.Add(viewModelCreationFunc(name));
-        return this;
-    }
-
-    public RowBuilder WithProperty<T>(string name)
-    {
-        _row.ObjectProperties.Add(new PropertyViewModel(name, typeof(T), null));
+        _row.ObjectProperties.Add(new T
+        {
+            EditorViewModel = _row.EditorViewModel,
+            PropertyName = name
+        });
         return this;
     }
 
