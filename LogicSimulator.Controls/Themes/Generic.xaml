@@ -17,5 +17,6 @@
         <ResourceDictionary Source="/LogicSimulator.Controls;component/Styles/ScrollBarStyle.xaml" />
         <ResourceDictionary Source="/LogicSimulator.Controls;component/Styles/StringBoxStyle.xaml" />
         <ResourceDictionary Source="/LogicSimulator.Controls;component/Styles/AvaloneDockStyle.xaml" />
+        <ResourceDictionary Source="/LogicSimulator.Controls;component/Styles/ComboBoxStyle.xaml" />
     </ResourceDictionary.MergedDictionaries>
 </ResourceDictionary>
