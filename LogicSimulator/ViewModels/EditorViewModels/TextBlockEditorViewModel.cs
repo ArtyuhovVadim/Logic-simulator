@@ -5,7 +5,6 @@ using LogicSimulator.ViewModels.EditorViewModels.Layout.Builders;
 
 namespace LogicSimulator.ViewModels.EditorViewModels;
 
-//TODO: !!!
 public class TextBlockEditorViewModel : EditorViewModel
 {
     protected override EditorLayout CreateLayout() => LayoutBuilder
@@ -15,95 +14,29 @@ public class TextBlockEditorViewModel : EditorViewModel
             .WithGroupName("Расположение")
                 .WithRow(rowBuilder => rowBuilder
                 .WithProperty<Vector2PropertyViewModel>(nameof(Line.Location))))
+            .WithGroup(groupBuilder => groupBuilder
+                .WithGroupName("Свойства")
+                .WithRow(rowBuilder => rowBuilder
+                    .WithRowName("Текст")
+                    .WithProperty<StringPropertyViewModel>(nameof(TextBlock.Text)))
+                .WithRow(rowBuilder => rowBuilder
+                    .WithRowName("Шрифт")
+                    .WithProperty<StringPropertyViewModel>(nameof(TextBlock.FontName))
+                    .WithProperty<FloatPropertyViewModel>(nameof(TextBlock.FontSize))
+                    .WithProperty<Color4PropertyViewModel>(nameof(TextBlock.TextColor))
+                    .WithLayout(layoutBuilder => layoutBuilder
+                        .WithRelativeSize(1)
+                        .WithRelativeSize(0.3)
+                        .WithAutoSize()))
+                .WithRow(rowBuilder => rowBuilder
+                    .WithProperty<BoolPropertyViewModel>(nameof(TextBlock.IsBold))
+                    .WithProperty<BoolPropertyViewModel>(nameof(TextBlock.IsItalic))
+                    .WithProperty<BoolPropertyViewModel>(nameof(TextBlock.IsUnderlined))
+                    .WithProperty<BoolPropertyViewModel>(nameof(TextBlock.IsCross))
+                    .WithLayout(layoutBuilder => layoutBuilder
+                        .WithRelativeSize(1)
+                        .WithRelativeSize(1)
+                        .WithRelativeSize(1)
+                        .WithRelativeSize(1))))
         .Build();
-
-    /*#region Location
-
-    public Vector2 Location
-    {
-        get => Get<Vector2>();
-        set => Set(value);
-    }
-
-    #endregion
-
-    #region Text
-
-    public string Text
-    {
-        get => Get<string>();
-        set => Set(value);
-    }
-
-    #endregion
-
-    #region FontName
-
-    public string FontName
-    {
-        get => Get<string>();
-        set => Set(value);
-    }
-
-    #endregion
-
-    #region FontSize
-
-    public float FontSize
-    {
-        get => Get<float>();
-        set => Set(value);
-    }
-
-    #endregion
-
-    #region IsBold
-
-    public bool IsBold
-    {
-        get => Get<bool>();
-        set => Set(value);
-    }
-
-    #endregion
-
-    #region IsItalic
-
-    public bool IsItalic
-    {
-        get => Get<bool>();
-        set => Set(value);
-    }
-
-    #endregion
-
-    #region IsUnderlined
-
-    public bool IsUnderlined
-    {
-        get => Get<bool>();
-        set => Set(value);
-    }
-
-    #endregion
-
-    #region IsCross
-
-    public bool IsCross
-    {
-        get => Get<bool>();
-        set => Set(value);
-    }
-
-    #endregion
-
-    #region TextColor
-
-    public Color4 TextColor
-    {
-        get => Get<Color4>();
-        set => Set(value);
-    }
-
-    #endregion*/
 }

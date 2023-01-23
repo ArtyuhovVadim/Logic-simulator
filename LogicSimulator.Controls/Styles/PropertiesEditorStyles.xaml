@@ -23,4 +23,13 @@
     <Style BasedOn="{StaticResource {x:Type controls:CheckBoxEx}}" TargetType="{x:Type controls:CheckBoxEx}">
         <Setter Property="Margin" Value="4" />
     </Style>
+    <Style BasedOn="{StaticResource {x:Type controls:StringBox}}" TargetType="{x:Type controls:StringBox}">
+        <Setter Property="Margin" Value="4" />
+        <Setter Property="VerticalAlignment" Value="Center" />
+        <Setter Property="SelectAllTextOnFocus" Value="False" />
+        <Setter Property="MaxLines" Value="8" />
+        <Setter Property="MinLines" Value="1" />
+        <Setter Property="VerticalScrollBarVisibility" Value="Auto" />
+        <Setter Property="AcceptsReturn" Value="True" />
+    </Style>
 </ResourceDictionary>

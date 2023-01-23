@@ -13,6 +13,82 @@
     d:DesignHeight="450"
     d:DesignWidth="800"
     mc:Ignorable="d">
+    <UserControl.Resources>
+        <Style x:Key="PropertiesStyle">
+            <Style.Triggers>
+                <DataTrigger Binding="{Binding Path=PropertyPropertyType}" Value="{x:Type sys:Single}">
+                    <DataTrigger.Setters>
+                        <Setter Property="ContentControl.ContentTemplate">
+                            <Setter.Value>
+                                <DataTemplate DataType="{x:Type base:PropertyViewModel}">
+                                    <cont:NumberBox IsValueUndefined="{Binding Path=IsValueUndefined}" Number="{Binding Path=Value}" />
+                                </DataTemplate>
+                            </Setter.Value>
+                        </Setter>
+                    </DataTrigger.Setters>
+                </DataTrigger>
+                <DataTrigger Binding="{Binding Path=PropertyPropertyType}" Value="{x:Type dx:Vector2}">
+                    <DataTrigger.Setters>
+                        <Setter Property="ContentControl.ContentTemplate">
+                            <Setter.Value>
+                                <DataTemplate DataType="{x:Type base:PropertyViewModel}">
+                                    <cont:Vector2Box
+                                        IsVectorXUndefined="{Binding Path=IsXUndefined}"
+                                        IsVectorYUndefined="{Binding Path=IsYUndefined}"
+                                        Vector="{Binding Path=Value}" />
+                                </DataTemplate>
+                            </Setter.Value>
+                        </Setter>
+                    </DataTrigger.Setters>
+                </DataTrigger>
+                <DataTrigger Binding="{Binding Path=PropertyPropertyType}" Value="{x:Type dx:Color4}">
+                    <DataTrigger.Setters>
+                        <Setter Property="ContentControl.ContentTemplate">
+                            <Setter.Value>
+                                <DataTemplate DataType="{x:Type base:PropertyViewModel}">
+                                    <cont:ColorPicker IsValueUndefined="{Binding Path=IsValueUndefined}" Color="{Binding Path=Value}" />
+                                </DataTemplate>
+                            </Setter.Value>
+                        </Setter>
+                    </DataTrigger.Setters>
+                </DataTrigger>
+                <DataTrigger Binding="{Binding Path=PropertyPropertyType}" Value="{x:Type sys:Boolean}">
+                    <DataTrigger.Setters>
+                        <Setter Property="ContentControl.ContentTemplate">
+                            <Setter.Value>
+                                <DataTemplate DataType="{x:Type base:PropertyViewModel}">
+                                    <cont:CheckBoxEx IsChecked="{Binding Path=Value}" IsValueUndefined="{Binding Path=IsValueUndefined}" />
+                                </DataTemplate>
+                            </Setter.Value>
+                        </Setter>
+                    </DataTrigger.Setters>
+                </DataTrigger>
+                <DataTrigger Binding="{Binding Path=PropertyPropertyType}" Value="{x:Type sys:String}">
+                    <DataTrigger.Setters>
+                        <Setter Property="ContentControl.ContentTemplate">
+                            <Setter.Value>
+                                <DataTemplate DataType="{x:Type base:PropertyViewModel}">
+                                    <cont:StringBox IsValueUndefined="{Binding Path=IsValueUndefined}" String="{Binding Path=Value}" />
+                                </DataTemplate>
+                            </Setter.Value>
+                        </Setter>
+                    </DataTrigger.Setters>
+                </DataTrigger>
+            </Style.Triggers>
+            <Setter Property="ContentControl.ContentTemplate">
+                <Setter.Value>
+                    <DataTemplate>
+                        <cont:TextBoxEx
+                            VerticalAlignment="Center"
+                            IsHasError="True"
+                            IsReadOnly="True"
+                            Text="Шаблон не найден!"
+                            ToolTip="{Binding}" />
+                    </DataTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+    </UserControl.Resources>
 
     <ScrollViewer
         DataContext="{Binding Path=CurrentEditorViewModel}"
@@ -33,12 +109,16 @@
                 Text="{Binding Path=Layout.ObjectName}" />
             <ItemsControl
                 Grid.Row="1"
+                Focusable="False"
                 Grid.IsSharedSizeScope="True"
                 ItemsSource="{Binding Path=Layout.Groups}">
                 <ItemsControl.ItemTemplate>
                     <DataTemplate>
                         <Expander Header="{Binding Path=Name}">
-                            <ItemsControl Margin="3" ItemsSource="{Binding Path=EditorRows}">
+                            <ItemsControl
+                                Margin="3"
+                                Focusable="False"
+                                ItemsSource="{Binding Path=EditorRows}">
                                 <ItemsControl.ItemTemplate>
                                     <DataTemplate>
                                         <DataTemplate.Resources>
@@ -61,60 +141,9 @@
                                             <ItemsControl
                                                 x:Name="Properties"
                                                 Grid.Column="1"
+                                                Focusable="False"
+                                                ItemContainerStyle="{StaticResource PropertiesStyle}"
                                                 ItemsSource="{Binding Path=ObjectProperties}">
-
-                                                <ItemsControl.ItemContainerStyle>
-                                                    <Style>
-                                                        <Style.Triggers>
-                                                            <DataTrigger Binding="{Binding Path=PropertyPropertyType}" Value="{x:Type sys:Single}">
-                                                                <DataTrigger.Setters>
-                                                                    <Setter Property="ContentControl.ContentTemplate" Value="{DynamicResource FloatPropertyTemplate}" />
-                                                                </DataTrigger.Setters>
-                                                            </DataTrigger>
-                                                            <DataTrigger Binding="{Binding Path=PropertyPropertyType}" Value="{x:Type dx:Vector2}">
-                                                                <DataTrigger.Setters>
-                                                                    <Setter Property="ContentControl.ContentTemplate" Value="{DynamicResource Vector2PropertyTemplate}" />
-                                                                </DataTrigger.Setters>
-                                                            </DataTrigger>
-                                                            <DataTrigger Binding="{Binding Path=PropertyPropertyType}" Value="{x:Type dx:Color4}">
-                                                                <DataTrigger.Setters>
-                                                                    <Setter Property="ContentControl.ContentTemplate" Value="{DynamicResource Color4PropertyTemplate}" />
-                                                                </DataTrigger.Setters>
-                                                            </DataTrigger>
-                                                            <DataTrigger Binding="{Binding Path=PropertyPropertyType}" Value="{x:Type sys:Boolean}">
-                                                                <DataTrigger.Setters>
-                                                                    <Setter Property="ContentControl.ContentTemplate" Value="{DynamicResource BoolPropertyTemplate}" />
-                                                                </DataTrigger.Setters>
-                                                            </DataTrigger>
-                                                        </Style.Triggers>
-                                                        <Setter Property="ContentControl.ContentTemplate" Value="{DynamicResource ErrorPropertyTemplate}" />
-                                                    </Style>
-                                                </ItemsControl.ItemContainerStyle>
-                                                <ItemsControl.Resources>
-                                                    <DataTemplate x:Key="FloatPropertyTemplate" DataType="{x:Type base:PropertyViewModel}">
-                                                        <cont:NumberBox IsValueUndefined="{Binding Path=IsValueUndefined}" Number="{Binding Path=Value}" />
-                                                    </DataTemplate>
-                                                    <DataTemplate x:Key="Vector2PropertyTemplate" DataType="{x:Type base:PropertyViewModel}">
-                                                        <cont:Vector2Box
-                                                            IsVectorXUndefined="{Binding Path=IsXUndefined}"
-                                                            IsVectorYUndefined="{Binding Path=IsYUndefined}"
-                                                            Vector="{Binding Path=Value}" />
-                                                    </DataTemplate>
-                                                    <DataTemplate x:Key="Color4PropertyTemplate" DataType="{x:Type base:PropertyViewModel}">
-                                                        <cont:ColorPicker IsValueUndefined="{Binding Path=IsValueUndefined}" Color="{Binding Path=Value}" />
-                                                    </DataTemplate>
-                                                    <DataTemplate x:Key="BoolPropertyTemplate" DataType="{x:Type base:PropertyViewModel}">
-                                                        <cont:CheckBoxEx IsChecked="{Binding Path=Value}" IsValueUndefined="{Binding Path=IsValueUndefined}" />
-                                                    </DataTemplate>
-                                                    <DataTemplate x:Key="ErrorPropertyTemplate">
-                                                        <cont:TextBoxEx
-                                                            VerticalAlignment="Center"
-                                                            IsHasError="True"
-                                                            IsReadOnly="True"
-                                                            Text="Шаблон не найден!"
-                                                            ToolTip="{Binding}" />
-                                                    </DataTemplate>
-                                                </ItemsControl.Resources>
                                                 <ItemsControl.ItemsPanel>
                                                     <ItemsPanelTemplate>
                                                         <cont:GridEx ColumnsLayout="{Binding Path=Layout}" />
