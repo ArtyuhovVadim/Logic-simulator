@@ -19,31 +19,31 @@ public class RectangleEditorViewModel : BaseEditorViewModel<Rectangle>
     protected override EditorLayout CreateLayout() => LayoutBuilder
         .Create()
         .WithName("Прямоугольник")
-        .WithGroup(groupBuilder => groupBuilder
-            .WithGroupName("Расположение")
-            .WithRow(rowBuilder => rowBuilder
-                .WithProperty<Vector2>(nameof(Rectangle.Location))))
+        // .WithGroup(groupBuilder => groupBuilder
+        //     .WithGroupName("Расположение")
+        //     .WithRow(rowBuilder => rowBuilder
+        //         .WithProperty<Vector2>(nameof(Rectangle.Location))))
         .WithGroup(groupBuilder => groupBuilder
             .WithGroupName("Свойства")
             .WithRow(rowBuilder => rowBuilder
                 .WithRowName("Ширина")
-                .WithProperty<float>(nameof(Rectangle.Width)))
+                .WithConcreteProperty(nameof(Rectangle.Width), name => new FloatPropertyViewModel(name, () => Objects)))
             .WithRow(rowBuilder => rowBuilder
                 .WithRowName("Высота")
-                .WithProperty<float>(nameof(Rectangle.Height)))
-            .WithRow(rowBuilder => rowBuilder
-                .WithRowName("Граница")
-                .WithProperty<float>(nameof(Rectangle.StrokeThickness))
-                .WithProperty<Color4>(nameof(Rectangle.StrokeColor))
-                .WithLayout(layoutBuilder => layoutBuilder
-                    .WithRelativeSize(1)
-                    .WithAutoSize()))
-            .WithRow(rowBuilder => rowBuilder
-                .WithRowName("Цвет заливки")
-                .WithProperty<Color4>(nameof(Rectangle.FillColor))
-                .WithProperty<bool>(nameof(Rectangle.IsFilled))
-                .WithLayout(layoutBuilder => layoutBuilder
-                    .WithAutoSize()
-                    .WithAutoSize())))
+                .WithConcreteProperty(nameof(Rectangle.Height), name => new FloatPropertyViewModel(name, () => Objects))))
+        /*.WithRow(rowBuilder => rowBuilder
+            .WithRowName("Граница")
+            .WithProperty<float>(nameof(Rectangle.StrokeThickness))
+            .WithProperty<Color4>(nameof(Rectangle.StrokeColor))
+            .WithLayout(layoutBuilder => layoutBuilder
+                .WithRelativeSize(1)
+                .WithAutoSize()))
+        .WithRow(rowBuilder => rowBuilder
+            .WithRowName("Цвет заливки")
+            .WithProperty<Color4>(nameof(Rectangle.FillColor))
+            .WithProperty<bool>(nameof(Rectangle.IsFilled))
+            .WithLayout(layoutBuilder => layoutBuilder
+                .WithAutoSize()
+                .WithAutoSize())))*/
         .Build();
 }

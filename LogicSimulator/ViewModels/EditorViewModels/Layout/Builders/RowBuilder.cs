@@ -14,9 +14,15 @@ public class RowBuilder
         return this;
     }
 
+    public RowBuilder WithConcreteProperty(string name, Func<string, PropertyViewModel> viewModelCreationFunc)
+    {
+        _row.ObjectProperties.Add(viewModelCreationFunc(name));
+        return this;
+    }
+
     public RowBuilder WithProperty<T>(string name)
     {
-        _row.ObjectProperties.Add(new ObjectProperty(name, typeof(T)));
+        _row.ObjectProperties.Add(new PropertyViewModel(name, typeof(T), null));
         return this;
     }
 

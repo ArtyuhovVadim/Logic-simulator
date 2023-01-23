@@ -78,10 +78,11 @@ public abstract class BaseEditorViewModel<T> : AbstractEditorViewModel where T :
         foreach (var propName in _propertyNames)
         {
             OnPropertyChanged(propName);
+            LayoutViewModel.PropertyChange(propName);
         }
 
         OnPropertyChanged(nameof(UndefinedPropertiesMap));
-        OnPropertyChanged(nameof(Layout));
+        OnPropertyChanged(nameof(LayoutViewModel));
     }
 
     protected TProp Get<TProp>([CallerMemberName] string propertyName = null)

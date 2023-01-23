@@ -8,15 +8,15 @@ namespace LogicSimulator.ViewModels.EditorViewModels.Base;
 
 public abstract class AbstractEditorViewModel : BindableBase
 {
-    private EditorLayout _layout;
+    private EditorLayout _layoutViewModel;
 
-    public EditorLayout Layout => _layout ??= CreateLayout();
+    public EditorLayout LayoutViewModel => _layoutViewModel ??= CreateLayout();
 
     public Dictionary<string, bool> UndefinedPropertiesMap { get; } = new();
 
     public abstract void SetObjectsToEdit(IEnumerable<BaseSceneObject> objects);
 
-    protected void OnPropertyChanged(object sender, PropertyChangedEventArgs e) => OnPropertyChanged(e.PropertyName);
+    protected void OnPropertyChanged(object sender, PropertyChangedEventArgs e) => LayoutViewModel.PropertyChange(e.PropertyName);
 
     protected abstract EditorLayout CreateLayout();
 }

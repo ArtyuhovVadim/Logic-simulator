@@ -4,9 +4,9 @@ namespace LogicSimulator.ViewModels.EditorViewModels.Layout.Builders;
 
 public class LayoutBuilder
 {
-    private readonly EditorLayout _layout;
+    private readonly EditorLayout _layoutViewModel;
 
-    private LayoutBuilder() => _layout = new EditorLayout
+    private LayoutBuilder() => _layoutViewModel = new EditorLayout
     {
         ObjectName = string.Empty,
     };
@@ -15,7 +15,7 @@ public class LayoutBuilder
 
     public LayoutBuilder WithName(string name)
     {
-        _layout.ObjectName = name;
+        _layoutViewModel.ObjectName = name;
         return this;
     }
 
@@ -23,9 +23,9 @@ public class LayoutBuilder
     {
         var groupBuilder = new GroupBuilder();
         configureAction.Invoke(groupBuilder);
-        _layout.Groups.Add(groupBuilder.Build());
+        _layoutViewModel.Groups.Add(groupBuilder.Build());
         return this;
     }
 
-    public EditorLayout Build() => _layout;
+    public EditorLayout Build() => _layoutViewModel;
 }

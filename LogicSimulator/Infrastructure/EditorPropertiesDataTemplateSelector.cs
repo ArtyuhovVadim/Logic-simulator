@@ -7,23 +7,24 @@ namespace LogicSimulator.Infrastructure;
 
 public class EditorPropertiesDataTemplateSelector : DataTemplateSelector
 {
+    //TODO: Refactor this!!!
     public override DataTemplate SelectTemplate(object item, DependencyObject container)
     {
-        if (item is not ObjectProperty prop) return null;
+        if (item is not PropertyViewModel prop) return null;
 
-        if (prop.ObjectPropertyType == typeof(float))
+        if (prop.PropertyType == typeof(float))
         {
             return ((FrameworkElement)container).FindResource("NumberBox") as DataTemplate;
         }
-        if (prop.ObjectPropertyType == typeof(Vector2))
+        if (prop.PropertyType == typeof(Vector2))
         {
             return ((FrameworkElement)container).FindResource("Vector2Box") as DataTemplate;
         }
-        if (prop.ObjectPropertyType == typeof(Color4))
+        if (prop.PropertyType == typeof(Color4))
         {
             return ((FrameworkElement)container).FindResource("ColorPicker") as DataTemplate;
         }
-        if (prop.ObjectPropertyType == typeof(bool))
+        if (prop.PropertyType == typeof(bool))
         {
             return ((FrameworkElement)container).FindResource("CheckBoxEx") as DataTemplate;
         }

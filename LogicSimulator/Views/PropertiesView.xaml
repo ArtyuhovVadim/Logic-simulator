@@ -32,11 +32,11 @@
                 Grid.Row="0"
                 Margin="4,4"
                 HorizontalAlignment="Left"
-                Text="{Binding Path=Layout.ObjectName}" />
+                Text="{Binding Path=LayoutViewModel.ObjectName}" />
             <ItemsControl
                 Grid.Row="1"
                 Grid.IsSharedSizeScope="True"
-                ItemsSource="{Binding Path=Layout.Groups}">
+                ItemsSource="{Binding Path=LayoutViewModel.Groups}">
                 <ItemsControl.ItemTemplate>
                     <DataTemplate>
                         <Expander Header="{Binding Path=Name}">
@@ -66,6 +66,11 @@
                                                 ItemsSource="{Binding Path=ObjectProperties}">
 
                                                 <ItemsControl.Resources>
+                                                    <DataTemplate x:Key="NumberBox" DataType="{x:Type layout:PropertyViewModel}">
+                                                        <cont:NumberBox IsValueUndefined="{Binding Path=IsValueUndefined}" Number="{Binding Path=Value}" />
+                                                    </DataTemplate>
+
+                                                    <!--
                                                     <DataTemplate x:Key="NumberBox" DataType="{x:Type layout:ObjectProperty}">
                                                         <cont:NumberBox>
                                                             <i:Interaction.Behaviors>
@@ -81,14 +86,15 @@
                                                             </i:Interaction.Behaviors>
                                                         </cont:NumberBox>
                                                     </DataTemplate>
-                                                    <DataTemplate x:Key="Vector2Box" DataType="{x:Type layout:ObjectProperty}">
+                                                    -->
+                                                    <DataTemplate x:Key="Vector2Box" DataType="{x:Type layout:PropertyViewModel}">
                                                         <cont:Vector2Box>
                                                             <i:Interaction.Behaviors>
                                                                 <b:PropertyEditorBehavior
                                                                     EditorDependencyProperty="{x:Static cont:Vector2Box.VectorProperty}"
                                                                     EditorViewModel="{Binding Path=DataContext,
                                                                                               RelativeSource={RelativeSource AncestorType={x:Type ScrollViewer}}}"
-                                                                    ObjectPropertyName="{Binding Path=ObjectPropertyName}">
+                                                                    ObjectPropertyName="{Binding Path=PropertyName}">
                                                                     <b:PropertyEditorBehavior.UndefinedProperties>
                                                                         <b:UndefinedProperty DependencyProperty="{x:Static cont:Vector2Box.IsVectorXUndefinedProperty}" Suffix="X" />
                                                                         <b:UndefinedProperty DependencyProperty="{x:Static cont:Vector2Box.IsVectorYUndefinedProperty}" Suffix="Y" />
@@ -97,14 +103,14 @@
                                                             </i:Interaction.Behaviors>
                                                         </cont:Vector2Box>
                                                     </DataTemplate>
-                                                    <DataTemplate x:Key="ColorPicker" DataType="{x:Type layout:ObjectProperty}">
+                                                    <DataTemplate x:Key="ColorPicker" DataType="{x:Type layout:PropertyViewModel}">
                                                         <cont:ColorPicker>
                                                             <i:Interaction.Behaviors>
                                                                 <b:PropertyEditorBehavior
                                                                     EditorDependencyProperty="{x:Static cont:ColorPicker.ColorProperty}"
                                                                     EditorViewModel="{Binding Path=DataContext,
                                                                                               RelativeSource={RelativeSource AncestorType={x:Type ScrollViewer}}}"
-                                                                    ObjectPropertyName="{Binding Path=ObjectPropertyName}">
+                                                                    ObjectPropertyName="{Binding Path=PropertyName}">
                                                                     <b:PropertyEditorBehavior.UndefinedProperties>
                                                                         <b:UndefinedProperty DependencyProperty="{x:Static cont:ColorPicker.IsValueUndefinedProperty}" />
                                                                     </b:PropertyEditorBehavior.UndefinedProperties>
@@ -112,14 +118,14 @@
                                                             </i:Interaction.Behaviors>
                                                         </cont:ColorPicker>
                                                     </DataTemplate>
-                                                    <DataTemplate x:Key="CheckBoxEx" DataType="{x:Type layout:ObjectProperty}">
+                                                    <DataTemplate x:Key="CheckBoxEx" DataType="{x:Type layout:PropertyViewModel}">
                                                         <cont:CheckBoxEx>
                                                             <i:Interaction.Behaviors>
                                                                 <b:PropertyEditorBehavior
                                                                     EditorDependencyProperty="{x:Static cont:CheckBoxEx.IsCheckedProperty}"
                                                                     EditorViewModel="{Binding Path=DataContext,
                                                                                               RelativeSource={RelativeSource AncestorType={x:Type ScrollViewer}}}"
-                                                                    ObjectPropertyName="{Binding Path=ObjectPropertyName}">
+                                                                    ObjectPropertyName="{Binding Path=PropertyName}">
                                                                     <b:PropertyEditorBehavior.UndefinedProperties>
                                                                         <b:UndefinedProperty DependencyProperty="{x:Static cont:CheckBoxEx.IsValueUndefinedProperty}" />
                                                                     </b:PropertyEditorBehavior.UndefinedProperties>
@@ -133,7 +139,6 @@
                                                 </ItemsControl.ItemTemplateSelector>
                                                 <ItemsControl.ItemsPanel>
                                                     <ItemsPanelTemplate>
-                                                        <!--<UniformGrid Columns="{Binding Path=ObjectProperties, Converter={c:CollectionToElementsCountConverter}}" Rows="1" />-->
                                                         <cont:GridEx ColumnsLayout="{Binding Path=Layout}" />
                                                     </ItemsPanelTemplate>
                                                 </ItemsControl.ItemsPanel>
