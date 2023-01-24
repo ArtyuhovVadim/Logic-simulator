@@ -13,7 +13,11 @@ public class RoundedRectangleEditorViewModel : EditorViewModel
         .WithGroup(groupBuilder => groupBuilder
             .WithGroupName("Расположение")
             .WithRow(rowBuilder => rowBuilder
-                .WithProperty<Vector2PropertyViewModel>(nameof(RoundedRectangle.Location))))
+                .WithRowName("(X/Y)")
+                .WithProperty<Vector2PropertyViewModel>(nameof(Rectangle.Location)))
+            .WithRow(rowBuilder => rowBuilder
+                .WithRowName("Поворот")
+                .WithProperty<RotationEnumPropertyViewModel>(nameof(Rectangle.Rotation))))
         .WithGroup(groupBuilder => groupBuilder
             .WithGroupName("Свойства")
             .WithRow(rowBuilder => rowBuilder
