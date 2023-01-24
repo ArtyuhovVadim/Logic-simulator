@@ -4,7 +4,7 @@ using System.Linq;
 
 namespace LogicSimulator.ViewModels.EditorViewModels.Base;
 
-public class FloatPropertyViewModel : PropertyViewModel
+public class FloatPropertyViewModel : SinglePropertyViewModel
 {
     #region IsValueUndefined
 

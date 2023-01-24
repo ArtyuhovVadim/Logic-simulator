@@ -4,7 +4,7 @@ using SharpDX;
 
 namespace LogicSimulator.ViewModels.EditorViewModels.Base;
 
-public class Vector2PropertyViewModel : PropertyViewModel
+public class Vector2PropertyViewModel : SinglePropertyViewModel
 {
     #region IsXUndedined
 

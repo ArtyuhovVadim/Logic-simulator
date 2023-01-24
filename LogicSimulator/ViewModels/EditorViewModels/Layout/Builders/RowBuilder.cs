@@ -15,7 +15,15 @@ public class RowBuilder
         return this;
     }
 
-    public RowBuilder WithProperty<T>(string name) where T : PropertyViewModel, new()
+    public RowBuilder WithMultiProperty<T>(Action<MultiPropertyBuilder<T>> configureAction) where T : MultiPropertyViewModel, new()
+    {
+        var builder = new MultiPropertyBuilder<T>(_row.EditorViewModel);
+        configureAction.Invoke(builder);
+        _row.ObjectProperties.Add(builder.Build());
+        return this;
+    }
+
+    public RowBuilder WithSingleProperty<T>(string name) where T : SinglePropertyViewModel, new()
     {
         _row.ObjectProperties.Add(new T
         {

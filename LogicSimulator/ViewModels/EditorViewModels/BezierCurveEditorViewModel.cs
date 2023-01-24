@@ -14,24 +14,24 @@ public class BezierCurveEditorViewModel : EditorViewModel
             .WithGroupName("Расположение")
             .WithRow(rowBuilder => rowBuilder
                 .WithRowName("(X/Y)")
-                .WithProperty<Vector2PropertyViewModel>(nameof(Rectangle.Location)))
+                .WithSingleProperty<Vector2PropertyViewModel>(nameof(Rectangle.Location)))
             .WithRow(rowBuilder => rowBuilder
                 .WithRowName("Поворот")
-                .WithProperty<RotationEnumPropertyViewModel>(nameof(Rectangle.Rotation))))
+                .WithSingleProperty<RotationEnumPropertyViewModel>(nameof(Rectangle.Rotation))))
         .WithGroup(groupBuilder => groupBuilder
             .WithGroupName("Вершины")
             .WithRow(rowBuilder => rowBuilder
-                .WithProperty<Vector2PropertyViewModel>(nameof(BezierCurve.Point1)))
+                .WithSingleProperty<Vector2PropertyViewModel>(nameof(BezierCurve.Point1)))
             .WithRow(rowBuilder => rowBuilder
-                .WithProperty<Vector2PropertyViewModel>(nameof(BezierCurve.Point2)))
+                .WithSingleProperty<Vector2PropertyViewModel>(nameof(BezierCurve.Point2)))
             .WithRow(rowBuilder => rowBuilder
-                .WithProperty<Vector2PropertyViewModel>(nameof(BezierCurve.Point3))))
+                .WithSingleProperty<Vector2PropertyViewModel>(nameof(BezierCurve.Point3))))
         .WithGroup(groupBuilder => groupBuilder
             .WithGroupName("Свойства")
             .WithRow(rowBuilder => rowBuilder
                 .WithRowName("Граница")
-                .WithProperty<FloatPropertyViewModel>(nameof(BezierCurve.StrokeThickness))
-                .WithProperty<Color4PropertyViewModel>(nameof(BezierCurve.StrokeColor))
+                .WithSingleProperty<FloatPropertyViewModel>(nameof(BezierCurve.StrokeThickness))
+                .WithSingleProperty<Color4PropertyViewModel>(nameof(BezierCurve.StrokeColor))
                 .WithLayout(layoutBuilder => layoutBuilder
                     .WithRelativeSize(1)
                     .WithAutoSize())))

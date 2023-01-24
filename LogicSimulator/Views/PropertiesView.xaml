@@ -6,6 +6,7 @@
     xmlns:base="clr-namespace:LogicSimulator.ViewModels.EditorViewModels.Base"
     xmlns:cont="clr-namespace:LogicSimulator.Controls;assembly=LogicSimulator.Controls"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:fa="http://schemas.fontawesome.io/icons/"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:me="clr-namespace:LogicSimulator.Infrastructure.MarkupExtensions"
     d:DataContext="{d:DesignInstance Type=avm:PropertiesViewModel}"
@@ -14,53 +15,130 @@
     mc:Ignorable="d">
 
     <UserControl.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="/LogicSimulator.Controls;component/Styles/PropertiesEditorStyles.xaml" />
+            </ResourceDictionary.MergedDictionaries>
 
-        <DataTemplate DataType="{x:Type base:FloatPropertyViewModel}">
-            <cont:NumberBox IsValueUndefined="{Binding Path=IsValueUndefined}" Number="{Binding Path=Value}" />
-        </DataTemplate>
+            <DataTemplate DataType="{x:Type base:FloatPropertyViewModel}">
+                <cont:NumberBox IsValueUndefined="{Binding Path=IsValueUndefined}" Number="{Binding Path=Value}" />
+            </DataTemplate>
 
-        <DataTemplate DataType="{x:Type base:Vector2PropertyViewModel}">
-            <cont:Vector2Box
-                IsVectorXUndefined="{Binding Path=IsXUndefined}"
-                IsVectorYUndefined="{Binding Path=IsYUndefined}"
-                Vector="{Binding Path=Value}" />
-        </DataTemplate>
+            <DataTemplate DataType="{x:Type base:Vector2PropertyViewModel}">
+                <cont:Vector2Box
+                    IsVectorXUndefined="{Binding Path=IsXUndefined}"
+                    IsVectorYUndefined="{Binding Path=IsYUndefined}"
+                    Vector="{Binding Path=Value}" />
+            </DataTemplate>
 
-        <DataTemplate DataType="{x:Type base:Color4PropertyViewModel}">
-            <cont:ColorPicker IsValueUndefined="{Binding Path=IsValueUndefined}" Color="{Binding Path=Value}" />
-        </DataTemplate>
+            <DataTemplate DataType="{x:Type base:Color4PropertyViewModel}">
+                <cont:ColorPicker IsValueUndefined="{Binding Path=IsValueUndefined}" Color="{Binding Path=Value}" />
+            </DataTemplate>
 
-        <DataTemplate DataType="{x:Type base:BoolPropertyViewModel}">
-            <cont:CheckBoxEx IsChecked="{Binding Path=Value}" IsValueUndefined="{Binding Path=IsValueUndefined}" />
-        </DataTemplate>
+            <DataTemplate DataType="{x:Type base:BoolPropertyViewModel}">
+                <cont:CheckBoxEx IsChecked="{Binding Path=Value}" IsValueUndefined="{Binding Path=IsValueUndefined}" />
+            </DataTemplate>
 
-        <DataTemplate DataType="{x:Type base:StringPropertyViewModel}">
-            <cont:StringBox IsValueUndefined="{Binding Path=IsValueUndefined}" String="{Binding Path=Value}" />
-        </DataTemplate>
+            <DataTemplate DataType="{x:Type base:StringPropertyViewModel}">
+                <cont:StringBox IsValueUndefined="{Binding Path=IsValueUndefined}" String="{Binding Path=Value}" />
+            </DataTemplate>
 
-        <DataTemplate DataType="{x:Type base:RotationEnumPropertyViewModel}">
-            <cont:ComboBoxEx
-                IsValueUndefined="{Binding Path=IsValueUndefined}"
-                ItemsSource="{Binding Path=Rotations}"
-                SelectedValue="{Binding Path=Value}" />
-        </DataTemplate>
+            <DataTemplate DataType="{x:Type base:RotationEnumPropertyViewModel}">
+                <cont:ComboBoxEx
+                    IsValueUndefined="{Binding Path=IsValueUndefined}"
+                    ItemsSource="{Binding Path=Rotations}"
+                    SelectedValue="{Binding Path=Value}" />
+            </DataTemplate>
 
-        <DataTemplate DataType="{x:Type base:FontNamePropertyViewModel}">
-            <cont:ComboBoxEx
-                IsValueUndefined="{Binding Path=IsValueUndefined}"
-                ItemsSource="{Binding Source={me:SystemFontFamilies}}"
-                SelectedValue="{Binding Path=Value}" />
-        </DataTemplate>
+            <DataTemplate DataType="{x:Type base:FontNamePropertyViewModel}">
+                <cont:ComboBoxEx
+                    IsValueUndefined="{Binding Path=IsValueUndefined}"
+                    ItemsSource="{Binding Source={me:SystemFontFamilies}}"
+                    SelectedValue="{Binding Path=Value}" />
+            </DataTemplate>
 
+            <DataTemplate DataType="{x:Type base:FontPropertyViewModel}">
+                <cont:ClippingBorder
+                    Margin="4"
+                    Background="#222222"
+                    BorderBrush="#222222"
+                    BorderThickness="1"
+                    CornerRadius="5"
+                    SnapsToDevicePixels="True"
+                    UseLayoutRounding="True">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition />
+                            <ColumnDefinition />
+                            <ColumnDefinition />
+                            <ColumnDefinition />
+                        </Grid.ColumnDefinitions>
+                        <cont:CheckBoxEx
+                            Grid.Column="0"
+                            Margin="0,0,1,0"
+                            IsChecked="{Binding Path=Properties[IsBold].Value}"
+                            IsValueUndefined="{Binding Path=Properties[IsBold].IsValueUndefined}"
+                            Style="{StaticResource FontCheckBoxStyle}">
+                            <cont:CheckBoxEx.Content>
+                                <fa:ImageAwesome
+                                    Height="11"
+                                    Foreground="{Binding Path=Foreground,
+                                                         RelativeSource={RelativeSource AncestorType=cont:CheckBoxEx}}"
+                                    Icon="Bold" />
+                            </cont:CheckBoxEx.Content>
+                        </cont:CheckBoxEx>
+                        <cont:CheckBoxEx
+                            Grid.Column="1"
+                            Margin="0,0,1,0"
+                            IsChecked="{Binding Path=Properties[IsItalic].Value}"
+                            IsValueUndefined="{Binding Path=Properties[IsItalic].IsValueUndefined}"
+                            Style="{StaticResource FontCheckBoxStyle}">
+                            <cont:CheckBoxEx.Content>
+                                <fa:ImageAwesome
+                                    Height="11"
+                                    Foreground="{Binding Path=Foreground,
+                                                         RelativeSource={RelativeSource AncestorType=cont:CheckBoxEx}}"
+                                    Icon="Italic" />
+                            </cont:CheckBoxEx.Content>
+                        </cont:CheckBoxEx>
+                        <cont:CheckBoxEx
+                            Grid.Column="2"
+                            Margin="0,0,1,0"
+                            IsChecked="{Binding Path=Properties[IsUnderlined].Value}"
+                            IsValueUndefined="{Binding Path=Properties[IsUnderlined].IsValueUndefined}"
+                            Style="{StaticResource FontCheckBoxStyle}">
+                            <cont:CheckBoxEx.Content>
+                                <fa:ImageAwesome
+                                    Height="11"
+                                    Foreground="{Binding Path=Foreground,
+                                                         RelativeSource={RelativeSource AncestorType=cont:CheckBoxEx}}"
+                                    Icon="Underline" />
+                            </cont:CheckBoxEx.Content>
+                        </cont:CheckBoxEx>
+                        <cont:CheckBoxEx
+                            Grid.Column="3"
+                            IsChecked="{Binding Path=Properties[IsCross].Value}"
+                            IsValueUndefined="{Binding Path=Properties[IsCross].IsValueUndefined}"
+                            Style="{StaticResource FontCheckBoxStyle}">
+                            <cont:CheckBoxEx.Content>
+                                <fa:ImageAwesome
+                                    Height="11"
+                                    Foreground="{Binding Path=Foreground,
+                                                         RelativeSource={RelativeSource AncestorType=cont:CheckBoxEx}}"
+                                    Icon="Strikethrough" />
+                            </cont:CheckBoxEx.Content>
+                        </cont:CheckBoxEx>
+                    </Grid>
+                </cont:ClippingBorder>
+            </DataTemplate>
+        </ResourceDictionary>
     </UserControl.Resources>
 
     <ScrollViewer
         DataContext="{Binding Path=CurrentEditorViewModel}"
         HorizontalScrollBarVisibility="Disabled"
         VerticalScrollBarVisibility="Auto">
-        <ScrollViewer.Resources>
-            <ResourceDictionary Source="/LogicSimulator.Controls;component/Styles/PropertiesEditorStyles.xaml" />
-        </ScrollViewer.Resources>
+
         <Grid Margin="5" Background="#404040">
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto" />

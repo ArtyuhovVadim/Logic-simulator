@@ -3,7 +3,7 @@ using System.Linq;
 
 namespace LogicSimulator.ViewModels.EditorViewModels.Base;
 
-public class Color4PropertyViewModel : PropertyViewModel
+public class Color4PropertyViewModel : SinglePropertyViewModel
 {
     #region IsValueUndefined
 

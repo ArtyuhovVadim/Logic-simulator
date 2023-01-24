@@ -15,16 +15,16 @@ public class LineEditorViewModel : EditorViewModel
             .WithGroupName("Расположение")
             .WithRow(rowBuilder => rowBuilder
                 .WithRowName("(X/Y)")
-                .WithProperty<Vector2PropertyViewModel>(nameof(Rectangle.Location)))
+                .WithSingleProperty<Vector2PropertyViewModel>(nameof(Rectangle.Location)))
             .WithRow(rowBuilder => rowBuilder
                 .WithRowName("Поворот")
-                .WithProperty<RotationEnumPropertyViewModel>(nameof(Rectangle.Rotation))))
+                .WithSingleProperty<RotationEnumPropertyViewModel>(nameof(Rectangle.Rotation))))
         .WithGroup(groupBuilder => groupBuilder
             .WithGroupName("Свойства")
             .WithRow(rowBuilder => rowBuilder
                 .WithRowName("Граница")
-                .WithProperty<FloatPropertyViewModel>(nameof(Line.StrokeThickness))
-                .WithProperty<Color4PropertyViewModel>(nameof(Line.StrokeColor))
+                .WithSingleProperty<FloatPropertyViewModel>(nameof(Line.StrokeThickness))
+                .WithSingleProperty<Color4PropertyViewModel>(nameof(Line.StrokeColor))
                 .WithLayout(layoutBuilder => layoutBuilder
                     .WithRelativeSize(1)
                     .WithAutoSize())))

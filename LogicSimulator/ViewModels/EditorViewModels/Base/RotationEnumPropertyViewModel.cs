@@ -4,12 +4,12 @@ using LogicSimulator.Scene;
 
 namespace LogicSimulator.ViewModels.EditorViewModels.Base;
 
-public class RotationEnumPropertyViewModel : PropertyViewModel
+public class RotationEnumPropertyViewModel : SinglePropertyViewModel
 {
-    private string _degrees0String = "Поворот 0";
-    private string _degrees90String = "Поворот 90";
-    private string _degrees180String = "Поворот 180";
-    private string _degrees270String = "Поворот 270";
+    private string _degrees0String = "0 Градусов";
+    private string _degrees90String = "90 Градусов";
+    private string _degrees180String = "180 Градусов";
+    private string _degrees270String = "270 Градусов";
 
     #region IsValueUndefined
 

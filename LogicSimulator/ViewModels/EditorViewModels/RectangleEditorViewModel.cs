@@ -14,29 +14,29 @@ public class RectangleEditorViewModel : EditorViewModel
             .WithGroupName("Расположение")
             .WithRow(rowBuilder => rowBuilder
                 .WithRowName("(X/Y)")
-                .WithProperty<Vector2PropertyViewModel>(nameof(Rectangle.Location)))
+                .WithSingleProperty<Vector2PropertyViewModel>(nameof(Rectangle.Location)))
             .WithRow(rowBuilder => rowBuilder
                 .WithRowName("Поворот")
-                .WithProperty<RotationEnumPropertyViewModel>(nameof(Rectangle.Rotation))))
+                .WithSingleProperty<RotationEnumPropertyViewModel>(nameof(Rectangle.Rotation))))
         .WithGroup(groupBuilder => groupBuilder
             .WithGroupName("Свойства")
             .WithRow(rowBuilder => rowBuilder
                 .WithRowName("Ширина")
-                .WithProperty<FloatPropertyViewModel>(nameof(Rectangle.Width)))
+                .WithSingleProperty<FloatPropertyViewModel>(nameof(Rectangle.Width)))
             .WithRow(rowBuilder => rowBuilder
                 .WithRowName("Высота")
-                .WithProperty<FloatPropertyViewModel>(nameof(Rectangle.Height)))
+                .WithSingleProperty<FloatPropertyViewModel>(nameof(Rectangle.Height)))
             .WithRow(rowBuilder => rowBuilder
                 .WithRowName("Граница")
-                .WithProperty<FloatPropertyViewModel>(nameof(Rectangle.StrokeThickness))
-                .WithProperty<Color4PropertyViewModel>(nameof(Rectangle.StrokeColor))
+                .WithSingleProperty<FloatPropertyViewModel>(nameof(Rectangle.StrokeThickness))
+                .WithSingleProperty<Color4PropertyViewModel>(nameof(Rectangle.StrokeColor))
                 .WithLayout(layoutBuilder => layoutBuilder
                     .WithRelativeSize(1)
                     .WithAutoSize()))
             .WithRow(rowBuilder => rowBuilder
                 .WithRowName("Цвет заливки")
-                .WithProperty<Color4PropertyViewModel>(nameof(Rectangle.FillColor))
-                .WithProperty<BoolPropertyViewModel>(nameof(Rectangle.IsFilled))
+                .WithSingleProperty<Color4PropertyViewModel>(nameof(Rectangle.FillColor))
+                .WithSingleProperty<BoolPropertyViewModel>(nameof(Rectangle.IsFilled))
                 .WithLayout(layoutBuilder => layoutBuilder
                     .WithAutoSize()
                     .WithAutoSize())))
