@@ -213,7 +213,7 @@
                                             SnapsToDevicePixels="True"
                                             UseLayoutRounding="True">
                                             <Border.Background>
-                                                <SolidColorBrush Color="{Binding Path=TempColor, RelativeSource={RelativeSource AncestorType={x:Type c:ColorPicker}}}" />
+                                                <SolidColorBrush Color="{Binding Path=TempColor, RelativeSource={RelativeSource AncestorType=c:ColorPicker}, FallbackValue=White}" />
                                             </Border.Background>
                                         </Border>
 
