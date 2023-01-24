@@ -81,7 +81,10 @@
                         <Setter Property="ContentControl.ContentTemplate">
                             <Setter.Value>
                                 <DataTemplate DataType="{x:Type base:PropertyViewModel}">
-                                    <ComboBox ItemsSource="{Binding Path=Rotations}" SelectedValue="{Binding Path=Value}" />
+                                    <cont:ComboBoxEx
+                                        IsValueUndefined="{Binding Path=IsValueUndefined}"
+                                        ItemsSource="{Binding Path=Rotations}"
+                                        SelectedValue="{Binding Path=Value}" />
                                 </DataTemplate>
                             </Setter.Value>
                         </Setter>

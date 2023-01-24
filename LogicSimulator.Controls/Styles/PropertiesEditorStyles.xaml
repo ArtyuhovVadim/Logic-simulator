@@ -33,14 +33,7 @@
         <Setter Property="VerticalScrollBarVisibility" Value="Auto" />
         <Setter Property="AcceptsReturn" Value="True" />
     </Style>
-    <Style BasedOn="{StaticResource {x:Type ComboBox}}" TargetType="{x:Type ComboBox}">
+    <Style BasedOn="{StaticResource {x:Type controls:ComboBoxEx}}" TargetType="{x:Type controls:ComboBoxEx}">
         <Setter Property="Margin" Value="4" />
-        <Setter Property="ItemTemplate">
-            <Setter.Value>
-                <DataTemplate>
-                    <TextBlock Text="{Binding}" />
-                </DataTemplate>
-            </Setter.Value>
-        </Setter>
     </Style>
 </ResourceDictionary>
