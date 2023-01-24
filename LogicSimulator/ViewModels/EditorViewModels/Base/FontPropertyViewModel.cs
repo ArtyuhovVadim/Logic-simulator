@@ -4,7 +4,7 @@ using System.Linq;
 
 namespace LogicSimulator.ViewModels.EditorViewModels.Base;
 
-public class FloatPropertyViewModel : PropertyViewModel
+public class FontPropertyViewModel : PropertyViewModel
 {
     #region IsValueUndefined
 
@@ -21,7 +21,7 @@ public class FloatPropertyViewModel : PropertyViewModel
     protected override object GetPropertyValue(IEnumerable<object> objects)
     {
         IsValueUndefined = objects.Any(o => !Equals(PropertyInfo.GetValue(o), PropertyInfo.GetValue(objects.First())));
-        return Convert.ToDouble(PropertyInfo.GetValue(objects.First()));
+        return PropertyInfo.GetValue(objects.First());
     }
 
     protected override void SetPropertyValue(IEnumerable<object> objects, object value)
@@ -30,7 +30,7 @@ public class FloatPropertyViewModel : PropertyViewModel
 
         foreach (var obj in objects)
         {
-            PropertyInfo.SetValue(obj, Convert.ToSingle(value));
+            PropertyInfo.SetValue(obj, value);
         }
     }
 }

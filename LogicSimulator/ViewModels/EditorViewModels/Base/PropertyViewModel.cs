@@ -14,8 +14,6 @@ public abstract class PropertyViewModel : BindableBase
 
     public string PropertyName { get; set; }
 
-    public Type PropertyPropertyType { get; set; }
-
     protected PropertyInfo PropertyInfo => _propertyInfo ??= EditorViewModel.Objects.First().GetType().GetProperty(PropertyName);
 
     #region Value
@@ -31,8 +29,6 @@ public abstract class PropertyViewModel : BindableBase
     }
 
     #endregion
-
-    protected PropertyViewModel(Type propertyType) => PropertyPropertyType = propertyType;
 
     public void ProvidePropertyChanged(string propName)
     {

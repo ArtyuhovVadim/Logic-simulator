@@ -30,8 +30,6 @@ public class Vector2PropertyViewModel : PropertyViewModel
 
     #endregion
 
-    public Vector2PropertyViewModel() : base(typeof(Vector2)) { }
-
     protected override object GetPropertyValue(IEnumerable<object> objects)
     {
         IsXUndefined = objects.Any(o => !MathUtil.NearEqual(((Vector2)PropertyInfo.GetValue(o)!).X, ((Vector2)PropertyInfo.GetValue(objects.First())!).X));

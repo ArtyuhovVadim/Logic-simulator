@@ -18,8 +18,6 @@ public class Color4PropertyViewModel : PropertyViewModel
 
     #endregion  
 
-    public Color4PropertyViewModel() : base(typeof(Color4)) { }
-
     protected override object GetPropertyValue(IEnumerable<object> objects)
     {
         IsValueUndefined = objects.Any(o => !Equals(PropertyInfo.GetValue(o), PropertyInfo.GetValue(objects.First())));

@@ -17,8 +17,6 @@ public class StringPropertyViewModel : PropertyViewModel
 
     #endregion
 
-    public StringPropertyViewModel() : base(typeof(string)) { }
-
     protected override object GetPropertyValue(IEnumerable<object> objects)
     {
         IsValueUndefined = objects.Any(o => !Equals(PropertyInfo.GetValue(o), PropertyInfo.GetValue(objects.First())));

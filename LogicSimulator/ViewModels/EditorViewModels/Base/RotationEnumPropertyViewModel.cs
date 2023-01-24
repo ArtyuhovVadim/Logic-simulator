@@ -25,7 +25,7 @@ public class RotationEnumPropertyViewModel : PropertyViewModel
 
     public IEnumerable<string> Rotations { get; }
 
-    public RotationEnumPropertyViewModel() : base(typeof(Rotation))
+    public RotationEnumPropertyViewModel()
     {
         Rotations = new[]
         {

@@ -6,104 +6,52 @@
     xmlns:base="clr-namespace:LogicSimulator.ViewModels.EditorViewModels.Base"
     xmlns:cont="clr-namespace:LogicSimulator.Controls;assembly=LogicSimulator.Controls"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-    xmlns:dx="clr-namespace:SharpDX;assembly=SharpDX.Mathematics"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:me="clr-namespace:LogicSimulator.Infrastructure.MarkupExtensions"
-    xmlns:scene="clr-namespace:LogicSimulator.Scene;assembly=LogicSimulator.Scene"
-    xmlns:sys="clr-namespace:System;assembly=System.Runtime"
     d:DataContext="{d:DesignInstance Type=avm:PropertiesViewModel}"
     d:DesignHeight="450"
     d:DesignWidth="800"
     mc:Ignorable="d">
+
     <UserControl.Resources>
-        <Style x:Key="PropertiesStyle">
-            <Style.Triggers>
-                <DataTrigger Binding="{Binding Path=PropertyPropertyType}" Value="{x:Type sys:Single}">
-                    <DataTrigger.Setters>
-                        <Setter Property="ContentControl.ContentTemplate">
-                            <Setter.Value>
-                                <DataTemplate DataType="{x:Type base:PropertyViewModel}">
-                                    <cont:NumberBox IsValueUndefined="{Binding Path=IsValueUndefined}" Number="{Binding Path=Value}" />
-                                </DataTemplate>
-                            </Setter.Value>
-                        </Setter>
-                    </DataTrigger.Setters>
-                </DataTrigger>
-                <DataTrigger Binding="{Binding Path=PropertyPropertyType}" Value="{x:Type dx:Vector2}">
-                    <DataTrigger.Setters>
-                        <Setter Property="ContentControl.ContentTemplate">
-                            <Setter.Value>
-                                <DataTemplate DataType="{x:Type base:PropertyViewModel}">
-                                    <cont:Vector2Box
-                                        IsVectorXUndefined="{Binding Path=IsXUndefined}"
-                                        IsVectorYUndefined="{Binding Path=IsYUndefined}"
-                                        Vector="{Binding Path=Value}" />
-                                </DataTemplate>
-                            </Setter.Value>
-                        </Setter>
-                    </DataTrigger.Setters>
-                </DataTrigger>
-                <DataTrigger Binding="{Binding Path=PropertyPropertyType}" Value="{x:Type dx:Color4}">
-                    <DataTrigger.Setters>
-                        <Setter Property="ContentControl.ContentTemplate">
-                            <Setter.Value>
-                                <DataTemplate DataType="{x:Type base:PropertyViewModel}">
-                                    <cont:ColorPicker IsValueUndefined="{Binding Path=IsValueUndefined}" Color="{Binding Path=Value}" />
-                                </DataTemplate>
-                            </Setter.Value>
-                        </Setter>
-                    </DataTrigger.Setters>
-                </DataTrigger>
-                <DataTrigger Binding="{Binding Path=PropertyPropertyType}" Value="{x:Type sys:Boolean}">
-                    <DataTrigger.Setters>
-                        <Setter Property="ContentControl.ContentTemplate">
-                            <Setter.Value>
-                                <DataTemplate DataType="{x:Type base:PropertyViewModel}">
-                                    <cont:CheckBoxEx IsChecked="{Binding Path=Value}" IsValueUndefined="{Binding Path=IsValueUndefined}" />
-                                </DataTemplate>
-                            </Setter.Value>
-                        </Setter>
-                    </DataTrigger.Setters>
-                </DataTrigger>
-                <DataTrigger Binding="{Binding Path=PropertyPropertyType}" Value="{x:Type sys:String}">
-                    <DataTrigger.Setters>
-                        <Setter Property="ContentControl.ContentTemplate">
-                            <Setter.Value>
-                                <DataTemplate DataType="{x:Type base:PropertyViewModel}">
-                                    <cont:StringBox IsValueUndefined="{Binding Path=IsValueUndefined}" String="{Binding Path=Value}" />
-                                </DataTemplate>
-                            </Setter.Value>
-                        </Setter>
-                    </DataTrigger.Setters>
-                </DataTrigger>
-                <DataTrigger Binding="{Binding Path=PropertyPropertyType}" Value="{x:Type scene:Rotation}">
-                    <DataTrigger.Setters>
-                        <Setter Property="ContentControl.ContentTemplate">
-                            <Setter.Value>
-                                <DataTemplate DataType="{x:Type base:PropertyViewModel}">
-                                    <cont:ComboBoxEx
-                                        IsValueUndefined="{Binding Path=IsValueUndefined}"
-                                        ItemsSource="{Binding Path=Rotations}"
-                                        SelectedValue="{Binding Path=Value}" />
-                                </DataTemplate>
-                            </Setter.Value>
-                        </Setter>
-                    </DataTrigger.Setters>
-                </DataTrigger>
-            </Style.Triggers>
-            <Setter Property="ContentControl.ContentTemplate">
-                <Setter.Value>
-                    <DataTemplate>
-                        <cont:TextBoxEx
-                            VerticalAlignment="Center"
-                            IsHasError="True"
-                            IsReadOnly="True"
-                            Text="Шаблон не найден!"
-                            ToolTip="{Binding}" />
-                    </DataTemplate>
-                </Setter.Value>
-            </Setter>
-        </Style>
+
+        <DataTemplate DataType="{x:Type base:FloatPropertyViewModel}">
+            <cont:NumberBox IsValueUndefined="{Binding Path=IsValueUndefined}" Number="{Binding Path=Value}" />
+        </DataTemplate>
+
+        <DataTemplate DataType="{x:Type base:Vector2PropertyViewModel}">
+            <cont:Vector2Box
+                IsVectorXUndefined="{Binding Path=IsXUndefined}"
+                IsVectorYUndefined="{Binding Path=IsYUndefined}"
+                Vector="{Binding Path=Value}" />
+        </DataTemplate>
+
+        <DataTemplate DataType="{x:Type base:Color4PropertyViewModel}">
+            <cont:ColorPicker IsValueUndefined="{Binding Path=IsValueUndefined}" Color="{Binding Path=Value}" />
+        </DataTemplate>
+
+        <DataTemplate DataType="{x:Type base:BoolPropertyViewModel}">
+            <cont:CheckBoxEx IsChecked="{Binding Path=Value}" IsValueUndefined="{Binding Path=IsValueUndefined}" />
+        </DataTemplate>
+
+        <DataTemplate DataType="{x:Type base:StringPropertyViewModel}">
+            <cont:StringBox IsValueUndefined="{Binding Path=IsValueUndefined}" String="{Binding Path=Value}" />
+        </DataTemplate>
+
+        <DataTemplate DataType="{x:Type base:RotationEnumPropertyViewModel}">
+            <cont:ComboBoxEx
+                IsValueUndefined="{Binding Path=IsValueUndefined}"
+                ItemsSource="{Binding Path=Rotations}"
+                SelectedValue="{Binding Path=Value}" />
+        </DataTemplate>
+
+        <DataTemplate DataType="{x:Type base:FontPropertyViewModel}">
+            <cont:ComboBoxEx
+                IsValueUndefined="{Binding Path=IsValueUndefined}"
+                ItemsSource="{Binding Source={me:SystemFontFamilies}}"
+                SelectedValue="{Binding Path=Value}" />
+        </DataTemplate>
+
     </UserControl.Resources>
 
     <ScrollViewer
@@ -158,7 +106,6 @@
                                                 x:Name="Properties"
                                                 Grid.Column="1"
                                                 Focusable="False"
-                                                ItemContainerStyle="{StaticResource PropertiesStyle}"
                                                 ItemsSource="{Binding Path=ObjectProperties}">
                                                 <ItemsControl.ItemsPanel>
                                                     <ItemsPanelTemplate>
