@@ -19,6 +19,7 @@
     </Style>
     <Style BasedOn="{StaticResource {x:Type controls:Vector2Box}}" TargetType="{x:Type controls:Vector2Box}">
         <Setter Property="Margin" Value="4" />
+        <Setter Property="Content" Value="" />
     </Style>
     <Style BasedOn="{StaticResource {x:Type controls:CheckBoxEx}}" TargetType="{x:Type controls:CheckBoxEx}">
         <Setter Property="Margin" Value="4" />
@@ -31,5 +32,15 @@
         <Setter Property="MinLines" Value="1" />
         <Setter Property="VerticalScrollBarVisibility" Value="Auto" />
         <Setter Property="AcceptsReturn" Value="True" />
+    </Style>
+    <Style BasedOn="{StaticResource {x:Type ComboBox}}" TargetType="{x:Type ComboBox}">
+        <Setter Property="Margin" Value="4" />
+        <Setter Property="ItemTemplate">
+            <Setter.Value>
+                <DataTemplate>
+                    <TextBlock Text="{Binding}" />
+                </DataTemplate>
+            </Setter.Value>
+        </Setter>
     </Style>
 </ResourceDictionary>

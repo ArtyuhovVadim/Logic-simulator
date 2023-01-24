@@ -8,6 +8,8 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:dx="clr-namespace:SharpDX;assembly=SharpDX.Mathematics"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:me="clr-namespace:LogicSimulator.Infrastructure.MarkupExtensions"
+    xmlns:scene="clr-namespace:LogicSimulator.Scene;assembly=LogicSimulator.Scene"
     xmlns:sys="clr-namespace:System;assembly=System.Runtime"
     d:DataContext="{d:DesignInstance Type=avm:PropertiesViewModel}"
     d:DesignHeight="450"
@@ -69,6 +71,17 @@
                             <Setter.Value>
                                 <DataTemplate DataType="{x:Type base:PropertyViewModel}">
                                     <cont:StringBox IsValueUndefined="{Binding Path=IsValueUndefined}" String="{Binding Path=Value}" />
+                                </DataTemplate>
+                            </Setter.Value>
+                        </Setter>
+                    </DataTrigger.Setters>
+                </DataTrigger>
+                <DataTrigger Binding="{Binding Path=PropertyPropertyType}" Value="{x:Type scene:Rotation}">
+                    <DataTrigger.Setters>
+                        <Setter Property="ContentControl.ContentTemplate">
+                            <Setter.Value>
+                                <DataTemplate DataType="{x:Type base:PropertyViewModel}">
+                                    <ComboBox ItemsSource="{Binding Path=Rotations}" SelectedValue="{Binding Path=Value}" />
                                 </DataTemplate>
                             </Setter.Value>
                         </Setter>

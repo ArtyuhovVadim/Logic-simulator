@@ -3,6 +3,7 @@ using System.IO;
 using System.Windows.Input;
 using LogicSimulator.Infrastructure.Commands;
 using LogicSimulator.Infrastructure.Services.Interfaces;
+using LogicSimulator.Scene;
 using LogicSimulator.ViewModels.AnchorableViewModels;
 using LogicSimulator.ViewModels.AnchorableViewModels.Base;
 using LogicSimulator.ViewModels.Base;
@@ -94,6 +95,18 @@ public class MainWindowViewModel : BindableBase
     {
 
     }, _ => true);
+
+    #endregion
+
+    #region Test
+
+    private Rotation _Test;
+
+    public Rotation Test
+    {
+        get => _Test;
+        set => Set(ref _Test, value);
+    }
 
     #endregion
 

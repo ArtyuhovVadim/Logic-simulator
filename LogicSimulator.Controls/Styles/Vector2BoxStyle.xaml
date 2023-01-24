@@ -28,6 +28,7 @@
                         </Grid.Resources>
 
                         <ContentPresenter
+                            x:Name="ContentPresenter"
                             Grid.Column="0"
                             Margin="0,0,5,0"
                             HorizontalAlignment="Center"
@@ -39,6 +40,11 @@
                             Margin="0,0,5,0" />
                         <controls:NumberBox x:Name="PART_NumberBoxY" Grid.Column="2" />
                     </Grid>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="Content" Value="">
+                            <Setter TargetName="ContentPresenter" Property="Visibility" Value="Collapsed" />
+                        </Trigger>
+                    </ControlTemplate.Triggers>
                 </ControlTemplate>
             </Setter.Value>
         </Setter>
