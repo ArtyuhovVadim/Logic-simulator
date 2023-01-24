@@ -45,7 +45,7 @@
                 SelectedValue="{Binding Path=Value}" />
         </DataTemplate>
 
-        <DataTemplate DataType="{x:Type base:FontPropertyViewModel}">
+        <DataTemplate DataType="{x:Type base:FontNamePropertyViewModel}">
             <cont:ComboBoxEx
                 IsValueUndefined="{Binding Path=IsValueUndefined}"
                 ItemsSource="{Binding Source={me:SystemFontFamilies}}"

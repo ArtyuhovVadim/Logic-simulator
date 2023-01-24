@@ -25,7 +25,7 @@ public class TextBlockEditorViewModel : EditorViewModel
                 .WithProperty<StringPropertyViewModel>(nameof(TextBlock.Text)))
             .WithRow(rowBuilder => rowBuilder
                 .WithRowName("Шрифт")
-                .WithProperty<FontPropertyViewModel>(nameof(TextBlock.FontName))
+                .WithProperty<FontNamePropertyViewModel>(nameof(TextBlock.FontName))
                 .WithProperty<FloatPropertyViewModel>(nameof(TextBlock.FontSize))
                 .WithProperty<Color4PropertyViewModel>(nameof(TextBlock.TextColor))
                 .WithLayout(layoutBuilder => layoutBuilder

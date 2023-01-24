@@ -1,10 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 
 namespace LogicSimulator.ViewModels.EditorViewModels.Base;
 
-public class FontPropertyViewModel : PropertyViewModel
+public class FontNamePropertyViewModel : PropertyViewModel
 {
     #region IsValueUndefined
 
