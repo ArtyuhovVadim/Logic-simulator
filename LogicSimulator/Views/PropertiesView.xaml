@@ -131,6 +131,156 @@
                     </Grid>
                 </cont:ClippingBorder>
             </DataTemplate>
+
+            <DataTemplate DataType="{x:Type base:VerticesPropertyViewModel}">
+                <Grid>
+                    <Grid x:Name="VertexesGrid">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="*" />
+                            <RowDefinition Height="Auto" />
+                        </Grid.RowDefinitions>
+
+                        <DataGrid
+                            MaxHeight="156"
+                            Margin="4"
+                            AutoGenerateColumns="False"
+                            Background="#484848"
+                            BorderBrush="#232323"
+                            BorderThickness="1"
+                            CanUserAddRows="False"
+                            CanUserDeleteRows="False"
+                            CanUserReorderColumns="False"
+                            CanUserResizeRows="False"
+                            Foreground="White"
+                            HorizontalGridLinesBrush="#353535"
+                            ItemsSource="{Binding Path=Value}"
+                            RowBackground="#3B3B3B"
+                            SelectedIndex="{Binding Path=SelectedVertexIndex}"
+                            SelectionMode="Single"
+                            SelectionUnit="FullRow"
+                            SnapsToDevicePixels="True"
+                            UseLayoutRounding="True"
+                            VerticalGridLinesBrush="#353535">
+                            <DataGrid.ColumnHeaderStyle>
+                                <Style TargetType="{x:Type DataGridColumnHeader}">
+                                    <Setter Property="VerticalContentAlignment" Value="Center" />
+                                    <Setter Property="Template">
+                                        <Setter.Value>
+                                            <ControlTemplate TargetType="{x:Type DataGridColumnHeader}">
+                                                <Grid>
+                                                    <Border
+                                                        x:Name="columnHeaderBorder"
+                                                        Background="#484848"
+                                                        BorderBrush="#232323"
+                                                        BorderThickness="0,0,0,1">
+                                                        <ContentPresenter
+                                                            Margin="5,3"
+                                                            HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                                            VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
+                                                            SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" />
+                                                    </Border>
+
+                                                    <Thumb
+                                                        x:Name="PART_LeftHeaderGripper"
+                                                        Width="6"
+                                                        HorizontalAlignment="Left"
+                                                        Cursor="SizeWE">
+                                                        <Thumb.Template>
+                                                            <ControlTemplate TargetType="{x:Type Thumb}">
+                                                                <Border
+                                                                    Margin="-1,3,0,3"
+                                                                    Background="Transparent"
+                                                                    BorderBrush="#222222"
+                                                                    BorderThickness="1,0,0,0" />
+                                                            </ControlTemplate>
+                                                        </Thumb.Template>
+                                                    </Thumb>
+                                                </Grid>
+                                            </ControlTemplate>
+                                        </Setter.Value>
+                                    </Setter>
+                                    <Setter Property="Background">
+                                        <Setter.Value>
+                                            <LinearGradientBrush StartPoint="0.5,0" EndPoint="0.5,1">
+                                                <GradientStop Offset="0" Color="{DynamicResource ControlLightColor}" />
+                                                <GradientStop Offset="1" Color="{DynamicResource ControlMediumColor}" />
+                                            </LinearGradientBrush>
+                                        </Setter.Value>
+                                    </Setter>
+                                </Style>
+                            </DataGrid.ColumnHeaderStyle>
+                            <DataGrid.RowHeaderStyle>
+                                <Style TargetType="{x:Type DataGridRowHeader}">
+                                    <Setter Property="Template" Value="{x:Null}" />
+                                </Style>
+                            </DataGrid.RowHeaderStyle>
+
+                            <DataGrid.Columns>
+                                <DataGridTextColumn
+                                    Width="Auto"
+                                    Binding="{Binding Path=Index}"
+                                    CanUserSort="True"
+                                    Header="№"
+                                    IsReadOnly="True" />
+                                <DataGridTextColumn
+                                    Width="*"
+                                    Binding="{Binding Path=X}"
+                                    CanUserSort="False"
+                                    Header="X" />
+
+                                <DataGridTextColumn
+                                    Width="*"
+                                    Binding="{Binding Path=Y}"
+                                    CanUserSort="False"
+                                    Header="Y" />
+                            </DataGrid.Columns>
+                        </DataGrid>
+
+                        <StackPanel
+                            Grid.Row="1"
+                            Margin="4"
+                            HorizontalAlignment="Right"
+                            Orientation="Horizontal">
+                            <Button
+                                Margin="0,0,4,0"
+                                Padding="8,5"
+                                Command="{Binding Path=AddVertexCommand}">
+                                <Button.Content>
+                                    <fa:ImageAwesome
+                                        Height="11"
+                                        Foreground="#FDFDFD"
+                                        Icon="Plus" />
+                                </Button.Content>
+                            </Button>
+                            <Button Padding="8,5" Command="{Binding Path=RemoveVertexCommand}">
+                                <Button.Content>
+                                    <fa:ImageAwesome
+                                        Height="11"
+                                        Foreground="#FDFDFD"
+                                        Icon="Trash" />
+                                </Button.Content>
+                            </Button>
+                        </StackPanel>
+                    </Grid>
+                    <TextBox
+                        x:Name="Border"
+                        Height="100"
+                        Margin="4"
+                        HorizontalContentAlignment="Center"
+                        VerticalContentAlignment="Center"
+                        IsReadOnly="True"
+                        Text="Одновременное редактирование недоступно"
+                        TextWrapping="Wrap"
+                        Visibility="Collapsed" />
+                </Grid>
+                <DataTemplate.Triggers>
+                    <DataTrigger Binding="{Binding Path=IsVisible}" Value="False">
+                        <Setter TargetName="VertexesGrid" Property="Visibility" Value="Collapsed" />
+                        <Setter TargetName="Border" Property="Visibility" Value="Visible" />
+                    </DataTrigger>
+                </DataTemplate.Triggers>
+            </DataTemplate>
+
         </ResourceDictionary>
     </UserControl.Resources>
 

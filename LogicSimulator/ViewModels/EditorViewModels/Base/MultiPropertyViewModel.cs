@@ -6,7 +6,7 @@ public abstract class MultiPropertyViewModel : PropertyViewModel
 {
     private readonly Dictionary<string, SinglePropertyViewModel> _properties = new();
 
-    public Dictionary<string, SinglePropertyViewModel> Properties => _properties;
+    public IReadOnlyDictionary<string, SinglePropertyViewModel> Properties => _properties;
 
     public void AddProperty<T>(string name) where T : SinglePropertyViewModel, new()
     {

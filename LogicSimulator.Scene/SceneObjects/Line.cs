@@ -54,6 +54,7 @@ public class Line : EditableSceneObject
         }
     }
 
+    [Editable]
     public IReadOnlyList<Vector2> Vertexes => _vertices;
 
     [Editable]

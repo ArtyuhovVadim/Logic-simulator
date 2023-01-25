@@ -21,10 +21,13 @@ public class BezierCurveEditorViewModel : EditorViewModel
         .WithGroup(groupBuilder => groupBuilder
             .WithGroupName("Вершины")
             .WithRow(rowBuilder => rowBuilder
+                .WithRowName("(X/Y)")
                 .WithSingleProperty<Vector2PropertyViewModel>(nameof(BezierCurve.Point1)))
             .WithRow(rowBuilder => rowBuilder
+                .WithRowName("(X/Y)")
                 .WithSingleProperty<Vector2PropertyViewModel>(nameof(BezierCurve.Point2)))
             .WithRow(rowBuilder => rowBuilder
+                .WithRowName("(X/Y)")
                 .WithSingleProperty<Vector2PropertyViewModel>(nameof(BezierCurve.Point3))))
         .WithGroup(groupBuilder => groupBuilder
             .WithGroupName("Свойства")

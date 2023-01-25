@@ -83,6 +83,7 @@ public class Scene2D : FrameworkElement
 
     #endregion
 
+    //TODO: Сильно влияет на производительноть
     #region Scale
 
     public float Scale
@@ -107,6 +108,7 @@ public class Scene2D : FrameworkElement
 
     #endregion
 
+    //TODO: Сильно влияет на производительноть
     #region MousePosition
 
     private static readonly DependencyPropertyKey MousePositionPropertyKey
