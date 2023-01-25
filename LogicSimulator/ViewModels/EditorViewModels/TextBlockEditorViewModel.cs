@@ -14,10 +14,10 @@ public class TextBlockEditorViewModel : EditorViewModel
             .WithGroupName("Расположение")
             .WithRow(rowBuilder => rowBuilder
                 .WithRowName("(X/Y)")
-                .WithSingleProperty<Vector2PropertyViewModel>(nameof(Rectangle.Location)))
+                .WithSingleProperty<Vector2PropertyViewModel>(nameof(TextBlock.Location)))
             .WithRow(rowBuilder => rowBuilder
                 .WithRowName("Поворот")
-                .WithSingleProperty<RotationEnumPropertyViewModel>(nameof(Rectangle.Rotation))))
+                .WithSingleProperty<RotationEnumPropertyViewModel>(nameof(TextBlock.Rotation))))
         .WithGroup(groupBuilder => groupBuilder
             .WithGroupName("Свойства")
             .WithRow(rowBuilder => rowBuilder

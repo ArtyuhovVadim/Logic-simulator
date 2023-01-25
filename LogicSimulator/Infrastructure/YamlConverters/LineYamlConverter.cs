@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using LogicSimulator.Scene;
 using LogicSimulator.Scene.SceneObjects;
 using SharpDX;
 using YamlDotNet.Core;
@@ -32,6 +33,11 @@ public class LineYamlConverter : IYamlTypeConverter
 
         line.Location = (Vector2)ValueDeserializer.DeserializeValue(parser, typeof(Vector2), new SerializerState(), ValueDeserializer)!;
 
+        if (!parser.TryConsume<Scalar>(out var rotationScalar) || rotationScalar.Value != nameof(Line.Rotation))
+            throw new YamlException(rotationScalar!.Start, rotationScalar.End, $"Expected a scalar named '{nameof(Line.Rotation)}'");
+
+        line.Rotation = (Rotation)ValueDeserializer.DeserializeValue(parser, typeof(Rotation), new SerializerState(), ValueDeserializer)!;
+
         if (!parser.TryConsume<Scalar>(out var strokeThicknessScalar) || strokeThicknessScalar.Value != nameof(Line.StrokeThickness))
             throw new YamlException(strokeThicknessScalar!.Start, strokeThicknessScalar.End, $"Expected a scalar named '{nameof(Line.StrokeThickness)}'");
 
@@ -62,6 +68,12 @@ public class LineYamlConverter : IYamlTypeConverter
         var line = (Line)value;
 
         emitter.Emit(new MappingStart(AnchorName.Empty, new TagName("!Line"), false, MappingStyle.Block));
+
+        ValueSerializer.SerializeValue(emitter, nameof(Line.Location), typeof(string));
+        ValueSerializer.SerializeValue(emitter, line.Location, typeof(Vector2));
+
+        ValueSerializer.SerializeValue(emitter, nameof(Line.Rotation), typeof(string));
+        ValueSerializer.SerializeValue(emitter, line.Rotation, typeof(Rotation));
 
         ValueSerializer.SerializeValue(emitter, nameof(Line.StrokeThickness), typeof(string));
         ValueSerializer.SerializeValue(emitter, line.StrokeThickness, typeof(float));

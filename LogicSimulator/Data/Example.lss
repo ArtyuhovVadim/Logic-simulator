@@ -1,55 +1,71 @@
 Name: Example
 Objects:
 - !Rectangle
+  Width: 200
+  Height: 200
+  FillColor: [1, 1, 1, 1]
+  StrokeColor: [0, 0, 0, 1]
+  StrokeThickness: 1
+  IsFilled: true
   Location: [525, 25]
+  Rotation: Degrees0
+- !Rectangle
   Width: 200
   Height: 200
   FillColor: [1, 1, 1, 1]
   StrokeColor: [0, 0, 0, 1]
   StrokeThickness: 1
   IsFilled: true
-- !Rectangle
   Location: [275, 25]
-  Width: 200
-  Height: 200
-  FillColor: [1, 1, 1, 1]
-  StrokeColor: [0, 0, 0, 1]
-  StrokeThickness: 1
-  IsFilled: true
+  Rotation: Degrees0
 - !Rectangle
+  Width: 200
+  Height: 200
+  FillColor: [1, 1, 1, 1]
+  StrokeColor: [0, 0, 0, 1]
+  StrokeThickness: 1
+  IsFilled: true
   Location: [25, 25]
-  Width: 200
-  Height: 200
+  Rotation: Degrees0
+- !Ellipse
+  RadiusX: 100
+  RadiusY: 100
   FillColor: [1, 1, 1, 1]
   StrokeColor: [0, 0, 0, 1]
-  StrokeThickness: 1
+  StrokeThickness: 3
   IsFilled: true
-- !Ellipse
   Location: [125, 625]
+  Rotation: Degrees0
+- !Ellipse
   RadiusX: 100
   RadiusY: 100
   FillColor: [1, 1, 1, 1]
   StrokeColor: [0, 0, 0, 1]
   StrokeThickness: 3
   IsFilled: true
-- !Ellipse
   Location: [625, 625]
-  RadiusX: 100
-  RadiusY: 100
-  FillColor: [1, 1, 1, 1]
-  StrokeColor: [0, 0, 0, 1]
-  StrokeThickness: 3
-  IsFilled: true
+  Rotation: Degrees0
 - !Ellipse
-  Location: [375, 625]
   RadiusX: 100
   RadiusY: 100
   FillColor: [1, 1, 1, 1]
   StrokeColor: [0, 0, 0, 1]
   StrokeThickness: 3
   IsFilled: true
+  Location: [375, 625]
+  Rotation: Degrees0
 - !RoundedRectangle
+  Width: 200
+  Height: 200
+  RadiusX: 25
+  RadiusY: 25
+  FillColor: [1, 1, 1, 1]
+  StrokeColor: [0, 0, 0, 1]
+  StrokeThickness: 1
+  IsFilled: true
   Location: [525, 275]
+  Rotation: Degrees0
+- !RoundedRectangle
   Width: 200
   Height: 200
   RadiusX: 25
@@ -58,18 +74,9 @@ Objects:
   StrokeColor: [0, 0, 0, 1]
   StrokeThickness: 1
   IsFilled: true
-- !RoundedRectangle
   Location: [25, 275]
-  Width: 200
-  Height: 200
-  RadiusX: 25
-  RadiusY: 25
-  FillColor: [1, 1, 1, 1]
-  StrokeColor: [0, 0, 0, 1]
-  StrokeThickness: 1
-  IsFilled: true
+  Rotation: Degrees0
 - !RoundedRectangle
-  Location: [275, 275]
   Width: 200
   Height: 200
   RadiusX: 25
@@ -78,23 +85,27 @@ Objects:
   StrokeColor: [0, 0, 0, 1]
   StrokeThickness: 1
   IsFilled: true
+  Location: [275, 275]
+  Rotation: Degrees0
 - !Line
-  Location: [25, 775]
+  Location: [775, 525]
+  Rotation: Degrees0
   StrokeThickness: 1
   StrokeColor: [0, 0, 0, 1]
   Vertexes: [[200, 0], [200, 200], [0, 200], [0, 25], [175, 25], [175, 175], [25, 175], [25, 50], [150, 50], [150, 150], [50, 150], [50, 75], [125, 75], [125, 125], [75, 125], [75, 100], [100, 100]]
 - !Line
-  Location: [525, 775]
+  Location: [1025, 525]
+  Rotation: Degrees0
   StrokeThickness: 1
   StrokeColor: [0, 0, 0, 1]
   Vertexes: [[200, 0], [200, 200], [0, 200], [0, 25], [175, 25], [175, 175], [25, 175], [25, 50], [150, 50], [150, 150], [50, 150], [50, 75], [125, 75], [125, 125], [75, 125], [75, 100], [100, 100]]
 - !Line
-  Location: [275, 775]
+  Location: [1275, 525]
+  Rotation: Degrees0
   StrokeThickness: 1
   StrokeColor: [0, 0, 0, 1]
   Vertexes: [[200, 0], [200, 200], [0, 200], [0, 25], [175, 25], [175, 175], [25, 175], [25, 50], [150, 50], [150, 150], [50, 150], [50, 75], [125, 75], [125, 125], [75, 125], [75, 100], [100, 100]]
 - !TextBlock
-  Location: [25, 1000]
   Text: >-
     #include <iostream>
 
@@ -112,8 +123,9 @@ Objects:
   IsUnderlined: false
   IsCross: false
   TextColor: [0, 0, 0, 1]
+  Location: [25, 775]
+  Rotation: Degrees0
 - !TextBlock
-  Location: [25, 1225]
   Text: Some text
   FontName: Consolas
   FontSize: 24
@@ -122,24 +134,56 @@ Objects:
   IsUnderlined: false
   IsCross: false
   TextColor: [0, 0, 0, 1]
+  Location: [25, 1000]
+  Rotation: Degrees0
 - !BezierCurve
+  Point1: [200, 0]
+  Point2: [0, 200]
+  Point3: [200, 200]
+  StrokeColor: [0, 0, 0, 1]
+  StrokeThickness: 1
   Location: [775, 25]
+  Rotation: Degrees0
+- !BezierCurve
   Point1: [200, 0]
   Point2: [0, 200]
   Point3: [200, 200]
   StrokeColor: [0, 0, 0, 1]
   StrokeThickness: 1
-- !BezierCurve
   Location: [1025, 25]
-  Point1: [200, 0]
-  Point2: [0, 200]
-  Point3: [200, 200]
-  StrokeColor: [0, 0, 0, 1]
-  StrokeThickness: 1
+  Rotation: Degrees0
 - !BezierCurve
-  Location: [1275, 25]
   Point1: [200, 0]
   Point2: [0, 200]
   Point3: [200, 200]
   StrokeColor: [0, 0, 0, 1]
   StrokeThickness: 1
+  Location: [1275, 25]
+  Rotation: Degrees0
+- !Arc
+  RadiusX: 100
+  RadiusY: 100
+  StartAngle: 135
+  EndAngle: 45
+  StrokeColor: [0, 0, 0, 1]
+  StrokeThickness: 2
+  Location: [875, 375]
+  Rotation: Degrees0
+- !Arc
+  RadiusX: 100
+  RadiusY: 100
+  StartAngle: 135
+  EndAngle: 45
+  StrokeColor: [0, 0, 0, 1]
+  StrokeThickness: 2
+  Location: [1375, 375]
+  Rotation: Degrees0
+- !Arc
+  RadiusX: 100
+  RadiusY: 100
+  StartAngle: 315
+  EndAngle: 225
+  StrokeColor: [0, 0, 0, 1]
+  StrokeThickness: 2
+  Location: [1125, 375]
+  Rotation: Degrees0

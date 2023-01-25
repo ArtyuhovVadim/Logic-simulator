@@ -3,7 +3,6 @@ using System.IO;
 using System.Windows.Input;
 using LogicSimulator.Infrastructure.Commands;
 using LogicSimulator.Infrastructure.Services.Interfaces;
-using LogicSimulator.Scene;
 using LogicSimulator.ViewModels.AnchorableViewModels;
 using LogicSimulator.ViewModels.AnchorableViewModels.Base;
 using LogicSimulator.ViewModels.Base;
@@ -81,7 +80,7 @@ public class MainWindowViewModel : BindableBase
             _userDialogService.ShowErrorMessage("Ошибка загрузки файла", $"Не удалось загрузить файл: {path}");
             return;
         }
-
+        
         SchemeViewModels.Add(new SchemeViewModel(scheme));
     }, _ => true);
 
@@ -91,22 +90,7 @@ public class MainWindowViewModel : BindableBase
 
     private ICommand _saveExampleCommand;
 
-    public ICommand SaveExampleCommand => _saveExampleCommand ??= new LambdaCommand(_ =>
-    {
-
-    }, _ => true);
-
-    #endregion
-
-    #region Test
-
-    private Rotation _Test;
-
-    public Rotation Test
-    {
-        get => _Test;
-        set => Set(ref _Test, value);
-    }
+    public ICommand SaveExampleCommand => _saveExampleCommand ??= new LambdaCommand(_ => { }, _ => true);
 
     #endregion
 

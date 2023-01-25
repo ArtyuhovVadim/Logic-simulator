@@ -22,6 +22,7 @@ public class EditorSelectionService : IEditorSelectionService
          { typeof(Ellipse), new EllipseEditorViewModel() },
          { typeof(Line), new LineEditorViewModel() },
          { typeof(BezierCurve), new BezierCurveEditorViewModel() },
+         { typeof(Arc), new ArcEditorViewModel() },
          { typeof(TextBlock), new TextBlockEditorViewModel() },
     };
 

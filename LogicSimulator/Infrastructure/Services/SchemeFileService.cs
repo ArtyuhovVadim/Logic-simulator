@@ -32,7 +32,9 @@ public class SchemeFileService : ISchemeFileService
             .WithTagMapping(new TagName("!Ellipse"), typeof(Ellipse))
             .WithTagMapping(new TagName("!Line"), typeof(Line))
             .WithTagMapping(new TagName("!BezierCurve"), typeof(BezierCurve))
-            .WithTagMapping(new TagName("!TextBlock"), typeof(TextBlock));
+            .WithTagMapping(new TagName("!TextBlock"), typeof(TextBlock))
+            .WithTagMapping(new TagName("!Arc"), typeof(Arc))
+            ;
 
         var deserializerBuilder = new DeserializerBuilder()
             .WithTypeConverter(vector2Converter)
@@ -43,7 +45,9 @@ public class SchemeFileService : ISchemeFileService
             .WithTagMapping(new TagName("!Ellipse"), typeof(Ellipse))
             .WithTagMapping(new TagName("!Line"), typeof(Line))
             .WithTagMapping(new TagName("!BezierCurve"), typeof(BezierCurve))
-            .WithTagMapping(new TagName("!TextBlock"), typeof(TextBlock));
+            .WithTagMapping(new TagName("!TextBlock"), typeof(TextBlock))
+            .WithTagMapping(new TagName("!Arc"), typeof(Arc))
+            ;
 
 
         lineConverter.ValueSerializer = serializerBuilder.BuildValueSerializer();

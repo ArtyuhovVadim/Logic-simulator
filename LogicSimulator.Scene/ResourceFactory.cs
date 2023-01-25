@@ -1,5 +1,6 @@
-﻿using System.Collections.Generic;
-using System.Linq;
+﻿using System;
+using System.Collections.Generic;
+using LogicSimulator.Utils;
 using SharpDX;
 using SharpDX.Direct2D1;
 using SharpDX.DirectWrite;
@@ -77,6 +78,34 @@ public class ResourceFactory
         sink.AddBezier(new BezierSegment { Point1 = p1, Point2 = p2, Point3 = p3 });
         sink.EndFigure(FigureEnd.Open);
 
+        sink.Close();
+        sink.Dispose();
+
+        return pathGeometry;
+    }
+
+    public Geometry CreateArcGeometry(Vector2 center, float radiusX, float radiusY, float startAngle, float endAngle)
+    {
+        var startAnglePos = MathHelper.GetPositionFromAngle(center, radiusX, radiusY, startAngle);
+        var endAnglePos = MathHelper.GetPositionFromAngle(center, radiusX, radiusY, endAngle);
+
+        if (Math.Abs(startAnglePos.X - endAnglePos.X) < 0.0001f && Math.Abs(startAnglePos.Y - endAnglePos.Y) < 0.0001f)
+            return CreateEllipseGeometry(new Ellipse(center, radiusX, radiusY));
+
+        var pathGeometry = new PathGeometry(_sceneRenderer.Factory);
+        var sink = pathGeometry.Open();
+        sink.BeginFigure(startAnglePos, FigureBegin.Hollow);
+
+        sink.AddArc(new ArcSegment
+        {
+            ArcSize = MathHelper.NormalizeAngle(startAngle - endAngle) < 180f ? ArcSize.Small : ArcSize.Large,
+            Point = endAnglePos,
+            RotationAngle = 0f,
+            Size = new Size2F(radiusX, radiusY),
+            SweepDirection = SweepDirection.CounterClockwise
+        });
+
+        sink.EndFigure(FigureEnd.Open);
         sink.Close();
         sink.Dispose();
 
