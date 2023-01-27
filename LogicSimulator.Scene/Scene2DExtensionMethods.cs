@@ -26,8 +26,10 @@ public static class Scene2DExtensionMethods
 
     public static (AbstractNode node, EditableSceneObject owner) GetNodeThatIntersectPoint(this Scene2D scene, Vector2 point)
     {
-        foreach (var obj in scene.Objects.OfType<EditableSceneObject>())
+        foreach (var obj in scene.Objects.OfType<EditableSceneObject>().Reverse())
         {
+            if (!obj.IsSelected) continue;
+
             foreach (var node in obj.Nodes)
             {
                 if (point.IsInRectangle(node.GetLocation(obj).RectangleRelativePointAsCenter(AbstractNode.NodeSize / scene.Scale)))
