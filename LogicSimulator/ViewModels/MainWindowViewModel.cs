@@ -3,6 +3,7 @@ using System.IO;
 using System.Windows.Input;
 using LogicSimulator.Infrastructure.Commands;
 using LogicSimulator.Infrastructure.Services.Interfaces;
+using LogicSimulator.Scene.SceneObjects;
 using LogicSimulator.ViewModels.AnchorableViewModels;
 using LogicSimulator.ViewModels.AnchorableViewModels.Base;
 using LogicSimulator.ViewModels.Base;
@@ -73,14 +74,29 @@ public class MainWindowViewModel : BindableBase
 
     public ICommand LoadExampleCommand => _loadExampleCommand ??= new LambdaCommand(_ =>
     {
-        var path = Path.Combine(Path.GetDirectoryName(System.Reflection.Assembly.GetEntryAssembly().Location), "Data/Example.lss");
+        var exePath = Path.GetDirectoryName(System.Reflection.Assembly.GetEntryAssembly().Location)!;
+        var schemePath = Path.Combine(exePath, "Data/Example.lss");
 
-        if (!_schemeFileService.ReadFromFile(path, out var scheme))
+        if (!_schemeFileService.ReadFromFile(schemePath, out var scheme))
         {
-            _userDialogService.ShowErrorMessage("Ошибка загрузки файла", $"Не удалось загрузить файл: {path}");
+            _userDialogService.ShowErrorMessage("Ошибка загрузки файла", $"Не удалось загрузить файл: {schemePath}");
             return;
         }
-        
+
+        scheme.Objects.Add(new Image { FilePath = Path.Combine(exePath, "Data/image.png") });
+        scheme.Objects.Add(new Image { FilePath = Path.Combine(exePath, "Data/image.png") });
+        scheme.Objects.Add(new Image { FilePath = Path.Combine(exePath, "Data/image.png") });
+        scheme.Objects.Add(new Image { FilePath = Path.Combine(exePath, "Data/image.png") });
+        scheme.Objects.Add(new Image { FilePath = Path.Combine(exePath, "Data/image.png") });
+        scheme.Objects.Add(new Image { FilePath = Path.Combine(exePath, "Data/image.png") });
+        scheme.Objects.Add(new Image { FilePath = Path.Combine(exePath, "Data/image.png") });
+        scheme.Objects.Add(new Image { FilePath = Path.Combine(exePath, "Data/image.png") });
+        scheme.Objects.Add(new Image { FilePath = Path.Combine(exePath, "Data/image.png") });
+        scheme.Objects.Add(new Image { FilePath = Path.Combine(exePath, "Data/image.png") });
+        scheme.Objects.Add(new Image { FilePath = Path.Combine(exePath, "Data/image.png") });
+        scheme.Objects.Add(new Image { FilePath = Path.Combine(exePath, "Data/image.png") });
+        scheme.Objects.Add(new Image { FilePath = Path.Combine(exePath, "Data/image.png") });
+
         SchemeViewModels.Add(new SchemeViewModel(scheme));
     }, _ => true);
 

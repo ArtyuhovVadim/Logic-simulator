@@ -1,5 +1,4 @@
 ﻿using SharpDX;
-using SharpDX.Mathematics.Interop;
 
 namespace LogicSimulator.Utils;
 

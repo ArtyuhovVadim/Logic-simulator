@@ -1,9 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using LogicSimulator.Utils;
 using SharpDX;
 using SharpDX.Direct2D1;
 using SharpDX.DirectWrite;
+using SharpDX.WIC;
+using Bitmap = SharpDX.Direct2D1.Bitmap;
+using PixelFormat = SharpDX.WIC.PixelFormat;
 
 namespace LogicSimulator.Scene;
 
@@ -110,6 +114,22 @@ public class ResourceFactory
         sink.Dispose();
 
         return pathGeometry;
+    }
+
+    public Bitmap CreateBitmap(string path)
+    {
+        if (string.IsNullOrWhiteSpace(path)) return null;
+
+        if (!File.Exists(path)) return null;
+
+        using var imagingFactory = new ImagingFactory();
+        using var bitmapDecoder = new BitmapDecoder(imagingFactory, path, DecodeOptions.CacheOnLoad);
+        using var frame = bitmapDecoder.GetFrame(0);
+        using var converter = new FormatConverter(imagingFactory);
+
+        converter.Initialize(frame, PixelFormat.Format32bppPRGBA);
+
+        return Bitmap.FromWicBitmap(_sceneRenderer.RenderTarget, converter);
     }
 
     public StrokeStyle CreateStrokeStyle(in StrokeStyleProperties properties, in float[] dashes)

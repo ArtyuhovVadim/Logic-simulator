@@ -24,6 +24,7 @@ public class EditorSelectionService : IEditorSelectionService
          { typeof(BezierCurve), new BezierCurveEditorViewModel() },
          { typeof(Arc), new ArcEditorViewModel() },
          { typeof(TextBlock), new TextBlockEditorViewModel() },
+         { typeof(Image), new ImageEditorViewModel() },
     };
 
     public EditorSelectionService(PropertiesViewModel propertiesViewModel)
