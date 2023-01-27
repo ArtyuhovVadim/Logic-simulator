@@ -187,3 +187,30 @@ Objects:
   StrokeThickness: 2
   Location: [1125, 375]
   Rotation: Degrees0
+- !Image
+  FilePath: C:\Users\Vadim\Desktop\Logic-simulator\LogicSimulator\bin\x64\Debug\net7.0-windows\Data/image.png
+  Width: 200
+  Height: 200
+  StrokeColor: [0, 0, 0, 1]
+  StrokeThickness: 1
+  IsBordered: false
+  Location: [1275, 775]
+  Rotation: Degrees0
+- !Image
+  FilePath: C:\Users\Vadim\Desktop\Logic-simulator\LogicSimulator\bin\x64\Debug\net7.0-windows\Data/image.png
+  Width: 200
+  Height: 200
+  StrokeColor: [0, 0, 0, 1]
+  StrokeThickness: 1
+  IsBordered: false
+  Location: [1025, 775]
+  Rotation: Degrees0
+- !Image
+  FilePath: C:\Users\Vadim\Desktop\Logic-simulator\LogicSimulator\bin\x64\Debug\net7.0-windows\Data/image.png
+  Width: 200
+  Height: 200
+  StrokeColor: [0, 0, 0, 1]
+  StrokeThickness: 1
+  IsBordered: false
+  Location: [775, 775]
+  Rotation: Degrees0

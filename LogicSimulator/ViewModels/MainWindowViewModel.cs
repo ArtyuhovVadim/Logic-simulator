@@ -3,7 +3,6 @@ using System.IO;
 using System.Windows.Input;
 using LogicSimulator.Infrastructure.Commands;
 using LogicSimulator.Infrastructure.Services.Interfaces;
-using LogicSimulator.Scene.SceneObjects;
 using LogicSimulator.ViewModels.AnchorableViewModels;
 using LogicSimulator.ViewModels.AnchorableViewModels.Base;
 using LogicSimulator.ViewModels.Base;
@@ -82,20 +81,6 @@ public class MainWindowViewModel : BindableBase
             _userDialogService.ShowErrorMessage("Ошибка загрузки файла", $"Не удалось загрузить файл: {schemePath}");
             return;
         }
-
-        scheme.Objects.Add(new Image { FilePath = Path.Combine(exePath, "Data/image.png") });
-        scheme.Objects.Add(new Image { FilePath = Path.Combine(exePath, "Data/image.png") });
-        scheme.Objects.Add(new Image { FilePath = Path.Combine(exePath, "Data/image.png") });
-        scheme.Objects.Add(new Image { FilePath = Path.Combine(exePath, "Data/image.png") });
-        scheme.Objects.Add(new Image { FilePath = Path.Combine(exePath, "Data/image.png") });
-        scheme.Objects.Add(new Image { FilePath = Path.Combine(exePath, "Data/image.png") });
-        scheme.Objects.Add(new Image { FilePath = Path.Combine(exePath, "Data/image.png") });
-        scheme.Objects.Add(new Image { FilePath = Path.Combine(exePath, "Data/image.png") });
-        scheme.Objects.Add(new Image { FilePath = Path.Combine(exePath, "Data/image.png") });
-        scheme.Objects.Add(new Image { FilePath = Path.Combine(exePath, "Data/image.png") });
-        scheme.Objects.Add(new Image { FilePath = Path.Combine(exePath, "Data/image.png") });
-        scheme.Objects.Add(new Image { FilePath = Path.Combine(exePath, "Data/image.png") });
-        scheme.Objects.Add(new Image { FilePath = Path.Combine(exePath, "Data/image.png") });
 
         SchemeViewModels.Add(new SchemeViewModel(scheme));
     }, _ => true);

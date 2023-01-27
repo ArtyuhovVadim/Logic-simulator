@@ -4,8 +4,7 @@ using LogicSimulator.Utils;
 using SharpDX;
 using SharpDX.Direct2D1;
 using SharpDX.DirectWrite;
-using System;
-using System.ComponentModel;
+using YamlDotNet.Serialization;
 
 namespace LogicSimulator.Scene.SceneObjects;
 
@@ -16,9 +15,6 @@ public class Image : EditableSceneObject
         var image = (Image)obj;
 
         image._isBitmapValid = false;
-        image.Width = 300;
-        image.Height = 300;
-        image.SourceAspectRatio = 0;
 
         var bitmap = scene.ResourceFactory.CreateBitmap(image.FilePath);
 
@@ -87,8 +83,10 @@ public class Image : EditableSceneObject
 
     private RectangleF Bounds => new(0, 0, _width, _height);
 
+    [YamlIgnore]
     public float SourceAspectRatio { get; private set; }
 
+    [YamlIgnore]
     public float CurrentAspectRatio => Width / Height;
 
     [Editable]

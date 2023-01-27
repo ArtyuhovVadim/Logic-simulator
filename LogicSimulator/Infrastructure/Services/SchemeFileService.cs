@@ -34,6 +34,7 @@ public class SchemeFileService : ISchemeFileService
             .WithTagMapping(new TagName("!BezierCurve"), typeof(BezierCurve))
             .WithTagMapping(new TagName("!TextBlock"), typeof(TextBlock))
             .WithTagMapping(new TagName("!Arc"), typeof(Arc))
+            .WithTagMapping(new TagName("!Image"), typeof(Image))
             ;
 
         var deserializerBuilder = new DeserializerBuilder()
@@ -47,6 +48,7 @@ public class SchemeFileService : ISchemeFileService
             .WithTagMapping(new TagName("!BezierCurve"), typeof(BezierCurve))
             .WithTagMapping(new TagName("!TextBlock"), typeof(TextBlock))
             .WithTagMapping(new TagName("!Arc"), typeof(Arc))
+            .WithTagMapping(new TagName("!Image"), typeof(Image))
             ;
 
 
