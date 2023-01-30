@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-
-namespace LogicSimulator.Scene;
+﻿namespace LogicSimulator.Scene;
 
 public static class RenderNotifier
 {

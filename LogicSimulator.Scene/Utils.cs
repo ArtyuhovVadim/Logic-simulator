@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace LogicSimulator.Scene;
+﻿namespace LogicSimulator.Scene;
 
 public static class Utils
 {

@@ -1,5 +1,4 @@
-﻿using System;
-using System.Windows;
+﻿using System.Windows;
 using LogicSimulator.Infrastructure.Commands.Base;
 
 namespace LogicSimulator.Infrastructure.Commands;

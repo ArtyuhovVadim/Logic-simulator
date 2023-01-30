@@ -1,5 +1,4 @@
-﻿using System.Linq;
-using LogicSimulator.Core;
+﻿using LogicSimulator.Core;
 using LogicSimulator.Core.LogicComponents;
 using LogicSimulator.Scene.SceneObjects;
 using LogicSimulator.Scene.SceneObjects.Gates.Base;

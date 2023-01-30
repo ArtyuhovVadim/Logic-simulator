@@ -1,5 +1,4 @@
-﻿using System;
-using LogicSimulator.Scene.SceneObjects;
+﻿using LogicSimulator.Scene.SceneObjects;
 using LogicSimulator.Scene.Tools.PlacingTools.Base;
 using SharpDX;
 

@@ -1,5 +1,4 @@
-﻿using System;
-using LogicSimulator.Infrastructure;
+﻿using LogicSimulator.Infrastructure;
 using LogicSimulator.ViewModels.Base;
 
 namespace LogicSimulator.ViewModels.UserDialogViewModels.Base;

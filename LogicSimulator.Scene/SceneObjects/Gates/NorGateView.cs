@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using LogicSimulator.Core;
+﻿using LogicSimulator.Core;
 using LogicSimulator.Core.LogicComponents.Gates;
 using LogicSimulator.Scene.SceneObjects.Gates.Base;
 using SharpDX;

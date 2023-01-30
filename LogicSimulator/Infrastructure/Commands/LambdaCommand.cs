@@ -1,5 +1,4 @@
 ﻿using LogicSimulator.Infrastructure.Commands.Base;
-using System;
 
 namespace LogicSimulator.Infrastructure.Commands;
 

@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-
-namespace LogicSimulator.ViewModels.EditorViewModels.Base;
+﻿namespace LogicSimulator.ViewModels.EditorViewModels.Base;
 
 public class FloatPropertyViewModel : SinglePropertyViewModel
 {

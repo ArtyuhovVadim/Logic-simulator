@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
+﻿using System.IO;
 using LogicSimulator.Scene;
 using LogicSimulator.Scene.SceneObjects;
 using SharpDX;

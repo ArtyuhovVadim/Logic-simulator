@@ -4,7 +4,6 @@ using LogicSimulator.Scene.SceneObjects.Gates.Base;
 using SharpDX;
 using SharpDX.Direct2D1;
 using SharpDX.DirectWrite;
-using System.Collections.Generic;
 
 namespace LogicSimulator.Scene.SceneObjects.Gates;
 

@@ -6,6 +6,7 @@
         <UseWPF>true</UseWPF>
         <Platforms>x64;x86</Platforms>
         <LangVersion>preview</LangVersion>
+        <ImplicitUsings>enable</ImplicitUsings>
     </PropertyGroup>
 
     <ItemGroup>

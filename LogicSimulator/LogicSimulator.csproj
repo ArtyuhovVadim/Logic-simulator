@@ -10,6 +10,7 @@
         <LangVersion>latest</LangVersion>
         <ApplicationIcon>Icons\icon512x512.ico</ApplicationIcon>
 	    <VersionPrefix>0.3.1</VersionPrefix>
+	    <ImplicitUsings>enable</ImplicitUsings>
     </PropertyGroup>
 
     <ItemGroup>

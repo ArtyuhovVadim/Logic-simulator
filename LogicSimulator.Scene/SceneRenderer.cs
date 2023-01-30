@@ -2,7 +2,6 @@
 using SharpDX;
 using SharpDX.Direct2D1;
 using SharpDX.WIC;
-using System;
 using System.IO;
 using System.Windows;
 using System.Windows.Interop;

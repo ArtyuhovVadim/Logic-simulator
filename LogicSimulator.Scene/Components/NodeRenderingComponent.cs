@@ -2,7 +2,6 @@
 using LogicSimulator.Scene.SceneObjects.Base;
 using SharpDX;
 using SharpDX.Direct2D1;
-using System.Linq;
 using LogicSimulator.Utils;
 using LogicSimulator.Scene.Nodes;
 

@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using LogicSimulator.Scene.SceneObjects.Base;
+﻿using LogicSimulator.Scene.SceneObjects.Base;
 
 namespace LogicSimulator.Models;
 

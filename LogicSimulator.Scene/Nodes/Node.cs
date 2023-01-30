@@ -1,5 +1,4 @@
-﻿using System;
-using LogicSimulator.Scene.SceneObjects.Base;
+﻿using LogicSimulator.Scene.SceneObjects.Base;
 using SharpDX;
 
 namespace LogicSimulator.Scene.Nodes;

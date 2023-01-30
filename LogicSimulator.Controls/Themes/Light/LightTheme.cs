@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace LogicSimulator.Controls.Themes.Light;
+﻿namespace LogicSimulator.Controls.Themes.Light;
 
 public class LightTheme : Theme
 {

@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using LogicSimulator.Scene;
+﻿using LogicSimulator.Scene;
 
 namespace LogicSimulator.ViewModels.EditorViewModels.Base;
 

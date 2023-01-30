@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-
-namespace LogicSimulator.ViewModels.EditorViewModels.Base;
+﻿namespace LogicSimulator.ViewModels.EditorViewModels.Base;
 
 public abstract class MultiPropertyViewModel : PropertyViewModel
 {

@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace LogicSimulator.Controls.Themes.Dark;
+﻿namespace LogicSimulator.Controls.Themes.Dark;
 
 public class DarkTheme : Theme
 {
