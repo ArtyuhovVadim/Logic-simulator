@@ -1,10 +1,12 @@
-﻿using LogicSimulator.Scene.SceneObjects;
+﻿using LogicSimulator.Infrastructure;
+using LogicSimulator.Scene.SceneObjects;
 using LogicSimulator.ViewModels.EditorViewModels.Base;
 using LogicSimulator.ViewModels.EditorViewModels.Layout;
 using LogicSimulator.ViewModels.EditorViewModels.Layout.Builders;
 
 namespace LogicSimulator.ViewModels.EditorViewModels;
 
+[Editor(typeof(Ellipse))]
 public class EllipseEditorViewModel : EditorViewModel
 {
     protected override EditorLayout CreateLayout() => LayoutBuilder

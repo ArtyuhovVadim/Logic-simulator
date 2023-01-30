@@ -1,28 +1,19 @@
-﻿using LogicSimulator.Infrastructure.Services.Interfaces;
-using LogicSimulator.Scene.SceneObjects;
+﻿using System.Reflection;
+using LogicSimulator.Infrastructure.Services.Interfaces;
 using LogicSimulator.Scene.SceneObjects.Base;
 using LogicSimulator.ViewModels;
 using LogicSimulator.ViewModels.AnchorableViewModels;
-using LogicSimulator.ViewModels.EditorViewModels;
 using LogicSimulator.ViewModels.EditorViewModels.Base;
 
 namespace LogicSimulator.Infrastructure.Services;
 
 public class EditorSelectionService : IEditorSelectionService
 {
+    private static readonly Dictionary<Type, EditorViewModel> EditorsMap = new();
+
     private readonly PropertiesViewModel _propertiesViewModel;
 
-    private readonly Dictionary<Type, EditorViewModel> _editorsMap = new()
-    {
-         { typeof(Rectangle), new RectangleEditorViewModel() },
-         { typeof(RoundedRectangle), new RoundedRectangleEditorViewModel() },
-         { typeof(Ellipse), new EllipseEditorViewModel() },
-         { typeof(Line), new LineEditorViewModel() },
-         { typeof(BezierCurve), new BezierCurveEditorViewModel() },
-         { typeof(Arc), new ArcEditorViewModel() },
-         { typeof(TextBlock), new TextBlockEditorViewModel() },
-         { typeof(Image), new ImageEditorViewModel() },
-    };
+    static EditorSelectionService() => FillEditorMap();
 
     public EditorSelectionService(PropertiesViewModel propertiesViewModel)
     {
@@ -47,7 +38,7 @@ public class EditorSelectionService : IEditorSelectionService
             return;
         }
 
-        if (!_editorsMap.TryGetValue(firstObjectType, out var editor))
+        if (!EditorsMap.TryGetValue(firstObjectType, out var editor))
         {
             SetEmptyEditor();
             return;
@@ -61,5 +52,20 @@ public class EditorSelectionService : IEditorSelectionService
     {
         _propertiesViewModel.CurrentEditorViewModel?.SetObjectsToEdit(Enumerable.Empty<BaseSceneObject>());
         _propertiesViewModel.CurrentEditorViewModel = null;
+    }
+
+    private static void FillEditorMap()
+    {
+        var assembly = Assembly.GetEntryAssembly();
+
+        foreach (var type in assembly.DefinedTypes)
+        {
+            var attribute = Attribute.GetCustomAttribute(type, typeof(EditorAttribute));
+
+            if (attribute is EditorAttribute editorAttribute)
+            {
+                EditorsMap.Add(editorAttribute.ObjectType, (EditorViewModel)Activator.CreateInstance(type));
+            }
+        }
     }
 }

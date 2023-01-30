@@ -1,10 +1,12 @@
-﻿using LogicSimulator.Scene.SceneObjects;
+﻿using LogicSimulator.Infrastructure;
+using LogicSimulator.Scene.SceneObjects;
 using LogicSimulator.ViewModels.EditorViewModels.Base;
 using LogicSimulator.ViewModels.EditorViewModels.Layout;
 using LogicSimulator.ViewModels.EditorViewModels.Layout.Builders;
 
 namespace LogicSimulator.ViewModels.EditorViewModels;
 
+[Editor(typeof(BezierCurve))]
 public class BezierCurveEditorViewModel : EditorViewModel
 {
     protected override EditorLayout CreateLayout() => LayoutBuilder
