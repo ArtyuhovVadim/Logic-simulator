@@ -61,6 +61,8 @@ public partial class App
 
         IsDesignMode = false;
 
+        Environment.CurrentDirectory = Path.GetDirectoryName(System.Reflection.Assembly.GetEntryAssembly().Location);
+
         await Host.StartAsync().ConfigureAwait(false);
     }
 

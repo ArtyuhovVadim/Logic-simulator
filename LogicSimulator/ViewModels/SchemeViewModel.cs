@@ -152,7 +152,7 @@ public class SchemeViewModel : BindableBase
     public ObservableCollection<BaseSceneObject> Objects
     {
         get => _objects;
-        set => Set(ref _objects, value);
+        private set => Set(ref _objects, value);
     }
 
     #endregion

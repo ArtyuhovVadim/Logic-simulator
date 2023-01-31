@@ -1,9 +1,9 @@
 ﻿using System.Collections.ObjectModel;
-using System.IO;
 using System.Windows.Input;
 using LogicSimulator.Infrastructure.Commands;
 using LogicSimulator.Infrastructure.Services;
 using LogicSimulator.Infrastructure.Services.Interfaces;
+using LogicSimulator.Scene;
 using LogicSimulator.ViewModels.AnchorableViewModels;
 using LogicSimulator.ViewModels.AnchorableViewModels.Base;
 using LogicSimulator.ViewModels.Base;
@@ -12,18 +12,15 @@ namespace LogicSimulator.ViewModels;
 
 public class MainWindowViewModel : BindableBase
 {
-    private readonly ISchemeFileService _schemeFileService;
     private readonly IUserDialogService _userDialogService;
     private readonly IProjectFileService _projectFileService;
 
     public MainWindowViewModel(
-        ISchemeFileService schemeFileService,
         IUserDialogService userDialogService,
         IProjectFileService projectFileService,
         PropertiesViewModel propertiesViewModel,
         ProjectExplorerViewModel projectExplorerViewModel)
     {
-        _schemeFileService = schemeFileService;
         _userDialogService = userDialogService;
         _projectFileService = projectFileService;
 
@@ -31,8 +28,6 @@ public class MainWindowViewModel : BindableBase
 
         AnchorableViewModels.Add(propertiesViewModel);
         AnchorableViewModels.Add(projectExplorerViewModel);
-
-        LoadExampleCommand.Execute(null);
     }
 
     #region ActiveContent
@@ -43,18 +38,6 @@ public class MainWindowViewModel : BindableBase
     {
         get => _activeContent;
         set => Set(ref _activeContent, value);
-    }
-
-    #endregion
-
-    #region SchemeViewModels
-
-    private ObservableCollection<SchemeViewModel> _schemeViewModels = new();
-
-    public ObservableCollection<SchemeViewModel> SchemeViewModels
-    {
-        get => _schemeViewModels;
-        private set => Set(ref _schemeViewModels, value);
     }
 
     #endregion
@@ -71,22 +54,33 @@ public class MainWindowViewModel : BindableBase
 
     #endregion
 
+    #region ActiveProjectViewModel
+
+    private ProjectViewModel _activeProjectViewModel;
+
+    public ProjectViewModel ActiveProjectViewModel
+    {
+        get => _activeProjectViewModel;
+        set => Set(ref _activeProjectViewModel, value);
+    }
+
+    #endregion
+
     #region LoadExampleCommand
 
     private ICommand _loadExampleCommand;
 
     public ICommand LoadExampleCommand => _loadExampleCommand ??= new LambdaCommand(_ =>
     {
-        var exePath = Path.GetDirectoryName(System.Reflection.Assembly.GetEntryAssembly().Location)!;
-        var schemePath = Path.Combine(exePath, "Data/Example.lss");
+        var projectPath = @"C:\Users\Vadim\Desktop\ExampleProject\ExampleProject.lsproj";
 
-        if (!_schemeFileService.ReadFromFile(schemePath, out var scheme))
+        if (!_projectFileService.ReadFromFile(projectPath, out var project))
         {
-            _userDialogService.ShowErrorMessage("Ошибка загрузки файла", $"Не удалось загрузить файл: {schemePath}");
+            _userDialogService.ShowErrorMessage("Ошибка загрузки файла", $"Не удалось загрузить файл: {projectPath}");
             return;
         }
 
-        SchemeViewModels.Add(new SchemeViewModel(scheme));
+        ActiveProjectViewModel = new ProjectViewModel(project);
     }, _ => true);
 
     #endregion
@@ -103,10 +97,6 @@ public class MainWindowViewModel : BindableBase
 
     private ICommand _testCommand;
 
-    public ICommand TestCommand => _testCommand ??= new LambdaCommand(_ =>
-    {
-        _projectFileService.ReadFromFile(@"C:\Users\Vadim\Desktop\ExampleProject\ExampleProject.lsproj", out var proj);
-    }, _ => true);
-
+    public ICommand TestCommand => _testCommand ??= new LambdaCommand(_ => { }, _ => true);
     #endregion
 }
