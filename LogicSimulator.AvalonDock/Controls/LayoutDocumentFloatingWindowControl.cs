@@ -7,15 +7,17 @@
    License (Ms-PL) as published at https://opensource.org/licenses/MS-PL
  ************************************************************************/
 
-using AvalonDock.Commands;
-using AvalonDock.Layout;
-using Microsoft.Windows.Shell;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls.Primitives;
 using System.Windows.Input;
+
+using AvalonDock.Commands;
+using AvalonDock.Layout;
+
+using Microsoft.Windows.Shell;
 
 namespace AvalonDock.Controls
 {
@@ -118,17 +120,18 @@ namespace AvalonDock.Controls
 		{
 			switch (msg)
 			{
-				case Win32Helper.WM_NCLBUTTONDOWN: //Left button down on title -> start dragging over docking manager
-					if (wParam.ToInt32() == Win32Helper.HT_CAPTION)
+				case Win32Helper.WM_ACTIVATE:
+					var isInactive = ((int)wParam & 0xFFFF) == Win32Helper.WA_INACTIVE;
+					if (_model.IsSinglePane)
 					{
-						LayoutDocumentPane layoutDocumentPane = _model.Descendents().OfType<LayoutDocumentPane>().FirstOrDefault(p => p.ChildrenCount > 0 && p.SelectedContent != null);
-						if (layoutDocumentPane != null)
-						{
-							layoutDocumentPane.SelectedContent.IsActive = true;
-						}
-
-						handled = true;
+						LayoutFloatingWindowControlHelper.ActiveTheContentOfSinglePane(this, !isInactive);
 					}
+					else
+					{
+						LayoutFloatingWindowControlHelper.ActiveTheContentOfMultiPane(this, !isInactive);
+					}
+
+					handled = true;
 					break;
 
 				case Win32Helper.WM_NCRBUTTONUP:

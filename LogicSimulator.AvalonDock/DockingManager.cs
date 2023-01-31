@@ -115,9 +115,34 @@ namespace AvalonDock
 		/// <summary>Event fired after a document is closed.</summary>
 		public event EventHandler<DocumentClosedEventArgs> DocumentClosed;
 
+		/// <summary>Event fired when an anchorable is about to be closed.</summary>
+		/// <remarks>Subscribers have the opportuniy to cancel the operation.</remarks>
+		public event EventHandler<AnchorableClosingEventArgs> AnchorableClosing;
+
+		/// <summary>Event fired after an anchorable is closed</summary>
+		public event EventHandler<AnchorableClosedEventArgs> AnchorableClosed;
+
+		/// <summary>Event fired when an anchorable is about to be hidden.</summary>
+		/// <remarks>Subscribers have the opportuniy to cancel the operation.</remarks>
+		public event EventHandler<AnchorableHidingEventArgs> AnchorableHiding;
+
+		/// <summary>Event fired after an anchorable is hidden</summary>
+		public event EventHandler<AnchorableHiddenEventArgs> AnchorableHidden;
+
 		/// <summary>Event is raised when <see cref="ActiveContent"/> changes.</summary>
 		/// <seealso cref="ActiveContent"/>
 		public event EventHandler ActiveContentChanged;
+
+		/// <summary>
+		/// Event is raised when LayoutFloatingWindowControl created
+		/// </summary>
+		public event EventHandler<LayoutFloatingWindowControlCreatedEventArgs> LayoutFloatingWindowControlCreated;
+
+		/// <summary>
+		/// Event is raised when LayoutFloatingWindowControl closed
+		/// </summary>
+		public event EventHandler<LayoutFloatingWindowControlClosedEventArgs> LayoutFloatingWindowControlClosed;
+
 
 		#endregion Events
 
@@ -1736,7 +1761,11 @@ namespace AvalonDock
 
 			var show = fwc == null; // Do not show already visible floating window
 			if (fwc == null)
+			{
 				fwc = CreateFloatingWindow(contentModel, false);
+
+				LayoutFloatingWindowControlCreated?.Invoke(this, new LayoutFloatingWindowControlCreatedEventArgs(fwc));
+			}
 
 			if (fwc != null)
 			{
@@ -1758,6 +1787,9 @@ namespace AvalonDock
 		{
 			var fwc = CreateFloatingWindowForLayoutAnchorableWithoutParent(paneModel, false);
 			if (fwc == null) return;
+
+			LayoutFloatingWindowControlCreated?.Invoke(this, new LayoutFloatingWindowControlCreatedEventArgs(fwc));
+
 			fwc.AttachDrag();
 			fwc.Show();
 		}
@@ -1815,7 +1847,12 @@ namespace AvalonDock
 			overlayWindowHosts.AddRange(bottomFloatingWindows);
 		}
 
-		internal void RemoveFloatingWindow(LayoutFloatingWindowControl floatingWindow) => _fwList.Remove(floatingWindow);
+		internal void RemoveFloatingWindow(LayoutFloatingWindowControl floatingWindow)
+		{
+			_fwList.Remove(floatingWindow);
+
+			LayoutFloatingWindowControlClosed?.Invoke(this, new LayoutFloatingWindowControlClosedEventArgs(floatingWindow));
+		}
 
 		internal void ExecuteCloseCommand(LayoutDocument document)
 		{
@@ -1922,11 +1959,35 @@ namespace AvalonDock
 		internal void ExecuteCloseCommand(LayoutAnchorable anchorable)
 		{
 			if (!(anchorable is LayoutAnchorable model)) return;
-			model.CloseAnchorable();
-			RemoveViewFromLogicalChild(anchorable);
+
+			AnchorableClosingEventArgs closingArgs = null;
+			AnchorableClosing?.Invoke(this, closingArgs = new AnchorableClosingEventArgs(model));
+			if (closingArgs?.Cancel == true)
+				return;
+
+			if (model.CloseAnchorable())
+			{
+				RemoveViewFromLogicalChild(model);
+				AnchorableClosed?.Invoke(this, new AnchorableClosedEventArgs(model));
+			}
 		}
 
-		internal void ExecuteHideCommand(LayoutAnchorable anchorable) => anchorable?.Hide();
+		internal void ExecuteHideCommand(LayoutAnchorable anchorable)
+		{
+			if (!(anchorable is LayoutAnchorable model)) return;
+
+			AnchorableHidingEventArgs hidingArgs = null;
+			AnchorableHiding?.Invoke(this, hidingArgs = new AnchorableHidingEventArgs(model));
+			if (hidingArgs?.CloseInsteadOfHide == true)
+			{
+				ExecuteCloseCommand(model);
+				return;
+			}
+			if (hidingArgs?.Cancel == true) return;
+
+			if(model.HideAnchorable(true))
+				AnchorableHidden?.Invoke(this, new AnchorableHiddenEventArgs(model));
+		}
 
 		internal void ExecuteAutoHideCommand(LayoutAnchorable _anchorable) => _anchorable.ToggleAutoHide();
 
@@ -2230,6 +2291,7 @@ namespace AvalonDock
 					var documentsToRemove = Layout.Descendents().OfType<LayoutDocument>().Where(d => e.OldItems.Contains(d.Content)).ToArray();
 					foreach (var documentToRemove in documentsToRemove)
 					{
+						documentToRemove.Content = null;
 						documentToRemove.Parent.RemoveChild(documentToRemove);
 						RemoveViewFromLogicalChild(documentToRemove);
 					}
