@@ -60,6 +60,11 @@
                 <TextBlock
                     Margin="0,0,5,0"
                     Foreground="White"
+                    Text="Статус..." />
+
+                <!--<TextBlock
+                    Margin="0,0,5,0"
+                    Foreground="White"
                     Text="{Binding Path=ActiveContent.Scale,
                                    StringFormat='Масштаб: {0:0.00}',
                                    FallbackValue=''}" />
@@ -75,7 +80,7 @@
                     Foreground="White"
                     Text="{Binding Path=ActiveContent.Objects.Count,
                                    StringFormat='Кол-во объектов: {0}',
-                                   FallbackValue=''}" />
+                                   FallbackValue=''}" />-->
             </StatusBar>
 
             <Menu HorizontalAlignment="Right">
@@ -95,7 +100,7 @@
             ActiveContent="{Binding Path=ActiveContent,
                                     Mode=TwoWay}"
             AnchorablesSource="{Binding Path=AnchorableViewModels}"
-            DocumentsSource="{Binding Path=SchemeViewModels}">
+            DocumentsSource="{Binding Path=OpenedSchemes}">
             <DockingManager.LayoutItemTemplateSelector>
                 <infrastructure:PanesTemplateSelector>
                     <infrastructure:PanesTemplateSelector.SchemeViewTemplate>
@@ -110,7 +115,7 @@
                     </infrastructure:PanesTemplateSelector.PropertiesViewTemplate>
                     <infrastructure:PanesTemplateSelector.ProjectExplorerViewTemplate>
                         <DataTemplate DataType="{x:Type avm:ProjectExplorerViewModel}">
-                            <TextBlock FontSize="24" Text="{Binding Path=Name}" />
+                            <views:ProjectExplorerView />
                         </DataTemplate>
                     </infrastructure:PanesTemplateSelector.ProjectExplorerViewTemplate>
                 </infrastructure:PanesTemplateSelector>
@@ -120,7 +125,8 @@
                     <infrastructure:PanesStyleSelector.SchemeViewStyle>
                         <Style TargetType="{x:Type LayoutDocumentItem}">
                             <Setter Property="Title" Value="{Binding Path=Model.Name}" />
-                            <Setter Property="CanClose" Value="False" />
+                            <Setter Property="CloseCommand" Value="{Binding Path=MainWindowViewModel.SchemeCloseCommand, Source={StaticResource Locator}}" />
+                            
                         </Style>
                     </infrastructure:PanesStyleSelector.SchemeViewStyle>
                     <infrastructure:PanesStyleSelector.PropertiesViewStyle>

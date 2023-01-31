@@ -3,7 +3,6 @@ using System.Windows.Input;
 using LogicSimulator.Infrastructure.Commands;
 using LogicSimulator.Infrastructure.Services;
 using LogicSimulator.Infrastructure.Services.Interfaces;
-using LogicSimulator.Scene;
 using LogicSimulator.ViewModels.AnchorableViewModels;
 using LogicSimulator.ViewModels.AnchorableViewModels.Base;
 using LogicSimulator.ViewModels.Base;
@@ -14,6 +13,7 @@ public class MainWindowViewModel : BindableBase
 {
     private readonly IUserDialogService _userDialogService;
     private readonly IProjectFileService _projectFileService;
+    private readonly ProjectExplorerViewModel _projectExplorerViewModel;
 
     public MainWindowViewModel(
         IUserDialogService userDialogService,
@@ -23,8 +23,12 @@ public class MainWindowViewModel : BindableBase
     {
         _userDialogService = userDialogService;
         _projectFileService = projectFileService;
+        _projectExplorerViewModel = projectExplorerViewModel;
 
         propertiesViewModel.IsVisible = true;
+        projectExplorerViewModel.IsVisible = true;
+
+        projectExplorerViewModel.SchemeOpened += OnSchemeOpened;
 
         AnchorableViewModels.Add(propertiesViewModel);
         AnchorableViewModels.Add(projectExplorerViewModel);
@@ -61,7 +65,25 @@ public class MainWindowViewModel : BindableBase
     public ProjectViewModel ActiveProjectViewModel
     {
         get => _activeProjectViewModel;
-        set => Set(ref _activeProjectViewModel, value);
+        set
+        {
+            if (Set(ref _activeProjectViewModel, value))
+            {
+                _projectExplorerViewModel.ProjectViewModel = value;
+            }
+        }
+    }
+
+    #endregion
+
+    #region OpenedSchemes
+
+    private ObservableCollection<SchemeViewModel> _openedSchemes = new();
+
+    public ObservableCollection<SchemeViewModel> OpenedSchemes
+    {
+        get => _openedSchemes;
+        set => Set(ref _openedSchemes, value);
     }
 
     #endregion
@@ -97,6 +119,33 @@ public class MainWindowViewModel : BindableBase
 
     private ICommand _testCommand;
 
-    public ICommand TestCommand => _testCommand ??= new LambdaCommand(_ => { }, _ => true);
+    public ICommand TestCommand => _testCommand ??= new LambdaCommand(_ =>
+    {
+        SchemeCloseCommand.Execute(null);
+    }, _ => true);
+
     #endregion
+
+    #region SchemeClosedCommand
+
+    private ICommand _schemeClosedCommand;
+
+    public ICommand SchemeCloseCommand => _schemeClosedCommand ??= new LambdaCommand(_ =>
+    {
+        
+    }, _ => true);
+
+    #endregion
+
+    private void OnSchemeOpened(SchemeViewModel scheme)
+    {
+        if (OpenedSchemes.Contains(scheme))
+        {
+            ActiveContent = scheme;
+        }
+        else
+        {
+            OpenedSchemes.Add(scheme);
+        }
+    }
 }
