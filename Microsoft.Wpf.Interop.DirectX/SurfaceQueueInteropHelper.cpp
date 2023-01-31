@@ -321,14 +321,14 @@ namespace Microsoft {
                 if (renderMode == QueueRenderMode::RenderDXGI)
                 {
                     // Render D3D10 content
-                    try
-                    {
+                    //try
+                    //{
                         RenderToDXGI((IntPtr)(void*)pDXGISurface, isNewSurface);
-                    }
-                    catch (Exception^)
-                    {
-                        IFC(E_FAIL);
-                    }
+                    //}
+                    //catch (Exception^)
+                    //{
+                    //    IFC(E_FAIL);
+                    //}
                 }
 
                 // Produce the surface
