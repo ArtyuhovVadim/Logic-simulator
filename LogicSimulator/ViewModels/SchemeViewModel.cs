@@ -22,7 +22,7 @@ public class SchemeViewModel : BindableBase
 
     private readonly SelectionTool _selectionTool = new();
     private readonly RectangleSelectionTool _rectangleSelectionTool = new();
-    private readonly DragTool _dragTool = new() { GridSnap = 25f };
+    private readonly DragTool _dragTool = new();
     private readonly NodeDragTool _nodeDragTool = new();
 
     private readonly RectanglePlacingTool _rectanglePlacingTool = new();
