@@ -2,6 +2,7 @@
 using System.IO;
 using System.Windows.Input;
 using LogicSimulator.Infrastructure.Commands;
+using LogicSimulator.Infrastructure.Services;
 using LogicSimulator.Infrastructure.Services.Interfaces;
 using LogicSimulator.ViewModels.AnchorableViewModels;
 using LogicSimulator.ViewModels.AnchorableViewModels.Base;
@@ -13,15 +14,18 @@ public class MainWindowViewModel : BindableBase
 {
     private readonly ISchemeFileService _schemeFileService;
     private readonly IUserDialogService _userDialogService;
+    private readonly IProjectFileService _projectFileService;
 
     public MainWindowViewModel(
         ISchemeFileService schemeFileService,
         IUserDialogService userDialogService,
+        IProjectFileService projectFileService,
         PropertiesViewModel propertiesViewModel,
         ProjectExplorerViewModel projectExplorerViewModel)
     {
         _schemeFileService = schemeFileService;
         _userDialogService = userDialogService;
+        _projectFileService = projectFileService;
 
         propertiesViewModel.IsVisible = true;
 
@@ -99,7 +103,10 @@ public class MainWindowViewModel : BindableBase
 
     private ICommand _testCommand;
 
-    public ICommand TestCommand => _testCommand ??= new LambdaCommand(_ => { }, _ => true);
+    public ICommand TestCommand => _testCommand ??= new LambdaCommand(_ =>
+    {
+        _projectFileService.ReadFromFile(@"C:\Users\Vadim\Desktop\ExampleProject\ExampleProject.lsproj", out var proj);
+    }, _ => true);
 
     #endregion
 }

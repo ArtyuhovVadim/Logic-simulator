@@ -94,7 +94,7 @@ public class SchemeFileService : ISchemeFileService
             using var streamReader = new StreamReader(path, Encoding.Default, false, _fileReadStreamOptions);
 
             var serializedScheme = streamReader.ReadToEnd();
-
+            //TODO: scheme = _deserializer.Deserialize<Scheme>(streamReader);
             scheme = _deserializer.Deserialize<Scheme>(serializedScheme);
 
             return true;
