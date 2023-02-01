@@ -1,4 +1,7 @@
-﻿using Microsoft.Extensions.Configuration;
+﻿using System.Windows;
+using LogicSimulator.Infrastructure.Services.Interfaces;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 
 namespace LogicSimulator;
@@ -8,9 +11,27 @@ public static class Program
     [STAThread]
     public static void Main(string[] args)
     {
-        var app = new App();
-        app.InitializeComponent();
-        app.Run();
+        try
+        {
+            var app = new App();
+            app.InitializeComponent();
+            app.Run();
+        }
+        catch (Exception e)
+        {
+            var dialog = App.Host.Services.GetRequiredService<IUserDialogService>();
+
+            var message = $"Message: {e.Message}\nSource: {e.Source}\nStackTrace:\n{e.StackTrace}";
+
+            if (dialog is null)
+            {
+                MessageBox.Show(message, "Ошибка!", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+            else
+            {
+                dialog.ShowErrorMessage("Ошибка!", message);
+            }
+        }
     }
 
     public static IHostBuilder CreateHostBuilder(string[] args)
