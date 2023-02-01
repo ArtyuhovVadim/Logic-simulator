@@ -1,6 +1,4 @@
-﻿using System.Collections.ObjectModel;
-using System.Windows.Input;
-using LogicSimulator.Infrastructure.Commands;
+﻿using LogicSimulator.Infrastructure.Commands;
 using LogicSimulator.Infrastructure.Services;
 using LogicSimulator.Infrastructure.Services.Interfaces;
 using LogicSimulator.ViewModels.AnchorableViewModels;
@@ -36,21 +34,21 @@ public class MainWindowViewModel : BindableBase
 
     #region ActiveContent
 
-    private BindableBase _activeContent;
+    private AnchorableViewModel _activeAnchorable;
 
-    public BindableBase ActiveContent
+    public AnchorableViewModel ActiveContent
     {
-        get => _activeContent;
-        set => Set(ref _activeContent, value);
+        get => _activeAnchorable;
+        set => Set(ref _activeAnchorable, value);
     }
 
     #endregion
 
     #region AnchorableViewModels
 
-    private ObservableCollection<BaseAnchorableViewModel> _anchorableViewModels = new();
+    private ObservableCollection<AnchorableViewModel> _anchorableViewModels = new();
 
-    public ObservableCollection<BaseAnchorableViewModel> AnchorableViewModels
+    public ObservableCollection<AnchorableViewModel> AnchorableViewModels
     {
         get => _anchorableViewModels;
         private set => Set(ref _anchorableViewModels, value);
@@ -121,31 +119,17 @@ public class MainWindowViewModel : BindableBase
 
     public ICommand TestCommand => _testCommand ??= new LambdaCommand(_ =>
     {
-        SchemeCloseCommand.Execute(null);
-    }, _ => true);
-
-    #endregion
-
-    #region SchemeClosedCommand
-
-    private ICommand _schemeClosedCommand;
-
-    public ICommand SchemeCloseCommand => _schemeClosedCommand ??= new LambdaCommand(_ =>
-    {
-        
     }, _ => true);
 
     #endregion
 
     private void OnSchemeOpened(SchemeViewModel scheme)
     {
-        if (OpenedSchemes.Contains(scheme))
-        {
-            ActiveContent = scheme;
-        }
-        else
+        if (!OpenedSchemes.Contains(scheme))
         {
             OpenedSchemes.Add(scheme);
         }
+
+        scheme.IsActive = true;
     }
 }

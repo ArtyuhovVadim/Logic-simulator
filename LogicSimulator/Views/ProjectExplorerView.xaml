@@ -2,11 +2,11 @@
     x:Class="LogicSimulator.Views.ProjectExplorerView"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:anchorableViewModels="clr-namespace:LogicSimulator.ViewModels.AnchorableViewModels"
+    xmlns:avm="clr-namespace:LogicSimulator.ViewModels.AnchorableViewModels"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:vm="clr-namespace:LogicSimulator.ViewModels"
-    d:DataContext="{d:DesignInstance Type=anchorableViewModels:ProjectExplorerViewModel}"
+    d:DataContext="{d:DesignInstance Type=avm:ProjectExplorerViewModel}"
     d:DesignHeight="480"
     d:DesignWidth="360"
     mc:Ignorable="d">
@@ -219,8 +219,8 @@
                 <HierarchicalDataTemplate DataType="{x:Type vm:ProjectViewModel}" ItemsSource="{Binding Path=Schemes}">
                     <TextBlock Text="{Binding Path=Name}" />
                     <HierarchicalDataTemplate.ItemTemplate>
-                        <HierarchicalDataTemplate DataType="{x:Type vm:SchemeViewModel}">
-                            <TextBlock Text="{Binding Path=Name}">
+                        <HierarchicalDataTemplate DataType="{x:Type avm:SchemeViewModel}">
+                            <TextBlock Text="{Binding Path=Title}">
                                 <TextBlock.InputBindings>
                                     <MouseBinding
                                         Command="{Binding Path=DataContext.OpenSchemeCommand,

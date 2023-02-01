@@ -1,17 +1,13 @@
-﻿using System.Windows.Input;
-using LogicSimulator.Infrastructure.Commands;
+﻿using LogicSimulator.Infrastructure.Commands;
 using LogicSimulator.ViewModels.AnchorableViewModels.Base;
 
 namespace LogicSimulator.ViewModels.AnchorableViewModels;
 
-public class ProjectExplorerViewModel : BaseAnchorableViewModel
+public class ProjectExplorerViewModel : ToolViewModel
 {
     public event Action<SchemeViewModel> SchemeOpened;
 
-    public ProjectExplorerViewModel()
-    {
-        Name = "Обозреватель проекта";
-    }
+    public override string Title => "Обозреватель проекта";
 
     #region ProjectViewModel
 

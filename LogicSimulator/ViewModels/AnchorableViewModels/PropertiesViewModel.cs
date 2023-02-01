@@ -3,12 +3,9 @@ using LogicSimulator.ViewModels.EditorViewModels.Base;
 
 namespace LogicSimulator.ViewModels.AnchorableViewModels;
 
-public class PropertiesViewModel : BaseAnchorableViewModel
+public class PropertiesViewModel : ToolViewModel
 {
-    public PropertiesViewModel()
-    {
-        Name = "Свойства";
-    }
+    public override string Title => "Свойства";
 
     #region CurrentEditorViewModel
 

@@ -1,5 +1,4 @@
-﻿using System.Windows.Input;
-using LogicSimulator.Infrastructure;
+﻿using LogicSimulator.Infrastructure;
 using LogicSimulator.Infrastructure.Commands;
 using LogicSimulator.ViewModels.UserDialogViewModels.Base;
 

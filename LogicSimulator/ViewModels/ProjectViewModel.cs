@@ -1,5 +1,5 @@
-﻿using System.Collections.ObjectModel;
-using LogicSimulator.Models;
+﻿using LogicSimulator.Models;
+using LogicSimulator.ViewModels.AnchorableViewModels;
 using LogicSimulator.ViewModels.Base;
 
 namespace LogicSimulator.ViewModels;
@@ -18,7 +18,7 @@ public class ProjectViewModel : BindableBase
         {
             _schemes.Add(new SchemeViewModel(scheme));
         }
-    } 
+    }
 
     #region Version
 

@@ -1,4 +1,4 @@
-﻿using LogicSimulator.ViewModels;
+﻿using LogicSimulator.ViewModels.AnchorableViewModels;
 
 namespace LogicSimulator.Infrastructure.Services.Interfaces;
 

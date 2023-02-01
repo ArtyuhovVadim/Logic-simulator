@@ -88,7 +88,7 @@
                     <MenuItem.ItemContainerStyle>
                         <Style BasedOn="{StaticResource {x:Type MenuItem}}" TargetType="{x:Type MenuItem}">
                             <Setter Property="IsCheckable" Value="True" />
-                            <Setter Property="Header" Value="{Binding Path=Name}" />
+                            <Setter Property="Header" Value="{Binding Path=Title}" />
                             <Setter Property="IsChecked" Value="{Binding Path=IsVisible}" />
                         </Style>
                     </MenuItem.ItemContainerStyle>
@@ -104,7 +104,7 @@
             <DockingManager.LayoutItemTemplateSelector>
                 <infrastructure:PanesTemplateSelector>
                     <infrastructure:PanesTemplateSelector.SchemeViewTemplate>
-                        <DataTemplate DataType="{x:Type viewModels:SchemeViewModel}">
+                        <DataTemplate DataType="{x:Type avm:SchemeViewModel}">
                             <views:SchemeView />
                         </DataTemplate>
                     </infrastructure:PanesTemplateSelector.SchemeViewTemplate>
@@ -122,25 +122,24 @@
             </DockingManager.LayoutItemTemplateSelector>
             <DockingManager.LayoutItemContainerStyleSelector>
                 <infrastructure:PanesStyleSelector>
-                    <infrastructure:PanesStyleSelector.SchemeViewStyle>
+                    <infrastructure:PanesStyleSelector.DocumentViewStyle>
                         <Style TargetType="{x:Type LayoutDocumentItem}">
-                            <Setter Property="Title" Value="{Binding Path=Model.Name}" />
-                            <Setter Property="CloseCommand" Value="{Binding Path=MainWindowViewModel.SchemeCloseCommand, Source={StaticResource Locator}}" />
-                            
+                            <Setter Property="Title" Value="{Binding Path=Model.Title}" />
+                            <Setter Property="IsActive" Value="{Binding Path=Model.IsActive, Mode=TwoWay}" />
+                            <Setter Property="IsSelected" Value="{Binding Path=Model.IsSelected, Mode=TwoWay}" />
+                            <Setter Property="ContentId" Value="{Binding Path=Model.ContentId}" />
+                            <Setter Property="CloseCommand" Value="{Binding Path=Model.CloseCommand}" />
                         </Style>
-                    </infrastructure:PanesStyleSelector.SchemeViewStyle>
-                    <infrastructure:PanesStyleSelector.PropertiesViewStyle>
+                    </infrastructure:PanesStyleSelector.DocumentViewStyle>
+                    <infrastructure:PanesStyleSelector.ToolViewStyle>
                         <Style TargetType="{x:Type LayoutAnchorableItem}">
-                            <Setter Property="Title" Value="{Binding Path=Model.Name}" />
-                            <Setter Property="Visibility" Value="{Binding Path=Model.IsVisible, Mode=TwoWay, ConverterParameter={x:Static Visibility.Hidden}, Converter={BoolToVisibilityConverter}}" />
+                            <Setter Property="Title" Value="{Binding Path=Model.Title}" />
+                            <Setter Property="IsActive" Value="{Binding Path=Model.IsActive, Mode=TwoWay}" />
+                            <Setter Property="IsSelected" Value="{Binding Path=Model.IsSelected, Mode=TwoWay}" />
+                            <Setter Property="ContentId" Value="{Binding Path=Model.ContentId}" />
+                            <Setter Property="Visibility" Value="{Binding Path=Model.IsVisible, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, ConverterParameter={x:Static Visibility.Hidden}, Converter={BoolToVisibilityConverter}}" />
                         </Style>
-                    </infrastructure:PanesStyleSelector.PropertiesViewStyle>
-                    <infrastructure:PanesStyleSelector.ProjectExplorerViewStyle>
-                        <Style TargetType="{x:Type LayoutAnchorableItem}">
-                            <Setter Property="Title" Value="{Binding Path=Model.Name}" />
-                            <Setter Property="Visibility" Value="{Binding Path=Model.IsVisible, Mode=TwoWay, ConverterParameter={x:Static Visibility.Hidden}, Converter={BoolToVisibilityConverter}}" />
-                        </Style>
-                    </infrastructure:PanesStyleSelector.ProjectExplorerViewStyle>
+                    </infrastructure:PanesStyleSelector.ToolViewStyle>
                 </infrastructure:PanesStyleSelector>
             </DockingManager.LayoutItemContainerStyleSelector>
 

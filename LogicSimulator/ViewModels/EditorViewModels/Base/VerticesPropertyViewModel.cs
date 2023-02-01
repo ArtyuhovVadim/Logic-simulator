@@ -1,7 +1,5 @@
-﻿using System.Collections.ObjectModel;
-using System.ComponentModel;
+﻿using System.ComponentModel;
 using LogicSimulator.Infrastructure.Commands;
-using System.Windows.Input;
 using LogicSimulator.Scene.SceneObjects;
 
 namespace LogicSimulator.ViewModels.EditorViewModels.Base;

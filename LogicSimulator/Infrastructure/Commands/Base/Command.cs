@@ -1,6 +1,4 @@
-﻿using System.Windows.Input;
-
-namespace LogicSimulator.Infrastructure.Commands.Base;
+﻿namespace LogicSimulator.Infrastructure.Commands.Base;
 
 public abstract class Command : ICommand
 {

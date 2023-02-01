@@ -1,20 +1,19 @@
-﻿using System.Collections.ObjectModel;
-using LogicSimulator.Infrastructure.Services.Interfaces;
+﻿using LogicSimulator.Infrastructure.Services.Interfaces;
 using LogicSimulator.Models;
 using LogicSimulator.Scene;
-using LogicSimulator.Scene.Components.Base;
 using LogicSimulator.Scene.Components;
+using LogicSimulator.Scene.Components.Base;
 using LogicSimulator.Scene.SceneObjects.Base;
 using LogicSimulator.Scene.Tools;
 using LogicSimulator.Scene.Tools.Base;
-using LogicSimulator.ViewModels.Base;
+using LogicSimulator.Scene.Tools.PlacingTools;
+using LogicSimulator.ViewModels.AnchorableViewModels.Base;
 using Microsoft.Extensions.DependencyInjection;
 using SharpDX;
-using LogicSimulator.Scene.Tools.PlacingTools;
 
-namespace LogicSimulator.ViewModels;
+namespace LogicSimulator.ViewModels.AnchorableViewModels;
 
-public class SchemeViewModel : BindableBase
+public class SchemeViewModel : DocumentViewModel
 {
     #region Tools
 
@@ -58,6 +57,8 @@ public class SchemeViewModel : BindableBase
 
     #endregion
 
+    private readonly MainWindowViewModel _mainWindowViewModel;
+
     private readonly Scheme _scheme;
 
     private readonly IEditorSelectionService _editorSelectionService;
@@ -100,6 +101,7 @@ public class SchemeViewModel : BindableBase
         ToolsController.SelectedObjectsChanged += OnSelectedObjectsChanged;
 
         _editorSelectionService = App.Host.Services.GetRequiredService<IEditorSelectionService>();
+        _mainWindowViewModel = App.Host.Services.GetRequiredService<MainWindowViewModel>();
     }
 
     private void OnSelectedObjectsChanged()
@@ -107,9 +109,9 @@ public class SchemeViewModel : BindableBase
         _editorSelectionService.Select(this);
     }
 
-    #region Name
+    #region Title
 
-    public string Name
+    public override string Title
     {
         get => _scheme.Name;
         set
@@ -179,4 +181,9 @@ public class SchemeViewModel : BindableBase
     }
 
     #endregion
+
+    protected override void Close(object p)
+    {
+        _mainWindowViewModel.OpenedSchemes.Remove(this);
+    }
 }

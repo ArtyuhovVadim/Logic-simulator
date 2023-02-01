@@ -57,4 +57,9 @@
       <Resource Include="Icons\icon512x512.png" />
     </ItemGroup>
 
+    <ItemGroup>
+      <Using Include="System.Collections.ObjectModel" />
+      <Using Include="System.Windows.Input" />
+    </ItemGroup>
+
 </Project>

@@ -1,7 +1,6 @@
 ﻿using System.Reflection;
 using LogicSimulator.Infrastructure.Services.Interfaces;
 using LogicSimulator.Scene.SceneObjects.Base;
-using LogicSimulator.ViewModels;
 using LogicSimulator.ViewModels.AnchorableViewModels;
 using LogicSimulator.ViewModels.EditorViewModels.Base;
 
