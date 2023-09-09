@@ -10,7 +10,7 @@
     </ResourceDictionary.MergedDictionaries>
     <Style BasedOn="{StaticResource {x:Type TextBox}}" TargetType="{x:Type controls:TextBoxEx}">
         <Style.Resources>
-            <BoolToVisibilityConverter x:Key="Converter" />
+            <BooleanToVisibilityConverter x:Key="Converter" />
         </Style.Resources>
         <Setter Property="Template">
             <Setter.Value>

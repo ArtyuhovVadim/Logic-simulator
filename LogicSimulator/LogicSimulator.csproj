@@ -22,7 +22,6 @@
     </ItemGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\LogicSimulator.AvalonDock\LogicSimulator.AvalonDock.csproj" />
         <ProjectReference Include="..\LogicSimulator.Controls\LogicSimulator.Controls.csproj" />
         <ProjectReference Include="..\LogicSimulator.Scene\LogicSimulator.Scene.csproj" />
     </ItemGroup>
@@ -46,6 +45,7 @@
     </ItemGroup>
 
     <ItemGroup>
+        <PackageReference Include="Dirkster.AvalonDock" Version="4.72.1" />
         <PackageReference Include="FontAwesome.WPF" Version="4.7.0.9" />
         <PackageReference Include="Microsoft.Extensions.Hosting" Version="7.0.0" />
         <PackageReference Include="Microsoft.Extensions.Hosting.Abstractions" Version="7.0.0" />
