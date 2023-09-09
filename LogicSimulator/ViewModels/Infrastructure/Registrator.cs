@@ -1,5 +1,4 @@
-﻿using LogicSimulator.ViewModels.AnchorableViewModels;
-using LogicSimulator.ViewModels.UserDialogViewModels;
+﻿using LogicSimulator.ViewModels.UserDialogViewModels;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace LogicSimulator.ViewModels.Infrastructure;

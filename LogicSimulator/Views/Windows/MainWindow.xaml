@@ -97,7 +97,7 @@
             </Menu>
         </Grid>
 
-        <views:SchemeView />
+        <views:SchemeView DataContext="{Binding Path=TestSchemeViewModel}" />
 
         <!--<DockingManager
             ActiveContent="{Binding Path=ActiveContent,

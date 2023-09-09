@@ -31,7 +31,6 @@
       <Compile Remove="Models\Scheme.cs" />
       <Compile Remove="ViewModels\AnchorableViewModels\ProjectExplorerViewModel.cs" />
       <Compile Remove="ViewModels\AnchorableViewModels\PropertiesViewModel.cs" />
-      <Compile Remove="ViewModels\AnchorableViewModels\SchemeViewModel.cs" />
       <Compile Remove="ViewModels\ProjectViewModel.cs" />
     </ItemGroup>
 

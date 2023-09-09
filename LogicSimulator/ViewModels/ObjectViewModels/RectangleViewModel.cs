@@ -3,7 +3,7 @@ using LogicSimulator.ViewModels.ObjectViewModels.Base;
 
 namespace LogicSimulator.ViewModels.ObjectViewModels;
 
-public class RectangleViewModel : SceneObjectViewModel
+public class RectangleViewModel : BaseEditableObjectViewModel
 {
     #region Width
 
@@ -29,14 +29,50 @@ public class RectangleViewModel : SceneObjectViewModel
 
     #endregion
 
-    #region Background
+    #region FillColor
 
-    private Color _background = Colors.Blue;
+    private Color _fillColor = Colors.White;
 
-    public Color Background
+    public Color FillColor
     {
-        get => _background;
-        set => Set(ref _background, value);
+        get => _fillColor;
+        set => Set(ref _fillColor, value);
+    }
+
+    #endregion
+
+    #region StrokeColor
+
+    private Color _strokeColor = Colors.Black;
+
+    public Color StrokeColor
+    {
+        get => _strokeColor;
+        set => Set(ref _strokeColor, value);
+    }
+
+    #endregion
+
+    #region StrokeThickness
+
+    private float _strokeThickness = 1f;
+
+    public float StrokeThickness
+    {
+        get => _strokeThickness;
+        set => Set(ref _strokeThickness, value);
+    }
+
+    #endregion
+
+    #region IsFilled
+
+    private bool _isFilled = true;
+
+    public bool IsFilled
+    {
+        get => _isFilled;
+        set => Set(ref _isFilled, value);
     }
 
     #endregion

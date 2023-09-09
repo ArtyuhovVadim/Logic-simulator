@@ -3,32 +3,20 @@ using System.Windows.Media;
 using LogicSimulator.Scene.Cache;
 using LogicSimulator.Scene.Layers.Base;
 using LogicSimulator.Scene.Layers.Renderers;
-using SharpDX;
-using Color = System.Windows.Media.Color;
+using LogicSimulator.Utils;
 
 namespace LogicSimulator.Scene.Layers;
 
 public class GridLayer : BaseSceneLayer
 {
     public static readonly IResource BackgroundBrushResource =
-        ResourceCache.Register<GridLayerRenderer>((factory, user) => factory.CreateSolidColorBrush(ToColor4(user.Layer.Background)));
+        ResourceCache.Register<GridLayerRenderer>((factory, user) => factory.CreateSolidColorBrush(user.Layer.Background.ToColor4()));
 
     public static readonly IResource LineBrushResource =
-        ResourceCache.Register<GridLayerRenderer>((factory, user) => factory.CreateSolidColorBrush(ToColor4(user.Layer.LineColor)));
+        ResourceCache.Register<GridLayerRenderer>((factory, user) => factory.CreateSolidColorBrush(user.Layer.LineColor.ToColor4()));
 
     public static readonly IResource BoldLineBrushResource =
-        ResourceCache.Register<GridLayerRenderer>((factory, user) => factory.CreateSolidColorBrush(ToColor4(user.Layer.BoldLineColor)));
-
-    //TODO: Move
-    private static Color4 ToColor4(Color color)
-    {
-        var a = color.A / 255f;
-        var r = color.R / 255f;
-        var g = color.G / 255f;
-        var b = color.B / 255f;
-
-        return new Color4(r, g, b, a);
-    }
+        ResourceCache.Register<GridLayerRenderer>((factory, user) => factory.CreateSolidColorBrush(user.Layer.BoldLineColor.ToColor4()));
 
     #region Background
 

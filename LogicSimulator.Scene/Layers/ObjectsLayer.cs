@@ -12,8 +12,6 @@ public class ObjectsLayer : BaseSceneLayer
 {
     private readonly List<SceneObjectView> _objects = new();
 
-    public IEnumerable<IRenderable> Views => _objects;
-
     #region ObjectTemplateSelector
 
     public DataTemplateSelector ObjectTemplateSelector
@@ -23,17 +21,7 @@ public class ObjectsLayer : BaseSceneLayer
     }
 
     public static readonly DependencyProperty ObjectTemplateSelectorProperty =
-        DependencyProperty.Register(nameof(ObjectTemplateSelector), typeof(DataTemplateSelector), typeof(ObjectsLayer), new PropertyMetadata(default(DataTemplateSelector), PropertyChangedCallback));
-
-    private static void PropertyChangedCallback(DependencyObject d, DependencyPropertyChangedEventArgs e)
-    {
-        if (d is not ObjectsLayer layer) return;
-
-        foreach (var layerObject in layer.Objects)
-        {
-            layer._objects.Add(layer.CreateViewFromItem(layerObject));
-        }
-    }
+        DependencyProperty.Register(nameof(ObjectTemplateSelector), typeof(DataTemplateSelector), typeof(ObjectsLayer), new PropertyMetadata(default(DataTemplateSelector)));
 
     #endregion
 
@@ -67,6 +55,20 @@ public class ObjectsLayer : BaseSceneLayer
     }
 
     #endregion
+
+    public ObjectsLayer() => Loaded += OnLoaded;
+
+    private void OnLoaded(object sender, RoutedEventArgs e)
+    {
+        Loaded -= OnLoaded;
+
+        foreach (var layerObject in Objects)
+        {
+            _objects.Add(CreateViewFromItem(layerObject));
+        }
+    }
+
+    public IEnumerable<IRenderable> Views => _objects;
 
     protected override bool OnIsDirtyEvaluation() => Views.Any(x => x.IsDirty);
 

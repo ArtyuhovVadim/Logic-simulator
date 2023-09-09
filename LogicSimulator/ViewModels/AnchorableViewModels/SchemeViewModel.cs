@@ -1,21 +1,31 @@
-﻿using LogicSimulator.Infrastructure.Services.Interfaces;
-using LogicSimulator.Models;
-using LogicSimulator.Scene;
-using LogicSimulator.Scene.Components;
-using LogicSimulator.Scene.Components.Base;
-using LogicSimulator.Scene.SceneObjects.Base;
-using LogicSimulator.Scene.Tools;
-using LogicSimulator.Scene.Tools.Base;
-using LogicSimulator.Scene.Tools.PlacingTools;
+﻿using System.Windows.Media;
 using LogicSimulator.ViewModels.AnchorableViewModels.Base;
-using Microsoft.Extensions.DependencyInjection;
+using LogicSimulator.ViewModels.ObjectViewModels;
+using LogicSimulator.ViewModels.ObjectViewModels.Base;
 using SharpDX;
 
 namespace LogicSimulator.ViewModels.AnchorableViewModels;
 
 public class SchemeViewModel : DocumentViewModel
 {
-    #region Tools
+    #region Objects
+
+    private ObservableCollection<BaseObjectViewModel> _objects = new()
+    {
+        new RectangleViewModel{ Location = new Vector2(100, 100), Width = 100, Height = 100, StrokeThickness = 1f, IsFilled = true, StrokeColor = Colors.Red, FillColor = Colors.White },
+        new RectangleViewModel{ Location = new Vector2(300, 100), Width = 100, Height = 100, StrokeThickness = 2f, IsFilled = false, StrokeColor = Colors.Green, FillColor = Colors.Bisque },
+        new RectangleViewModel{ Location = new Vector2(500, 100), Width = 100, Height = 100, StrokeThickness = 5f, IsFilled = true, StrokeColor = Colors.Blue, FillColor = Colors.Coral },
+    };
+
+    public IEnumerable<BaseObjectViewModel> Objects
+    {
+        get => _objects;
+        private set => Set(ref _objects, new ObservableCollection<BaseObjectViewModel>(value));
+    }
+
+    #endregion
+
+    /*#region Tools
 
     private readonly TransformTool _transformTool = new();
 
@@ -185,5 +195,9 @@ public class SchemeViewModel : DocumentViewModel
     protected override void Close(object p)
     {
         _mainWindowViewModel.OpenedSchemes.Remove(this);
+    }*/
+    protected override void Close(object p)
+    {
+        throw new NotImplementedException();
     }
 }

@@ -1,5 +1,4 @@
 ﻿using LogicSimulator.Infrastructure.Commands;
-using LogicSimulator.Infrastructure.Services;
 using LogicSimulator.Infrastructure.Services.Interfaces;
 using LogicSimulator.ViewModels.AnchorableViewModels;
 using LogicSimulator.ViewModels.AnchorableViewModels.Base;
@@ -32,6 +31,18 @@ public class MainWindowViewModel : BindableBase
         //AnchorableViewModels.Add(propertiesViewModel);
         //AnchorableViewModels.Add(projectExplorerViewModel);
     }
+
+    #region TestSchemeViewModel
+
+    private SchemeViewModel _testSchemeViewModel = new();
+
+    public SchemeViewModel TestSchemeViewModel
+    {
+        get => _testSchemeViewModel;
+        set => Set(ref _testSchemeViewModel, value);
+    }
+
+    #endregion
 
     #region ActiveContent
 

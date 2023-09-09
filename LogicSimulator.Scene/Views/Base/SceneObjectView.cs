@@ -22,16 +22,20 @@ public abstract class SceneObjectView : DisposableFrameworkContentElement, IRend
     }
 
     public static readonly DependencyProperty LocationProperty =
-        DependencyProperty.Register(nameof(Location), typeof(Vector2), typeof(SceneObjectView), new FrameworkPropertyMetadata(default(Vector2), FrameworkPropertyMetadataOptions.BindsTwoWayByDefault, OnLocationChanged));
+        DependencyProperty.Register(nameof(Location), typeof(Vector2), typeof(SceneObjectView), new FrameworkPropertyMetadata(default(Vector2), FrameworkPropertyMetadataOptions.BindsTwoWayByDefault, DefaultPropertyChangedHandler));
 
-    private static void OnLocationChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+    #endregion
+
+    #region Rotation
+
+    public float Rotation
     {
-        if (d is not SceneObjectView sceneObjectView) return;
-
-        sceneObjectView.ThrowIfDisposed();
-
-        sceneObjectView.MakeDirty();
+        get => (float)GetValue(RotationProperty);
+        set => SetValue(RotationProperty, value);
     }
+
+    public static readonly DependencyProperty RotationProperty =
+        DependencyProperty.Register(nameof(Rotation), typeof(float), typeof(SceneObjectView), new FrameworkPropertyMetadata(default(float), FrameworkPropertyMetadataOptions.BindsTwoWayByDefault, DefaultPropertyChangedHandler));
 
     #endregion
 
@@ -69,5 +73,14 @@ public abstract class SceneObjectView : DisposableFrameworkContentElement, IRend
         Cache = null!;
 
         base.Dispose(disposingManaged);
+    }
+
+    protected static void DefaultPropertyChangedHandler(DependencyObject d, DependencyPropertyChangedEventArgs e)
+    {
+        if (d is not SceneObjectView obj) return;
+
+        obj.ThrowIfDisposed();
+
+        obj.MakeDirty();
     }
 }
