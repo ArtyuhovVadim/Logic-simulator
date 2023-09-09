@@ -21,11 +21,6 @@
     </ItemGroup>
 
     <ItemGroup>
-        <Folder Include="SceneObjects\Gates\Base\" />
-        <Folder Include="Tools\Base\" />
-    </ItemGroup>
-
-    <ItemGroup>
       <ProjectReference Include="..\LogicSimulator.Core\LogicSimulator.Core.csproj" />
       <ProjectReference Include="..\LogicSimulator.Utils\LogicSimulator.Utils.csproj" />
     </ItemGroup>
