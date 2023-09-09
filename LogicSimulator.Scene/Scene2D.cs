@@ -9,11 +9,6 @@ using System.Windows.Media;
 using LogicSimulator.Scene.DirectX;
 using LogicSimulator.Scene.Layers.Base;
 using SharpDX;
-using SharpDX.Direct2D1;
-using Color = SharpDX.Color;
-using FontStretch = SharpDX.DirectWrite.FontStretch;
-using FontStyle = SharpDX.DirectWrite.FontStyle;
-using FontWeight = SharpDX.DirectWrite.FontWeight;
 
 namespace LogicSimulator.Scene;
 

@@ -5,7 +5,9 @@ using LogicSimulator.Scene.DirectX;
 using LogicSimulator.Scene.Views.Base;
 using LogicSimulator.Utils;
 using SharpDX;
+using SharpDX.Direct2D1;
 using Color = System.Windows.Media.Color;
+using Geometry = SharpDX.Direct2D1.Geometry;
 using SolidColorBrush = SharpDX.Direct2D1.SolidColorBrush;
 using RectangleGeometry = SharpDX.Direct2D1.RectangleGeometry;
 
@@ -121,6 +123,21 @@ public class RectangleView : SceneObjectView
         DependencyProperty.Register(nameof(IsFilled), typeof(bool), typeof(RectangleView), new FrameworkPropertyMetadata(true, FrameworkPropertyMetadataOptions.BindsTwoWayByDefault, DefaultPropertyChangedHandler));
 
     #endregion
+
+    public override bool HitTest(Vector2 pos, Matrix3x2 transform, float tolerance = 0.25f)
+    {
+        var geometry = Cache.Get<RectangleGeometry>(this, GeometryResource);
+
+        return IsFilled ?
+            geometry.FillContainsPoint(pos, TransformMatrix * transform, tolerance) :
+            geometry.StrokeContainsPoint(pos, StrokeThickness, null, TransformMatrix * transform, tolerance);
+    }
+
+    public override GeometryRelation HitTest(Geometry inputGeometry, Matrix3x2 transform, float tolerance = 0.25f)
+    {
+        var rectGeometry = Cache.Get<RectangleGeometry>(this, GeometryResource);
+        return rectGeometry.Compare(inputGeometry, Matrix3x2.Invert(TransformMatrix) * transform, tolerance);
+    }
 
     protected override void OnRender(Scene2D scene, D2DContext context)
     {
