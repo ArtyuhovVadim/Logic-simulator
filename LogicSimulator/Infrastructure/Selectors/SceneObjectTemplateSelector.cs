@@ -8,9 +8,24 @@ public class SceneObjectTemplateSelector : DataTemplateSelector
 {
     public DataTemplate RectangleDataTemplate { get; set; } = null!;
 
+    public DataTemplate RoundedRectangleDataTemplate { get; set; } = null!;
+
+    public DataTemplate ArcDataTemplate { get; set; } = null!;
+
+    public DataTemplate TextBlockDataTemplate { get; set; } = null!;
+
+    public DataTemplate EllipseDataTemplate { get; set; } = null!;
+
+    public DataTemplate BezierCurveDataTemplate { get; set; } = null!;
+
     public override DataTemplate SelectTemplate(object item, DependencyObject container) => item switch
     {
+        RoundedRectangleViewModel => RoundedRectangleDataTemplate,
         RectangleViewModel => RectangleDataTemplate,
+        ArcViewModel => ArcDataTemplate,
+        TextBlockViewModel => TextBlockDataTemplate,
+        EllipseViewModel => EllipseDataTemplate,
+        BezierCurveViewModel => BezierCurveDataTemplate,
         _ => base.SelectTemplate(item, container)!,
     };
 }
