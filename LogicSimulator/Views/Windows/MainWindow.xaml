@@ -10,6 +10,7 @@
     xmlns:fa="http://schemas.fontawesome.io/icons/"
     xmlns:infrastructure="clr-namespace:LogicSimulator.Infrastructure"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:selectors="clr-namespace:LogicSimulator.Infrastructure.Selectors"
     xmlns:viewModels="clr-namespace:LogicSimulator.ViewModels"
     xmlns:views="clr-namespace:LogicSimulator.Views"
     Title="Logic-simulator"
@@ -96,12 +97,14 @@
             </Menu>
         </Grid>
 
-        <DockingManager
+        <views:SchemeView />
+
+        <!--<DockingManager
             ActiveContent="{Binding Path=ActiveContent,
                                     Mode=TwoWay}"
             AnchorablesSource="{Binding Path=AnchorableViewModels}"
             DocumentsSource="{Binding Path=OpenedSchemes}">
-            <!--<DockingManager.LayoutItemTemplateSelector>
+            ~1~<DockingManager.LayoutItemTemplateSelector>
                <infrastructure:PanesTemplateSelector>
                     <infrastructure:PanesTemplateSelector.SchemeViewTemplate>
                         <DataTemplate DataType="{x:Type avm:SchemeViewModel}">
@@ -119,10 +122,10 @@
                         </DataTemplate>
                     </infrastructure:PanesTemplateSelector.ProjectExplorerViewTemplate>
                 </infrastructure:PanesTemplateSelector>
-            </DockingManager.LayoutItemTemplateSelector>-->
+            </DockingManager.LayoutItemTemplateSelector>@1@
             <DockingManager.LayoutItemContainerStyleSelector>
-                <infrastructure:PanesStyleSelector>
-                    <infrastructure:PanesStyleSelector.DocumentViewStyle>
+                <selectors:PanesStyleSelector>
+                    <selectors:PanesStyleSelector.DocumentViewStyle>
                         <Style TargetType="{x:Type LayoutDocumentItem}">
                             <Setter Property="Title" Value="{Binding Path=Model.Title}" />
                             <Setter Property="IsActive" Value="{Binding Path=Model.IsActive, Mode=TwoWay}" />
@@ -130,8 +133,8 @@
                             <Setter Property="ContentId" Value="{Binding Path=Model.ContentId}" />
                             <Setter Property="CloseCommand" Value="{Binding Path=Model.CloseCommand}" />
                         </Style>
-                    </infrastructure:PanesStyleSelector.DocumentViewStyle>
-                    <infrastructure:PanesStyleSelector.ToolViewStyle>
+                    </selectors:PanesStyleSelector.DocumentViewStyle>
+                    <selectors:PanesStyleSelector.ToolViewStyle>
                         <Style TargetType="{x:Type LayoutAnchorableItem}">
                             <Setter Property="Title" Value="{Binding Path=Model.Title}" />
                             <Setter Property="IsActive" Value="{Binding Path=Model.IsActive, Mode=TwoWay}" />
@@ -139,8 +142,8 @@
                             <Setter Property="ContentId" Value="{Binding Path=Model.ContentId}" />
                             <Setter Property="Visibility" Value="{Binding Path=Model.IsVisible, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, ConverterParameter={x:Static Visibility.Hidden}, Converter={BoolToVisibilityConverter}}" />
                         </Style>
-                    </infrastructure:PanesStyleSelector.ToolViewStyle>
-                </infrastructure:PanesStyleSelector>
+                    </selectors:PanesStyleSelector.ToolViewStyle>
+                </selectors:PanesStyleSelector>
             </DockingManager.LayoutItemContainerStyleSelector>
 
             <LayoutRoot>
@@ -148,6 +151,6 @@
                     <LayoutDocumentPane />
                 </LayoutPanel>
             </LayoutRoot>
-        </DockingManager>
+        </DockingManager>-->
     </DockPanel>
 </c:Window>

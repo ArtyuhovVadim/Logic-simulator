@@ -2,7 +2,7 @@
 using System.Windows.Controls;
 using LogicSimulator.ViewModels.AnchorableViewModels;
 
-namespace LogicSimulator.Infrastructure;
+namespace LogicSimulator.Infrastructure.Selectors;
 
 public class PanesTemplateSelector : DataTemplateSelector
 {
