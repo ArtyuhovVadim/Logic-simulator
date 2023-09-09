@@ -9,8 +9,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LogicSimulator.Controls", "
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LogicSimulator.Scene", "LogicSimulator.Scene\LogicSimulator.Scene.csproj", "{61CF4324-89B3-4EE8-938C-C06626BEB605}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Microsoft.Wpf.Interop.DirectX", "Microsoft.Wpf.Interop.DirectX\Microsoft.Wpf.Interop.DirectX.vcxproj", "{0DFED4DE-C1BF-4041-B08A-BA3A84C28EF6}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LogicSimulator.MathParser", "LogicSimulator.MathParser\LogicSimulator.MathParser.csproj", "{8C7A6C42-BABF-497E-A421-BBCA9C3A72CF}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LogicSimulator.Utils", "LogicSimulator.Utils\LogicSimulator.Utils.csproj", "{64E81F91-1585-4484-92E7-D4086B8F862A}"
@@ -39,10 +37,6 @@ Global
 		{61CF4324-89B3-4EE8-938C-C06626BEB605}.Debug|x64.Build.0 = Debug|x64
 		{61CF4324-89B3-4EE8-938C-C06626BEB605}.Release|x64.ActiveCfg = Release|x64
 		{61CF4324-89B3-4EE8-938C-C06626BEB605}.Release|x64.Build.0 = Release|x64
-		{0DFED4DE-C1BF-4041-B08A-BA3A84C28EF6}.Debug|x64.ActiveCfg = Debug|x64
-		{0DFED4DE-C1BF-4041-B08A-BA3A84C28EF6}.Debug|x64.Build.0 = Debug|x64
-		{0DFED4DE-C1BF-4041-B08A-BA3A84C28EF6}.Release|x64.ActiveCfg = Release|x64
-		{0DFED4DE-C1BF-4041-B08A-BA3A84C28EF6}.Release|x64.Build.0 = Release|x64
 		{8C7A6C42-BABF-497E-A421-BBCA9C3A72CF}.Debug|x64.ActiveCfg = Debug|x64
 		{8C7A6C42-BABF-497E-A421-BBCA9C3A72CF}.Debug|x64.Build.0 = Debug|x64
 		{8C7A6C42-BABF-497E-A421-BBCA9C3A72CF}.Release|x64.ActiveCfg = Release|x64

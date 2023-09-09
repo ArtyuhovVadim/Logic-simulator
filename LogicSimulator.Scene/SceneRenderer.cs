@@ -1,5 +1,4 @@
-﻿using Microsoft.Wpf.Interop.DirectX;
-using SharpDX;
+﻿using SharpDX;
 using SharpDX.Direct2D1;
 using SharpDX.WIC;
 using System.IO;
@@ -7,6 +6,7 @@ using System.Windows;
 using System.Windows.Interop;
 using System.Windows.Media;
 using SharpDX.DXGI;
+using TqkLibrary.Wpf.Interop.DirectX;
 using AlphaMode = SharpDX.Direct2D1.AlphaMode;
 using Factory1 = SharpDX.Direct2D1.Factory1;
 using TextFactory = SharpDX.DirectWrite.Factory;
@@ -223,7 +223,6 @@ public class SceneRenderer : IDisposable
     {
         if (!disposing) return;
 
-        _imageSource?.Dispose();
         _renderTarget?.Dispose();
         _factory?.Dispose();
     }
