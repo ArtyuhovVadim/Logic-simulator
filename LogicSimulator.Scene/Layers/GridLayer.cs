@@ -1,0 +1,198 @@
+﻿using System.Windows;
+using System.Windows.Media;
+using LogicSimulator.Scene.Cache;
+using LogicSimulator.Scene.Layers.Base;
+using LogicSimulator.Scene.Layers.Renderers;
+using SharpDX;
+using Color = System.Windows.Media.Color;
+
+namespace LogicSimulator.Scene.Layers;
+
+public class GridLayer : BaseSceneLayer
+{
+    public static readonly IResource BackgroundBrushResource =
+        ResourceCache.Register<GridLayerRenderer>((factory, user) => factory.CreateSolidColorBrush(ToColor4(user.Layer.Background)));
+
+    public static readonly IResource LineBrushResource =
+        ResourceCache.Register<GridLayerRenderer>((factory, user) => factory.CreateSolidColorBrush(ToColor4(user.Layer.LineColor)));
+
+    public static readonly IResource BoldLineBrushResource =
+        ResourceCache.Register<GridLayerRenderer>((factory, user) => factory.CreateSolidColorBrush(ToColor4(user.Layer.BoldLineColor)));
+
+    //TODO: Move
+    private static Color4 ToColor4(Color color)
+    {
+        var a = color.A / 255f;
+        var r = color.R / 255f;
+        var g = color.G / 255f;
+        var b = color.B / 255f;
+
+        return new Color4(r, g, b, a);
+    }
+
+    #region Background
+
+    public Color Background
+    {
+        get => (Color)GetValue(BackgroundProperty);
+        set => SetValue(BackgroundProperty, value);
+    }
+
+    public static readonly DependencyProperty BackgroundProperty =
+        DependencyProperty.Register(nameof(Background), typeof(Color), typeof(GridLayer), new PropertyMetadata(Colors.White, OnBackgroundChanged));
+
+    private static void OnBackgroundChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+    {
+        if (d is not GridLayer gridLayer) return;
+        
+        gridLayer.Cache?.Update(gridLayer.Renderer, BackgroundBrushResource);
+
+        gridLayer.MakeDirty();
+    }
+
+    #endregion
+
+    #region LineColor
+
+    public Color LineColor
+    {
+        get => (Color)GetValue(LineColorProperty);
+        set => SetValue(LineColorProperty, value);
+    }
+
+    public static readonly DependencyProperty LineColorProperty =
+        DependencyProperty.Register(nameof(LineColor), typeof(Color), typeof(GridLayer), new PropertyMetadata(Colors.Black, OnColorChanged));
+
+    private static void OnColorChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+    {
+        if (d is not GridLayer gridLayer) return;
+
+        gridLayer.Cache?.Update(gridLayer.Renderer, LineBrushResource);
+
+        gridLayer.MakeDirty();
+    }
+
+    #endregion
+
+    #region BoldLineColor
+
+    public Color BoldLineColor
+    {
+        get => (Color)GetValue(BoldLineColorProperty);
+        set => SetValue(BoldLineColorProperty, value);
+    }
+
+    public static readonly DependencyProperty BoldLineColorProperty =
+        DependencyProperty.Register(nameof(BoldLineColor), typeof(Color), typeof(GridLayer), new PropertyMetadata(Colors.Black, OnBoldLineColorChanged));
+
+    private static void OnBoldLineColorChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+    {
+        if (d is not GridLayer gridLayer) return;
+
+        gridLayer.Cache?.Update(gridLayer.Renderer, BoldLineBrushResource);
+
+        gridLayer.MakeDirty();
+    }
+
+    #endregion
+
+    #region LineThickness
+
+    public float LineThickness
+    {
+        get => (float)GetValue(LineThicknessProperty);
+        set => SetValue(LineThicknessProperty, value);
+    }
+
+    public static readonly DependencyProperty LineThicknessProperty =
+        DependencyProperty.Register(nameof(LineThickness), typeof(float), typeof(GridLayer), new PropertyMetadata(1f, OnLineThicknessChanged));
+
+    private static void OnLineThicknessChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+    {
+        if (d is not GridLayer gridLayer) return;
+
+        gridLayer.MakeDirty();
+    }
+
+    #endregion
+
+    #region Width
+
+    public int Width
+    {
+        get => (int)GetValue(WidthProperty);
+        set => SetValue(WidthProperty, value);
+    }
+
+    public static readonly DependencyProperty WidthProperty =
+        DependencyProperty.Register(nameof(Width), typeof(int), typeof(GridLayer), new PropertyMetadata(300, OnWidthChanged));
+
+    private static void OnWidthChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+    {
+        if (d is not GridLayer gridLayer) return;
+
+        gridLayer.MakeDirty();
+    }
+
+    #endregion
+
+    #region Height
+
+    public int Height
+    {
+        get => (int)GetValue(HeightProperty);
+        set => SetValue(HeightProperty, value);
+    }
+
+    public static readonly DependencyProperty HeightProperty =
+        DependencyProperty.Register(nameof(Height), typeof(int), typeof(GridLayer), new PropertyMetadata(300, OnHeightChanged));
+
+    private static void OnHeightChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+    {
+        if (d is not GridLayer gridLayer) return;
+
+        gridLayer.MakeDirty();
+    }
+
+    #endregion
+
+    #region CellSize
+
+    public int CellSize
+    {
+        get => (int)GetValue(CellSizeProperty);
+        set => SetValue(CellSizeProperty, value);
+    }
+
+    public static readonly DependencyProperty CellSizeProperty =
+        DependencyProperty.Register(nameof(CellSize), typeof(int), typeof(GridLayer), new PropertyMetadata(25, OnCellSizeChanged));
+
+    private static void OnCellSizeChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+    {
+        if (d is not GridLayer gridLayer) return;
+
+        gridLayer.MakeDirty();
+    }
+
+    #endregion
+
+    #region BoldLineStep
+
+    public int BoldLineStep
+    {
+        get => (int)GetValue(BoldLineStepProperty);
+        set => SetValue(BoldLineStepProperty, value);
+    }
+
+    public static readonly DependencyProperty BoldLineStepProperty =
+        DependencyProperty.Register(nameof(BoldLineStep), typeof(int), typeof(GridLayer), new PropertyMetadata(10, OnBoldLineStepChanged));
+
+    private static void OnBoldLineStepChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+    {
+        if (d is not GridLayer gridLayer) return;
+
+        gridLayer.MakeDirty();
+    }
+
+    #endregion
+}
