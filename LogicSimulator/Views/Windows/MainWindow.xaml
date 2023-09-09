@@ -101,8 +101,8 @@
                                     Mode=TwoWay}"
             AnchorablesSource="{Binding Path=AnchorableViewModels}"
             DocumentsSource="{Binding Path=OpenedSchemes}">
-            <DockingManager.LayoutItemTemplateSelector>
-                <infrastructure:PanesTemplateSelector>
+            <!--<DockingManager.LayoutItemTemplateSelector>
+               <infrastructure:PanesTemplateSelector>
                     <infrastructure:PanesTemplateSelector.SchemeViewTemplate>
                         <DataTemplate DataType="{x:Type avm:SchemeViewModel}">
                             <views:SchemeView />
@@ -119,7 +119,7 @@
                         </DataTemplate>
                     </infrastructure:PanesTemplateSelector.ProjectExplorerViewTemplate>
                 </infrastructure:PanesTemplateSelector>
-            </DockingManager.LayoutItemTemplateSelector>
+            </DockingManager.LayoutItemTemplateSelector>-->
             <DockingManager.LayoutItemContainerStyleSelector>
                 <infrastructure:PanesStyleSelector>
                     <infrastructure:PanesStyleSelector.DocumentViewStyle>

@@ -14,9 +14,9 @@ public class PanesTemplateSelector : DataTemplateSelector
 
     public override DataTemplate SelectTemplate(object item, DependencyObject container) => item switch
     {
-        SchemeViewModel => SchemeViewTemplate,
-        PropertiesViewModel => PropertiesViewTemplate, 
-        ProjectExplorerViewModel => ProjectExplorerViewTemplate,
+        //SchemeViewModel => SchemeViewTemplate,
+        //PropertiesViewModel => PropertiesViewTemplate, 
+        //ProjectExplorerViewModel => ProjectExplorerViewTemplate,
         _ => base.SelectTemplate(item, container)
     };
 }

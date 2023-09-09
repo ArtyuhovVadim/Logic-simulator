@@ -14,6 +14,28 @@
     </PropertyGroup>
 
     <ItemGroup>
+      <Compile Remove="ViewModels\EditorViewModels\**" />
+      <EmbeddedResource Remove="ViewModels\EditorViewModels\**" />
+      <None Remove="ViewModels\EditorViewModels\**" />
+      <Page Remove="ViewModels\EditorViewModels\**" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Compile Remove="Infrastructure\Services\EditorSelectionService.cs" />
+      <Compile Remove="Infrastructure\Services\Interfaces\IEditorSelectionService.cs" />
+      <Compile Remove="Infrastructure\Services\Interfaces\ISchemeFileService.cs" />
+      <Compile Remove="Infrastructure\Services\ProjectFileService.cs" />
+      <Compile Remove="Infrastructure\Services\SchemeFileService.cs" />
+      <Compile Remove="Infrastructure\YamlConverters\LineYamlConverter.cs" />
+      <Compile Remove="Models\Project.cs" />
+      <Compile Remove="Models\Scheme.cs" />
+      <Compile Remove="ViewModels\AnchorableViewModels\ProjectExplorerViewModel.cs" />
+      <Compile Remove="ViewModels\AnchorableViewModels\PropertiesViewModel.cs" />
+      <Compile Remove="ViewModels\AnchorableViewModels\SchemeViewModel.cs" />
+      <Compile Remove="ViewModels\ProjectViewModel.cs" />
+    </ItemGroup>
+
+    <ItemGroup>
       <None Remove="Icons\icon512x512.png" />
     </ItemGroup>
 
