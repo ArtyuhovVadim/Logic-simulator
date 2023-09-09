@@ -7,6 +7,7 @@ using LogicSimulator.Utils;
 using SharpDX;
 using Color = System.Windows.Media.Color;
 using SolidColorBrush = SharpDX.Direct2D1.SolidColorBrush;
+using RectangleGeometry = SharpDX.Direct2D1.RectangleGeometry;
 
 namespace LogicSimulator.Scene.Views;
 
@@ -18,6 +19,9 @@ public class RectangleView : SceneObjectView
     public static readonly IResource StrokeBrushResource =
         ResourceCache.Register<RectangleView>((factory, user) => factory.CreateSolidColorBrush(user.StrokeColor.ToColor4()));
 
+    public static readonly IResource GeometryResource =
+        ResourceCache.Register<RectangleView>((factory, user) => factory.CreateRectangleGeometry(user.Width, user.Height));
+
     #region Width
 
     public float Width
@@ -27,7 +31,7 @@ public class RectangleView : SceneObjectView
     }
 
     public static readonly DependencyProperty WidthProperty =
-        DependencyProperty.Register(nameof(Width), typeof(float), typeof(RectangleView), new FrameworkPropertyMetadata(default(float), FrameworkPropertyMetadataOptions.BindsTwoWayByDefault, DefaultPropertyChangedHandler));
+        DependencyProperty.Register(nameof(Width), typeof(float), typeof(RectangleView), new FrameworkPropertyMetadata(default(float), FrameworkPropertyMetadataOptions.BindsTwoWayByDefault, OnGeometryChanged));
 
     #endregion
 
@@ -40,7 +44,7 @@ public class RectangleView : SceneObjectView
     }
 
     public static readonly DependencyProperty HeightProperty =
-        DependencyProperty.Register(nameof(Height), typeof(float), typeof(RectangleView), new FrameworkPropertyMetadata(default(float), FrameworkPropertyMetadataOptions.BindsTwoWayByDefault, DefaultPropertyChangedHandler));
+        DependencyProperty.Register(nameof(Height), typeof(float), typeof(RectangleView), new FrameworkPropertyMetadata(default(float), FrameworkPropertyMetadataOptions.BindsTwoWayByDefault, OnGeometryChanged));
 
     #endregion
 
@@ -120,14 +124,30 @@ public class RectangleView : SceneObjectView
 
     protected override void OnRender(Scene2D scene, D2DContext context)
     {
+        var rect = new RectangleF { Width = Width, Height = Height };
+        //var geometry = Cache.Get<RectangleGeometry>(this, GeometryResource);
+
         if (IsFilled)
         {
             var fillBrush = Cache.Get<SolidColorBrush>(this, FillBrushResource);
-            context.DrawingContext.FillRectangle(new RectangleF { Location = Location, Width = Width, Height = Height }, fillBrush);
+            context.DrawingContext.FillRectangle(rect, fillBrush);
+            //context.DrawingContext.FillGeometry(geometry, fillBrush);
         }
 
         var strokeBrush = Cache.Get<SolidColorBrush>(this, StrokeBrushResource);
 
-        context.DrawingContext.DrawRectangle(new RectangleF { Location = Location, Width = Width, Height = Height }, strokeBrush, StrokeThickness);
+        context.DrawingContext.DrawRectangle(rect, strokeBrush, StrokeThickness);
+        //context.DrawingContext.DrawGeometry(geometry, strokeBrush, StrokeThickness);
+    }
+
+    private static void OnGeometryChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+    {
+        if (d is not RectangleView rectangleView) return;
+
+        rectangleView.ThrowIfDisposed();
+
+        rectangleView.Cache?.Update(rectangleView, GeometryResource);
+
+        rectangleView.MakeDirty();
     }
 }

@@ -41,6 +41,7 @@
                                 FillColor="{Binding Path=FillColor}"
                                 IsFilled="{Binding Path=IsFilled}"
                                 Location="{Binding Path=Location}"
+                                Rotation="30"
                                 StrokeColor="{Binding Path=StrokeColor}"
                                 StrokeThickness="{Binding Path=StrokeThickness}" />
                         </DataTemplate>

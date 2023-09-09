@@ -43,7 +43,6 @@ public class Scene2D : FrameworkElement, IDisposable
     {
         if (d is not Scene2D scene) return;
 
-        if (scene.IsInitialized) scene.Context.DrawingContext.Scale = (float)e.NewValue;
         scene._isRenderRequested = true;
     }
 
@@ -64,7 +63,26 @@ public class Scene2D : FrameworkElement, IDisposable
     {
         if (d is not Scene2D scene) return;
 
-        if (scene.IsInitialized) scene.Context.DrawingContext.Translation = (Vector2)e.NewValue;
+        scene._isRenderRequested = true;
+    }
+
+    #endregion
+
+    #region Rotation
+
+    public float Rotation
+    {
+        get => (float)GetValue(RotationProperty);
+        set => SetValue(RotationProperty, value);
+    }
+
+    public static readonly DependencyProperty RotationProperty =
+        DependencyProperty.Register(nameof(Rotation), typeof(float), typeof(Scene2D), new PropertyMetadata(0f, OnRotationChanged));
+
+    private static void OnRotationChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+    {
+        if (d is not Scene2D scene) return;
+
         scene._isRenderRequested = true;
     }
 
@@ -115,9 +133,6 @@ public class Scene2D : FrameworkElement, IDisposable
             layer.InitializeCache(Context.Cache);
         }
 
-        Context.DrawingContext.Scale = Scale;
-        Context.DrawingContext.Translation = Translation;
-
         _renderer.RequestRender();
     }
 
@@ -167,9 +182,6 @@ public class Scene2D : FrameworkElement, IDisposable
             layer.InitializeCache(Context.Cache);
         }
 
-        Context.DrawingContext.Scale = Scale;
-        Context.DrawingContext.Translation = Translation;
-
         InvalidateVisual();
 
         CompositionTarget.Rendering += OnCompositionTargetRendering;
@@ -199,23 +211,14 @@ public class Scene2D : FrameworkElement, IDisposable
     private void OnRender(DirectXContext context)
     {
         Context.DrawingContext.BeginDraw();
+        Context.DrawingContext.PushTransform(Matrix3x2.Scaling(Scale) * Matrix3x2.Rotation(MathUtil.DegreesToRadians(Rotation)) * Matrix3x2.Translation(Translation));
 
         foreach (var layer in Layers)
         {
             layer.Render(this, Context);
         }
 
-#if DEBUG
-        using var brush = Context.ResourceFactory.CreateSolidColorBrush(Color.Red);
-        using var textFormat = Context.ResourceFactory.CreateTextFormat("Calibry", FontWeight.Normal, FontStyle.Normal, FontStretch.Normal, 32);
-
-        Context.DrawingContext.DrawText(Context.DrawingContext.RenderedFramesCount.ToString(),
-            textFormat,
-            new RectangleF(10, 10, 500, 500),
-            brush,
-            DrawTextOptions.None);
-#endif
-
+        Context.DrawingContext.PopTransform();
         Context.DrawingContext.EndDraw();
     }
 

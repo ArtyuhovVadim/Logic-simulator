@@ -9,6 +9,7 @@ namespace LogicSimulator.Scene.DirectX;
 public class D2DDrawingContext
 {
     private readonly DirectXContext _context;
+    private readonly Stack<Matrix3x2> _transforms = new();
 
     public int RenderedFramesCount { get; private set; }
 
@@ -52,6 +53,18 @@ public class D2DDrawingContext
     {
         _context.D2DDeviceContext.EndDraw();
         RenderedFramesCount++;
+    }
+
+    public void PushTransform(Matrix3x2 transform)
+    {
+        _transforms.Push(transform);
+        Transform = _transforms.Peek() * Transform;
+    }
+
+    public void PopTransform()
+    {
+        Transform = Matrix3x2.Invert(_transforms.Peek()) * Transform;
+        _transforms.Pop();
     }
 
     public void Clear(Color4 color) => _context.D2DDeviceContext.Clear(color);

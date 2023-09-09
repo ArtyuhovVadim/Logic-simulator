@@ -3,6 +3,7 @@ using System.IO;
 using SharpDX;
 using SharpDX.Direct2D1;
 using SharpDX.DirectWrite;
+using SharpDX.Mathematics.Interop;
 using SharpDX.WIC;
 using Bitmap = SharpDX.Direct2D1.Bitmap;
 using PixelFormat = SharpDX.WIC.PixelFormat;
@@ -42,6 +43,11 @@ public class D2DResourceFactory : DisposableObject
     public RectangleGeometry CreateRectangleGeometry(in RectangleF rectangle)
     {
         return new RectangleGeometry(_context.D2DFactory, rectangle);
+    }
+
+    public RectangleGeometry CreateRectangleGeometry(float width, float height)
+    {
+        return new RectangleGeometry(_context.D2DFactory, new RawRectangleF(0, 0, width, height));
     }
 
     public RoundedRectangleGeometry CreateRoundedRectangleGeometry(in RoundedRectangle roundedRectangle)
@@ -156,7 +162,7 @@ public class D2DResourceFactory : DisposableObject
     {
         _tempPathGeometry = new PathGeometry(_context.D2DFactory);
         _tempGeometrySink = _tempPathGeometry.Open();
-        
+
         return _tempGeometrySink;
     }
 
