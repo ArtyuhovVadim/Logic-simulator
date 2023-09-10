@@ -3,7 +3,7 @@ using System.Text;
 using LogicSimulator.Infrastructure.Services.Interfaces;
 using LogicSimulator.Infrastructure.YamlConverters;
 using LogicSimulator.Models;
-using LogicSimulator.Scene.SceneObjects;
+using LogicSimulator.ViewModels.ObjectViewModels;
 using YamlDotNet.Core;
 using YamlDotNet.Serialization;
 
@@ -20,35 +20,35 @@ public class SchemeFileService : ISchemeFileService
     public SchemeFileService()
     {
         var vector2Converter = new Vector2YamlConverter();
-        var color4Converter = new Color4YamlConverter();
+        var color4Converter = new ColorYamlConverter();
         var lineConverter = new LineYamlConverter();
 
         var serializerBuilder = new SerializerBuilder()
             .WithTypeConverter(vector2Converter)
             .WithTypeConverter(color4Converter)
             .WithTypeConverter(lineConverter)
-            .WithTagMapping(new TagName("!Rectangle"), typeof(Rectangle))
-            .WithTagMapping(new TagName("!RoundedRectangle"), typeof(RoundedRectangle))
-            .WithTagMapping(new TagName("!Ellipse"), typeof(Ellipse))
-            .WithTagMapping(new TagName("!Line"), typeof(Line))
-            .WithTagMapping(new TagName("!BezierCurve"), typeof(BezierCurve))
-            .WithTagMapping(new TagName("!TextBlock"), typeof(TextBlock))
-            .WithTagMapping(new TagName("!Arc"), typeof(Arc))
-            .WithTagMapping(new TagName("!Image"), typeof(Image))
+            .WithTagMapping(new TagName("!Rectangle"), typeof(RectangleViewModel))
+            .WithTagMapping(new TagName("!RoundedRectangle"), typeof(RoundedRectangleViewModel))
+            .WithTagMapping(new TagName("!Ellipse"), typeof(EllipseViewModel))
+            .WithTagMapping(new TagName("!Line"), typeof(LineViewModel))
+            .WithTagMapping(new TagName("!BezierCurve"), typeof(BezierCurveViewModel))
+            .WithTagMapping(new TagName("!TextBlock"), typeof(TextBlockViewModel))
+            .WithTagMapping(new TagName("!Arc"), typeof(ArcViewModel))
+            .WithTagMapping(new TagName("!Image"), typeof(ImageViewModel))
             ;
 
         var deserializerBuilder = new DeserializerBuilder()
             .WithTypeConverter(vector2Converter)
             .WithTypeConverter(color4Converter)
             .WithTypeConverter(lineConverter)
-            .WithTagMapping(new TagName("!Rectangle"), typeof(Rectangle))
-            .WithTagMapping(new TagName("!RoundedRectangle"), typeof(RoundedRectangle))
-            .WithTagMapping(new TagName("!Ellipse"), typeof(Ellipse))
-            .WithTagMapping(new TagName("!Line"), typeof(Line))
-            .WithTagMapping(new TagName("!BezierCurve"), typeof(BezierCurve))
-            .WithTagMapping(new TagName("!TextBlock"), typeof(TextBlock))
-            .WithTagMapping(new TagName("!Arc"), typeof(Arc))
-            .WithTagMapping(new TagName("!Image"), typeof(Image))
+            .WithTagMapping(new TagName("!Rectangle"), typeof(RectangleViewModel))
+            .WithTagMapping(new TagName("!RoundedRectangle"), typeof(RoundedRectangleViewModel))
+            .WithTagMapping(new TagName("!Ellipse"), typeof(EllipseViewModel))
+            .WithTagMapping(new TagName("!Line"), typeof(LineViewModel))
+            .WithTagMapping(new TagName("!BezierCurve"), typeof(BezierCurveViewModel))
+            .WithTagMapping(new TagName("!TextBlock"), typeof(TextBlockViewModel))
+            .WithTagMapping(new TagName("!Arc"), typeof(ArcViewModel))
+            .WithTagMapping(new TagName("!Image"), typeof(ImageViewModel))
             ;
 
 

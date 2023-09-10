@@ -3,6 +3,7 @@
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:anchorableViewModels="clr-namespace:LogicSimulator.ViewModels.AnchorableViewModels"
+    xmlns:base="clr-namespace:LogicSimulator.ViewModels.ObjectViewModels.Base"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:layers="clr-namespace:LogicSimulator.Scene.Layers;assembly=LogicSimulator.Scene"
     xmlns:local="clr-namespace:LogicSimulator.ViewModels.ObjectViewModels"
@@ -32,6 +33,16 @@
         <layers:ObjectsLayer Objects="{Binding Path=Objects}">
             <layers:ObjectsLayer.ObjectTemplateSelector>
                 <selectors:SceneObjectTemplateSelector>
+                    <selectors:SceneObjectTemplateSelector.UnknownObjectDataTemplate>
+                        <DataTemplate DataType="{x:Type base:BaseObjectViewModel}">
+                            <!--  TODO Rotation="{Binding Path=Rotation}"  -->
+                            <views:RectangleView
+                                Width="25"
+                                Height="25"
+                                FillColor="Red"
+                                Location="{Binding Path=Location}" />
+                        </DataTemplate>
+                    </selectors:SceneObjectTemplateSelector.UnknownObjectDataTemplate>
                     <selectors:SceneObjectTemplateSelector.RectangleDataTemplate>
                         <DataTemplate DataType="{x:Type local:RectangleViewModel}">
                             <!--  TODO Rotation="{Binding Path=Rotation}"  -->
@@ -41,7 +52,6 @@
                                 FillColor="{Binding Path=FillColor}"
                                 IsFilled="{Binding Path=IsFilled}"
                                 Location="{Binding Path=Location}"
-                                Rotation="30"
                                 StrokeColor="{Binding Path=StrokeColor}"
                                 StrokeThickness="{Binding Path=StrokeThickness}" />
                         </DataTemplate>

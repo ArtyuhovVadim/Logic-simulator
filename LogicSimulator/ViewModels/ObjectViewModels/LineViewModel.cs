@@ -5,7 +5,7 @@ using Color = System.Windows.Media.Color;
 
 namespace LogicSimulator.ViewModels.ObjectViewModels;
 
-public class Line : BaseEditableObjectViewModel
+public class LineViewModel : BaseEditableObjectViewModel
 {
     #region Vertexes
 
@@ -14,7 +14,7 @@ public class Line : BaseEditableObjectViewModel
     public IEnumerable<Vector2> Vertexes
     {
         get => _vertexes;
-        private set => Set(ref _vertexes, new ObservableCollection<Vector2>(value));
+        set => Set(ref _vertexes, new ObservableCollection<Vector2>(value));
     }
 
     #endregion

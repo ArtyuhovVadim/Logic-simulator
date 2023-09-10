@@ -3,7 +3,7 @@ using LogicSimulator.ViewModels.ObjectViewModels.Base;
 
 namespace LogicSimulator.ViewModels.ObjectViewModels;
 
-public class Image : BaseEditableObjectViewModel
+public class ImageViewModel : BaseEditableObjectViewModel
 {
     #region FilePath
 

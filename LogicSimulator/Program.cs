@@ -1,7 +1,9 @@
-﻿using System.Windows;
+﻿#if !DEBUG
+using System.Windows;
 using LogicSimulator.Infrastructure.Services.Interfaces;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+#endif
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
 
 namespace LogicSimulator;
@@ -11,6 +13,11 @@ public static class Program
     [STAThread]
     public static void Main(string[] args)
     {
+#if DEBUG
+        var app = new App();
+        app.InitializeComponent();
+        app.Run();
+#else
         try
         {
             var app = new App();
@@ -32,6 +39,7 @@ public static class Program
                 dialog.ShowErrorMessage("Ошибка!", message);
             }
         }
+#endif
     }
 
     public static IHostBuilder CreateHostBuilder(string[] args)

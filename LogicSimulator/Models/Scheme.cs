@@ -1,4 +1,4 @@
-﻿using LogicSimulator.Scene.SceneObjects.Base;
+﻿using LogicSimulator.ViewModels.ObjectViewModels.Base;
 
 namespace LogicSimulator.Models;
 
@@ -8,5 +8,5 @@ public class Scheme
 
     public string Name { get; set; }
 
-    public IEnumerable<BaseSceneObject> Objects { get; set; }
+    public IEnumerable<BaseObjectViewModel> Objects { get; set; }
 }

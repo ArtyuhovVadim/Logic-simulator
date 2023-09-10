@@ -18,14 +18,16 @@ public class SceneObjectTemplateSelector : DataTemplateSelector
 
     public DataTemplate BezierCurveDataTemplate { get; set; } = null!;
 
+    public DataTemplate UnknownObjectDataTemplate { get; set; } = null!;
+
     public override DataTemplate SelectTemplate(object item, DependencyObject container) => item switch
     {
-        RoundedRectangleViewModel => RoundedRectangleDataTemplate,
+        RoundedRectangleViewModel => UnknownObjectDataTemplate,
         RectangleViewModel => RectangleDataTemplate,
-        ArcViewModel => ArcDataTemplate,
-        TextBlockViewModel => TextBlockDataTemplate,
-        EllipseViewModel => EllipseDataTemplate,
-        BezierCurveViewModel => BezierCurveDataTemplate,
-        _ => base.SelectTemplate(item, container)!,
+        ArcViewModel => UnknownObjectDataTemplate,
+        TextBlockViewModel => UnknownObjectDataTemplate,
+        EllipseViewModel => UnknownObjectDataTemplate,
+        BezierCurveViewModel => UnknownObjectDataTemplate,
+        _ => UnknownObjectDataTemplate,
     };
 }

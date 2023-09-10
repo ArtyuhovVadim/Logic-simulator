@@ -1,11 +1,11 @@
 ﻿using System.IO;
-using LogicSimulator.Scene;
-using LogicSimulator.Scene.SceneObjects;
+using LogicSimulator.ViewModels.ObjectViewModels;
 using SharpDX;
 using YamlDotNet.Core;
 using YamlDotNet.Core.Events;
 using YamlDotNet.Serialization;
 using YamlDotNet.Serialization.Utilities;
+using Color = System.Windows.Media.Color;
 
 namespace LogicSimulator.Infrastructure.YamlConverters;
 
@@ -15,46 +15,43 @@ public class LineYamlConverter : IYamlTypeConverter
 
     public IValueDeserializer ValueDeserializer { get; set; }
 
-    public bool Accepts(Type type) => type == typeof(Line);
+    public bool Accepts(Type type) => type == typeof(LineViewModel);
 
     public object ReadYaml(IParser parser, Type type)
     {
-        if (type != typeof(Line))
+        if (type != typeof(LineViewModel))
             throw new InvalidDataException("Failed to retrieve Line!");
 
-        var line = new Line();
+        var line = new LineViewModel();
 
         parser.TryConsume<MappingStart>(out _);
 
-        if (!parser.TryConsume<Scalar>(out var locationScalar) || locationScalar.Value != nameof(Line.Location))
-            throw new YamlException(locationScalar!.Start, locationScalar.End, $"Expected a scalar named '{nameof(Line.Location)}'");
+        if (!parser.TryConsume<Scalar>(out var locationScalar) || locationScalar.Value != nameof(LineViewModel.Location))
+            throw new YamlException(locationScalar!.Start, locationScalar.End, $"Expected a scalar named '{nameof(LineViewModel.Location)}'");
 
         line.Location = (Vector2)ValueDeserializer.DeserializeValue(parser, typeof(Vector2), new SerializerState(), ValueDeserializer)!;
 
-        if (!parser.TryConsume<Scalar>(out var rotationScalar) || rotationScalar.Value != nameof(Line.Rotation))
-            throw new YamlException(rotationScalar!.Start, rotationScalar.End, $"Expected a scalar named '{nameof(Line.Rotation)}'");
+        if (!parser.TryConsume<Scalar>(out var rotationScalar) || rotationScalar.Value != nameof(LineViewModel.Rotation))
+            throw new YamlException(rotationScalar!.Start, rotationScalar.End, $"Expected a scalar named '{nameof(LineViewModel.Rotation)}'");
 
         line.Rotation = (Rotation)ValueDeserializer.DeserializeValue(parser, typeof(Rotation), new SerializerState(), ValueDeserializer)!;
 
-        if (!parser.TryConsume<Scalar>(out var strokeThicknessScalar) || strokeThicknessScalar.Value != nameof(Line.StrokeThickness))
-            throw new YamlException(strokeThicknessScalar!.Start, strokeThicknessScalar.End, $"Expected a scalar named '{nameof(Line.StrokeThickness)}'");
+        if (!parser.TryConsume<Scalar>(out var strokeThicknessScalar) || strokeThicknessScalar.Value != nameof(LineViewModel.StrokeThickness))
+            throw new YamlException(strokeThicknessScalar!.Start, strokeThicknessScalar.End, $"Expected a scalar named '{nameof(LineViewModel.StrokeThickness)}'");
 
         line.StrokeThickness = (float)ValueDeserializer.DeserializeValue(parser, typeof(float), new SerializerState(), ValueDeserializer)!;
 
-        if (!parser.TryConsume<Scalar>(out var strokeColorScalar) || strokeColorScalar.Value != nameof(Line.StrokeColor))
-            throw new YamlException(strokeColorScalar!.Start, strokeColorScalar.End, $"Expected a scalar named '{nameof(Line.StrokeColor)}'");
+        if (!parser.TryConsume<Scalar>(out var strokeColorScalar) || strokeColorScalar.Value != nameof(LineViewModel.StrokeColor))
+            throw new YamlException(strokeColorScalar!.Start, strokeColorScalar.End, $"Expected a scalar named '{nameof(LineViewModel.StrokeColor)}'");
 
-        line.StrokeColor = (Color4)ValueDeserializer.DeserializeValue(parser, typeof(Color4), new SerializerState(), ValueDeserializer)!;
+        line.StrokeColor = (Color)ValueDeserializer.DeserializeValue(parser, typeof(Color), new SerializerState(), ValueDeserializer)!;
 
-        if (!parser.TryConsume<Scalar>(out var vertexScalar) || vertexScalar.Value != nameof(Line.Vertexes))
-            throw new YamlException(vertexScalar!.Start, vertexScalar.End, $"Expected a scalar named '{nameof(Line.Vertexes)}'");
+        if (!parser.TryConsume<Scalar>(out var vertexScalar) || vertexScalar.Value != nameof(LineViewModel.Vertexes))
+            throw new YamlException(vertexScalar!.Start, vertexScalar.End, $"Expected a scalar named '{nameof(LineViewModel.Vertexes)}'");
 
         var vertexes = (IEnumerable<Vector2>)ValueDeserializer.DeserializeValue(parser, typeof(IEnumerable<Vector2>), new SerializerState(), ValueDeserializer);
 
-        foreach (var vertex in vertexes!)
-        {
-            line.AddVertex(vertex);
-        }
+        line.Vertexes = vertexes;
 
         parser.TryConsume<MappingEnd>(out _);
 
@@ -63,23 +60,23 @@ public class LineYamlConverter : IYamlTypeConverter
 
     public void WriteYaml(IEmitter emitter, object value, Type type)
     {
-        var line = (Line)value;
+        var line = (LineViewModel)value;
 
         emitter.Emit(new MappingStart(AnchorName.Empty, new TagName("!Line"), false, MappingStyle.Block));
 
-        ValueSerializer.SerializeValue(emitter, nameof(Line.Location), typeof(string));
+        ValueSerializer.SerializeValue(emitter, nameof(LineViewModel.Location), typeof(string));
         ValueSerializer.SerializeValue(emitter, line.Location, typeof(Vector2));
 
-        ValueSerializer.SerializeValue(emitter, nameof(Line.Rotation), typeof(string));
+        ValueSerializer.SerializeValue(emitter, nameof(LineViewModel.Rotation), typeof(string));
         ValueSerializer.SerializeValue(emitter, line.Rotation, typeof(Rotation));
 
-        ValueSerializer.SerializeValue(emitter, nameof(Line.StrokeThickness), typeof(string));
+        ValueSerializer.SerializeValue(emitter, nameof(LineViewModel.StrokeThickness), typeof(string));
         ValueSerializer.SerializeValue(emitter, line.StrokeThickness, typeof(float));
 
-        ValueSerializer.SerializeValue(emitter, nameof(Line.StrokeColor), typeof(string));
-        ValueSerializer.SerializeValue(emitter, line.StrokeColor, typeof(Color4));
+        ValueSerializer.SerializeValue(emitter, nameof(LineViewModel.StrokeColor), typeof(string));
+        ValueSerializer.SerializeValue(emitter, line.StrokeColor, typeof(Color));
 
-        ValueSerializer.SerializeValue(emitter, nameof(Line.Vertexes), typeof(string));
+        ValueSerializer.SerializeValue(emitter, nameof(LineViewModel.Vertexes), typeof(string));
 
         emitter.Emit(new SequenceStart(AnchorName.Empty, TagName.Empty, false, SequenceStyle.Flow));
 

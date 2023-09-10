@@ -52,6 +52,16 @@ public class ObjectsLayer : BaseSceneLayer
         {
             newCollectionChanged.CollectionChanged += layer.OnObjectsCollectionChanged;
         }
+
+        if (!layer.IsLoaded)
+            return;
+
+        layer._objects.Clear();
+
+        foreach (var layerObject in layer.Objects)
+        {
+            layer._objects.Add(layer.CreateViewFromItem(layerObject));
+        }
     }
 
     #endregion

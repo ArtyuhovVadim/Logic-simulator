@@ -1,4 +1,5 @@
 ﻿using LogicSimulator.Infrastructure.Commands;
+using LogicSimulator.Infrastructure.Services;
 using LogicSimulator.Infrastructure.Services.Interfaces;
 using LogicSimulator.ViewModels.AnchorableViewModels;
 using LogicSimulator.ViewModels.AnchorableViewModels.Base;
@@ -34,7 +35,7 @@ public class MainWindowViewModel : BindableBase
 
     #region TestSchemeViewModel
 
-    private SchemeViewModel _testSchemeViewModel = new();
+    private SchemeViewModel _testSchemeViewModel;
 
     public SchemeViewModel TestSchemeViewModel
     {
@@ -131,6 +132,8 @@ public class MainWindowViewModel : BindableBase
 
     public ICommand TestCommand => _testCommand ??= new LambdaCommand(_ =>
     {
+        new SchemeFileService().ReadFromFile("Data/Example.lss", out var scheme);
+        TestSchemeViewModel = new SchemeViewModel(scheme);
     }, _ => true);
 
     #endregion

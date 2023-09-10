@@ -1,21 +1,23 @@
-﻿using System.Windows.Media;
+﻿using LogicSimulator.Models;
 using LogicSimulator.ViewModels.AnchorableViewModels.Base;
 using LogicSimulator.ViewModels.ObjectViewModels;
 using LogicSimulator.ViewModels.ObjectViewModels.Base;
-using SharpDX;
 
 namespace LogicSimulator.ViewModels.AnchorableViewModels;
 
 public class SchemeViewModel : DocumentViewModel
 {
+    private readonly Scheme _scheme;
+
+    public SchemeViewModel(Scheme scheme)
+    {
+        _scheme = scheme;
+        Objects = _scheme.Objects;
+    }
+
     #region Objects
 
-    private ObservableCollection<BaseObjectViewModel> _objects = new()
-    {
-        new RectangleViewModel{ Location = new Vector2(100, 100), Width = 100, Height = 100, StrokeThickness = 1f, IsFilled = true, StrokeColor = Colors.Red, FillColor = Colors.White },
-        new RectangleViewModel{ Location = new Vector2(300, 100), Width = 100, Height = 100, StrokeThickness = 2f, IsFilled = false, StrokeColor = Colors.Green, FillColor = Colors.Bisque },
-        new RectangleViewModel{ Location = new Vector2(500, 100), Width = 100, Height = 100, StrokeThickness = 5f, IsFilled = true, StrokeColor = Colors.Blue, FillColor = Colors.Coral },
-    };
+    private ObservableCollection<BaseObjectViewModel> _objects;
 
     public IEnumerable<BaseObjectViewModel> Objects
     {
