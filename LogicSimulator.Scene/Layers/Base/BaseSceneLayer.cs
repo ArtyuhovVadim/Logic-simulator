@@ -108,4 +108,13 @@ public abstract class BaseSceneLayer : DisposableFrameworkContentElement, IRende
 
         base.Dispose(disposingManaged);
     }
+
+    protected static void DefaultPropertyChangedHandler(DependencyObject d, DependencyPropertyChangedEventArgs e)
+    {
+        if (d is not BaseSceneLayer layer) return;
+
+        layer.ThrowIfDisposed();
+
+        layer.MakeDirty();
+    }
 }

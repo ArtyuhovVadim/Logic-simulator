@@ -19,11 +19,11 @@
         <converters:RotationToFloatConverter x:Key="RotationToFloatConverter" />
     </UserControl.Resources>
     <scene:Scene2D>
-        <layers:ClearLayer Color="Black">
-            <layers:ClearLayer.Renderer>
-                <renderers:ClearLayerRenderer />
-            </layers:ClearLayer.Renderer>
-        </layers:ClearLayer>
+        <layers:GradientClearLayer EndColor="#E2E2E2" StartColor="#C1C1C1">
+            <layers:GradientClearLayer.Renderer>
+                <renderers:GradientClearRenderer />
+            </layers:GradientClearLayer.Renderer>
+        </layers:GradientClearLayer>
         <layers:GridLayer
             Width="2000"
             Height="2000"
