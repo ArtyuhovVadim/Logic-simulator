@@ -153,6 +153,11 @@ public class D2DResourceFactory : DisposableObject
         return new TextFormat(_context.D2DTextFactory, fontFamily, fontWeight, fontStyle, fontStretch, fontSize);
     }
 
+    public TextFormat CreateTextFormat(in string fontFamily, in float fontSize)
+    {
+        return new TextFormat(_context.D2DTextFactory, fontFamily, FontWeight.Normal, FontStyle.Normal, FontStretch.Normal, fontSize);
+    }
+
     public TextLayout CreateTextLayout(in string text, TextFormat textFormat)
     {
         return new TextLayout(_context.D2DTextFactory, text, textFormat, float.MaxValue, float.MaxValue);
