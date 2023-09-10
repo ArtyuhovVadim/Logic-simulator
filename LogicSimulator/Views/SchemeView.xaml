@@ -36,11 +36,7 @@
                     <selectors:SceneObjectTemplateSelector.UnknownObjectDataTemplate>
                         <DataTemplate DataType="{x:Type base:BaseObjectViewModel}">
                             <!--  TODO Rotation="{Binding Path=Rotation}"  -->
-                            <views:RectangleView
-                                Width="25"
-                                Height="25"
-                                FillColor="Red"
-                                Location="{Binding Path=Location}" />
+                            <views:UnknownObjectView Location="{Binding Path=Location}" />
                         </DataTemplate>
                     </selectors:SceneObjectTemplateSelector.UnknownObjectDataTemplate>
                     <selectors:SceneObjectTemplateSelector.RectangleDataTemplate>
