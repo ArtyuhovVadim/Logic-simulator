@@ -4,6 +4,7 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:anchorableViewModels="clr-namespace:LogicSimulator.ViewModels.AnchorableViewModels"
     xmlns:base="clr-namespace:LogicSimulator.ViewModels.ObjectViewModels.Base"
+    xmlns:converters="clr-namespace:LogicSimulator.Infrastructure.Converters"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:layers="clr-namespace:LogicSimulator.Scene.Layers;assembly=LogicSimulator.Scene"
     xmlns:local="clr-namespace:LogicSimulator.ViewModels.ObjectViewModels"
@@ -14,6 +15,9 @@
     xmlns:views="clr-namespace:LogicSimulator.Scene.Views;assembly=LogicSimulator.Scene"
     d:DataContext="{d:DesignInstance Type=anchorableViewModels:SchemeViewModel}"
     mc:Ignorable="d">
+    <UserControl.Resources>
+        <converters:RotationToFloatConverter x:Key="RotationToFloatConverter" />
+    </UserControl.Resources>
     <scene:Scene2D>
         <layers:ClearLayer Color="Black">
             <layers:ClearLayer.Renderer>
@@ -35,19 +39,19 @@
                 <selectors:SceneObjectTemplateSelector>
                     <selectors:SceneObjectTemplateSelector.UnknownObjectDataTemplate>
                         <DataTemplate DataType="{x:Type base:BaseObjectViewModel}">
-                            <!--  TODO Rotation="{Binding Path=Rotation}"  -->
-                            <views:UnknownObjectView Location="{Binding Path=Location}" />
+                            <views:UnknownObjectView Location="{Binding Path=Location}" Rotation="{Binding Path=Rotation, Converter={StaticResource RotationToFloatConverter}}" />
                         </DataTemplate>
                     </selectors:SceneObjectTemplateSelector.UnknownObjectDataTemplate>
                     <selectors:SceneObjectTemplateSelector.RectangleDataTemplate>
                         <DataTemplate DataType="{x:Type local:RectangleViewModel}">
-                            <!--  TODO Rotation="{Binding Path=Rotation}"  -->
                             <views:RectangleView
                                 Width="{Binding Path=Width}"
                                 Height="{Binding Path=Height}"
                                 FillColor="{Binding Path=FillColor}"
                                 IsFilled="{Binding Path=IsFilled}"
                                 Location="{Binding Path=Location}"
+                                Rotation="{Binding Path=Rotation,
+                                                   Converter={StaticResource RotationToFloatConverter}}"
                                 StrokeColor="{Binding Path=StrokeColor}"
                                 StrokeThickness="{Binding Path=StrokeThickness}" />
                         </DataTemplate>
