@@ -21,6 +21,10 @@ public class ResourceCache : IDisposable
                 managedResource.Dispose();
             }
         }
+        else
+        {
+            _cache[user.Id] = new Dictionary<long, IDisposable>(1);
+        }
 
         _cache[user.Id][resource.Id] = resource.Update(_factory, user);
     }
