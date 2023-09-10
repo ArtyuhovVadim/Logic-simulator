@@ -78,12 +78,12 @@ public abstract class SceneObjectView : DisposableFrameworkContentElement, IRend
     public bool HitTest(Vector2 pos, float tolerance = 0.25f) =>
         HitTest(pos, Matrix3x2.Identity, tolerance);
 
-    public abstract bool HitTest(Vector2 pos, Matrix3x2 transform, float tolerance = 0.25f);
+    public abstract bool HitTest(Vector2 pos, Matrix3x2 worldTransform, float tolerance = 0.25f);
 
     public GeometryRelation HitTest(Geometry inputGeometry, float tolerance = 0.25f) =>
         HitTest(inputGeometry, Matrix3x2.Identity, tolerance);
 
-    public abstract GeometryRelation HitTest(Geometry inputGeometry, Matrix3x2 transform, float tolerance = 0.25f);
+    public abstract GeometryRelation HitTest(Geometry inputGeometry, Matrix3x2 worldTransform, float tolerance = 0.25f);
 
     public void Render(Scene2D scene, D2DContext context)
     {

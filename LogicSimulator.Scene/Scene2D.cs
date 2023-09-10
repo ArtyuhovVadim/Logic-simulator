@@ -17,6 +17,10 @@ public class Scene2D : FrameworkElement, IDisposable
 {
     private bool _isRenderRequested;
 
+    private Matrix3x2 _scaleMatrix = Matrix3x2.Identity;
+    private Matrix3x2 _translationMatrix = Matrix3x2.Identity;
+    private Matrix3x2 _rotationMatrix = Matrix3x2.Identity;
+
     private SceneRenderer? _renderer;
 
     private D2DContext Context => _renderer?.D2DContext ?? throw new ApplicationException("Context is not initialized.");
@@ -38,6 +42,8 @@ public class Scene2D : FrameworkElement, IDisposable
     {
         if (d is not Scene2D scene) return;
 
+        scene._scaleMatrix = Matrix3x2.Scaling((float)e.NewValue);
+
         scene._isRenderRequested = true;
     }
 
@@ -57,6 +63,8 @@ public class Scene2D : FrameworkElement, IDisposable
     private static void OnTranslationChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
     {
         if (d is not Scene2D scene) return;
+
+        scene._translationMatrix = Matrix3x2.Translation((Vector2)e.NewValue);
 
         scene._isRenderRequested = true;
     }
@@ -78,12 +86,14 @@ public class Scene2D : FrameworkElement, IDisposable
     {
         if (d is not Scene2D scene) return;
 
+        scene._rotationMatrix = Matrix3x2.Rotation(MathUtil.DegreesToRadians((float)e.NewValue));
+
         scene._isRenderRequested = true;
     }
 
     #endregion
 
-    public Matrix3x2 Transform => Context.DrawingContext.Transform;
+    public Matrix3x2 Transform => _scaleMatrix * _rotationMatrix * _translationMatrix;
 
     public Size2F PixelSize => Context.DrawingContext.DrawingSize;
 
@@ -206,7 +216,7 @@ public class Scene2D : FrameworkElement, IDisposable
     private void OnRender(DirectXContext context)
     {
         Context.DrawingContext.BeginDraw();
-        Context.DrawingContext.PushTransform(Matrix3x2.Scaling(Scale) * Matrix3x2.Rotation(MathUtil.DegreesToRadians(Rotation)) * Matrix3x2.Translation(Translation));
+        Context.DrawingContext.PushTransform(Transform);
 
         foreach (var layer in Layers)
         {
