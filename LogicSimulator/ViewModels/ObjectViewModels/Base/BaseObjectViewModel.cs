@@ -45,17 +45,4 @@ public abstract class BaseObjectViewModel : BindableBase
     }
 
     #endregion
-
-    #region IsDragging
-
-    private bool _isDragging;
-
-    [YamlIgnore]
-    public bool IsDragging
-    {
-        get => _isDragging;
-        set => Set(ref _isDragging, value);
-    }
-
-    #endregion
 }

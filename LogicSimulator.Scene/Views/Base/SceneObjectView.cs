@@ -66,6 +66,19 @@ public abstract class SceneObjectView : DisposableFrameworkContentElement, IRend
 
     #endregion
 
+    #region IsSelected
+
+    public bool IsSelected
+    {
+        get => (bool)GetValue(IsSelectedProperty);
+        set => SetValue(IsSelectedProperty, value);
+    }
+
+    public static readonly DependencyProperty IsSelectedProperty =
+        DependencyProperty.Register(nameof(IsSelected), typeof(bool), typeof(SceneObjectView), new FrameworkPropertyMetadata(default(bool), FrameworkPropertyMetadataOptions.BindsTwoWayByDefault, DefaultPropertyChangedHandler));
+
+    #endregion
+
     //https://stackoverflow.com/a/45392997
     public Matrix3x2 TransformMatrix => _rotationMatrix * _translateMatrix;
 
