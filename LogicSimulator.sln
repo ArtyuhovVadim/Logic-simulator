@@ -9,8 +9,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LogicSimulator.Controls", "
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LogicSimulator.Scene", "LogicSimulator.Scene\LogicSimulator.Scene.csproj", "{61CF4324-89B3-4EE8-938C-C06626BEB605}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LogicSimulator.MathParser", "LogicSimulator.MathParser\LogicSimulator.MathParser.csproj", "{8C7A6C42-BABF-497E-A421-BBCA9C3A72CF}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LogicSimulator.Utils", "LogicSimulator.Utils\LogicSimulator.Utils.csproj", "{64E81F91-1585-4484-92E7-D4086B8F862A}"
 EndProject
 Project("{930C7802-8A8C-48F9-8165-68863BCCD9DD}") = "LogicSimulator.Installer", "LogicSimulator.Installer\LogicSimulator.Installer.wixproj", "{9DE10794-D31C-4684-A072-C2E6D6301C09}"
@@ -49,14 +47,6 @@ Global
 		{61CF4324-89B3-4EE8-938C-C06626BEB605}.Release|x64.Build.0 = Release|x64
 		{61CF4324-89B3-4EE8-938C-C06626BEB605}.Release|x86.ActiveCfg = Release|x86
 		{61CF4324-89B3-4EE8-938C-C06626BEB605}.Release|x86.Build.0 = Release|x86
-		{8C7A6C42-BABF-497E-A421-BBCA9C3A72CF}.Debug|x64.ActiveCfg = Debug|x64
-		{8C7A6C42-BABF-497E-A421-BBCA9C3A72CF}.Debug|x64.Build.0 = Debug|x64
-		{8C7A6C42-BABF-497E-A421-BBCA9C3A72CF}.Debug|x86.ActiveCfg = Debug|x86
-		{8C7A6C42-BABF-497E-A421-BBCA9C3A72CF}.Debug|x86.Build.0 = Debug|x86
-		{8C7A6C42-BABF-497E-A421-BBCA9C3A72CF}.Release|x64.ActiveCfg = Release|x64
-		{8C7A6C42-BABF-497E-A421-BBCA9C3A72CF}.Release|x64.Build.0 = Release|x64
-		{8C7A6C42-BABF-497E-A421-BBCA9C3A72CF}.Release|x86.ActiveCfg = Release|x86
-		{8C7A6C42-BABF-497E-A421-BBCA9C3A72CF}.Release|x86.Build.0 = Release|x86
 		{64E81F91-1585-4484-92E7-D4086B8F862A}.Debug|x64.ActiveCfg = Debug|x64
 		{64E81F91-1585-4484-92E7-D4086B8F862A}.Debug|x64.Build.0 = Debug|x64
 		{64E81F91-1585-4484-92E7-D4086B8F862A}.Debug|x86.ActiveCfg = Debug|x86

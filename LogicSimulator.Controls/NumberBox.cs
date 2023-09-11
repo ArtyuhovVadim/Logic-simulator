@@ -1,6 +1,6 @@
-﻿using System.Globalization;
+﻿using MathExpressionParser;
+using System.Globalization;
 using System.Windows;
-using LogicSimulator.MathParser;
 
 namespace LogicSimulator.Controls;
 
@@ -126,7 +126,7 @@ public class NumberBox : TextBoxEx
 
     #endregion
 
-    private static readonly MathExpressionParser Parser = new();
+    private static readonly MathParser Parser = MathParserBuilder.BuildDefaultParser();
 
     static NumberBox()
     {
@@ -152,7 +152,7 @@ public class NumberBox : TextBoxEx
 
     private double ParseText(string text)
     {
-        if (!Parser.TryParse(text, out var number) || number < MinNumber || number > MaxNumber)
+        if (!TryParse(text, out var number) || number < MinNumber || number > MaxNumber)
         {
             IsHasError = true;
             return Number;
@@ -165,4 +165,19 @@ public class NumberBox : TextBoxEx
     }
 
     private string NumberToString(double number) => number.ToString($"F{DecimalPlaces}", CultureInfo.InvariantCulture).TrimEnd('0').TrimEnd('.');
+
+    //TODO: Вынести в метод расширения
+    private bool TryParse(string text, out double number)
+    {
+        try
+        {
+            number = Parser.Parse(text);
+            return true;
+        }
+        catch
+        {
+            number = double.NaN;
+            return false;
+        } 
+    }
 }
