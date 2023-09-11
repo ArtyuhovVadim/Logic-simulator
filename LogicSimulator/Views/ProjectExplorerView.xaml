@@ -6,10 +6,10 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:vm="clr-namespace:LogicSimulator.ViewModels"
+    d:DataContext="{d:DesignInstance Type=avm:ProjectExplorerViewModel}"
     d:DesignHeight="480"
     d:DesignWidth="360"
     mc:Ignorable="d">
-    <!--  d:DataContext="{d:DesignInstance Type=avm:ProjectExplorerViewModel}"  -->
     <!--<UserControl.Resources>
         ~1~  Control colors.  @1@
         <Color x:Key="SelectedBackgroundColor">#FFC5CBF9</Color>
@@ -210,7 +210,7 @@
         </Style>
     </UserControl.Resources>-->
     <DockPanel>
-        <!--<TreeView
+        <TreeView
             Padding="0"
             Background="Transparent"
             BorderThickness="0"
@@ -233,6 +233,6 @@
                     </HierarchicalDataTemplate.ItemTemplate>
                 </HierarchicalDataTemplate>
             </TreeView.ItemTemplate>
-        </TreeView>-->
+        </TreeView>
     </DockPanel>
 </UserControl>

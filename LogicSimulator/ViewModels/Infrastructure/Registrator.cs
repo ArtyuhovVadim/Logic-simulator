@@ -1,4 +1,5 @@
-﻿using LogicSimulator.ViewModels.UserDialogViewModels;
+﻿using LogicSimulator.ViewModels.AnchorableViewModels;
+using LogicSimulator.ViewModels.UserDialogViewModels;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace LogicSimulator.ViewModels.Infrastructure;
@@ -11,7 +12,7 @@ public static class Registrator
             .AddSingleton<MainWindowViewModel>()
 
             //.AddSingleton<PropertiesViewModel>()
-            //.AddSingleton<ProjectExplorerViewModel>()
+            .AddSingleton<ProjectExplorerViewModel>()
 
             .AddSingleton<InfoDialogWindowViewModel>()
             .AddSingleton<ErrorDialogWindowViewModel>()

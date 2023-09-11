@@ -8,10 +8,8 @@
     xmlns:con="clr-namespace:LogicSimulator.Infrastructure.Converters"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:fa="http://schemas.fontawesome.io/icons/"
-    xmlns:infrastructure="clr-namespace:LogicSimulator.Infrastructure"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:selectors="clr-namespace:LogicSimulator.Infrastructure.Selectors"
-    xmlns:viewModels="clr-namespace:LogicSimulator.ViewModels"
     xmlns:views="clr-namespace:LogicSimulator.Views"
     Title="Logic-simulator"
     Width="1280"
@@ -97,32 +95,30 @@
             </Menu>
         </Grid>
 
-        <views:SchemeView DataContext="{Binding Path=TestSchemeViewModel}" />
-
-        <!--<DockingManager
+        <DockingManager
             ActiveContent="{Binding Path=ActiveContent,
                                     Mode=TwoWay}"
             AnchorablesSource="{Binding Path=AnchorableViewModels}"
             DocumentsSource="{Binding Path=OpenedSchemes}">
-            ~1~<DockingManager.LayoutItemTemplateSelector>
-               <infrastructure:PanesTemplateSelector>
-                    <infrastructure:PanesTemplateSelector.SchemeViewTemplate>
+            <DockingManager.LayoutItemTemplateSelector>
+                <selectors:PanesTemplateSelector>
+                    <selectors:PanesTemplateSelector.SchemeViewTemplate>
                         <DataTemplate DataType="{x:Type avm:SchemeViewModel}">
                             <views:SchemeView />
                         </DataTemplate>
-                    </infrastructure:PanesTemplateSelector.SchemeViewTemplate>
-                    <infrastructure:PanesTemplateSelector.PropertiesViewTemplate>
+                    </selectors:PanesTemplateSelector.SchemeViewTemplate>
+                    <!--<selectors:PanesTemplateSelector.PropertiesViewTemplate>
                         <DataTemplate DataType="{x:Type avm:PropertiesViewModel}">
                             <views:PropertiesView />
                         </DataTemplate>
-                    </infrastructure:PanesTemplateSelector.PropertiesViewTemplate>
-                    <infrastructure:PanesTemplateSelector.ProjectExplorerViewTemplate>
+                    </selectors:PanesTemplateSelector.PropertiesViewTemplate>-->
+                    <selectors:PanesTemplateSelector.ProjectExplorerViewTemplate>
                         <DataTemplate DataType="{x:Type avm:ProjectExplorerViewModel}">
                             <views:ProjectExplorerView />
                         </DataTemplate>
-                    </infrastructure:PanesTemplateSelector.ProjectExplorerViewTemplate>
-                </infrastructure:PanesTemplateSelector>
-            </DockingManager.LayoutItemTemplateSelector>@1@
+                    </selectors:PanesTemplateSelector.ProjectExplorerViewTemplate>
+                </selectors:PanesTemplateSelector>
+            </DockingManager.LayoutItemTemplateSelector>
             <DockingManager.LayoutItemContainerStyleSelector>
                 <selectors:PanesStyleSelector>
                     <selectors:PanesStyleSelector.DocumentViewStyle>
@@ -151,6 +147,6 @@
                     <LayoutDocumentPane />
                 </LayoutPanel>
             </LayoutRoot>
-        </DockingManager>-->
+        </DockingManager>
     </DockPanel>
 </c:Window>

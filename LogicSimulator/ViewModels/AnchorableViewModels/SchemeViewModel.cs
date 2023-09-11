@@ -1,18 +1,35 @@
 ﻿using LogicSimulator.Models;
 using LogicSimulator.ViewModels.AnchorableViewModels.Base;
 using LogicSimulator.ViewModels.ObjectViewModels.Base;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace LogicSimulator.ViewModels.AnchorableViewModels;
 
 public class SchemeViewModel : DocumentViewModel
 {
+    private readonly MainWindowViewModel _mainWindowViewModel;
     private readonly Scheme _scheme;
 
     public SchemeViewModel(Scheme scheme)
     {
         _scheme = scheme;
         Objects = _scheme.Objects;
+        _mainWindowViewModel = App.Host.Services.GetRequiredService<MainWindowViewModel>();
     }
+
+    #region Title
+
+    public override string Title
+    {
+        get => _scheme.Name;
+        set
+        {
+            _scheme.Name = value;
+            OnPropertyChanged();
+        }
+    }
+
+    #endregion
 
     #region Objects
 
@@ -25,6 +42,11 @@ public class SchemeViewModel : DocumentViewModel
     }
 
     #endregion
+
+    protected override void Close(object p)
+    {
+        _mainWindowViewModel.OpenedSchemes.Remove(this);
+    }
 
     /*#region Tools
 
@@ -120,20 +142,6 @@ public class SchemeViewModel : DocumentViewModel
         _editorSelectionService.Select(this);
     }
 
-    #region Title
-
-    public override string Title
-    {
-        get => _scheme.Name;
-        set
-        {
-            _scheme.Name = value;
-            OnPropertyChanged();
-        }
-    }
-
-    #endregion
-
     #region Scale
 
     private float _scale = 1f;
@@ -197,8 +205,4 @@ public class SchemeViewModel : DocumentViewModel
     {
         _mainWindowViewModel.OpenedSchemes.Remove(this);
     }*/
-    protected override void Close(object p)
-    {
-        throw new NotImplementedException();
-    }
 }

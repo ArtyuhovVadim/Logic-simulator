@@ -1,5 +1,6 @@
 ﻿using System.Windows;
 using System.Windows.Controls;
+using LogicSimulator.ViewModels.AnchorableViewModels;
 
 namespace LogicSimulator.Infrastructure.Selectors;
 
@@ -13,9 +14,9 @@ public class PanesTemplateSelector : DataTemplateSelector
 
     public override DataTemplate SelectTemplate(object item, DependencyObject container) => item switch
     {
-        //SchemeViewModel => SchemeViewTemplate,
+        SchemeViewModel => SchemeViewTemplate,
         //PropertiesViewModel => PropertiesViewTemplate, 
-        //ProjectExplorerViewModel => ProjectExplorerViewTemplate,
+        ProjectExplorerViewModel => ProjectExplorerViewTemplate,
         _ => base.SelectTemplate(item, container)
     };
 }

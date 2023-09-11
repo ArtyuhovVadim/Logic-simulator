@@ -23,11 +23,7 @@
     <ItemGroup>
       <Compile Remove="Infrastructure\Services\EditorSelectionService.cs" />
       <Compile Remove="Infrastructure\Services\Interfaces\IEditorSelectionService.cs" />
-      <Compile Remove="Infrastructure\Services\ProjectFileService.cs" />
-      <Compile Remove="Models\Project.cs" />
-      <Compile Remove="ViewModels\AnchorableViewModels\ProjectExplorerViewModel.cs" />
       <Compile Remove="ViewModels\AnchorableViewModels\PropertiesViewModel.cs" />
-      <Compile Remove="ViewModels\ProjectViewModel.cs" />
     </ItemGroup>
 
     <ItemGroup>
