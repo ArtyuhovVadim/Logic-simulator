@@ -46,6 +46,15 @@
         <None Update="Data\Example.lss">
           <CopyToOutputDirectory>Always</CopyToOutputDirectory>
         </None>
+        <None Update="Data\ExampleProject\ExampleScheme1.lss">
+          <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        </None>
+        <None Update="Data\ExampleProject\ExampleScheme2.lss">
+          <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        </None>
+        <None Update="Data\ExampleProject\ExampleScheme3.lss">
+          <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        </None>
         <None Update="Data\image.png">
           <CopyToOutputDirectory>Always</CopyToOutputDirectory>
         </None>
@@ -53,6 +62,12 @@
 
     <ItemGroup>
         <Folder Include="Infrastructure\Converters\" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <None Include="Data\ExampleProject\ExampleProject.lsproj">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </None>
     </ItemGroup>
 
     <ItemGroup>

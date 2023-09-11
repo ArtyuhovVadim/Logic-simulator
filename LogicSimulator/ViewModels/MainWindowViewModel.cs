@@ -33,18 +33,6 @@ public class MainWindowViewModel : BindableBase
         AnchorableViewModels.Add(projectExplorerViewModel);
     }
 
-    // #region TestSchemeViewModel
-    //
-    // private SchemeViewModel _testSchemeViewModel;
-    //
-    // public SchemeViewModel TestSchemeViewModel
-    // {
-    //     get => _testSchemeViewModel;
-    //     set => Set(ref _testSchemeViewModel, value);
-    // }
-    //
-    // #endregion
-
     #region ActiveContent
 
     private AnchorableViewModel _activeAnchorable;
@@ -105,7 +93,7 @@ public class MainWindowViewModel : BindableBase
 
     public ICommand LoadExampleCommand => _loadExampleCommand ??= new LambdaCommand(_ =>
     {
-        var projectPath = @"C:\Users\Vadim\Desktop\ExampleProject\ExampleProject.lsproj";
+        var projectPath = @"Data\ExampleProject\ExampleProject.lsproj";
 
         if (!_projectFileService.ReadFromFile(projectPath, out var project))
         {
@@ -132,8 +120,6 @@ public class MainWindowViewModel : BindableBase
 
     public ICommand TestCommand => _testCommand ??= new LambdaCommand(_ =>
     {
-        // new SchemeFileService().ReadFromFile("Data/Example.lss", out var scheme);
-        // TestSchemeViewModel = new SchemeViewModel(scheme);
     }, _ => true);
 
     #endregion
