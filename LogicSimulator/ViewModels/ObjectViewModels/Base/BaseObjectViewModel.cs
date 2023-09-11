@@ -1,6 +1,7 @@
 ﻿using LogicSimulator.Infrastructure;
 using LogicSimulator.ViewModels.Base;
 using SharpDX;
+using YamlDotNet.Serialization;
 
 namespace LogicSimulator.ViewModels.ObjectViewModels.Base;
 
@@ -10,6 +11,7 @@ public abstract class BaseObjectViewModel : BindableBase
 
     private Vector2 _location;
 
+    [Editable]
     public Vector2 Location
     {
         get => _location;
@@ -22,10 +24,37 @@ public abstract class BaseObjectViewModel : BindableBase
 
     private Rotation _rotation = Rotation.Degrees0;
 
+    [Editable]
     public Rotation Rotation
     {
         get => _rotation;
         set => Set(ref _rotation, value);
+    }
+
+    #endregion
+
+    #region IsSelected
+
+    private bool _isSelected;
+
+    [YamlIgnore]
+    public bool IsSelected
+    {
+        get => _isSelected;
+        set => Set(ref _isSelected, value);
+    }
+
+    #endregion
+
+    #region IsDragging
+
+    private bool _isDragging;
+
+    [YamlIgnore]
+    public bool IsDragging
+    {
+        get => _isDragging;
+        set => Set(ref _isDragging, value);
     }
 
     #endregion

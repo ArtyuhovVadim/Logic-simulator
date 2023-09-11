@@ -11,7 +11,7 @@ public static class Registrator
         services
             .AddSingleton<MainWindowViewModel>()
 
-            //.AddSingleton<PropertiesViewModel>()
+            .AddSingleton<PropertiesViewModel>()
             .AddSingleton<ProjectExplorerViewModel>()
 
             .AddSingleton<InfoDialogWindowViewModel>()

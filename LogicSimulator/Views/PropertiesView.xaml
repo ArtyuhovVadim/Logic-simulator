@@ -8,16 +8,13 @@
     xmlns:fa="http://schemas.fontawesome.io/icons/"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:me="clr-namespace:LogicSimulator.Infrastructure.MarkupExtensions"
+    xmlns:base="clr-namespace:LogicSimulator.ViewModels.EditorViewModels.Base"
     d:DesignHeight="450"
     d:DesignWidth="800"
+    d:DataContext="{d:DesignInstance Type=avm:PropertiesViewModel}"
     mc:Ignorable="d">
 
-    <!--
-        d:DataContext="{d:DesignInstance Type=avm:PropertiesViewModel}"
-        xmlns:base="clr-namespace:LogicSimulator.ViewModels.EditorViewModels.Base"
-    -->
-
-    <!--<UserControl.Resources>
+    <UserControl.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="/LogicSimulator.Controls;component/Styles/PropertiesEditorStyles.xaml" />
@@ -359,5 +356,5 @@
                 </ItemsControl.ItemTemplate>
             </ItemsControl>
         </Grid>
-    </ScrollViewer>-->
+    </ScrollViewer>
 </UserControl>

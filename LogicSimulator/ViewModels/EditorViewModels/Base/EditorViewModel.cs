@@ -1,5 +1,5 @@
 ﻿using System.ComponentModel;
-using LogicSimulator.Scene;
+using LogicSimulator.Infrastructure;
 using LogicSimulator.ViewModels.Base;
 using LogicSimulator.ViewModels.EditorViewModels.Layout;
 

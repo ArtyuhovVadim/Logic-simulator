@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel;
 using LogicSimulator.Infrastructure.Commands;
-using LogicSimulator.Scene.SceneObjects;
+using LogicSimulator.ViewModels.ObjectViewModels;
 
 namespace LogicSimulator.ViewModels.EditorViewModels.Base;
 
@@ -8,7 +8,7 @@ public class VerticesPropertyViewModel : SinglePropertyViewModel
 {
     private readonly ObservableCollection<VertexViewModel> _vertexes = new();
 
-    private Line FirstLine => (Line)EditorViewModel.Objects.First();
+    private LineViewModel FirstLine => (LineViewModel)EditorViewModel.Objects.First();
 
     public bool IsVisible => _vertexes.Any();
 
@@ -32,7 +32,7 @@ public class VerticesPropertyViewModel : SinglePropertyViewModel
         }
         else
         {
-            SynchronizeVertexes((Line)objects.First());
+            SynchronizeVertexes((LineViewModel)objects.First());
         }
 
         OnPropertyChanged(nameof(IsVisible));
@@ -48,7 +48,7 @@ public class VerticesPropertyViewModel : SinglePropertyViewModel
 
     public ICommand AddVertexCommand => _addVertexCommand ??= new LambdaCommand(_ =>
     {
-        FirstLine.AddVertex(_vertexes.Last().Position);
+        FirstLine.Vertexes.Add(_vertexes.Last().Position);
         SelectedVertexIndex = _vertexes.Count - 1;
     }, _ => true);
 
@@ -60,7 +60,7 @@ public class VerticesPropertyViewModel : SinglePropertyViewModel
 
     public ICommand RemoveVertexCommand => _removeVertexCommand ??= new LambdaCommand(_ =>
     {
-        FirstLine.RemoveVertex(_vertexes[SelectedVertexIndex].Position);
+        FirstLine.Vertexes.Remove(_vertexes[SelectedVertexIndex].Position);
     }, _ => SelectedVertexIndex != -1 && _vertexes.Count > 2);
 
     #endregion
@@ -70,11 +70,11 @@ public class VerticesPropertyViewModel : SinglePropertyViewModel
         if (e.PropertyName == nameof(VertexViewModel.Position))
         {
             var vertex = (VertexViewModel)sender;
-            FirstLine.ModifyVertex(vertex.Index, vertex.Position);
+            FirstLine.Vertexes[vertex.Index] = vertex.Position;
         }
     }
 
-    private void SynchronizeVertexes(Line line)
+    private void SynchronizeVertexes(LineViewModel line)
     {
         var diff = Math.Abs(_vertexes.Count - line.Vertexes.Count);
 

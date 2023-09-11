@@ -14,19 +14,6 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <Compile Remove="ViewModels\EditorViewModels\**" />
-      <EmbeddedResource Remove="ViewModels\EditorViewModels\**" />
-      <None Remove="ViewModels\EditorViewModels\**" />
-      <Page Remove="ViewModels\EditorViewModels\**" />
-    </ItemGroup>
-
-    <ItemGroup>
-      <Compile Remove="Infrastructure\Services\EditorSelectionService.cs" />
-      <Compile Remove="Infrastructure\Services\Interfaces\IEditorSelectionService.cs" />
-      <Compile Remove="ViewModels\AnchorableViewModels\PropertiesViewModel.cs" />
-    </ItemGroup>
-
-    <ItemGroup>
       <None Remove="Icons\icon512x512.png" />
     </ItemGroup>
 

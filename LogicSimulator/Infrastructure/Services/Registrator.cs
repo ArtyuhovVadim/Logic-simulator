@@ -11,7 +11,7 @@ public static class Registrator
                 .AddSingleton<ISchemeFileService, SchemeFileService>()
                 .AddSingleton<IProjectFileService, ProjectFileService>()
 
-                //.AddSingleton<IEditorSelectionService, EditorSelectionService>()
+                .AddSingleton<IEditorSelectionService, EditorSelectionService>()
                 ;
 
         return services;

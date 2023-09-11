@@ -16,20 +16,19 @@ public class MainWindowViewModel : BindableBase
     public MainWindowViewModel(
         IUserDialogService userDialogService,
         IProjectFileService projectFileService,
-        //PropertiesViewModel propertiesViewModel,
-        ProjectExplorerViewModel projectExplorerViewModel
-        )
+        PropertiesViewModel propertiesViewModel,
+        ProjectExplorerViewModel projectExplorerViewModel)
     {
         _userDialogService = userDialogService;
         _projectFileService = projectFileService;
         _projectExplorerViewModel = projectExplorerViewModel;
 
-        //propertiesViewModel.IsVisible = true;
+        propertiesViewModel.IsVisible = true;
         projectExplorerViewModel.IsVisible = true;
 
         projectExplorerViewModel.SchemeOpened += OnSchemeOpened;
 
-        //AnchorableViewModels.Add(propertiesViewModel);
+        AnchorableViewModels.Add(propertiesViewModel);
         AnchorableViewModels.Add(projectExplorerViewModel);
     }
 

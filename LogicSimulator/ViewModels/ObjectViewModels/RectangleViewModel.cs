@@ -1,4 +1,5 @@
 ﻿using System.Windows.Media;
+using LogicSimulator.Infrastructure;
 using LogicSimulator.ViewModels.ObjectViewModels.Base;
 
 namespace LogicSimulator.ViewModels.ObjectViewModels;
@@ -9,6 +10,7 @@ public class RectangleViewModel : BaseEditableObjectViewModel
 
     private float _width;
 
+    [Editable]
     public float Width
     {
         get => _width;
@@ -20,7 +22,8 @@ public class RectangleViewModel : BaseEditableObjectViewModel
     #region Height
 
     private float _height;
-
+    
+    [Editable]
     public float Height
     {
         get => _height;
@@ -32,7 +35,8 @@ public class RectangleViewModel : BaseEditableObjectViewModel
     #region FillColor
 
     private Color _fillColor = Colors.White;
-
+    
+    [Editable]
     public Color FillColor
     {
         get => _fillColor;
@@ -44,7 +48,8 @@ public class RectangleViewModel : BaseEditableObjectViewModel
     #region StrokeColor
 
     private Color _strokeColor = Colors.Black;
-
+    
+    [Editable]
     public Color StrokeColor
     {
         get => _strokeColor;
@@ -56,7 +61,8 @@ public class RectangleViewModel : BaseEditableObjectViewModel
     #region StrokeThickness
 
     private float _strokeThickness = 1f;
-
+    
+    [Editable]
     public float StrokeThickness
     {
         get => _strokeThickness;
@@ -68,7 +74,8 @@ public class RectangleViewModel : BaseEditableObjectViewModel
     #region IsFilled
 
     private bool _isFilled = true;
-
+    
+    [Editable]
     public bool IsFilled
     {
         get => _isFilled;

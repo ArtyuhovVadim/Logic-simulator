@@ -1,4 +1,5 @@
 ﻿using System.Windows.Media;
+using LogicSimulator.Infrastructure;
 using LogicSimulator.ViewModels.ObjectViewModels.Base;
 
 namespace LogicSimulator.ViewModels.ObjectViewModels;
@@ -8,7 +9,8 @@ public class ImageViewModel : BaseEditableObjectViewModel
     #region FilePath
 
     private string _filePath = string.Empty;
-
+    
+    [Editable]
     public string FilePath
     {
         get => _filePath;
@@ -20,7 +22,8 @@ public class ImageViewModel : BaseEditableObjectViewModel
     #region Width
 
     private float _width;
-
+    
+    [Editable]
     public float Width
     {
         get => _width;
@@ -32,7 +35,8 @@ public class ImageViewModel : BaseEditableObjectViewModel
     #region Height
 
     private float _height;
-
+    
+    [Editable]
     public float Height
     {
         get => _height;
@@ -44,7 +48,8 @@ public class ImageViewModel : BaseEditableObjectViewModel
     #region StrokeColor
 
     private Color _strokeColor = Colors.Black;
-
+    
+    [Editable]
     public Color StrokeColor
     {
         get => _strokeColor;
@@ -56,7 +61,8 @@ public class ImageViewModel : BaseEditableObjectViewModel
     #region StrokeThickness
 
     private float _strokeThickness = 1f;
-
+    
+    [Editable]
     public float StrokeThickness
     {
         get => _strokeThickness;
@@ -68,7 +74,8 @@ public class ImageViewModel : BaseEditableObjectViewModel
     #region IsBordered
 
     private bool _isBordered = true;
-
+    
+    [Editable]
     public bool IsBordered
     {
         get => _isBordered;

@@ -1,4 +1,5 @@
 ﻿using System.Windows.Media;
+using LogicSimulator.Infrastructure;
 using LogicSimulator.ViewModels.ObjectViewModels.Base;
 
 namespace LogicSimulator.ViewModels.ObjectViewModels;
@@ -9,6 +10,7 @@ public class TextBlockViewModel : BaseObjectViewModel
 
     private string _text = "Text";
 
+    [Editable]
     public string Text
     {
         get => _text;
@@ -21,6 +23,7 @@ public class TextBlockViewModel : BaseObjectViewModel
 
     private string _fontName = "Times New Roman";
 
+    [Editable]
     public string FontName
     {
         get => _fontName;
@@ -33,6 +36,7 @@ public class TextBlockViewModel : BaseObjectViewModel
 
     private float _fontSize = 24f;
 
+    [Editable]
     public float FontSize
     {
         get => _fontSize;
@@ -45,6 +49,7 @@ public class TextBlockViewModel : BaseObjectViewModel
 
     private bool _isBold;
 
+    [Editable]
     public bool IsBold
     {
         get => _isBold;
@@ -57,6 +62,7 @@ public class TextBlockViewModel : BaseObjectViewModel
 
     private bool _isItalic;
 
+    [Editable]
     public bool IsItalic
     {
         get => _isItalic;
@@ -69,6 +75,7 @@ public class TextBlockViewModel : BaseObjectViewModel
 
     private bool _isUnderlined;
 
+    [Editable]
     public bool IsUnderlined
     {
         get => _isUnderlined;
@@ -81,6 +88,7 @@ public class TextBlockViewModel : BaseObjectViewModel
 
     private bool _isCross;
 
+    [Editable]
     public bool IsCross
     {
         get => _isCross;
@@ -93,6 +101,7 @@ public class TextBlockViewModel : BaseObjectViewModel
 
     private Color _textColor = Colors.Black;
 
+    [Editable]
     public Color TextColor
     {
         get => _textColor;

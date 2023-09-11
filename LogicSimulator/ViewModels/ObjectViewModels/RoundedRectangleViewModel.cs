@@ -1,4 +1,6 @@
-﻿namespace LogicSimulator.ViewModels.ObjectViewModels;
+﻿using LogicSimulator.Infrastructure;
+
+namespace LogicSimulator.ViewModels.ObjectViewModels;
 
 public class RoundedRectangleViewModel : RectangleViewModel
 {
@@ -6,6 +8,7 @@ public class RoundedRectangleViewModel : RectangleViewModel
 
     private float _radiusX;
 
+    [Editable]
     public float RadiusX
     {
         get => _radiusX;
@@ -18,6 +21,7 @@ public class RoundedRectangleViewModel : RectangleViewModel
 
     private float _radiusY;
 
+    [Editable]
     public float RadiusY
     {
         get => _radiusY;

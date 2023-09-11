@@ -107,11 +107,11 @@
                             <views:SchemeView />
                         </DataTemplate>
                     </selectors:PanesTemplateSelector.SchemeViewTemplate>
-                    <!--<selectors:PanesTemplateSelector.PropertiesViewTemplate>
+                    <selectors:PanesTemplateSelector.PropertiesViewTemplate>
                         <DataTemplate DataType="{x:Type avm:PropertiesViewModel}">
                             <views:PropertiesView />
                         </DataTemplate>
-                    </selectors:PanesTemplateSelector.PropertiesViewTemplate>-->
+                    </selectors:PanesTemplateSelector.PropertiesViewTemplate>
                     <selectors:PanesTemplateSelector.ProjectExplorerViewTemplate>
                         <DataTemplate DataType="{x:Type avm:ProjectExplorerViewModel}">
                             <views:ProjectExplorerView />

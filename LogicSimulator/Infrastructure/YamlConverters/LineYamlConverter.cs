@@ -51,7 +51,7 @@ public class LineYamlConverter : IYamlTypeConverter
 
         var vertexes = (IEnumerable<Vector2>)ValueDeserializer.DeserializeValue(parser, typeof(IEnumerable<Vector2>), new SerializerState(), ValueDeserializer);
 
-        line.Vertexes = vertexes;
+        line.Vertexes = new ObservableCollection<Vector2>(vertexes);
 
         parser.TryConsume<MappingEnd>(out _);
 

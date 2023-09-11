@@ -1,12 +1,12 @@
 ﻿using LogicSimulator.Infrastructure;
-using LogicSimulator.Scene.SceneObjects;
 using LogicSimulator.ViewModels.EditorViewModels.Base;
 using LogicSimulator.ViewModels.EditorViewModels.Layout;
 using LogicSimulator.ViewModels.EditorViewModels.Layout.Builders;
+using LogicSimulator.ViewModels.ObjectViewModels;
 
 namespace LogicSimulator.ViewModels.EditorViewModels;
 
-[Editor(typeof(TextBlock))]
+[Editor(typeof(TextBlockViewModel))]
 public class TextBlockEditorViewModel : EditorViewModel
 {
     protected override EditorLayout CreateLayout() => LayoutBuilder
@@ -16,29 +16,29 @@ public class TextBlockEditorViewModel : EditorViewModel
             .WithGroupName("Расположение")
             .WithRow(rowBuilder => rowBuilder
                 .WithRowName("(X/Y)")
-                .WithSingleProperty<Vector2PropertyViewModel>(nameof(TextBlock.Location)))
+                .WithSingleProperty<Vector2PropertyViewModel>(nameof(TextBlockViewModel.Location)))
             .WithRow(rowBuilder => rowBuilder
                 .WithRowName("Поворот")
-                .WithSingleProperty<RotationEnumPropertyViewModel>(nameof(TextBlock.Rotation))))
+                .WithSingleProperty<RotationEnumPropertyViewModel>(nameof(TextBlockViewModel.Rotation))))
         .WithGroup(groupBuilder => groupBuilder
             .WithGroupName("Свойства")
             .WithRow(rowBuilder => rowBuilder
                 .WithRowName("Текст")
-                .WithSingleProperty<StringPropertyViewModel>(nameof(TextBlock.Text)))
+                .WithSingleProperty<StringPropertyViewModel>(nameof(TextBlockViewModel.Text)))
             .WithRow(rowBuilder => rowBuilder
                 .WithRowName("Шрифт")
-                .WithSingleProperty<FontNamePropertyViewModel>(nameof(TextBlock.FontName))
-                .WithSingleProperty<FloatPropertyViewModel>(nameof(TextBlock.FontSize))
-                .WithSingleProperty<Color4PropertyViewModel>(nameof(TextBlock.TextColor))
+                .WithSingleProperty<FontNamePropertyViewModel>(nameof(TextBlockViewModel.FontName))
+                .WithSingleProperty<FloatPropertyViewModel>(nameof(TextBlockViewModel.FontSize))
+                .WithSingleProperty<Color4PropertyViewModel>(nameof(TextBlockViewModel.TextColor))
                 .WithLayout(layoutBuilder => layoutBuilder
                     .WithRelativeSize(1)
                     .WithRelativeSize(0.3)
                     .WithAutoSize()))
             .WithRow(rowBuilder => rowBuilder.
                 WithMultiProperty<FontPropertyViewModel>(multiPropertyBuilder => multiPropertyBuilder
-                    .WithProperty<BoolPropertyViewModel>(nameof(TextBlock.IsBold))
-                    .WithProperty<BoolPropertyViewModel>(nameof(TextBlock.IsItalic))
-                    .WithProperty<BoolPropertyViewModel>(nameof(TextBlock.IsUnderlined))
-                    .WithProperty<BoolPropertyViewModel>(nameof(TextBlock.IsCross)))))
+                    .WithProperty<BoolPropertyViewModel>(nameof(TextBlockViewModel.IsBold))
+                    .WithProperty<BoolPropertyViewModel>(nameof(TextBlockViewModel.IsItalic))
+                    .WithProperty<BoolPropertyViewModel>(nameof(TextBlockViewModel.IsUnderlined))
+                    .WithProperty<BoolPropertyViewModel>(nameof(TextBlockViewModel.IsCross)))))
         .Build();
 }

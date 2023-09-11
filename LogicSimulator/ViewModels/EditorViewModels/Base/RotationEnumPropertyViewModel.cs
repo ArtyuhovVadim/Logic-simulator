@@ -1,4 +1,5 @@
-﻿using LogicSimulator.Scene;
+﻿using LogicSimulator.Infrastructure;
+using LogicSimulator.Scene;
 
 namespace LogicSimulator.ViewModels.EditorViewModels.Base;
 

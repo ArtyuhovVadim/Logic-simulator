@@ -1,12 +1,12 @@
 ﻿using LogicSimulator.Infrastructure;
-using LogicSimulator.Scene.SceneObjects;
 using LogicSimulator.ViewModels.EditorViewModels.Base;
 using LogicSimulator.ViewModels.EditorViewModels.Layout;
 using LogicSimulator.ViewModels.EditorViewModels.Layout.Builders;
+using LogicSimulator.ViewModels.ObjectViewModels;
 
 namespace LogicSimulator.ViewModels.EditorViewModels;
 
-[Editor(typeof(Image))]
+[Editor(typeof(ImageViewModel))]
 public class ImageEditorViewModel : EditorViewModel
 {
     protected override EditorLayout CreateLayout() => LayoutBuilder
@@ -16,26 +16,26 @@ public class ImageEditorViewModel : EditorViewModel
             .WithGroupName("Расположение")
             .WithRow(rowBuilder => rowBuilder
                 .WithRowName("(X/Y)")
-                .WithSingleProperty<Vector2PropertyViewModel>(nameof(Image.Location)))
+                .WithSingleProperty<Vector2PropertyViewModel>(nameof(ImageViewModel.Location)))
             .WithRow(rowBuilder => rowBuilder
                 .WithRowName("Поворот")
-                .WithSingleProperty<RotationEnumPropertyViewModel>(nameof(Image.Rotation))))
+                .WithSingleProperty<RotationEnumPropertyViewModel>(nameof(ImageViewModel.Rotation))))
         .WithGroup(groupBuilder => groupBuilder
             .WithGroupName("Свойства")
             .WithRow(rowBuilder => rowBuilder
                 .WithRowName("Путь до файла")
-                .WithSingleProperty<StringPropertyViewModel>(nameof(Image.FilePath)))
+                .WithSingleProperty<StringPropertyViewModel>(nameof(ImageViewModel.FilePath)))
             .WithRow(rowBuilder => rowBuilder
                 .WithRowName("Ширина")
-                .WithSingleProperty<FloatPropertyViewModel>(nameof(Image.Width)))
+                .WithSingleProperty<FloatPropertyViewModel>(nameof(ImageViewModel.Width)))
             .WithRow(rowBuilder => rowBuilder
                 .WithRowName("Высота")
-                .WithSingleProperty<FloatPropertyViewModel>(nameof(Image.Height)))
+                .WithSingleProperty<FloatPropertyViewModel>(nameof(ImageViewModel.Height)))
             .WithRow(rowBuilder => rowBuilder
                 .WithRowName("Граница")
-                .WithSingleProperty<BoolPropertyViewModel>(nameof(Image.IsBordered))
-                .WithSingleProperty<FloatPropertyViewModel>(nameof(Image.StrokeThickness))
-                .WithSingleProperty<Color4PropertyViewModel>(nameof(Image.StrokeColor))
+                .WithSingleProperty<BoolPropertyViewModel>(nameof(ImageViewModel.IsBordered))
+                .WithSingleProperty<FloatPropertyViewModel>(nameof(ImageViewModel.StrokeThickness))
+                .WithSingleProperty<Color4PropertyViewModel>(nameof(ImageViewModel.StrokeColor))
                 .WithLayout(layoutBuilder => layoutBuilder
                     .WithAutoSize()
                     .WithRelativeSize(1)

@@ -1,4 +1,5 @@
 ﻿using System.Windows.Media;
+using LogicSimulator.Infrastructure;
 using LogicSimulator.ViewModels.ObjectViewModels.Base;
 using SharpDX;
 using Color = System.Windows.Media.Color;
@@ -10,11 +11,12 @@ public class LineViewModel : BaseEditableObjectViewModel
     #region Vertexes
 
     private ObservableCollection<Vector2> _vertexes = new();
-
-    public IEnumerable<Vector2> Vertexes
+    
+    [Editable]
+    public ObservableCollection<Vector2> Vertexes
     {
         get => _vertexes;
-        set => Set(ref _vertexes, new ObservableCollection<Vector2>(value));
+        set => Set(ref _vertexes, value);
     }
 
     #endregion
@@ -22,7 +24,8 @@ public class LineViewModel : BaseEditableObjectViewModel
     #region StrokeColor
 
     private Color _strokeColor = Colors.Black;
-
+    
+    [Editable]
     public Color StrokeColor
     {
         get => _strokeColor;
@@ -34,7 +37,8 @@ public class LineViewModel : BaseEditableObjectViewModel
     #region StrokeThickness
 
     private float _strokeThickness = 1f;
-
+    
+    [Editable]
     public float StrokeThickness
     {
         get => _strokeThickness;

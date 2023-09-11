@@ -1,12 +1,12 @@
 ﻿using LogicSimulator.Infrastructure;
-using LogicSimulator.Scene.SceneObjects;
 using LogicSimulator.ViewModels.EditorViewModels.Base;
 using LogicSimulator.ViewModels.EditorViewModels.Layout;
 using LogicSimulator.ViewModels.EditorViewModels.Layout.Builders;
+using LogicSimulator.ViewModels.ObjectViewModels;
 
 namespace LogicSimulator.ViewModels.EditorViewModels;
 
-[Editor(typeof(Arc))]
+[Editor(typeof(ArcViewModel))]
 public class ArcEditorViewModel : EditorViewModel
 {
     protected override EditorLayout CreateLayout() => LayoutBuilder
@@ -16,28 +16,28 @@ public class ArcEditorViewModel : EditorViewModel
             .WithGroupName("Расположение")
             .WithRow(rowBuilder => rowBuilder
                 .WithRowName("(X/Y)")
-                .WithSingleProperty<Vector2PropertyViewModel>(nameof(Arc.Location)))
+                .WithSingleProperty<Vector2PropertyViewModel>(nameof(ArcViewModel.Location)))
             .WithRow(rowBuilder => rowBuilder
                 .WithRowName("Поворот")
-                .WithSingleProperty<RotationEnumPropertyViewModel>(nameof(Arc.Rotation))))
+                .WithSingleProperty<RotationEnumPropertyViewModel>(nameof(ArcViewModel.Rotation))))
         .WithGroup(groupBuilder => groupBuilder
             .WithGroupName("Свойства")
             .WithRow(rowBuilder => rowBuilder
                 .WithRowName("Начальный угол")
-                .WithSingleProperty<FloatPropertyViewModel>(nameof(Arc.StartAngle)))
+                .WithSingleProperty<FloatPropertyViewModel>(nameof(ArcViewModel.StartAngle)))
             .WithRow(rowBuilder => rowBuilder
                 .WithRowName("Конечный угол")
-                .WithSingleProperty<FloatPropertyViewModel>(nameof(Arc.EndAngle)))
+                .WithSingleProperty<FloatPropertyViewModel>(nameof(ArcViewModel.EndAngle)))
             .WithRow(rowBuilder => rowBuilder
                 .WithRowName("Радиус X")
-                .WithSingleProperty<FloatPropertyViewModel>(nameof(Arc.RadiusX)))
+                .WithSingleProperty<FloatPropertyViewModel>(nameof(ArcViewModel.RadiusX)))
             .WithRow(rowBuilder => rowBuilder
                 .WithRowName("Радиус Y")
-                .WithSingleProperty<FloatPropertyViewModel>(nameof(Arc.RadiusY)))
+                .WithSingleProperty<FloatPropertyViewModel>(nameof(ArcViewModel.RadiusY)))
             .WithRow(rowBuilder => rowBuilder
                 .WithRowName("Граница")
-                .WithSingleProperty<FloatPropertyViewModel>(nameof(Arc.StrokeThickness))
-                .WithSingleProperty<Color4PropertyViewModel>(nameof(Arc.StrokeColor))
+                .WithSingleProperty<FloatPropertyViewModel>(nameof(ArcViewModel.StrokeThickness))
+                .WithSingleProperty<Color4PropertyViewModel>(nameof(ArcViewModel.StrokeColor))
                 .WithLayout(layoutBuilder => layoutBuilder
                     .WithRelativeSize(1)
                     .WithAutoSize())))

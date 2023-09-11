@@ -1,4 +1,5 @@
 ﻿using System.Windows.Media;
+using LogicSimulator.Infrastructure;
 using LogicSimulator.ViewModels.ObjectViewModels.Base;
 using Color = System.Windows.Media.Color;
 
@@ -9,7 +10,8 @@ public class ArcViewModel : BaseEditableObjectViewModel
     #region RadiusX
 
     private float _radiusX;
-
+    
+    [Editable]
     public float RadiusX
     {
         get => _radiusX;
@@ -21,7 +23,8 @@ public class ArcViewModel : BaseEditableObjectViewModel
     #region RadiusY
 
     private float _radiusY;
-
+    
+    [Editable]
     public float RadiusY
     {
         get => _radiusY;
@@ -33,7 +36,8 @@ public class ArcViewModel : BaseEditableObjectViewModel
     #region StartAngle
 
     private float _startAngle;
-
+    
+    [Editable]
     public float StartAngle
     {
         get => _startAngle;
@@ -45,7 +49,8 @@ public class ArcViewModel : BaseEditableObjectViewModel
     #region EndAngle
 
     private float _endAngle = 180f;
-
+    
+    [Editable]
     public float EndAngle
     {
         get => _endAngle;
@@ -57,7 +62,8 @@ public class ArcViewModel : BaseEditableObjectViewModel
     #region StrokeColor
 
     private Color _strokeColor = Colors.Black;
-
+    
+    [Editable]
     public Color StrokeColor
     {
         get => _strokeColor;
@@ -69,7 +75,8 @@ public class ArcViewModel : BaseEditableObjectViewModel
     #region StrokeThickness
 
     private float _strokeThickness = 1f;
-
+    
+    [Editable]
     public float StrokeThickness
     {
         get => _strokeThickness;

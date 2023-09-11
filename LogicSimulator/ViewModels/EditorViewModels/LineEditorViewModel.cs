@@ -1,12 +1,12 @@
 ﻿using LogicSimulator.Infrastructure;
-using LogicSimulator.Scene.SceneObjects;
 using LogicSimulator.ViewModels.EditorViewModels.Base;
 using LogicSimulator.ViewModels.EditorViewModels.Layout;
 using LogicSimulator.ViewModels.EditorViewModels.Layout.Builders;
+using LogicSimulator.ViewModels.ObjectViewModels;
 
 namespace LogicSimulator.ViewModels.EditorViewModels;
 
-[Editor(typeof(Line))]
+[Editor(typeof(LineViewModel))]
 public class LineEditorViewModel : EditorViewModel
 {
     protected override EditorLayout CreateLayout() => LayoutBuilder
@@ -16,20 +16,20 @@ public class LineEditorViewModel : EditorViewModel
             .WithGroupName("Расположение")
             .WithRow(rowBuilder => rowBuilder
                 .WithRowName("(X/Y)")
-                .WithSingleProperty<Vector2PropertyViewModel>(nameof(Line.Location)))
+                .WithSingleProperty<Vector2PropertyViewModel>(nameof(LineViewModel.Location)))
             .WithRow(rowBuilder => rowBuilder
                 .WithRowName("Поворот")
-                .WithSingleProperty<RotationEnumPropertyViewModel>(nameof(Line.Rotation))))
+                .WithSingleProperty<RotationEnumPropertyViewModel>(nameof(LineViewModel.Rotation))))
         .WithGroup(groupBuilder => groupBuilder
             .WithGroupName("Вершины")
             .WithRow(rowBuilder => rowBuilder
-                .WithSingleProperty<VerticesPropertyViewModel>(nameof(Line.Vertexes))))
+                .WithSingleProperty<VerticesPropertyViewModel>(nameof(LineViewModel.Vertexes))))
         .WithGroup(groupBuilder => groupBuilder
             .WithGroupName("Свойства")
             .WithRow(rowBuilder => rowBuilder
                 .WithRowName("Граница")
-                .WithSingleProperty<FloatPropertyViewModel>(nameof(Line.StrokeThickness))
-                .WithSingleProperty<Color4PropertyViewModel>(nameof(Line.StrokeColor))
+                .WithSingleProperty<FloatPropertyViewModel>(nameof(LineViewModel.StrokeThickness))
+                .WithSingleProperty<Color4PropertyViewModel>(nameof(LineViewModel.StrokeColor))
                 .WithLayout(layoutBuilder => layoutBuilder
                     .WithRelativeSize(1)
                     .WithAutoSize())))

@@ -1,4 +1,5 @@
-﻿using LogicSimulator.Models;
+﻿using LogicSimulator.Infrastructure.Services.Interfaces;
+using LogicSimulator.Models;
 using LogicSimulator.ViewModels.AnchorableViewModels.Base;
 using LogicSimulator.ViewModels.ObjectViewModels.Base;
 using Microsoft.Extensions.DependencyInjection;
@@ -10,11 +11,14 @@ public class SchemeViewModel : DocumentViewModel
     private readonly MainWindowViewModel _mainWindowViewModel;
     private readonly Scheme _scheme;
 
+    private readonly IEditorSelectionService _editorSelectionService;
+
     public SchemeViewModel(Scheme scheme)
     {
         _scheme = scheme;
         Objects = _scheme.Objects;
         _mainWindowViewModel = App.Host.Services.GetRequiredService<MainWindowViewModel>();
+        _editorSelectionService = App.Host.Services.GetRequiredService<IEditorSelectionService>();
     }
 
     #region Title

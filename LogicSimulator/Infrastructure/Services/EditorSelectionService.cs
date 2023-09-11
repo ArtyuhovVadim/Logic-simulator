@@ -1,8 +1,8 @@
 ﻿using System.Reflection;
 using LogicSimulator.Infrastructure.Services.Interfaces;
-using LogicSimulator.Scene.SceneObjects.Base;
 using LogicSimulator.ViewModels.AnchorableViewModels;
 using LogicSimulator.ViewModels.EditorViewModels.Base;
+using LogicSimulator.ViewModels.ObjectViewModels.Base;
 
 namespace LogicSimulator.Infrastructure.Services;
 
@@ -49,7 +49,7 @@ public class EditorSelectionService : IEditorSelectionService
 
     private void SetEmptyEditor()
     {
-        _propertiesViewModel.CurrentEditorViewModel?.SetObjectsToEdit(Enumerable.Empty<BaseSceneObject>());
+        _propertiesViewModel.CurrentEditorViewModel?.SetObjectsToEdit(Enumerable.Empty<BaseObjectViewModel>());
         _propertiesViewModel.CurrentEditorViewModel = null;
     }
 
