@@ -3,11 +3,13 @@ using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Windows;
+using System.Windows.Input;
 using System.Windows.Interop;
 using System.Windows.Markup;
 using System.Windows.Media;
 using LogicSimulator.Scene.DirectX;
 using LogicSimulator.Scene.Layers.Base;
+using LogicSimulator.Utils;
 using SharpDX;
 
 namespace LogicSimulator.Scene;
@@ -93,11 +95,21 @@ public class Scene2D : FrameworkElement, IDisposable
 
     #endregion
 
-    public Matrix3x2 Transform => _scaleMatrix * _rotationMatrix * _translationMatrix;
+    #region MousePosition
 
-    public Size2F PixelSize => Context.DrawingContext.DrawingSize;
+    private static readonly DependencyPropertyKey MousePositionPropertyKey
+        = DependencyProperty.RegisterReadOnly(nameof(MousePosition), typeof(Vector2), typeof(Scene2D), new PropertyMetadata(Vector2.Zero));
 
-    public float Dpi => (float)VisualTreeHelper.GetDpi(this).PixelsPerInchX;
+    public static readonly DependencyProperty MousePositionProperty
+        = MousePositionPropertyKey.DependencyProperty;
+
+    public Vector2 MousePosition
+    {
+        get => (Vector2)GetValue(MousePositionProperty);
+        private set => SetValue(MousePositionPropertyKey, value);
+    }
+
+    #endregion
 
     #region IsRequiredRenderingEnabled
 
@@ -111,6 +123,15 @@ public class Scene2D : FrameworkElement, IDisposable
         DependencyProperty.Register(nameof(IsRequiredRenderingEnabled), typeof(bool), typeof(Scene2D), new PropertyMetadata(true));
 
     #endregion
+
+    public Matrix3x2 Transform => _scaleMatrix * _rotationMatrix * _translationMatrix;
+
+    public Size2F PixelSize => Context.DrawingContext.DrawingSize;
+
+    //TODO: Оптимизировать
+    public float Dpi => (float)VisualTreeHelper.GetDpi(this).PixelsPerInchX;
+
+    protected override IEnumerator LogicalChildren => Layers.GetEnumerator();
 
     public Scene2D()
     {
@@ -141,7 +162,10 @@ public class Scene2D : FrameworkElement, IDisposable
         _renderer.RequestRender();
     }
 
-    protected override IEnumerator LogicalChildren => Layers.GetEnumerator();
+    protected override void OnMouseMove(MouseEventArgs e)
+    {
+        MousePosition = e.GetPosition(this).ToVector2().DpiCorrect(Dpi).InvertAndTransform(Transform);
+    }
 
     private void OnLayersCollectionChanged(object? sender, NotifyCollectionChangedEventArgs args)
     {

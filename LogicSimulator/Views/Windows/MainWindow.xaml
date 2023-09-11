@@ -55,13 +55,9 @@
         </Grid>
 
         <Grid DockPanel.Dock="Bottom">
+            <!--  TODO Вызывает постоянные ошибки биндинга  -->
             <StatusBar Background="#424242">
                 <TextBlock
-                    Margin="0,0,5,0"
-                    Foreground="White"
-                    Text="Статус..." />
-
-                <!--<TextBlock
                     Margin="0,0,5,0"
                     Foreground="White"
                     Text="{Binding Path=ActiveContent.Scale,
@@ -79,7 +75,7 @@
                     Foreground="White"
                     Text="{Binding Path=ActiveContent.Objects.Count,
                                    StringFormat='Кол-во объектов: {0}',
-                                   FallbackValue=''}" />-->
+                                   FallbackValue=''}" />
             </StatusBar>
 
             <Menu HorizontalAlignment="Right">

@@ -6,6 +6,7 @@
     xmlns:base="clr-namespace:LogicSimulator.ViewModels.ObjectViewModels.Base"
     xmlns:converters="clr-namespace:LogicSimulator.Infrastructure.Converters"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:dataPiping="clr-namespace:LogicSimulator.Infrastructure.DataPiping"
     xmlns:layers="clr-namespace:LogicSimulator.Scene.Layers;assembly=LogicSimulator.Scene"
     xmlns:local="clr-namespace:LogicSimulator.ViewModels.ObjectViewModels"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
@@ -18,15 +19,20 @@
     <UserControl.Resources>
         <converters:RotationToFloatConverter x:Key="RotationToFloatConverter" />
     </UserControl.Resources>
-    <scene:Scene2D>
+    <scene:Scene2D Scale="{Binding Path=Scale}">
+        <dataPiping:DataPiping.DataPipes>
+            <dataPiping:DataPipeCollection>
+                <dataPiping:DataPipe Source="{Binding RelativeSource={RelativeSource AncestorType={x:Type scene:Scene2D}}, Path=MousePosition}" Target="{Binding Path=MousePosition, Mode=OneWayToSource}" />
+            </dataPiping:DataPipeCollection>
+        </dataPiping:DataPiping.DataPipes>
         <layers:GradientClearLayer EndColor="#E2E2E2" StartColor="#C1C1C1">
             <layers:GradientClearLayer.Renderer>
                 <renderers:GradientClearRenderer />
             </layers:GradientClearLayer.Renderer>
         </layers:GradientClearLayer>
         <layers:GridLayer
-            Width="2000"
-            Height="2000"
+            Width="2970"
+            Height="2100"
             Background="#FFFCF8"
             BoldLineColor="#DCDCD7"
             LineColor="#F0F0EB">
@@ -63,22 +69,4 @@
             </layers:ObjectsLayer.Renderer>
         </layers:ObjectsLayer>
     </scene:Scene2D>
-
-    <!--
-        xmlns:scene="clr-namespace:LogicSimulator.Scene;assembly=LogicSimulator.Scene"
-    -->
-
-    <!--<scene:Scene2D
-        Components="{Binding Path=Components}"
-        IsRequiredRenderingEnabled="True"
-        Objects="{Binding Path=Objects}"
-        Scale="{Binding Path=Scale,
-                        Mode=OneWayToSource}"
-        ToolsController="{Binding Path=ToolsController}">
-        <p:DataPiping.DataPipes>
-            <p:DataPipeCollection>
-                <p:DataPipe Source="{Binding RelativeSource={RelativeSource AncestorType={x:Type scene:Scene2D}}, Path=MousePosition}" Target="{Binding Path=MousePosition, Mode=OneWayToSource}" />
-            </p:DataPipeCollection>
-        </p:DataPiping.DataPipes>
-    </scene:Scene2D>-->
 </UserControl>

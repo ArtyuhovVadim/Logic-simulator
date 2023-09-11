@@ -3,6 +3,7 @@ using LogicSimulator.Models;
 using LogicSimulator.ViewModels.AnchorableViewModels.Base;
 using LogicSimulator.ViewModels.ObjectViewModels.Base;
 using Microsoft.Extensions.DependencyInjection;
+using SharpDX;
 
 namespace LogicSimulator.ViewModels.AnchorableViewModels;
 
@@ -47,6 +48,30 @@ public class SchemeViewModel : DocumentViewModel
 
     #endregion
 
+    #region Scale
+
+    private float _scale = 1f;
+
+    public float Scale
+    {
+        get => _scale;
+        set => Set(ref _scale, value);
+    }
+
+    #endregion
+
+    #region MousePosition
+
+    private Vector2 _mousePosition = Vector2.Zero;
+
+    public Vector2 MousePosition
+    {
+        get => _mousePosition;
+        set => Set(ref _mousePosition, value);
+    }
+
+    #endregion
+
     protected override void Close(object p)
     {
         _mainWindowViewModel.OpenedSchemes.Remove(this);
@@ -68,53 +93,11 @@ public class SchemeViewModel : DocumentViewModel
 
     #endregion
 
-    #region Components
-
-    private readonly GradientClearRenderingComponent _gradientClearRenderingComponent = new()
-    {
-        StartColor = new Color4(0.755f, 0.755f, 0.755f, 1f),
-        EndColor = new Color4(0.887f, 0.887f, 0.887f, 1f)
-    };
-    private readonly GridRenderingComponent _gridRenderingComponent = new()
-    {
-        Width = 2970,
-        Height = 2100,
-        CellSize = 25,
-        Background = new Color4(1, 0.9882353f, 0.972549f, 1f),
-        LineColor = new Color4(0.9411765f, 0.9411765f, 0.9215686f, 1f),
-        BoldLineColor = new Color4(0.8627451f, 0.8627451f, 0.8431373f, 1f),
-    };
-    private readonly SceneObjectsRenderingComponent _sceneObjectsRenderingComponent = new();
-    private readonly SelectionRenderingComponent _selectionRenderingComponent = new();
-    private readonly SelectionRectangleRenderingComponent _selectionRectangleRenderingComponent = new();
-    private readonly NodeRenderingComponent _nodeRenderingComponent = new()
-    {
-        BackgroundColor = new Color4(0f, 1f, 0f, 1f)
-    };
-
-    #endregion
-
-    private readonly MainWindowViewModel _mainWindowViewModel;
-
-    private readonly Scheme _scheme;
-
-    private readonly IEditorSelectionService _editorSelectionService;
-
     public SchemeViewModel(Scheme scheme)
     {
         _scheme = scheme;
 
         Objects = new ObservableCollection<BaseSceneObject>(_scheme.Objects);
-
-        _components = new ObservableCollection<BaseRenderingComponent>()
-        {
-            _gradientClearRenderingComponent,
-            _gridRenderingComponent,
-            _sceneObjectsRenderingComponent,
-            _selectionRenderingComponent,
-            _selectionRectangleRenderingComponent,
-            _nodeRenderingComponent
-        };
 
         var tools = new List<BaseTool>()
         {
@@ -146,53 +129,6 @@ public class SchemeViewModel : DocumentViewModel
         _editorSelectionService.Select(this);
     }
 
-    #region Scale
-
-    private float _scale = 1f;
-
-    public float Scale
-    {
-        get => _scale;
-        set => Set(ref _scale, value);
-    }
-
-    #endregion
-
-    #region MousePosition
-
-    private Vector2 _mousePosition = Vector2.Zero;
-
-    public Vector2 MousePosition
-    {
-        get => _mousePosition;
-        set => Set(ref _mousePosition, value);
-    }
-
-    #endregion
-
-    #region Objects
-
-    private ObservableCollection<BaseSceneObject> _objects;
-
-    public ObservableCollection<BaseSceneObject> Objects
-    {
-        get => _objects;
-        private set => Set(ref _objects, value);
-    }
-
-    #endregion
-
-    #region Components
-
-    private ObservableCollection<BaseRenderingComponent> _components;
-    public ObservableCollection<BaseRenderingComponent> Components
-    {
-        get => _components;
-        set => Set(ref _components, value);
-    }
-
-    #endregion
-
     #region ToolsController
 
     private ToolsController _toolsController;
@@ -203,10 +139,5 @@ public class SchemeViewModel : DocumentViewModel
         set => Set(ref _toolsController, value);
     }
 
-    #endregion
-
-    protected override void Close(object p)
-    {
-        _mainWindowViewModel.OpenedSchemes.Remove(this);
-    }*/
+    #endregion*/
 }
