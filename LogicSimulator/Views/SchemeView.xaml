@@ -3,7 +3,8 @@
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:anchorableViewModels="clr-namespace:LogicSimulator.ViewModels.AnchorableViewModels"
-    xmlns:base="clr-namespace:LogicSimulator.ViewModels.ObjectViewModels.Base"
+    xmlns:b="http://schemas.microsoft.com/xaml/behaviors"
+    xmlns:behaviors="clr-namespace:LogicSimulator.Infrastructure.Behaviors"
     xmlns:converters="clr-namespace:LogicSimulator.Infrastructure.Converters"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:dataPiping="clr-namespace:LogicSimulator.Infrastructure.DataPiping"
@@ -13,18 +14,33 @@
     xmlns:renderers="clr-namespace:LogicSimulator.Scene.Layers.Renderers;assembly=LogicSimulator.Scene"
     xmlns:scene="clr-namespace:LogicSimulator.Scene;assembly=LogicSimulator.Scene"
     xmlns:selectors="clr-namespace:LogicSimulator.Infrastructure.Selectors"
+    xmlns:tools="clr-namespace:LogicSimulator.Infrastructure.Tools"
     xmlns:views="clr-namespace:LogicSimulator.Scene.Views;assembly=LogicSimulator.Scene"
     d:DataContext="{d:DesignInstance Type=anchorableViewModels:SchemeViewModel}"
     mc:Ignorable="d">
+
     <UserControl.Resources>
         <converters:RotationToFloatConverter x:Key="RotationToFloatConverter" />
     </UserControl.Resources>
-    <scene:Scene2D Scale="{Binding Path=Scale}">
+
+    <scene:Scene2D Scale="{Binding Path=Scale, Mode=TwoWay}">
+        <tools:ToolsController.ToolsController>
+            <tools:ToolsController x:Name="ToolsController" CurrentTool="{Binding ElementName=SelectionTool, Mode=OneTime}">
+                <tools:SelectionTool x:Name="SelectionTool" ObjectsLayer="{Binding ElementName=ObjectsLayer}" />
+            </tools:ToolsController>
+        </tools:ToolsController.ToolsController>
+
+        <b:Interaction.Behaviors>
+            <behaviors:SceneToolEventProviderBehaviour CurrentTool="{Binding Path=CurrentTool, Mode=OneWay, ElementName=ToolsController}" />
+            <behaviors:SceneTransformBehaviour />
+        </b:Interaction.Behaviors>
+
         <dataPiping:DataPiping.DataPipes>
             <dataPiping:DataPipeCollection>
                 <dataPiping:DataPipe Source="{Binding RelativeSource={RelativeSource AncestorType={x:Type scene:Scene2D}}, Path=MousePosition}" Target="{Binding Path=MousePosition, Mode=OneWayToSource}" />
             </dataPiping:DataPipeCollection>
         </dataPiping:DataPiping.DataPipes>
+
         <layers:GradientClearLayer EndColor="#E2E2E2" StartColor="#C1C1C1">
             <layers:GradientClearLayer.Renderer>
                 <renderers:GradientClearRenderer />
@@ -40,11 +56,11 @@
                 <renderers:GridLayerRenderer />
             </layers:GridLayer.Renderer>
         </layers:GridLayer>
-        <layers:ObjectsLayer Objects="{Binding Path=Objects}">
+        <layers:ObjectsLayer x:Name="ObjectsLayer" Objects="{Binding Path=Objects}">
             <layers:ObjectsLayer.ObjectTemplateSelector>
                 <selectors:SceneObjectTemplateSelector>
                     <selectors:SceneObjectTemplateSelector.UnknownObjectDataTemplate>
-                        <DataTemplate DataType="{x:Type base:BaseObjectViewModel}">
+                        <DataTemplate xmlns:baseVm="clr-namespace:LogicSimulator.ViewModels.ObjectViewModels.Base" DataType="{x:Type baseVm:BaseObjectViewModel}">
                             <views:UnknownObjectView Location="{Binding Path=Location}" Rotation="{Binding Path=Rotation, Converter={StaticResource RotationToFloatConverter}}" />
                         </DataTemplate>
                     </selectors:SceneObjectTemplateSelector.UnknownObjectDataTemplate>
