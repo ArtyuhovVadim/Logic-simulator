@@ -15,6 +15,7 @@ public class GradientClearLayer : BaseSceneLayer
 {
     public static readonly IResource BrushResource = ResourceCache.Register<GradientClearRenderer>((factory, user) =>
     {
+        //TODO: Костыль, можно передавать width и height через свойства зависимости
         var scene = (Scene2D)user.Layer.Parent;
 
         var width = scene.PixelSize.Width;

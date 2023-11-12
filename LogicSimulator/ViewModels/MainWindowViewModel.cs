@@ -30,6 +30,14 @@ public class MainWindowViewModel : BindableBase
 
         AnchorableViewModels.Add(propertiesViewModel);
         AnchorableViewModels.Add(projectExplorerViewModel);
+
+        Task.Run(async () =>
+        {
+            await Task.Delay(100);
+
+            LoadExampleCommand.Execute(null);
+            OpenedSchemes.Add(ActiveProjectViewModel.Schemes.First());
+        });
     }
 
     #region ActiveContent

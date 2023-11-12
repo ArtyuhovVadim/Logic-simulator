@@ -11,6 +11,7 @@ using LogicSimulator.Scene.DirectX;
 using LogicSimulator.Scene.Layers.Base;
 using LogicSimulator.Utils;
 using SharpDX;
+using Point = System.Windows.Point;
 
 namespace LogicSimulator.Scene;
 
@@ -144,6 +145,10 @@ public class Scene2D : FrameworkElement, IDisposable
         Layers.CollectionChanged += OnLayersCollectionChanged;
         Loaded += OnLoaded;
     }
+
+    public Vector2 PointFromControlToSceneSpace(Point pos) => pos.ToVector2().DpiCorrect(Dpi).InvertAndTransform(Transform);
+
+    public Vector2 PointFromControlToSceneSpace(Vector2 pos) => pos.DpiCorrect(Dpi).InvertAndTransform(Transform);
 
     protected override void OnRender(DrawingContext drawingContext) => _renderer?.WpfRender(drawingContext, RenderSize);
 

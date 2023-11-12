@@ -8,9 +8,9 @@ namespace LogicSimulator.Scene.Views;
 
 public class UnknownObjectView : SceneObjectView
 {
-    public override bool HitTest(Vector2 pos, Matrix3x2 worldTransform, float tolerance = 0.25f) => throw new NotSupportedException();
+    public override bool HitTest(Vector2 pos, Matrix3x2 worldTransform, float tolerance = 0.25f) => false;
 
-    public override GeometryRelation HitTest(Geometry inputGeometry, Matrix3x2 worldTransform, float tolerance = 0.25f) => throw new NotSupportedException();
+    public override GeometryRelation HitTest(Geometry inputGeometry, Matrix3x2 worldTransform, float tolerance = 0.25f) => GeometryRelation.Unknown;
 
     protected override void OnRender(Scene2D scene, D2DContext context)
     {
