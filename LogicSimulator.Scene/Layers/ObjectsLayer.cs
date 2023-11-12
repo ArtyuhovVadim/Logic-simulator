@@ -68,17 +68,10 @@ public class ObjectsLayer : BaseSceneLayer
 
     public ObjectsLayer() => Loaded += OnLoaded;
 
-    private void OnLoaded(object sender, RoutedEventArgs e)
-    {
-        Loaded -= OnLoaded;
-
-        foreach (var layerObject in Objects)
-        {
-            _objects.Add(CreateViewFromItem(layerObject));
-        }
-    }
-
     public IEnumerable<IRenderable> Views => _objects;
+
+    public SceneObjectView? GetViewFromItem(object item) =>
+        _objects.FirstOrDefault(x => x.DataContext == item);
 
     protected override bool OnIsDirtyEvaluation() => Views.Any(x => x.IsDirty);
 
@@ -105,6 +98,16 @@ public class ObjectsLayer : BaseSceneLayer
         }
 
         base.Dispose(disposingManaged);
+    }
+
+    private void OnLoaded(object sender, RoutedEventArgs e)
+    {
+        Loaded -= OnLoaded;
+
+        foreach (var layerObject in Objects)
+        {
+            _objects.Add(CreateViewFromItem(layerObject));
+        }
     }
 
     private void OnObjectsCollectionChanged(object? sender, NotifyCollectionChangedEventArgs e)
@@ -214,7 +217,4 @@ public class ObjectsLayer : BaseSceneLayer
 
         return view;
     }
-
-    private SceneObjectView? GetViewFromItem(object item) =>
-        _objects.FirstOrDefault(x => x.DataContext == item);
 }
