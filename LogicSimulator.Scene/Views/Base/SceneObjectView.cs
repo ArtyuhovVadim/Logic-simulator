@@ -12,6 +12,9 @@ public abstract class SceneObjectView : DisposableFrameworkContentElement, IRend
     private Matrix3x2 _translateMatrix = Matrix3x2.Identity;
     private Matrix3x2 _rotationMatrix = Matrix3x2.Identity;
 
+    private Vector2 _startDragPosition = Vector2.Zero;
+    private Vector2 _startDragLocation = Vector2.Zero;
+
     protected SceneObjectView() => MakeDirty();
 
     public ResourceCache Cache { get; private set; } = null!;
@@ -79,10 +82,41 @@ public abstract class SceneObjectView : DisposableFrameworkContentElement, IRend
 
     #endregion
 
+    #region IsDragging
+
+    private static readonly DependencyPropertyKey IsDraggingPropertyKey =
+        DependencyProperty.RegisterReadOnly(nameof(IsDragging), typeof(bool), typeof(SceneObjectView), new FrameworkPropertyMetadata(default(bool)));
+
+    public bool IsDragging => (bool)GetValue(IsDraggingPropertyKey.DependencyProperty);
+
+    #endregion
+
     //https://stackoverflow.com/a/45392997
     public Matrix3x2 TransformMatrix => _rotationMatrix * _translateMatrix;
 
     public bool IsDirty { get; private set; }
+
+    public void Select() => IsSelected = true;
+
+    public void Unselect() => IsSelected = false;
+
+    public virtual void StartDrag(Vector2 pos)
+    {
+        SetValue(IsDraggingPropertyKey, true);
+
+        _startDragLocation = Location;
+        _startDragPosition = pos;
+    }
+
+    public virtual void Drag(Vector2 pos)
+    {
+        Location = _startDragLocation - _startDragPosition + pos;
+    }
+
+    public virtual void EndDrag()
+    {
+        SetValue(IsDraggingPropertyKey, false);
+    }
 
     public Vector2 WorldToLocalSpace(Vector2 worldPos) => worldPos.InvertAndTransform(TransformMatrix);
 

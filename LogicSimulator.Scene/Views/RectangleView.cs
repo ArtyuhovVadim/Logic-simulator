@@ -155,6 +155,12 @@ public class RectangleView : SceneObjectView
 
         context.DrawingContext.DrawRectangle(rect, strokeBrush, StrokeThickness);
         //context.DrawingContext.DrawGeometry(geometry, strokeBrush, StrokeThickness);
+
+        // TODO: Для тестов
+        if (IsSelected)
+        {
+            context.DrawingContext.FillRectangle(rect, strokeBrush);
+        }
     }
 
     private static void OnGeometryChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
