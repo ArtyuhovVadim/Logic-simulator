@@ -1,4 +1,4 @@
-﻿using System.Windows;
+﻿using LogicSimulator.Infrastructure.Tools;
 using LogicSimulator.Infrastructure.Tools.Base;
 using LogicSimulator.Scene;
 using Microsoft.Xaml.Behaviors;
@@ -12,18 +12,9 @@ public class SceneToolEventProviderBehaviour : Behavior<Scene2D>
     private bool _isMouseRightButtonPressedOnScene;
     private bool _isMouseMiddleButtonPressedOnScene;
 
-    #region CurrentTool
+    private ToolsController _controller;
 
-    public BaseTool CurrentTool
-    {
-        get => (BaseTool)GetValue(CurrentToolProperty);
-        set => SetValue(CurrentToolProperty, value);
-    }
-
-    public static readonly DependencyProperty CurrentToolProperty =
-        DependencyProperty.Register(nameof(CurrentTool), typeof(BaseTool), typeof(SceneToolEventProviderBehaviour), new PropertyMetadata(default(BaseTool)));
-
-    #endregion
+    private BaseTool CurrentTool => (_controller ??= ToolsController.GetController(AssociatedObject)).CurrentTool;
 
     protected override void OnAttached()
     {
@@ -33,6 +24,9 @@ public class SceneToolEventProviderBehaviour : Behavior<Scene2D>
         AssociatedObject.MouseWheel += OnSceneMouseWheel;
         AssociatedObject.KeyDown += OnSceneKeyDown;
         AssociatedObject.KeyUp += OnSceneKeyUp;
+
+        _controller = ToolsController.GetController(AssociatedObject) ??
+                      throw new InvalidOperationException("Can not find ToolsController.");
     }
 
     protected override void OnDetaching()

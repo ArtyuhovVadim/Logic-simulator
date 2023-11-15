@@ -1,11 +1,41 @@
 ﻿using LogicSimulator.Infrastructure.Services.Interfaces;
 using LogicSimulator.Models;
 using LogicSimulator.ViewModels.AnchorableViewModels.Base;
+using LogicSimulator.ViewModels.Base;
 using LogicSimulator.ViewModels.ObjectViewModels.Base;
 using Microsoft.Extensions.DependencyInjection;
 using SharpDX;
 
 namespace LogicSimulator.ViewModels.AnchorableViewModels;
+
+public class SchemeToolViewModel : BindableBase
+{
+    public SchemeToolViewModel(string name) => _name = name;
+
+    #region IsActive
+
+    private bool _isActive;
+
+    public bool IsActive
+    {
+        get => _isActive;
+        set => Set(ref _isActive, value);
+    }
+
+    #endregion
+
+    #region Name
+
+    private string _name;
+
+    public string Name
+    {
+        get => _name;
+        set => Set(ref _name, value);
+    }
+
+    #endregion
+}
 
 public class SchemeViewModel : DocumentViewModel
 {
@@ -45,6 +75,18 @@ public class SchemeViewModel : DocumentViewModel
         get => _objects;
         private set => Set(ref _objects, new ObservableCollection<BaseObjectViewModel>(value));
     }
+
+    #endregion
+
+    #region SelectionTool
+
+    public SchemeToolViewModel SelectionTool { get; } = new ("Selection tool");
+
+    #endregion
+
+    #region DragTool
+
+    public SchemeToolViewModel DragTool { get; } = new ("Drag tool");
 
     #endregion
 

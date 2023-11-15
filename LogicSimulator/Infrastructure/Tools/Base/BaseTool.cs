@@ -6,9 +6,27 @@ namespace LogicSimulator.Infrastructure.Tools.Base;
 
 public abstract class BaseTool : Freezable
 {
+    private bool _isActive;
     public bool CanSwitch { get; protected set; } = true;
 
-    public bool IsActive { get; private set; }
+    // public bool IsActive
+    // {
+    //     get => _isActive;
+    //     set => _isActive = value;
+    // }
+
+    #region IsActive
+
+    private static readonly DependencyPropertyKey IsActivePropertyKey
+        = DependencyProperty.RegisterReadOnly(nameof(IsActive), typeof(bool), typeof(BaseTool), new PropertyMetadata(default(bool)));
+
+    public bool IsActive
+    {
+        get => (bool)GetValue(IsActivePropertyKey.DependencyProperty);
+        private set => SetValue(IsActivePropertyKey, value);
+    }
+
+    #endregion
 
     protected ToolsController ToolsController { get; private set; }
 
