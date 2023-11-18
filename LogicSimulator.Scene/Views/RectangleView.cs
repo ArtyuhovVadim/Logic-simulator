@@ -2,6 +2,7 @@
 using System.Windows.Media;
 using LogicSimulator.Scene.Cache;
 using LogicSimulator.Scene.DirectX;
+using LogicSimulator.Scene.Nodes;
 using LogicSimulator.Scene.Views.Base;
 using LogicSimulator.Utils;
 using SharpDX;
@@ -13,7 +14,7 @@ using RectangleGeometry = SharpDX.Direct2D1.RectangleGeometry;
 
 namespace LogicSimulator.Scene.Views;
 
-public class RectangleView : SceneObjectView
+public class RectangleView : EditableSceneObjectView
 {
     public static readonly IResource FillBrushResource =
         ResourceCache.Register<RectangleView>((factory, user) => factory.CreateSolidColorBrush(user.FillColor.ToColor4()));
@@ -23,6 +24,43 @@ public class RectangleView : SceneObjectView
 
     public static readonly IResource GeometryResource =
         ResourceCache.Register<RectangleView>((factory, user) => factory.CreateRectangleGeometry(user.Width, user.Height));
+
+    private static readonly AbstractNode[] AbstractNodes =
+    {
+        new Node<RectangleView>(o => o.LocalToWorldSpace(Vector2.Zero), (o, p)=>
+        {
+            var localPos = o.WorldToLocalSpace(p);
+
+            o.Location = p;
+            o.Width -= localPos.X;
+            o.Height -= localPos.Y;
+        }),
+        new Node<RectangleView>(o => o.LocalToWorldSpace(new Vector2(o.Width, 0)), (o, p) =>
+        {
+            var localPos = o.WorldToLocalSpace(p);
+
+            o.Location = o.LocalToWorldSpace(new Vector2(0, localPos.Y));
+            o.Width = localPos.X;
+            o.Height -= localPos.Y;
+        }),
+        new Node<RectangleView>(o => o.LocalToWorldSpace(new Vector2(o.Width, o.Height)), (o, p) =>
+        {
+            var localPos = o.WorldToLocalSpace(p);
+
+            o.Width = localPos.X;
+            o.Height = localPos.Y;
+        }),
+        new Node<RectangleView>(o => o.LocalToWorldSpace(new Vector2(0, o.Height)), (o, p) =>
+        {
+            var localPos = o.WorldToLocalSpace(p);
+
+            o.Location = o.LocalToWorldSpace(new Vector2(localPos.X, 0));
+            o.Width -= localPos.X;
+            o.Height = localPos.Y;
+        })
+    };
+
+    public override IEnumerable<AbstractNode> Nodes => AbstractNodes;
 
     #region Width
 

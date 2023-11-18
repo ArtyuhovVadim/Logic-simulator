@@ -2,7 +2,9 @@
 using LogicSimulator.Infrastructure.Tools.Base;
 using LogicSimulator.Scene;
 using LogicSimulator.Scene.Layers;
+using LogicSimulator.Scene.Nodes;
 using LogicSimulator.Scene.Views.Base;
+using LogicSimulator.Utils;
 using SharpDX;
 
 namespace LogicSimulator.Infrastructure.Tools;
@@ -96,12 +98,16 @@ public class SelectionTool : BaseTool
 
     protected override void OnMouseLeftButtonDown(Scene2D scene, Vector2 pos)
     {
-        //TODO
-        //if (scene.IsNodeThatIntersectPointExists(pos.InvertAndTransform(scene.Transform)))
-        //{
-        //    ToolsController.SwitchTool<NodeDragTool>(tool => tool.MouseLeftButtonDown(scene, pos));
-        //    return;
-        //}
+        var isNodeThatIntersectPointExists = ObjectsLayer.Objects
+            .Select(ObjectsLayer.GetViewFromItem)
+            .OfType<EditableSceneObjectView>()
+            .Any(obj => obj.Nodes.Any(node => obj.IsSelected && pos.IsInRectangle(node.GetLocation(obj).RectangleRelativePointAsCenter(AbstractNode.NodeSize / scene.Scale))));
+
+        if (isNodeThatIntersectPointExists)
+        {
+            ToolsController.SwitchTool<NodeDragTool>(tool => tool.MouseLeftButtonDown(scene, pos));
+            return;
+        }
 
         _objectsUnderCursor = ObjectsLayer.Objects
             .Select(ObjectsLayer.GetViewFromItem)

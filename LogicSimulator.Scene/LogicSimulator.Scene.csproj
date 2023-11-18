@@ -25,4 +25,8 @@
       <ProjectReference Include="..\LogicSimulator.Utils\LogicSimulator.Utils.csproj" />
     </ItemGroup>
 
+    <ItemGroup>
+      <Folder Include="Nodes\" />
+    </ItemGroup>
+
 </Project>

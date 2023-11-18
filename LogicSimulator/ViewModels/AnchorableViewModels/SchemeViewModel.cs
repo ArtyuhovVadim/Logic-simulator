@@ -29,6 +29,7 @@ public class SchemeViewModel : DocumentViewModel
         SelectionTool.ToolSelected += OnToolSelected;
         DragTool.ToolSelected += OnToolSelected;
         RectangleSelectionTool.ToolSelected += OnToolSelected;
+        NodeDragTool.ToolSelected += OnToolSelected;
     }
 
     #region Title
@@ -91,10 +92,16 @@ public class SchemeViewModel : DocumentViewModel
     public SchemeDragToolViewModel DragTool { get; } = new("Drag tool");
 
     #endregion
-    
+
     #region RectangleSelectionTool
 
     public SchemeRectangleSelectionToolViewModel RectangleSelectionTool { get; } = new("Rectangle selection tool");
+
+    #endregion
+
+    #region NodeDragTool
+
+    public SchemeNodeDragToolViewModel NodeDragTool { get; } = new("Node drag tool");
 
     #endregion
 
