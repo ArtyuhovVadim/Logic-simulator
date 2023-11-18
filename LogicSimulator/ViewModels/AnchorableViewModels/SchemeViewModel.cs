@@ -1,4 +1,5 @@
-﻿using LogicSimulator.Infrastructure.Services.Interfaces;
+﻿using LogicSimulator.Infrastructure.Commands;
+using LogicSimulator.Infrastructure.Services.Interfaces;
 using LogicSimulator.Models;
 using LogicSimulator.ViewModels.AnchorableViewModels.Base;
 using LogicSimulator.ViewModels.ObjectViewModels.Base;
@@ -27,6 +28,7 @@ public class SchemeViewModel : DocumentViewModel
 
         SelectionTool.ToolSelected += OnToolSelected;
         DragTool.ToolSelected += OnToolSelected;
+        RectangleSelectionTool.ToolSelected += OnToolSelected;
     }
 
     #region Title
@@ -89,6 +91,12 @@ public class SchemeViewModel : DocumentViewModel
     public SchemeDragToolViewModel DragTool { get; } = new("Drag tool");
 
     #endregion
+    
+    #region RectangleSelectionTool
+
+    public SchemeRectangleSelectionToolViewModel RectangleSelectionTool { get; } = new("Rectangle selection tool");
+
+    #endregion
 
     #region Scale
 
@@ -114,71 +122,18 @@ public class SchemeViewModel : DocumentViewModel
 
     #endregion
 
-    protected override void Close(object p) => _mainWindowViewModel.OpenedSchemes.Remove(this);
+    #region ObjectSelectedCommand
 
-    private void OnToolSelected(BaseSchemeToolViewModel tool) => CurrentTool = tool;
+    private ICommand _objectSelectedCommand;
 
-    /*#region Tools
-
-    private readonly TransformTool _transformTool = new();
-
-    private readonly SelectionTool _selectionTool = new();
-    private readonly RectangleSelectionTool _rectangleSelectionTool = new();
-    private readonly DragTool _dragTool = new();
-    private readonly NodeDragTool _nodeDragTool = new();
-
-    private readonly RectanglePlacingTool _rectanglePlacingTool = new();
-    private readonly EllipsePlacingTool _ellipsePlacingTool = new();
-    private readonly TextBlockPlacingTool _textBlockPlacingTool = new();
-    private readonly WirePlacingTool _wirePlacingTool = new();
+    public ICommand ObjectSelectedCommand => _objectSelectedCommand ??= new LambdaCommand(_ =>
+    {
+        _editorSelectionService.Select(this);
+    });
 
     #endregion
 
-    public SchemeViewModel(Scheme scheme)
-    {
-        _scheme = scheme;
+    protected override void Close(object p) => _mainWindowViewModel.OpenedSchemes.Remove(this);
 
-        Objects = new ObservableCollection<BaseSceneObject>(_scheme.Objects);
-
-        var tools = new List<BaseTool>()
-        {
-            _selectionTool,
-            _rectangleSelectionTool,
-            _dragTool,
-            _nodeDragTool,
-
-            _rectanglePlacingTool,
-            _ellipsePlacingTool,
-            _textBlockPlacingTool,
-            _wirePlacingTool
-        };
-
-        ToolsController = new ToolsController(_selectionTool)
-        {
-            Tools = tools,
-            AlwaysUpdatingTools = new[] { _transformTool }
-        };
-
-        ToolsController.SelectedObjectsChanged += OnSelectedObjectsChanged;
-
-        _editorSelectionService = App.Host.Services.GetRequiredService<IEditorSelectionService>();
-        _mainWindowViewModel = App.Host.Services.GetRequiredService<MainWindowViewModel>();
-    }
-
-    private void OnSelectedObjectsChanged()
-    {
-        _editorSelectionService.Select(this);
-    }
-
-    #region ToolsController
-
-    private ToolsController _toolsController;
-
-    public ToolsController ToolsController
-    {
-        get => _toolsController;
-        set => Set(ref _toolsController, value);
-    }
-
-    #endregion*/
+    private void OnToolSelected(BaseSchemeToolViewModel tool) => CurrentTool = tool;
 }

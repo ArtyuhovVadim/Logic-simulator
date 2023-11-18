@@ -60,7 +60,7 @@ public class DragTool : BaseTool
 
     protected override void OnKeyDown(Scene2D scene, KeyEventArgs args, Vector2 pos)
     {
-        if (args.Key != Key.Escape) return;
+        if (args.Key != CancelKey) return;
 
         ToolsController.SwitchToDefaultTool();
     }
@@ -137,8 +137,8 @@ public class DragTool : BaseTool
             o.EndDrag();
         }
 
-        _draggingSceneObjects.Clear();
-        _objectsUnderCursor.Clear();
+        _draggingSceneObjects?.Clear();
+        _objectsUnderCursor?.Clear();
     }
 
     protected override Freezable CreateInstanceCore() => new DragTool();

@@ -12,6 +12,7 @@
     xmlns:layers="clr-namespace:LogicSimulator.Scene.Layers;assembly=LogicSimulator.Scene"
     xmlns:local="clr-namespace:LogicSimulator.ViewModels.ObjectViewModels"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:me="clr-namespace:LogicSimulator.Infrastructure.MarkupExtensions"
     xmlns:renderers="clr-namespace:LogicSimulator.Scene.Layers.Renderers;assembly=LogicSimulator.Scene"
     xmlns:scene="clr-namespace:LogicSimulator.Scene;assembly=LogicSimulator.Scene"
     xmlns:sceneViews="clr-namespace:LogicSimulator.Scene.Views;assembly=LogicSimulator.Scene"
@@ -29,8 +30,19 @@
         <scene:Scene2D x:Name="Scene2D" Scale="{Binding Path=Scale, Mode=TwoWay}">
             <tools:ToolsController.Controller>
                 <tools:ToolsController CurrentToolContext="{Binding Path=CurrentTool, Mode=TwoWay}" DefaultToolContext="{Binding Path=SelectionTool, Mode=OneTime}">
-                    <tools:SelectionTool Context="{Binding Path=SelectionTool}" ObjectsLayer="{Binding ElementName=ObjectsLayer}" />
+                    <tools:SelectionTool
+                        Context="{Binding Path=SelectionTool}"
+                        ObjectSelectedCommand="{Binding Path=ObjectSelectedCommand}"
+                        ObjectsLayer="{Binding ElementName=ObjectsLayer}" />
                     <tools:DragTool Context="{Binding Path=DragTool}" ObjectsLayer="{Binding ElementName=ObjectsLayer}" />
+                    <tools:RectangleSelectionTool
+                        x:Name="RectangleSelectionTool"
+                        Context="{Binding Path=RectangleSelectionTool}"
+                        Geometry="{Binding ElementName=RectangleSelectionLayer,
+                                           Path=Geometry,
+                                           Mode=OneWay}"
+                        ObjectSelectedCommand="{Binding Path=ObjectSelectedCommand}"
+                        ObjectsLayer="{Binding ElementName=ObjectsLayer}" />
                 </tools:ToolsController>
             </tools:ToolsController.Controller>
 
@@ -87,6 +99,20 @@
                     <renderers:ObjectsLayerRenderer />
                 </layers:ObjectsLayer.Renderer>
             </layers:ObjectsLayer>
+            <layers:RectangleSelectionLayer
+                x:Name="RectangleSelectionLayer"
+                EndPosition="{Binding ElementName=RectangleSelectionTool,
+                                      Path=EndPosition}"
+                IsVisible="{Binding ElementName=RectangleSelectionTool,
+                                    Path=IsSelectionStarted}"
+                NormalColor="#7DADFF"
+                SecantColor="#63C763"
+                StartPosition="{Binding ElementName=RectangleSelectionTool,
+                                        Path=StartPosition}">
+                <layers:RectangleSelectionLayer.Renderer>
+                    <layers:RectangleSelectionLayerRenderer />
+                </layers:RectangleSelectionLayer.Renderer>
+            </layers:RectangleSelectionLayer>
         </scene:Scene2D>
 
         <controls:ClippingBorder
@@ -113,12 +139,12 @@
                         Fill="White"
                         Stretch="Uniform" />
                 </views:SchemeToolView>
-                <!--<views:SchemeToolView>
+                <views:SchemeToolView DataContext="{Binding Path=RectangleSelectionTool}">
                     <Path
                         Data="M 0 0 L 2 0 L 2 1 L 1 1 L 1 2 L 0 2 z M 3 0 L 5 0 L 5 1 L 3 1 L 3 0 M 6 0 L 8 0 L 8 1 L 6 1 L 6 0 M 9 0 L 11 0 L 11 1 L 9 1 L 9 0 M 12 0 L 14 0 L 14 2 L 13 2 L 13 2 L 13 1 L 12 1 L 12 1 L 12 0 M 14 3 L 14 5 L 13 5 L 13 3 L 14 3 M 14 6 L 14 8 L 13 8 L 13 6 L 14 6 M 14 9 L 14 11 L 13 11 L 13 9 L 14 9 M 14 12 L 14 14 L 12 14 L 12 13 L 13 13 L 13 12 L 14 12 M 11 14 L 9 14 L 9 13 L 11 13 L 11 14 M 8 14 L 8 13 L 6 13 L 6 14 L 8 14 M 5 14 L 5 13 L 3 13 L 3 14 L 5 14 M 2 14 L 0 14 L 0 12 L 1 12 L 1 13 L 2 13 L 2 14 M 0 11 L 1 11 L 1 9 L 0 9 L 0 11 M 0 8 L 1 8 L 1 6 L 0 6 L 0 8 M 0 5 L 1 5 L 1 3 L 0 3 L 0 5"
                         Fill="White"
                         Stretch="Uniform" />
-                </views:SchemeToolView>-->
+                </views:SchemeToolView>
             </StackPanel>
         </controls:ClippingBorder>
     </Grid>

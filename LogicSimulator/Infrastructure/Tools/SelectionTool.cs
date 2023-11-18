@@ -65,6 +65,19 @@ public class SelectionTool : BaseTool
 
     #endregion
 
+    #region ObjectSelectedCommand
+
+    public ICommand ObjectSelectedCommand
+    {
+        get => (ICommand)GetValue(ObjectSelectedCommandProperty);
+        set => SetValue(ObjectSelectedCommandProperty, value);
+    }
+
+    public static readonly DependencyProperty ObjectSelectedCommandProperty =
+        DependencyProperty.Register(nameof(ObjectSelectedCommand), typeof(ICommand), typeof(SelectionTool), new PropertyMetadata(default(ICommand)));
+
+    #endregion
+
     //TODO
     /*protected override void OnKeyDown(Scene2D scene, KeyEventArgs args, Vector2 pos)
     {
@@ -105,11 +118,10 @@ public class SelectionTool : BaseTool
             if ((pos - _startPos).Length() > DragThreshold)
                 ToolsController.SwitchTool<DragTool>(tool => tool.MouseLeftButtonDown(scene, pos));
         }
-        //TODO
-        //else
-        //{
-        //    ToolsController.SwitchTool<RectangleSelectionTool>(tool => tool.MouseLeftButtonDown(scene, pos));
-        //}
+        else
+        {
+            ToolsController.SwitchTool<RectangleSelectionTool>(tool => tool.MouseLeftButtonDown(scene, pos));
+        }
     }
 
     protected override void OnMouseLeftButtonUp(Scene2D scene, Vector2 pos)
@@ -123,8 +135,7 @@ public class SelectionTool : BaseTool
             if (!isMultipleSelectionKeyPressed)
             {
                 UnselectAllObjects(ObjectsLayer);
-                //TODO
-                //ToolsController.OnSelectedObjectsChanged();
+                ObjectSelectedCommand?.Execute(null);
             }
         }
         else if (objects.Count == 1)
@@ -142,8 +153,7 @@ public class SelectionTool : BaseTool
                 obj.Select();
             }
 
-            //TODO
-            //ToolsController.OnSelectedObjectsChanged();
+            ObjectSelectedCommand?.Execute(null);
         }
         else
         {
@@ -175,8 +185,7 @@ public class SelectionTool : BaseTool
                 objects[nextSelectedObjectIndex].Select();
             }
 
-            //TODO
-            //ToolsController.OnSelectedObjectsChanged();
+            ObjectSelectedCommand?.Execute(null);
         }
     }
 

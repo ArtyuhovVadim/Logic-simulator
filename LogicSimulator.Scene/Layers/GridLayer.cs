@@ -93,14 +93,7 @@ public class GridLayer : BaseSceneLayer
     }
 
     public static readonly DependencyProperty LineThicknessProperty =
-        DependencyProperty.Register(nameof(LineThickness), typeof(float), typeof(GridLayer), new PropertyMetadata(1f, OnLineThicknessChanged));
-
-    private static void OnLineThicknessChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
-    {
-        if (d is not GridLayer gridLayer) return;
-
-        gridLayer.MakeDirty();
-    }
+        DependencyProperty.Register(nameof(LineThickness), typeof(float), typeof(GridLayer), new PropertyMetadata(1f, DefaultPropertyChangedHandler));
 
     #endregion
 
@@ -113,14 +106,7 @@ public class GridLayer : BaseSceneLayer
     }
 
     public static readonly DependencyProperty WidthProperty =
-        DependencyProperty.Register(nameof(Width), typeof(int), typeof(GridLayer), new PropertyMetadata(300, OnWidthChanged));
-
-    private static void OnWidthChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
-    {
-        if (d is not GridLayer gridLayer) return;
-
-        gridLayer.MakeDirty();
-    }
+        DependencyProperty.Register(nameof(Width), typeof(int), typeof(GridLayer), new PropertyMetadata(300, DefaultPropertyChangedHandler));
 
     #endregion
 
@@ -133,14 +119,7 @@ public class GridLayer : BaseSceneLayer
     }
 
     public static readonly DependencyProperty HeightProperty =
-        DependencyProperty.Register(nameof(Height), typeof(int), typeof(GridLayer), new PropertyMetadata(300, OnHeightChanged));
-
-    private static void OnHeightChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
-    {
-        if (d is not GridLayer gridLayer) return;
-
-        gridLayer.MakeDirty();
-    }
+        DependencyProperty.Register(nameof(Height), typeof(int), typeof(GridLayer), new PropertyMetadata(300, DefaultPropertyChangedHandler));
 
     #endregion
 
@@ -153,14 +132,7 @@ public class GridLayer : BaseSceneLayer
     }
 
     public static readonly DependencyProperty CellSizeProperty =
-        DependencyProperty.Register(nameof(CellSize), typeof(int), typeof(GridLayer), new PropertyMetadata(25, OnCellSizeChanged));
-
-    private static void OnCellSizeChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
-    {
-        if (d is not GridLayer gridLayer) return;
-
-        gridLayer.MakeDirty();
-    }
+        DependencyProperty.Register(nameof(CellSize), typeof(int), typeof(GridLayer), new PropertyMetadata(25, DefaultPropertyChangedHandler));
 
     #endregion
 
@@ -173,14 +145,7 @@ public class GridLayer : BaseSceneLayer
     }
 
     public static readonly DependencyProperty BoldLineStepProperty =
-        DependencyProperty.Register(nameof(BoldLineStep), typeof(int), typeof(GridLayer), new PropertyMetadata(10, OnBoldLineStepChanged));
-
-    private static void OnBoldLineStepChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
-    {
-        if (d is not GridLayer gridLayer) return;
-
-        gridLayer.MakeDirty();
-    }
+        DependencyProperty.Register(nameof(BoldLineStep), typeof(int), typeof(GridLayer), new PropertyMetadata(10, DefaultPropertyChangedHandler));
 
     #endregion
 }

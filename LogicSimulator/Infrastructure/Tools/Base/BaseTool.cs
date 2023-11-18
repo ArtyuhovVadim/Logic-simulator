@@ -8,6 +8,19 @@ public abstract class BaseTool : Freezable
 {
     public event Action<BaseTool> ContextChanged;
 
+    #region CancelKey
+
+    public Key CancelKey
+    {
+        get => (Key)GetValue(CancelKeyProperty);
+        set => SetValue(CancelKeyProperty, value);
+    }
+
+    public static readonly DependencyProperty CancelKeyProperty =
+        DependencyProperty.Register(nameof(CancelKey), typeof(Key), typeof(BaseTool), new PropertyMetadata(Key.Escape));
+
+    #endregion
+
     #region Context
 
     public object Context

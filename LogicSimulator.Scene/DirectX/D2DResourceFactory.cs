@@ -40,6 +40,11 @@ public class D2DResourceFactory : DisposableObject
         return linearGradientBrush;
     }
 
+    public RectangleGeometry CreateRectangleGeometry(Vector2 startPoint, Vector2 endPoint)
+    {
+        return new RectangleGeometry(_context.D2DFactory, new RawRectangleF(startPoint.X, startPoint.Y, endPoint.X, endPoint.Y));
+    }
+
     public RectangleGeometry CreateRectangleGeometry(in RectangleF rectangle)
     {
         return new RectangleGeometry(_context.D2DFactory, rectangle);
