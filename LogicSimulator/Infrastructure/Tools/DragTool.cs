@@ -58,6 +58,13 @@ public class DragTool : BaseTool
         _draggingSceneObjects = new List<SceneObjectView>();
     }
 
+    protected override void OnKeyDown(Scene2D scene, KeyEventArgs args, Vector2 pos)
+    {
+        if (args.Key != Key.Escape) return;
+
+        ToolsController.SwitchToDefaultTool();
+    }
+
     protected override void OnMouseLeftButtonDown(Scene2D scene, Vector2 pos)
     {
         _objectsUnderCursor = ObjectsLayer.Objects
@@ -98,11 +105,9 @@ public class DragTool : BaseTool
 
     protected override void OnMouseLeftButtonUp(Scene2D scene, Vector2 pos)
     {
-        //TODO
-        //ToolsController.SwitchToDefaultTool();
         if (ActivatedFromOtherTool)
-            ToolsController.SwitchTool<SelectionTool>();
-        else 
+            ToolsController.SwitchToDefaultTool();
+        else
             EndDragObjects();
     }
 

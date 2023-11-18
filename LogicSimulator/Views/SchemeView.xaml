@@ -28,7 +28,7 @@
     <Grid>
         <scene:Scene2D x:Name="Scene2D" Scale="{Binding Path=Scale, Mode=TwoWay}">
             <tools:ToolsController.Controller>
-                <tools:ToolsController CurrentToolContext="{Binding Path=CurrentTool, Mode=TwoWay}">
+                <tools:ToolsController CurrentToolContext="{Binding Path=CurrentTool, Mode=TwoWay}" DefaultToolContext="{Binding Path=SelectionTool, Mode=OneTime}">
                     <tools:SelectionTool Context="{Binding Path=SelectionTool}" ObjectsLayer="{Binding ElementName=ObjectsLayer}" />
                     <tools:DragTool Context="{Binding Path=DragTool}" ObjectsLayer="{Binding ElementName=ObjectsLayer}" />
                 </tools:ToolsController>
