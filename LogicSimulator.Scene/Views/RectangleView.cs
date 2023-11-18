@@ -7,7 +7,6 @@ using LogicSimulator.Utils;
 using SharpDX;
 using SharpDX.Direct2D1;
 using Color = System.Windows.Media.Color;
-using DashStyle = SharpDX.Direct2D1.DashStyle;
 using Geometry = SharpDX.Direct2D1.Geometry;
 using SolidColorBrush = SharpDX.Direct2D1.SolidColorBrush;
 using RectangleGeometry = SharpDX.Direct2D1.RectangleGeometry;
@@ -157,15 +156,8 @@ public class RectangleView : SceneObjectView
 
     protected override void OnRenderSelection(Scene2D scene, D2DContext context)
     {
-        var properties = new StrokeStyleProperties
-        {
-            DashStyle = DashStyle.Custom,
-            DashCap = CapStyle.Flat
-        };
-
-        using var style = context.ResourceFactory.CreateStrokeStyle(properties, new[] { 2f, 2f });
-
-        using var brush = context.ResourceFactory.CreateSolidColorBrush(new Color4(0, 1, 0, 1));
+        var brush = Cache.Get<SolidColorBrush>(SelectionBrushStaticResource);
+        var style = Cache.Get<StrokeStyle>(SelectionStyleStaticResource);
 
         var rect = new RectangleF { Width = Width, Height = Height };
 

@@ -21,6 +21,16 @@ public abstract class SceneObjectView : DisposableFrameworkContentElement, ISele
 
     public Guid Id { get; } = Guid.NewGuid();
 
+    public static readonly IStaticResource SelectionBrushStaticResource =
+        ResourceCache.RegisterStatic(factory => factory.CreateSolidColorBrush(new Color4(0, 1, 0, 1)));
+
+    public static readonly IStaticResource SelectionStyleStaticResource =
+        ResourceCache.RegisterStatic(factory => factory.CreateStrokeStyle(new StrokeStyleProperties
+        {
+            DashStyle = DashStyle.Custom,
+            DashCap = CapStyle.Flat
+        }, new[] { 2f, 2f }));
+
     #region Location
 
     public Vector2 Location

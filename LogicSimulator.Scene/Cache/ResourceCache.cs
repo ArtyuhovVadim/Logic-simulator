@@ -5,8 +5,11 @@ namespace LogicSimulator.Scene.Cache;
 public class ResourceCache : IDisposable
 {
     private readonly Dictionary<Guid, Dictionary<long, IDisposable>> _cache = new();
+    private readonly Dictionary<long, IDisposable> _staticCache = new();
 
     private static long _lastId;
+
+    private static long _lastStaticId;
 
     private readonly D2DResourceFactory _factory;
 
@@ -83,6 +86,26 @@ public class ResourceCache : IDisposable
         throw new InvalidCastException($"Can not cast resource to {typeof(T).Name}.");
     }
 
+    public T Get<T>(IStaticResource resource) where T : IDisposable
+    {
+        if (_staticCache.TryGetValue(resource.Id, out var managedResource))
+        {
+            if (managedResource is T t)
+                return t;
+
+            throw new InvalidCastException($"Can not cast resource to {typeof(T).Name}.");
+        }
+
+        var managedResource1 = resource.Update(_factory);
+
+        _staticCache[resource.Id] = managedResource1;
+
+        if (managedResource1 is T t1)
+            return t1;
+
+        throw new InvalidCastException($"Can not cast resource to {typeof(T).Name}.");
+    }
+
     public void Dispose()
     {
         ReleaseAll();
@@ -92,6 +115,9 @@ public class ResourceCache : IDisposable
 
     public static IResource Register<TUser>(Func<D2DResourceFactory, TUser, IDisposable> updateCallback)
         where TUser : class, IResourceUser => new Resource<TUser>(_lastId++, updateCallback);
+
+    public static IStaticResource RegisterStatic(Func<D2DResourceFactory, IDisposable> updateCallback)
+         => new StaticResource(_lastStaticId++, updateCallback);
 
     private class Resource<TUser> : IResource where TUser : class, IResourceUser
     {
@@ -107,5 +133,21 @@ public class ResourceCache : IDisposable
 
         public IDisposable Update(D2DResourceFactory factory, IResourceUser user) =>
             _updateCallback.Invoke(factory, (TUser)user);
+    }
+
+    private class StaticResource : IStaticResource
+    {
+        private readonly Func<D2DResourceFactory, IDisposable> _updateCallback;
+
+        public StaticResource(long id, Func<D2DResourceFactory, IDisposable> updateCallback)
+        {
+            _updateCallback = updateCallback;
+            Id = id;
+        }
+
+        public long Id { get; }
+
+        public IDisposable Update(D2DResourceFactory factory)
+            => _updateCallback.Invoke(factory);
     }
 }
