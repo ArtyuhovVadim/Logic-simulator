@@ -48,10 +48,6 @@
     </ItemGroup>
 
     <ItemGroup>
-        <Folder Include="Infrastructure\Converters\" />
-    </ItemGroup>
-
-    <ItemGroup>
       <None Include="Data\ExampleProject\ExampleProject.lsproj">
         <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       </None>

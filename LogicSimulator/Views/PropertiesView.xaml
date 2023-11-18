@@ -5,6 +5,7 @@
     xmlns:avm="clr-namespace:LogicSimulator.ViewModels.AnchorableViewModels"
     xmlns:base="clr-namespace:LogicSimulator.ViewModels.EditorViewModels.Base"
     xmlns:cont="clr-namespace:LogicSimulator.Controls;assembly=LogicSimulator.Controls"
+    xmlns:converters="clr-namespace:LogicSimulator.Infrastructure.Converters"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:fa="http://schemas.fontawesome.io/icons/"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
@@ -20,6 +21,8 @@
                 <ResourceDictionary Source="/LogicSimulator.Controls;component/Styles/PropertiesEditorStyles.xaml" />
             </ResourceDictionary.MergedDictionaries>
 
+            <converters:ColorToColor4Converter x:Key="ColorToColor4Converter" />
+
             <DataTemplate DataType="{x:Type base:FloatPropertyViewModel}">
                 <cont:NumberBox IsValueUndefined="{Binding Path=IsValueUndefined}" Number="{Binding Path=Value}" />
             </DataTemplate>
@@ -32,7 +35,7 @@
             </DataTemplate>
 
             <DataTemplate DataType="{x:Type base:Color4PropertyViewModel}">
-                <cont:ColorPicker IsValueUndefined="{Binding Path=IsValueUndefined}" Color="{Binding Path=Value}" />
+                <cont:ColorPicker IsValueUndefined="{Binding Path=IsValueUndefined}" Color="{Binding Path=Value, Converter={StaticResource ColorToColor4Converter}}" />
             </DataTemplate>
 
             <DataTemplate DataType="{x:Type base:BoolPropertyViewModel}">
