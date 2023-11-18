@@ -9,6 +9,8 @@ namespace LogicSimulator.Infrastructure.Tools;
 
 public class SelectionTool : BaseTool
 {
+    private Vector2 _startPos;
+
     private IEnumerable<SceneObjectView> _objectsUnderCursor;
 
     #region ObjectsLayer
@@ -50,6 +52,19 @@ public class SelectionTool : BaseTool
 
     #endregion
 
+    #region DragThreshold
+
+    public double DragThreshold
+    {
+        get => (double)GetValue(DragThresholdProperty);
+        set => SetValue(DragThresholdProperty, value);
+    }
+
+    public static readonly DependencyProperty DragThresholdProperty =
+        DependencyProperty.Register(nameof(DragThreshold), typeof(double), typeof(SelectionTool), new PropertyMetadata(10d));
+
+    #endregion
+
     //TODO
     /*protected override void OnKeyDown(Scene2D scene, KeyEventArgs args, Vector2 pos)
     {
@@ -79,13 +94,16 @@ public class SelectionTool : BaseTool
             .Select(ObjectsLayer.GetViewFromItem)
             .Where(objView => objView is not null && objView.HitTest(pos, Matrix3x2.Identity, (float)SelectionTolerance))
             .Reverse();
+
+        _startPos = pos;
     }
 
     protected override void OnMouseLeftButtonDragged(Scene2D scene, Vector2 pos)
     {
         if (_objectsUnderCursor.Any())
         {
-            ToolsController.SwitchTool<DragTool>(tool => tool.MouseLeftButtonDown(scene, pos));
+            if ((pos - _startPos).Length() > DragThreshold)
+                ToolsController.SwitchTool<DragTool>(tool => tool.MouseLeftButtonDown(scene, pos));
         }
         //TODO
         //else

@@ -5,18 +5,19 @@
     xmlns:anchorableViewModels="clr-namespace:LogicSimulator.ViewModels.AnchorableViewModels"
     xmlns:b="http://schemas.microsoft.com/xaml/behaviors"
     xmlns:behaviors="clr-namespace:LogicSimulator.Infrastructure.Behaviors"
+    xmlns:controls="clr-namespace:LogicSimulator.Controls;assembly=LogicSimulator.Controls"
     xmlns:converters="clr-namespace:LogicSimulator.Infrastructure.Converters"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:dataPiping="clr-namespace:LogicSimulator.Infrastructure.DataPiping"
-    xmlns:fa="http://schemas.fontawesome.io/icons/"
     xmlns:layers="clr-namespace:LogicSimulator.Scene.Layers;assembly=LogicSimulator.Scene"
     xmlns:local="clr-namespace:LogicSimulator.ViewModels.ObjectViewModels"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:renderers="clr-namespace:LogicSimulator.Scene.Layers.Renderers;assembly=LogicSimulator.Scene"
     xmlns:scene="clr-namespace:LogicSimulator.Scene;assembly=LogicSimulator.Scene"
+    xmlns:sceneViews="clr-namespace:LogicSimulator.Scene.Views;assembly=LogicSimulator.Scene"
     xmlns:selectors="clr-namespace:LogicSimulator.Infrastructure.Selectors"
     xmlns:tools="clr-namespace:LogicSimulator.Infrastructure.Tools"
-    xmlns:views="clr-namespace:LogicSimulator.Scene.Views;assembly=LogicSimulator.Scene"
+    xmlns:views="clr-namespace:LogicSimulator.Views"
     d:DataContext="{d:DesignInstance Type=anchorableViewModels:SchemeViewModel}"
     mc:Ignorable="d">
 
@@ -27,16 +28,14 @@
     <Grid>
         <scene:Scene2D x:Name="Scene2D" Scale="{Binding Path=Scale, Mode=TwoWay}">
             <tools:ToolsController.Controller>
-                <tools:ToolsController>
-                    <tools:SelectionTool x:Name="SelectionTool" ObjectsLayer="{Binding ElementName=ObjectsLayer}" />
-                    <tools:DragTool x:Name="DragTool" ObjectsLayer="{Binding ElementName=ObjectsLayer}" />
+                <tools:ToolsController CurrentToolContext="{Binding Path=CurrentTool, Mode=TwoWay}">
+                    <tools:SelectionTool Context="{Binding Path=SelectionTool}" ObjectsLayer="{Binding ElementName=ObjectsLayer}" />
+                    <tools:DragTool Context="{Binding Path=DragTool}" ObjectsLayer="{Binding ElementName=ObjectsLayer}" />
                 </tools:ToolsController>
             </tools:ToolsController.Controller>
 
             <dataPiping:DataPiping.DataPipes>
                 <dataPiping:DataPipe Source="{Binding ElementName=Scene2D, Path=MousePosition}" Target="{Binding Path=MousePosition, Mode=OneWayToSource}" />
-                <dataPiping:DataPipe Source="{Binding ElementName=SelectionTool, Path=IsActive}" Target="{Binding Path=SelectionTool.IsActive, Mode=OneWayToSource}" />
-                <dataPiping:DataPipe Source="{Binding ElementName=DragTool, Path=IsActive}" Target="{Binding Path=DragTool.IsActive, Mode=OneWayToSource}" />
             </dataPiping:DataPiping.DataPipes>
 
             <b:Interaction.Behaviors>
@@ -64,12 +63,12 @@
                     <selectors:SceneObjectTemplateSelector>
                         <selectors:SceneObjectTemplateSelector.UnknownObjectDataTemplate>
                             <DataTemplate xmlns:baseVm="clr-namespace:LogicSimulator.ViewModels.ObjectViewModels.Base" DataType="{x:Type baseVm:BaseObjectViewModel}">
-                                <views:UnknownObjectView Location="{Binding Path=Location}" Rotation="{Binding Path=Rotation, Converter={StaticResource RotationToFloatConverter}}" />
+                                <sceneViews:UnknownObjectView Location="{Binding Path=Location}" Rotation="{Binding Path=Rotation, Converter={StaticResource RotationToFloatConverter}}" />
                             </DataTemplate>
                         </selectors:SceneObjectTemplateSelector.UnknownObjectDataTemplate>
                         <selectors:SceneObjectTemplateSelector.RectangleDataTemplate>
                             <DataTemplate DataType="{x:Type local:RectangleViewModel}">
-                                <views:RectangleView
+                                <sceneViews:RectangleView
                                     Width="{Binding Path=Width}"
                                     Height="{Binding Path=Height}"
                                     FillColor="{Binding Path=FillColor}"
@@ -89,66 +88,38 @@
                 </layers:ObjectsLayer.Renderer>
             </layers:ObjectsLayer>
         </scene:Scene2D>
-        <Border
-            Margin="0,10,0,0"
-            Padding="5"
+
+        <controls:ClippingBorder
+            Height="28"
+            Margin="5"
             HorizontalAlignment="Center"
             VerticalAlignment="Top"
-            Background="#353535"
-            BorderBrush="#222222"
-            BorderThickness="1"
-            CornerRadius="3">
+            Background="#404040"
+            CornerRadius="5"
+            RenderOptions.EdgeMode="Unspecified"
+            SnapsToDevicePixels="True"
+            UseLayoutRounding="True">
             <StackPanel Orientation="Horizontal">
-                <ContentControl>
-                    <ContentControl.Template>
-                        <ControlTemplate>
-                            <Border
-                                Width="25"
-                                Height="25"
-                                Margin="0,0,5,0"
-                                Padding="3"
-                                Background="#424242"
-                                BorderBrush="#222222"
-                                BorderThickness="1"
-                                CornerRadius="3">
-                                <fa:ImageAwesome
-                                    x:Name="Icon"
-                                    Foreground="#6283A2"
-                                    Icon="MousePointer" />
-                            </Border>
-                            <ControlTemplate.Triggers>
-                                <DataTrigger Binding="{Binding Path=SelectionTool.IsActive}" Value="True">
-                                    <Setter TargetName="Icon" Property="Foreground" Value="White" />
-                                </DataTrigger>
-                            </ControlTemplate.Triggers>
-                        </ControlTemplate>
-                    </ContentControl.Template>
-                </ContentControl>
-                <ContentControl>
-                    <ContentControl.Template>
-                        <ControlTemplate>
-                            <Border
-                                Width="25"
-                                Height="25"
-                                Padding="3"
-                                Background="#424242"
-                                BorderBrush="#222222"
-                                BorderThickness="1"
-                                CornerRadius="3">
-                                <fa:ImageAwesome
-                                    x:Name="Icon"
-                                    Foreground="#6283A2"
-                                    Icon="HandGrabOutline" />
-                            </Border>
-                            <ControlTemplate.Triggers>
-                                <DataTrigger Binding="{Binding Path=DragTool.IsActive}" Value="True">
-                                    <Setter TargetName="Icon" Property="Foreground" Value="White" />
-                                </DataTrigger>
-                            </ControlTemplate.Triggers>
-                        </ControlTemplate>
-                    </ContentControl.Template>
-                </ContentControl>
+                <views:SchemeToolView DataContext="{Binding Path=SelectionTool}">
+                    <Path
+                        Data="M 0 0 z z M 7 17 L 0 0 L 17 7 L 10 10 L 7 17 Z"
+                        Fill="White"
+                        Stretch="Uniform" />
+                </views:SchemeToolView>
+                <views:SchemeToolView DataContext="{Binding Path=DragTool}">
+                    <Path
+                        Margin="-1"
+                        Data="M 0 0 Z Z M 79 39 L 64 29 L 64 36 L 42 36 L 42 14 L 49 14 L 39 0 L 29 14 L 36 14 L 36 36 L 14 36 L 14 29 L 0 39 L 14 49 L 14 42 L 36 42 L 36 64 L 29 64 L 39 78 L 49 64 L 42 64 L 42 42 L 64 42 L 64 49 L 79 39 Z"
+                        Fill="White"
+                        Stretch="Uniform" />
+                </views:SchemeToolView>
+                <!--<views:SchemeToolView>
+                    <Path
+                        Data="M 0 0 L 2 0 L 2 1 L 1 1 L 1 2 L 0 2 z M 3 0 L 5 0 L 5 1 L 3 1 L 3 0 M 6 0 L 8 0 L 8 1 L 6 1 L 6 0 M 9 0 L 11 0 L 11 1 L 9 1 L 9 0 M 12 0 L 14 0 L 14 2 L 13 2 L 13 2 L 13 1 L 12 1 L 12 1 L 12 0 M 14 3 L 14 5 L 13 5 L 13 3 L 14 3 M 14 6 L 14 8 L 13 8 L 13 6 L 14 6 M 14 9 L 14 11 L 13 11 L 13 9 L 14 9 M 14 12 L 14 14 L 12 14 L 12 13 L 13 13 L 13 12 L 14 12 M 11 14 L 9 14 L 9 13 L 11 13 L 11 14 M 8 14 L 8 13 L 6 13 L 6 14 L 8 14 M 5 14 L 5 13 L 3 13 L 3 14 L 5 14 M 2 14 L 0 14 L 0 12 L 1 12 L 1 13 L 2 13 L 2 14 M 0 11 L 1 11 L 1 9 L 0 9 L 0 11 M 0 8 L 1 8 L 1 6 L 0 6 L 0 8 M 0 5 L 1 5 L 1 3 L 0 3 L 0 5"
+                        Fill="White"
+                        Stretch="Uniform" />
+                </views:SchemeToolView>-->
             </StackPanel>
-        </Border>
+        </controls:ClippingBorder>
     </Grid>
 </UserControl>

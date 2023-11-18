@@ -6,41 +6,45 @@ namespace LogicSimulator.Infrastructure.Tools.Base;
 
 public abstract class BaseTool : Freezable
 {
-    private bool _isActive;
-    public bool CanSwitch { get; protected set; } = true;
+    public event Action<BaseTool> ContextChanged;
 
-    // public bool IsActive
-    // {
-    //     get => _isActive;
-    //     set => _isActive = value;
-    // }
+    #region Context
 
-    #region IsActive
-
-    private static readonly DependencyPropertyKey IsActivePropertyKey
-        = DependencyProperty.RegisterReadOnly(nameof(IsActive), typeof(bool), typeof(BaseTool), new PropertyMetadata(default(bool)));
-
-    public bool IsActive
+    public object Context
     {
-        get => (bool)GetValue(IsActivePropertyKey.DependencyProperty);
-        private set => SetValue(IsActivePropertyKey, value);
+        get => GetValue(ContextProperty);
+        set => SetValue(ContextProperty, value);
+    }
+
+    public static readonly DependencyProperty ContextProperty =
+        DependencyProperty.Register(nameof(Context), typeof(object), typeof(BaseTool), new PropertyMetadata(default, OnContextPropertyChanged));
+
+    private static void OnContextPropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+    {
+        if (d is not BaseTool tool) return;
+
+        tool.ContextChanged?.Invoke(tool);
     }
 
     #endregion
 
+    public bool CanSwitch { get; protected set; } = true;
+
+    public bool ActivatedFromOtherTool { get; private set; }
+
     protected ToolsController ToolsController { get; private set; }
 
-    public void Activate(ToolsController toolsController)
+    public void Activate(ToolsController toolsController, bool activatedFromOtherTool = false)
     {
-        IsActive = true;
         ToolsController = toolsController;
+        ActivatedFromOtherTool = activatedFromOtherTool;
         OnActivated();
     }
 
     public void Deactivate()
     {
         OnDeactivated();
-        IsActive = false;
+        ActivatedFromOtherTool = false;
     }
 
     public void KeyDown(Scene2D scene, KeyEventArgs args, Vector2 pos) => OnKeyDown(scene, args, pos);

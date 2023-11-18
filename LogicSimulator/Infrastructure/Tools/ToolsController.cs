@@ -38,6 +38,30 @@ public class ToolsController : Freezable
 
     #endregion
 
+    #region CurrentToolContext
+
+    public object CurrentToolContext
+    {
+        get => GetValue(CurrentToolContextProperty);
+        set => SetValue(CurrentToolContextProperty, value);
+    }
+
+    public static readonly DependencyProperty CurrentToolContextProperty =
+        DependencyProperty.Register(nameof(CurrentToolContext), typeof(object), typeof(ToolsController), new PropertyMetadata(default, OnCurrentToolContextPropertyChanged));
+
+    private static void OnCurrentToolContextPropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+    {
+        if (d is not ToolsController controller) return;
+
+        var tool = controller.Tools.FirstOrDefault(x => x.Context == e.NewValue);
+
+        if (tool is null) return;
+
+        controller.CurrentTool = tool;
+    }
+
+    #endregion
+
     public ToolsController()
     {
         Tools = new ToolsCollection();
@@ -50,6 +74,8 @@ public class ToolsController : Freezable
         get => _currentTool;
         set
         {
+            if (value == _currentTool) return;
+
             var newTool = value;
             var oldTool = _currentTool;
 
@@ -60,6 +86,7 @@ public class ToolsController : Freezable
             newTool?.Activate(this);
 
             _currentTool = value;
+            CurrentToolContext = value.Context;
 
             ToolChanged?.Invoke(newTool, oldTool);
         }
@@ -71,7 +98,22 @@ public class ToolsController : Freezable
 
         if (nextTool is null) return;
 
-        CurrentTool = nextTool;
+        if (nextTool == _currentTool) return;
+
+        var newTool = nextTool;
+        var oldTool = _currentTool;
+
+        if (oldTool is { CanSwitch: false })
+            return;
+
+        oldTool?.Deactivate();
+        nextTool?.Activate(this, true);
+
+        _currentTool = nextTool;
+        CurrentToolContext = nextTool.Context;
+
+        ToolChanged?.Invoke(newTool, oldTool);
+
         actionToNextToolAfterActivating?.Invoke((T)nextTool);
     }
 
@@ -79,6 +121,32 @@ public class ToolsController : Freezable
 
     private void OnToolCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
     {
-        CurrentTool ??= Tools.FirstOrDefault();
+        if (e.NewItems?.Count == 0)
+            return;
+
+        foreach (var tool in e.NewItems!)
+        {
+            if (Tools.Count(x => x.GetType() == tool.GetType()) > 1)
+            {
+                throw new InvalidOperationException($"{tool.GetType().Name} has already been added.");
+            }
+        }
+
+        foreach (BaseTool newTool in e.NewItems!)
+        {
+            if (newTool.Context is null)
+                newTool.ContextChanged += OnContextChanged;
+        }
+    }
+
+    private void OnContextChanged(BaseTool tool)
+    {
+        tool.ContextChanged -= OnContextChanged;
+
+        var newTool = Tools.FirstOrDefault(x => x.Context == CurrentToolContext);
+
+        if (newTool is null) return;
+
+        CurrentTool = newTool;
     }
 }

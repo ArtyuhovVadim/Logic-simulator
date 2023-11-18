@@ -1,41 +1,13 @@
 ﻿using LogicSimulator.Infrastructure.Services.Interfaces;
 using LogicSimulator.Models;
 using LogicSimulator.ViewModels.AnchorableViewModels.Base;
-using LogicSimulator.ViewModels.Base;
 using LogicSimulator.ViewModels.ObjectViewModels.Base;
+using LogicSimulator.ViewModels.Tools;
+using LogicSimulator.ViewModels.Tools.Base;
 using Microsoft.Extensions.DependencyInjection;
 using SharpDX;
 
 namespace LogicSimulator.ViewModels.AnchorableViewModels;
-
-public class SchemeToolViewModel : BindableBase
-{
-    public SchemeToolViewModel(string name) => _name = name;
-
-    #region IsActive
-
-    private bool _isActive;
-
-    public bool IsActive
-    {
-        get => _isActive;
-        set => Set(ref _isActive, value);
-    }
-
-    #endregion
-
-    #region Name
-
-    private string _name;
-
-    public string Name
-    {
-        get => _name;
-        set => Set(ref _name, value);
-    }
-
-    #endregion
-}
 
 public class SchemeViewModel : DocumentViewModel
 {
@@ -47,9 +19,14 @@ public class SchemeViewModel : DocumentViewModel
     public SchemeViewModel(Scheme scheme)
     {
         _scheme = scheme;
-        Objects = _scheme.Objects;
         _mainWindowViewModel = App.Host.Services.GetRequiredService<MainWindowViewModel>();
         _editorSelectionService = App.Host.Services.GetRequiredService<IEditorSelectionService>();
+        Objects = _scheme.Objects;
+
+        CurrentTool = SelectionTool;
+
+        SelectionTool.ToolSelected += OnToolSelected;
+        DragTool.ToolSelected += OnToolSelected;
     }
 
     #region Title
@@ -78,15 +55,38 @@ public class SchemeViewModel : DocumentViewModel
 
     #endregion
 
+    #region CurrentTool
+
+    private BaseSchemeToolViewModel _currentTool;
+
+    public BaseSchemeToolViewModel CurrentTool
+    {
+        get => _currentTool;
+        set
+        {
+            var tmp = _currentTool;
+
+            if (!Set(ref _currentTool, value)) return;
+
+            if (tmp is not null)
+                tmp.IsActive = false;
+
+            if (_currentTool is not null)
+                _currentTool.IsActive = true;
+        }
+    }
+
+    #endregion
+
     #region SelectionTool
 
-    public SchemeToolViewModel SelectionTool { get; } = new ("Selection tool");
+    public SchemeSelectionToolViewModel SelectionTool { get; } = new("Selection tool");
 
     #endregion
 
     #region DragTool
 
-    public SchemeToolViewModel DragTool { get; } = new ("Drag tool");
+    public SchemeDragToolViewModel DragTool { get; } = new("Drag tool");
 
     #endregion
 
@@ -114,10 +114,9 @@ public class SchemeViewModel : DocumentViewModel
 
     #endregion
 
-    protected override void Close(object p)
-    {
-        _mainWindowViewModel.OpenedSchemes.Remove(this);
-    }
+    protected override void Close(object p) => _mainWindowViewModel.OpenedSchemes.Remove(this);
+
+    private void OnToolSelected(BaseSchemeToolViewModel tool) => CurrentTool = tool;
 
     /*#region Tools
 

@@ -27,9 +27,31 @@ public class DragTool : BaseTool
 
     #endregion
 
-    public double GridSnap { get; set; } = 25f;
+    #region GridSnap
 
-    public double DragTolerance { get; set; } = 5f;
+    public double GridSnap
+    {
+        get => (double)GetValue(GridSnapProperty);
+        set => SetValue(GridSnapProperty, value);
+    }
+
+    public static readonly DependencyProperty GridSnapProperty =
+        DependencyProperty.Register(nameof(GridSnap), typeof(double), typeof(DragTool), new PropertyMetadata(25d));
+
+    #endregion
+
+    #region DragTolerance
+
+    public double DragTolerance
+    {
+        get => (double)GetValue(DragToleranceProperty);
+        set => SetValue(DragToleranceProperty, value);
+    }
+
+    public static readonly DependencyProperty DragToleranceProperty =
+        DependencyProperty.Register(nameof(DragTolerance), typeof(double), typeof(DragTool), new PropertyMetadata(5d));
+
+    #endregion
 
     protected override void OnActivated()
     {
@@ -78,7 +100,10 @@ public class DragTool : BaseTool
     {
         //TODO
         //ToolsController.SwitchToDefaultTool();
-        ToolsController.SwitchTool<SelectionTool>();
+        if (ActivatedFromOtherTool)
+            ToolsController.SwitchTool<SelectionTool>();
+        else 
+            EndDragObjects();
     }
 
     protected override void OnDeactivated()
