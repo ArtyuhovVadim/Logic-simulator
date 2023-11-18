@@ -93,7 +93,7 @@ public class ToolsController : Freezable
         }
     }
 
-    public void SwitchTool<T>(Action<T>? actionToNextToolAfterActivating = null) where T : BaseTool
+    public void SwitchTool<T>(Action<T> actionToNextToolAfterActivating = null) where T : BaseTool
     {
         var nextTool = Tools.FirstOrDefault(x => x.GetType() == typeof(T));
 

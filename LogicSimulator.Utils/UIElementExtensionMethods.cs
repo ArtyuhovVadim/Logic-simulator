@@ -5,7 +5,7 @@ namespace LogicSimulator.Utils;
 
 public static class UiElementExtensionMethods
 {
-    public static T GetTemplateChildOrThrowIfNull<T>(this UIElement owner, DependencyObject? obj) where T : UIElement
+    public static T GetTemplateChildOrThrowIfNull<T>(this UIElement owner, DependencyObject obj) where T : UIElement
     {
         if (obj is null)
         {
@@ -16,7 +16,7 @@ public static class UiElementExtensionMethods
     }
 
 
-    public static void ThrowIfPartElementIsNull(this UIElement? uiElement, UIElement owner)
+    public static void ThrowIfPartElementIsNull(this UIElement uiElement, UIElement owner)
     {
         if (uiElement is null)
         {

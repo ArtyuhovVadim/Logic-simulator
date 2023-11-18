@@ -1,4 +1,5 @@
-﻿using LogicSimulator.Infrastructure.Commands;
+﻿using System.Windows;
+using LogicSimulator.Infrastructure.Commands;
 using LogicSimulator.Infrastructure.Services;
 using LogicSimulator.Infrastructure.Services.Interfaces;
 using LogicSimulator.ViewModels.AnchorableViewModels;
@@ -34,9 +35,11 @@ public class MainWindowViewModel : BindableBase
         Task.Run(async () =>
         {
             await Task.Delay(100);
-
-            LoadExampleCommand.Execute(null);
-            OpenedSchemes.Add(ActiveProjectViewModel.Schemes.First());
+            await Application.Current.Dispatcher.InvokeAsync(() =>
+            {
+                LoadExampleCommand.Execute(null);
+                OnSchemeOpened(ActiveProjectViewModel.Schemes.First());
+            });
         });
     }
 
