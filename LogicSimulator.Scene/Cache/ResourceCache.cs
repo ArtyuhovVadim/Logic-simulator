@@ -32,6 +32,16 @@ public class ResourceCache : IDisposable
         _cache[user.Id][resource.Id] = resource.Update(_factory, user);
     }
 
+    public void UpdateStatic(IStaticResource resource)
+    {
+        if (_staticCache.TryGetValue(resource.Id, out var managedResource))
+        {
+            managedResource.Dispose();
+        }
+
+        _staticCache[resource.Id] = resource.Update(_factory);
+    }
+
     public void ReleaseAll()
     {
         foreach (var (_, resourceMap) in _cache)
@@ -45,6 +55,13 @@ public class ResourceCache : IDisposable
         }
 
         _cache.Clear();
+
+        foreach (var (_, resource) in _staticCache)
+        {
+            resource.Dispose();
+        }
+
+        _staticCache.Clear();
     }
 
     public void Release(IResourceUser user)
