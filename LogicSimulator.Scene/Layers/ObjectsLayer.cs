@@ -68,7 +68,7 @@ public class ObjectsLayer : BaseSceneLayer
 
     public ObjectsLayer() => Loaded += OnLoaded;
 
-    public IEnumerable<IRenderable> Views => _objects;
+    public IEnumerable<ISelectionRenderable> Views => _objects;
 
     public SceneObjectView? GetViewFromItem(object item) =>
         _objects.FirstOrDefault(x => x.DataContext == item);

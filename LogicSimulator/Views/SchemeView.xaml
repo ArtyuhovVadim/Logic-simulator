@@ -12,7 +12,6 @@
     xmlns:layers="clr-namespace:LogicSimulator.Scene.Layers;assembly=LogicSimulator.Scene"
     xmlns:local="clr-namespace:LogicSimulator.ViewModels.ObjectViewModels"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    xmlns:me="clr-namespace:LogicSimulator.Infrastructure.MarkupExtensions"
     xmlns:renderers="clr-namespace:LogicSimulator.Scene.Layers.Renderers;assembly=LogicSimulator.Scene"
     xmlns:scene="clr-namespace:LogicSimulator.Scene;assembly=LogicSimulator.Scene"
     xmlns:sceneViews="clr-namespace:LogicSimulator.Scene.Views;assembly=LogicSimulator.Scene"
@@ -99,6 +98,11 @@
                     <renderers:ObjectsLayerRenderer />
                 </layers:ObjectsLayer.Renderer>
             </layers:ObjectsLayer>
+            <layers:ObjectsSelectionLayer Views="{Binding ElementName=ObjectsLayer, Path=Views, Mode=OneWay}">
+                <layers:ObjectsSelectionLayer.Renderer>
+                    <renderers:ObjectsSelectionLayerRenderer />
+                </layers:ObjectsSelectionLayer.Renderer>
+            </layers:ObjectsSelectionLayer>
             <layers:RectangleSelectionLayer
                 x:Name="RectangleSelectionLayer"
                 EndPosition="{Binding ElementName=RectangleSelectionTool,
@@ -110,7 +114,7 @@
                 StartPosition="{Binding ElementName=RectangleSelectionTool,
                                         Path=StartPosition}">
                 <layers:RectangleSelectionLayer.Renderer>
-                    <layers:RectangleSelectionLayerRenderer />
+                    <renderers:RectangleSelectionLayerRenderer />
                 </layers:RectangleSelectionLayer.Renderer>
             </layers:RectangleSelectionLayer>
         </scene:Scene2D>

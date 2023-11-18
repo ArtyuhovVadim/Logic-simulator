@@ -7,6 +7,7 @@ using LogicSimulator.Utils;
 using SharpDX;
 using SharpDX.Direct2D1;
 using Color = System.Windows.Media.Color;
+using DashStyle = SharpDX.Direct2D1.DashStyle;
 using Geometry = SharpDX.Direct2D1.Geometry;
 using SolidColorBrush = SharpDX.Direct2D1.SolidColorBrush;
 using RectangleGeometry = SharpDX.Direct2D1.RectangleGeometry;
@@ -142,25 +143,33 @@ public class RectangleView : SceneObjectView
     protected override void OnRender(Scene2D scene, D2DContext context)
     {
         var rect = new RectangleF { Width = Width, Height = Height };
-        //var geometry = Cache.Get<RectangleGeometry>(this, GeometryResource);
 
         if (IsFilled)
         {
             var fillBrush = Cache.Get<SolidColorBrush>(this, FillBrushResource);
             context.DrawingContext.FillRectangle(rect, fillBrush);
-            //context.DrawingContext.FillGeometry(geometry, fillBrush);
         }
 
         var strokeBrush = Cache.Get<SolidColorBrush>(this, StrokeBrushResource);
 
         context.DrawingContext.DrawRectangle(rect, strokeBrush, StrokeThickness);
-        //context.DrawingContext.DrawGeometry(geometry, strokeBrush, StrokeThickness);
+    }
 
-        // TODO: Для тестов
-        if (IsSelected)
+    protected override void OnRenderSelection(Scene2D scene, D2DContext context)
+    {
+        var properties = new StrokeStyleProperties
         {
-            context.DrawingContext.FillRectangle(rect, strokeBrush);
-        }
+            DashStyle = DashStyle.Custom,
+            DashCap = CapStyle.Flat
+        };
+
+        using var style = context.ResourceFactory.CreateStrokeStyle(properties, new[] { 2f, 2f });
+
+        using var brush = context.ResourceFactory.CreateSolidColorBrush(new Color4(0, 1, 0, 1));
+
+        var rect = new RectangleF { Width = Width, Height = Height };
+
+        context.DrawingContext.DrawRectangle(rect, brush, 1f / scene.Scale, style);
     }
 
     private static void OnGeometryChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)

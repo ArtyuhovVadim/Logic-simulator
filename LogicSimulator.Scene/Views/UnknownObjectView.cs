@@ -34,4 +34,9 @@ public class UnknownObjectView : SceneObjectView
         context.DrawingContext.DrawRectangle(new RectangleF(-margin, -margin, metrics.Width + margin * 2, metrics.Height + margin * 2), blackBrush, 1f);
         context.DrawingContext.DrawTextLayout(Vector2.Zero, textLayout, redBrush, DrawTextOptions.None);
     }
+
+    protected override void OnRenderSelection(Scene2D scene, D2DContext context)
+    {
+        
+    }
 }

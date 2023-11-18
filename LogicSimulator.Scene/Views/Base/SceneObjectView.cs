@@ -7,7 +7,7 @@ using SharpDX.Direct2D1;
 
 namespace LogicSimulator.Scene.Views.Base;
 
-public abstract class SceneObjectView : DisposableFrameworkContentElement, IRenderable, IResourceUser, ICacheHost
+public abstract class SceneObjectView : DisposableFrameworkContentElement, ISelectionRenderable, IResourceUser, ICacheHost
 {
     private Matrix3x2 _translateMatrix = Matrix3x2.Identity;
     private Matrix3x2 _rotationMatrix = Matrix3x2.Identity;
@@ -96,9 +96,17 @@ public abstract class SceneObjectView : DisposableFrameworkContentElement, IRend
 
     public bool IsDirty { get; private set; }
 
-    public void Select() => IsSelected = true;
+    public void Select()
+    {
+        IsSelected = true;
+        MakeDirty();
+    }
 
-    public void Unselect() => IsSelected = false;
+    public void Unselect()
+    {
+        IsSelected = false;
+        MakeDirty();
+    }
 
     public virtual void StartDrag(Vector2 pos)
     {
@@ -141,7 +149,18 @@ public abstract class SceneObjectView : DisposableFrameworkContentElement, IRend
         context.DrawingContext.PopTransform();
     }
 
+    public void RenderSelection(Scene2D scene, D2DContext context)
+    {
+        ThrowIfDisposed();
+        context.DrawingContext.PushTransform(TransformMatrix);
+        OnRenderSelection(scene, context);
+        IsDirty = false;
+        context.DrawingContext.PopTransform();
+    }
+
     protected abstract void OnRender(Scene2D scene, D2DContext context);
+
+    protected abstract void OnRenderSelection(Scene2D scene, D2DContext context);
 
     public void InitializeCache(ResourceCache cache)
     {

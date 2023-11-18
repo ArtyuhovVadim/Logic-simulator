@@ -1,30 +1,14 @@
 ﻿using System.Windows;
 using System.Windows.Media;
 using LogicSimulator.Scene.Cache;
-using LogicSimulator.Scene.DirectX;
 using LogicSimulator.Scene.Layers.Base;
-using LogicSimulator.Scene.Layers.Renderers.Base;
+using LogicSimulator.Scene.Layers.Renderers;
 using LogicSimulator.Utils;
 using SharpDX;
 using Color = System.Windows.Media.Color;
-using SolidColorBrush = SharpDX.Direct2D1.SolidColorBrush;
 using RectangleGeometry = SharpDX.Direct2D1.RectangleGeometry;
 
 namespace LogicSimulator.Scene.Layers;
-
-public class RectangleSelectionLayerRenderer : BaseLayerRenderer<RectangleSelectionLayer>
-{
-    protected override void OnRender(Scene2D scene, D2DContext context)
-    {
-        var brush = Layer.Cache.Get<SolidColorBrush>(this,
-            Layer.EndPosition.X < Layer.StartPosition.X ? RectangleSelectionLayer.SecantBrushResource : RectangleSelectionLayer.NormalBrushResource);
-
-        var location = Layer.StartPosition;
-        var size = Layer.EndPosition - Layer.StartPosition;
-
-        context.DrawingContext.DrawRectangle(new RectangleF { Location = location, Width = size.X, Height = size.Y }, brush, 1f / scene.Scale);
-    }
-}
 
 public class RectangleSelectionLayer : BaseSceneLayer
 {
