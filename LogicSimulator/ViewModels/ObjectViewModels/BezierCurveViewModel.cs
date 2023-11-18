@@ -6,7 +6,7 @@ using Color = System.Windows.Media.Color;
 
 namespace LogicSimulator.ViewModels.ObjectViewModels;
 
-public class BezierCurveViewModel : BaseEditableObjectViewModel
+public class BezierCurveViewModel : BaseObjectViewModel
 {
     #region Point1
 

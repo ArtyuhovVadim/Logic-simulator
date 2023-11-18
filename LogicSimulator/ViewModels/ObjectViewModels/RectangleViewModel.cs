@@ -4,7 +4,7 @@ using LogicSimulator.ViewModels.ObjectViewModels.Base;
 
 namespace LogicSimulator.ViewModels.ObjectViewModels;
 
-public class RectangleViewModel : BaseEditableObjectViewModel
+public class RectangleViewModel : BaseObjectViewModel
 {
     #region Width
 

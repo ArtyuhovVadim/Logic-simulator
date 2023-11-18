@@ -6,7 +6,7 @@ using Color = System.Windows.Media.Color;
 
 namespace LogicSimulator.ViewModels.ObjectViewModels;
 
-public class LineViewModel : BaseEditableObjectViewModel
+public class LineViewModel : BaseObjectViewModel
 {
     #region Vertexes
 

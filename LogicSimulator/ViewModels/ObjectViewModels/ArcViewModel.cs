@@ -5,7 +5,7 @@ using Color = System.Windows.Media.Color;
 
 namespace LogicSimulator.ViewModels.ObjectViewModels;
 
-public class ArcViewModel : BaseEditableObjectViewModel
+public class ArcViewModel : BaseObjectViewModel
 {
     #region RadiusX
 

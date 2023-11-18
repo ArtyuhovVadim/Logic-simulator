@@ -28,8 +28,6 @@ public class Scene2D : FrameworkElement, IDisposable
 
     private D2DContext Context => _renderer?.D2DContext ?? throw new ApplicationException("Context is not initialized.");
 
-    public ObservableCollection<BaseSceneLayer> Layers { get; } = new();
-
     #region Scale
 
     public float Scale
@@ -125,14 +123,14 @@ public class Scene2D : FrameworkElement, IDisposable
 
     #endregion
 
+    public ObservableCollection<BaseSceneLayer> Layers { get; } = new();
+
     public Matrix3x2 Transform => _scaleMatrix * _rotationMatrix * _translationMatrix;
 
     public Size2F PixelSize => Context.DrawingContext.DrawingSize;
 
-    //TODO: Оптимизировать
+    //TODO: Оптимизировать (кешировать)
     public float Dpi => (float)VisualTreeHelper.GetDpi(this).PixelsPerInchX;
-
-    protected override IEnumerator LogicalChildren => Layers.GetEnumerator();
 
     public Scene2D()
     {
@@ -149,6 +147,8 @@ public class Scene2D : FrameworkElement, IDisposable
     public Vector2 PointFromControlToSceneSpace(Point pos) => pos.ToVector2().DpiCorrect(Dpi).InvertAndTransform(Transform);
 
     public Vector2 PointFromControlToSceneSpace(Vector2 pos) => pos.DpiCorrect(Dpi).InvertAndTransform(Transform);
+
+    protected override IEnumerator LogicalChildren => Layers.GetEnumerator();
 
     protected override void OnRender(DrawingContext drawingContext) => _renderer?.WpfRender(drawingContext, RenderSize);
 
