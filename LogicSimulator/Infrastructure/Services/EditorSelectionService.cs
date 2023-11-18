@@ -57,7 +57,7 @@ public class EditorSelectionService : IEditorSelectionService
     {
         var assembly = Assembly.GetEntryAssembly();
 
-        foreach (var type in assembly.DefinedTypes)
+        foreach (var type in assembly!.DefinedTypes)
         {
             var attribute = Attribute.GetCustomAttribute(type, typeof(EditorAttribute));
 

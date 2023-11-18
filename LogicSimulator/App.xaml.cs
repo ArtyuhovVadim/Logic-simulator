@@ -13,9 +13,9 @@ namespace LogicSimulator;
 
 public partial class App
 {
-    private static IHost host;
+    private static IHost _host;
 
-    private static ThemeType currentTheme = ThemeType.Dark;
+    private static ThemeType _currentTheme = ThemeType.Dark;
 
     private static readonly Dictionary<ThemeType, Theme> Themes = new()
     {
@@ -23,7 +23,7 @@ public partial class App
         { ThemeType.Light, new LightTheme() }
     };
 
-    public static IHost Host => host ??= Program.CreateHostBuilder(Environment.GetCommandLineArgs()).Build();
+    public static IHost Host => _host ??= Program.CreateHostBuilder(Environment.GetCommandLineArgs()).Build();
 
     public static Window ActiveWindow => Current.Windows.OfType<Window>().FirstOrDefault(w => w.IsActive);
 
@@ -38,10 +38,10 @@ public partial class App
 
     public static ThemeType CurrentTheme
     {
-        get => currentTheme;
+        get => _currentTheme;
         set
         {
-            if (currentTheme == value) return;
+            if (_currentTheme == value) return;
 
             var resources = Current.Resources.MergedDictionaries;
 
@@ -51,7 +51,7 @@ public partial class App
             resources.RemoveAt(oldThemeIndex);
             resources.Insert(oldThemeIndex, new ResourceDictionary { Source = Themes[value].GetResourceUri() });
 
-            currentTheme = value;
+            _currentTheme = value;
         }
     }
 
@@ -61,7 +61,7 @@ public partial class App
 
         IsDesignMode = false;
 
-        Environment.CurrentDirectory = Path.GetDirectoryName(System.Reflection.Assembly.GetEntryAssembly().Location);
+        Environment.CurrentDirectory = Path.GetDirectoryName(System.Reflection.Assembly.GetEntryAssembly()!.Location)!;
 
         await Host.StartAsync().ConfigureAwait(false);
     }
@@ -71,7 +71,7 @@ public partial class App
         base.OnExit(e);
 
         await Host.StopAsync().ConfigureAwait(false);
-        host.Dispose();
+        _host.Dispose();
     }
 
     public static void ConfigureServices(HostBuilderContext host, IServiceCollection services)

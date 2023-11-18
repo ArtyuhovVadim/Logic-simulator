@@ -72,7 +72,7 @@ public class NumberBox : TextBoxEx
         var maxNumber = (double)e.NewValue;
 
         if (maxNumber < numberBox.MinNumber)
-            throw new ArgumentOutOfRangeException("MaxValue < MinValue");
+            throw new ArgumentOutOfRangeException(nameof(MaxNumber), "MaxValue < MinValue");
     }
 
     #endregion
@@ -95,7 +95,7 @@ public class NumberBox : TextBoxEx
         var minNumber = (double)e.NewValue;
 
         if (minNumber > numberBox.MaxNumber)
-            throw new ArgumentOutOfRangeException("MaxValue > MinValue");
+            throw new ArgumentOutOfRangeException(nameof(MinNumber), "MaxValue > MinValue");
     }
 
     #endregion
@@ -178,6 +178,6 @@ public class NumberBox : TextBoxEx
         {
             number = double.NaN;
             return false;
-        } 
+        }
     }
 }

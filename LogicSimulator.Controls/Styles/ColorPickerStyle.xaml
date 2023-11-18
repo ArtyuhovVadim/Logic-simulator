@@ -196,10 +196,17 @@
                                             x:Name="PART_HexTextBoxEx"
                                             Grid.Column="0"
                                             Margin="0,0,3,0" />
-                                        <c:TextBoxEx x:Name="PART_RedTextBoxEx" Grid.Column="1" />
-                                        <c:TextBoxEx x:Name="PART_GreenTextBoxEx" Grid.Column="2" />
+                                        <c:TextBoxEx
+                                            x:Name="PART_RedTextBoxEx"
+                                            Grid.Row="0"
+                                            Grid.Column="1" />
+                                        <c:TextBoxEx
+                                            x:Name="PART_GreenTextBoxEx"
+                                            Grid.Row="0"
+                                            Grid.Column="2" />
                                         <c:TextBoxEx
                                             x:Name="PART_BlueTextBoxEx"
+                                            Grid.Row="0"
                                             Grid.Column="3"
                                             Margin="3,0,6,0" />
                                         <Border
@@ -217,10 +224,10 @@
                                             </Border.Background>
                                         </Border>
 
-                                        <TextBlock Grid.Column="0" Text="HEX" />
-                                        <TextBlock Grid.Column="1" Text="R" />
-                                        <TextBlock Grid.Column="2" Text="G" />
-                                        <TextBlock Grid.Column="3" Text="B" />
+                                        <TextBlock Grid.Row="0" Grid.Column="0" Text="HEX" />
+                                        <TextBlock Grid.Row="0" Grid.Column="1" Text="R" />
+                                        <TextBlock Grid.Row="0" Grid.Column="2" Text="G" />
+                                        <TextBlock Grid.Row="0" Grid.Column="3" Text="B" />
 
                                     </Grid>
                                     <Grid Grid.Row="3" Margin="5">

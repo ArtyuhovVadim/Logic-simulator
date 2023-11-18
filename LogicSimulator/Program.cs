@@ -46,7 +46,7 @@ public static class Program
     {
         return Host.CreateDefaultBuilder(args)
             .UseContentRoot(App.CurrentDirectory)
-            .ConfigureAppConfiguration((host, cfg) => cfg
+            .ConfigureAppConfiguration((_, cfg) => cfg
                 .SetBasePath(App.CurrentDirectory)
                 .AddJsonFile("app-settings.json", true, true))
             .ConfigureServices(App.ConfigureServices);

@@ -101,7 +101,7 @@ public abstract class BaseSceneLayer : DisposableFrameworkContentElement, IRende
     {
         if (disposingManaged)
         {
-            Renderer.Dispose();
+            Renderer?.Dispose();
         }
 
         Cache = null!;

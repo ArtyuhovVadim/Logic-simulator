@@ -7,7 +7,6 @@
     xmlns:commands="clr-namespace:LogicSimulator.Infrastructure.Commands"
     xmlns:con="clr-namespace:LogicSimulator.Infrastructure.Converters"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-    xmlns:fa="http://schemas.fontawesome.io/icons/"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:selectors="clr-namespace:LogicSimulator.Infrastructure.Selectors"
     xmlns:views="clr-namespace:LogicSimulator.Views"

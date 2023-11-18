@@ -36,6 +36,7 @@
 
                 <Border
                     x:Name="GlyphPanel"
+                    Grid.Column="0"
                     Width="18"
                     Height="18"
                     Margin="2,0,2,0"
@@ -86,6 +87,7 @@
                 </Grid>
                 <Popup
                     x:Name="SubMenuPopup"
+                    Grid.Column="0"
                     AllowsTransparency="True"
                     Focusable="false"
                     HorizontalOffset="-1"

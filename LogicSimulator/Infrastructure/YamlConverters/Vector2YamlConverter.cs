@@ -16,7 +16,7 @@ public class Vector2YamlConverter : IYamlTypeConverter
         if (type != typeof(Vector2))
             throw new InvalidDataException("Failed to retrieve Vector2!");
 
-        if (!parser.TryConsume<SequenceStart>(out var a))
+        if (!parser.TryConsume<SequenceStart>(out _))
             throw new InvalidDataException("Invalid YAML content.");
 
         var vector = Vector2.Zero;

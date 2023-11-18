@@ -17,9 +17,9 @@ public abstract class MultiPropertyViewModel : PropertyViewModel
 
     public override void ProvidePropertyChanged(string propName)
     {
-        if (_properties.ContainsKey(propName))
+        if (_properties.TryGetValue(propName, out var property))
         {
-            _properties[propName].ProvidePropertyChanged(propName);
+            property.ProvidePropertyChanged(propName);
         }
     }
 }

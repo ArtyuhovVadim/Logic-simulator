@@ -118,7 +118,7 @@ public class ObjectsLayer : BaseSceneLayer
             case NotifyCollectionChangedAction.Remove: HandleRemove(e); break;
             case NotifyCollectionChangedAction.Replace: HandleReplace(e); break;
             case NotifyCollectionChangedAction.Move: HandleMove(e); break;
-            case NotifyCollectionChangedAction.Reset: HandleReset(e); break;
+            case NotifyCollectionChangedAction.Reset: HandleReset(); break;
             default: throw new ArgumentOutOfRangeException();
         }
 
@@ -192,7 +192,7 @@ public class ObjectsLayer : BaseSceneLayer
         }
     }
 
-    private void HandleReset(NotifyCollectionChangedEventArgs args)
+    private void HandleReset()
     {
         foreach (var view in _objects)
         {
