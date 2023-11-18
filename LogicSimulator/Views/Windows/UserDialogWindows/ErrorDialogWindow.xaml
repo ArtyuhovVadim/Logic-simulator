@@ -31,12 +31,13 @@
                 Grid.Column="0"
                 Margin="5"
                 Fill="White" />
-            <fa:ImageAwesome
+            <Path
                 Grid.Column="0"
                 HorizontalAlignment="Left"
                 VerticalAlignment="Center"
-                Foreground="#FF2626"
-                Icon="ExclamationCircle" />
+                Data="{StaticResource ExclamationCircleIcon}"
+                Fill="#FF2626"
+                Stretch="Uniform" />
             <TextBlock
                 Grid.Column="1"
                 Margin="10,0,0,0"

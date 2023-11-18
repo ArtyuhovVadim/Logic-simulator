@@ -4,15 +4,16 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:c="clr-namespace:LogicSimulator.Controls;assembly=LogicSimulator.Controls"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:fa="http://schemas.fontawesome.io/icons/"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:r="clr-namespace:LogicSimulator.Controls.Themes;assembly=LogicSimulator.Controls"
-    xmlns:fa="http://schemas.fontawesome.io/icons/"
     Title="{Binding Path=Title}"
     Width="450"
     Height="250"
     MinWidth="100"
     MinHeight="100"
-    DataContext="{Binding Path=InfoDialogWindowViewModel, Source={StaticResource Locator}}"
+    DataContext="{Binding Path=InfoDialogWindowViewModel,
+                          Source={StaticResource Locator}}"
     ResizeMode="NoResize"
     ShowInTaskbar="False"
     mc:Ignorable="d">
@@ -31,12 +32,13 @@
                 Grid.Column="0"
                 Margin="5"
                 Fill="White" />
-            <fa:ImageAwesome
+            <Path
                 Grid.Column="0"
                 HorizontalAlignment="Left"
                 VerticalAlignment="Center"
-                Foreground="#357CC5"
-                Icon="InfoCircle" />
+                Data="{StaticResource InfoCircleIcon}"
+                Fill="#357CC5"
+                Stretch="Uniform" />
             <TextBlock
                 Grid.Column="1"
                 Margin="10,0,0,0"

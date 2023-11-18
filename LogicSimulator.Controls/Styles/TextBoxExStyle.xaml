@@ -72,7 +72,10 @@
                                     SnapsToDevicePixels="True" />
                             </Grid.ToolTip>
                             <Ellipse Margin="1" Fill="White" />
-                            <fa:ImageAwesome Foreground="#906161" Icon="ExclamationCircle" />
+                            <Path
+                                Data="M 16 16 Z Z M 16 8 A 8 8 0 1 1 0 8 A 8 8 0 0 1 16 8 Z M 8 4 A 0.905 0.905 0 0 0 7.1 4.995 L 7.45 8.502 A 0.552 0.552 0 0 0 8.55 8.502 L 8.9 4.995 A 0.905 0.905 0 0 0 8 4 Z M 8.002 10 A 1 1 0 1 0 8.002 12 A 1 1 0 0 0 8.002 10 Z"
+                                Fill="#906161"
+                                Stretch="Uniform" />
                         </Grid>
                     </Grid>
                     <ControlTemplate.Triggers>

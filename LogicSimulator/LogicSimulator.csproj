@@ -8,17 +8,17 @@
         <Platforms>x64;x86</Platforms>
         <StartupObject>LogicSimulator.Program</StartupObject>
         <LangVersion>latest</LangVersion>
-        <ApplicationIcon>Icons\icon512x512.ico</ApplicationIcon>
+        <ApplicationIcon>Resources\Icons\icon512x512.ico</ApplicationIcon>
 	    <VersionPrefix>0.3.1</VersionPrefix>
 	    <ImplicitUsings>enable</ImplicitUsings>
     </PropertyGroup>
 
     <ItemGroup>
-      <None Remove="Icons\icon512x512.png" />
+      <None Remove="Resources\Icons\icon512x512.png" />
     </ItemGroup>
 
     <ItemGroup>
-      <Content Include="Icons\icon512x512.ico" />
+      <Content Include="Resources\Icons\icon512x512.ico" />
     </ItemGroup>
 
     <ItemGroup>
@@ -55,7 +55,6 @@
 
     <ItemGroup>
         <PackageReference Include="Dirkster.AvalonDock" Version="4.72.1" />
-        <PackageReference Include="FontAwesome.WPF" Version="4.7.0.9" />
         <PackageReference Include="Microsoft.Extensions.Hosting" Version="8.0.0" />
         <PackageReference Include="Microsoft.Extensions.Hosting.Abstractions" Version="8.0.0" />
         <PackageReference Include="Microsoft.Xaml.Behaviors.Wpf" Version="1.1.77" />
@@ -63,7 +62,7 @@
     </ItemGroup>
 
     <ItemGroup>
-      <Resource Include="Icons\icon512x512.png" />
+      <Resource Include="Resources\Icons\icon512x512.png" />
     </ItemGroup>
 
     <ItemGroup>

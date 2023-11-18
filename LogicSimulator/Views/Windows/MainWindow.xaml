@@ -16,7 +16,7 @@
     Height="720"
     DataContext="{Binding Path=MainWindowViewModel,
                           Source={StaticResource Locator}}"
-    Icon="/Icons/icon512x512.png"
+    Icon="/Resources/Icons/icon512x512.png"
     mc:Ignorable="d">
 
     <c:Window.Resources>
@@ -41,15 +41,16 @@
             <Button
                 Height="21"
                 Margin="2,0,2,0"
-                Padding="5"
+                Padding="4"
                 HorizontalAlignment="Right"
                 VerticalAlignment="Center"
                 Background="Transparent"
                 BorderThickness="0">
-                <fa:ImageAwesome
-                    Foreground="White"
-                    Icon="Cog"
+                <Path
+                    Data="{StaticResource CogIcon}"
+                    Fill="White"
                     SnapsToDevicePixels="True"
+                    Stretch="Uniform"
                     UseLayoutRounding="True" />
             </Button>
         </Grid>

@@ -4,15 +4,16 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:controls="clr-namespace:LogicSimulator.Controls;assembly=LogicSimulator.Controls"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:fa="http://schemas.fontawesome.io/icons/"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:r="clr-namespace:LogicSimulator.Controls.Themes;assembly=LogicSimulator.Controls"
-    xmlns:fa="http://schemas.fontawesome.io/icons/"
     Title="{Binding Path=Title}"
     Width="450"
     Height="250"
     MinWidth="100"
     MinHeight="100"
-    DataContext="{Binding Path=WarningDialogWindowViewModel, Source={StaticResource Locator}}"
+    DataContext="{Binding Path=WarningDialogWindowViewModel,
+                          Source={StaticResource Locator}}"
     ResizeMode="NoResize"
     ShowInTaskbar="False"
     mc:Ignorable="d">
@@ -31,12 +32,13 @@
                 Grid.Column="0"
                 Margin="15,10,15,1"
                 Fill="White" />
-            <fa:ImageAwesome
+            <Path
                 Grid.Column="0"
                 HorizontalAlignment="Left"
                 VerticalAlignment="Center"
-                Foreground="#EBC500"
-                Icon="ExclamationTriangle" />
+                Data="{StaticResource ExclamationTriangleIcon}"
+                Fill="#EBC500"
+                Stretch="UniformToFill" />
             <TextBlock
                 Grid.Column="1"
                 Margin="10,0,0,0"

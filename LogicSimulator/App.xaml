@@ -8,6 +8,7 @@
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="/LogicSimulator.Controls;component/Themes/Dark/DarkTheme.xaml" />
+                <ResourceDictionary Source="/Resources/Icons.xaml" />
             </ResourceDictionary.MergedDictionaries>
 
             <i:ViewModelLocator x:Key="Locator" />

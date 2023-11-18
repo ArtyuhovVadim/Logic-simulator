@@ -142,27 +142,27 @@
             <StackPanel Orientation="Horizontal">
                 <views:SchemeToolView DataContext="{Binding Path=SelectionTool}">
                     <Path
-                        Data="M 0 0 z z M 7 17 L 0 0 L 17 7 L 10 10 L 7 17 Z"
+                        Data="{StaticResource SelectionToolIcon}"
                         Fill="White"
                         Stretch="Uniform" />
                 </views:SchemeToolView>
                 <views:SchemeToolView DataContext="{Binding Path=DragTool}">
                     <Path
                         Margin="-1"
-                        Data="M 0 0 Z Z M 79 39 L 64 29 L 64 36 L 42 36 L 42 14 L 49 14 L 39 0 L 29 14 L 36 14 L 36 36 L 14 36 L 14 29 L 0 39 L 14 49 L 14 42 L 36 42 L 36 64 L 29 64 L 39 78 L 49 64 L 42 64 L 42 42 L 64 42 L 64 49 L 79 39 Z"
+                        Data="{StaticResource DragToolIcon}"
                         Fill="White"
                         Stretch="Uniform" />
                 </views:SchemeToolView>
                 <views:SchemeToolView DataContext="{Binding Path=RectangleSelectionTool}">
                     <Path
-                        Data="M 0 0 L 2 0 L 2 1 L 1 1 L 1 2 L 0 2 z M 3 0 L 5 0 L 5 1 L 3 1 L 3 0 M 6 0 L 8 0 L 8 1 L 6 1 L 6 0 M 9 0 L 11 0 L 11 1 L 9 1 L 9 0 M 12 0 L 14 0 L 14 2 L 13 2 L 13 2 L 13 1 L 12 1 L 12 1 L 12 0 M 14 3 L 14 5 L 13 5 L 13 3 L 14 3 M 14 6 L 14 8 L 13 8 L 13 6 L 14 6 M 14 9 L 14 11 L 13 11 L 13 9 L 14 9 M 14 12 L 14 14 L 12 14 L 12 13 L 13 13 L 13 12 L 14 12 M 11 14 L 9 14 L 9 13 L 11 13 L 11 14 M 8 14 L 8 13 L 6 13 L 6 14 L 8 14 M 5 14 L 5 13 L 3 13 L 3 14 L 5 14 M 2 14 L 0 14 L 0 12 L 1 12 L 1 13 L 2 13 L 2 14 M 0 11 L 1 11 L 1 9 L 0 9 L 0 11 M 0 8 L 1 8 L 1 6 L 0 6 L 0 8 M 0 5 L 1 5 L 1 3 L 0 3 L 0 5"
+                        Data="{StaticResource RectangleSelectionToolIcon}"
                         Fill="White"
                         Stretch="Uniform" />
                 </views:SchemeToolView>
                 <views:SchemeToolView DataContext="{Binding Path=NodeDragTool}">
                     <Path
                         Margin="-1"
-                        Data="M 0 0 Z Z M 79 39 L 64 29 L 64 36 L 52 36 L 52 26 L 42 26 L 42 14 L 49 14 L 39 0 L 29 14 L 36 14 L 36 26 L 26 26 L 26 36 L 14 36 L 14 29 L 0 39 L 14 49 L 14 42 L 26 42 L 26 52 L 36 52 L 36 64 L 29 64 L 39 78 L 49 64 L 42 64 L 42 52 L 52 52 L 52 42 L 64 42 L 64 49 L 79 39 Z M 31 47 L 31 31 L 47 31 L 47 47 z"
+                        Data="{StaticResource NodeDragToolIcon}"
                         Fill="White"
                         Stretch="Uniform" />
                 </views:SchemeToolView>

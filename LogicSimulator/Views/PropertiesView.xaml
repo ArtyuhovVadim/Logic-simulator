@@ -83,11 +83,11 @@
                             IsValueUndefined="{Binding Path=Properties[IsBold].IsValueUndefined}"
                             Style="{StaticResource FontCheckBoxStyle}">
                             <cont:CheckBoxEx.Content>
-                                <fa:ImageAwesome
+                                <Path
                                     Height="11"
-                                    Foreground="{Binding Path=Foreground,
-                                                         RelativeSource={RelativeSource AncestorType=cont:CheckBoxEx}}"
-                                    Icon="Bold" />
+                                    Data="{StaticResource BoldTextIcon}"
+                                    Fill="{Binding Path=Foreground,
+                                                   RelativeSource={RelativeSource AncestorType=cont:CheckBoxEx}}" />
                             </cont:CheckBoxEx.Content>
                         </cont:CheckBoxEx>
                         <cont:CheckBoxEx
@@ -97,11 +97,11 @@
                             IsValueUndefined="{Binding Path=Properties[IsItalic].IsValueUndefined}"
                             Style="{StaticResource FontCheckBoxStyle}">
                             <cont:CheckBoxEx.Content>
-                                <fa:ImageAwesome
+                                <Path
                                     Height="11"
-                                    Foreground="{Binding Path=Foreground,
-                                                         RelativeSource={RelativeSource AncestorType=cont:CheckBoxEx}}"
-                                    Icon="Italic" />
+                                    Data="{StaticResource ItalicTextIcon}"
+                                    Fill="{Binding Path=Foreground,
+                                                   RelativeSource={RelativeSource AncestorType=cont:CheckBoxEx}}" />
                             </cont:CheckBoxEx.Content>
                         </cont:CheckBoxEx>
                         <cont:CheckBoxEx
@@ -111,11 +111,11 @@
                             IsValueUndefined="{Binding Path=Properties[IsUnderlined].IsValueUndefined}"
                             Style="{StaticResource FontCheckBoxStyle}">
                             <cont:CheckBoxEx.Content>
-                                <fa:ImageAwesome
+                                <Path
                                     Height="11"
-                                    Foreground="{Binding Path=Foreground,
-                                                         RelativeSource={RelativeSource AncestorType=cont:CheckBoxEx}}"
-                                    Icon="Underline" />
+                                    Data="{StaticResource UnderlinedTextIcon}"
+                                    Fill="{Binding Path=Foreground,
+                                                   RelativeSource={RelativeSource AncestorType=cont:CheckBoxEx}}" />
                             </cont:CheckBoxEx.Content>
                         </cont:CheckBoxEx>
                         <cont:CheckBoxEx
@@ -124,11 +124,11 @@
                             IsValueUndefined="{Binding Path=Properties[IsCross].IsValueUndefined}"
                             Style="{StaticResource FontCheckBoxStyle}">
                             <cont:CheckBoxEx.Content>
-                                <fa:ImageAwesome
+                                <Path
                                     Height="11"
-                                    Foreground="{Binding Path=Foreground,
-                                                         RelativeSource={RelativeSource AncestorType=cont:CheckBoxEx}}"
-                                    Icon="Strikethrough" />
+                                    Data="{StaticResource CrossTextIcon}"
+                                    Fill="{Binding Path=Foreground,
+                                                   RelativeSource={RelativeSource AncestorType=cont:CheckBoxEx}}" />
                             </cont:CheckBoxEx.Content>
                         </cont:CheckBoxEx>
                     </Grid>
@@ -249,18 +249,18 @@
                                 Padding="8,5"
                                 Command="{Binding Path=AddVertexCommand}">
                                 <Button.Content>
-                                    <fa:ImageAwesome
+                                    <Path
                                         Height="11"
-                                        Foreground="#FDFDFD"
-                                        Icon="Plus" />
+                                        Data="{StaticResource PlusIcon}"
+                                        Fill="#FDFDFD" />
                                 </Button.Content>
                             </Button>
                             <Button Padding="8,5" Command="{Binding Path=RemoveVertexCommand}">
                                 <Button.Content>
-                                    <fa:ImageAwesome
+                                    <Path
                                         Height="11"
-                                        Foreground="#FDFDFD"
-                                        Icon="Trash" />
+                                        Data="{StaticResource TrashIcon}"
+                                        Fill="#FDFDFD" />
                                 </Button.Content>
                             </Button>
                         </StackPanel>
