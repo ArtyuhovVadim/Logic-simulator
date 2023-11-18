@@ -33,6 +33,8 @@ public class GridLayer : BaseSceneLayer
     {
         if (d is not GridLayer gridLayer) return;
         
+        gridLayer.ThrowIfDisposed();
+
         gridLayer.Cache?.Update(gridLayer.Renderer, BackgroundBrushResource);
 
         gridLayer.MakeDirty();
@@ -55,6 +57,8 @@ public class GridLayer : BaseSceneLayer
     {
         if (d is not GridLayer gridLayer) return;
 
+        gridLayer.ThrowIfDisposed();
+
         gridLayer.Cache?.Update(gridLayer.Renderer, LineBrushResource);
 
         gridLayer.MakeDirty();
@@ -76,6 +80,8 @@ public class GridLayer : BaseSceneLayer
     private static void OnBoldLineColorChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
     {
         if (d is not GridLayer gridLayer) return;
+
+        gridLayer.ThrowIfDisposed();
 
         gridLayer.Cache?.Update(gridLayer.Renderer, BoldLineBrushResource);
 

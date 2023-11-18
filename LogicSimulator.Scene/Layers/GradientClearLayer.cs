@@ -45,7 +45,7 @@ public class GradientClearLayer : BaseSceneLayer
     }
 
     public static readonly DependencyProperty StartColorProperty =
-        DependencyProperty.Register(nameof(StartColor), typeof(Color), typeof(GradientClearLayer), new FrameworkPropertyMetadata(Colors.White, FrameworkPropertyMetadataOptions.BindsTwoWayByDefault, OnColorChanged));
+        DependencyProperty.Register(nameof(StartColor), typeof(Color), typeof(GradientClearLayer), new PropertyMetadata(Colors.White, OnColorChanged));
 
     #endregion
 
@@ -58,7 +58,9 @@ public class GradientClearLayer : BaseSceneLayer
     }
 
     public static readonly DependencyProperty EndColorProperty =
-        DependencyProperty.Register(nameof(EndColor), typeof(Color), typeof(GradientClearLayer), new FrameworkPropertyMetadata(Colors.Black, FrameworkPropertyMetadataOptions.BindsTwoWayByDefault, OnColorChanged));
+        DependencyProperty.Register(nameof(EndColor), typeof(Color), typeof(GradientClearLayer), new PropertyMetadata(Colors.Black, OnColorChanged));
+
+    #endregion
 
     private static void OnColorChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
     {
@@ -70,6 +72,4 @@ public class GradientClearLayer : BaseSceneLayer
 
         layer.MakeDirty();
     }
-
-    #endregion
 }

@@ -14,7 +14,7 @@ public class ObjectsSelectionLayer : BaseSceneLayer
     }
 
     public static readonly DependencyProperty ViewsProperty =
-        DependencyProperty.Register(nameof(Views), typeof(IEnumerable<ISelectionRenderable>), typeof(ObjectsSelectionLayer), new PropertyMetadata(default(IEnumerable<ISelectionRenderable>)));
+        DependencyProperty.Register(nameof(Views), typeof(IEnumerable<ISelectionRenderable>), typeof(ObjectsSelectionLayer), new PropertyMetadata(default(IEnumerable<ISelectionRenderable>), DefaultPropertyChangedHandler));
 
     #endregion
 }

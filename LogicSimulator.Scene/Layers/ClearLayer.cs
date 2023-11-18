@@ -15,14 +15,7 @@ public class ClearLayer : BaseSceneLayer
     }
 
     public static readonly DependencyProperty ColorProperty =
-        DependencyProperty.Register(nameof(Color), typeof(Color), typeof(ClearLayer), new PropertyMetadata(default(Color), OnColorChanged));
-
-    private static void OnColorChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
-    {
-        if (d is not ClearLayer layer) return;
-
-        layer.MakeDirty();
-    }
+        DependencyProperty.Register(nameof(Color), typeof(Color), typeof(ClearLayer), new PropertyMetadata(default(Color), DefaultPropertyChangedHandler));
 
     #endregion
 }

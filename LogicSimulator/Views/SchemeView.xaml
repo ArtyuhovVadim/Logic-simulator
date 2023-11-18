@@ -104,6 +104,15 @@
                     <renderers:ObjectsSelectionLayerRenderer />
                 </layers:ObjectsSelectionLayer.Renderer>
             </layers:ObjectsSelectionLayer>
+            <layers:NodesLayer
+                FillColor="#00FF00"
+                StrokeColor="#000000"
+                Views="{Binding ElementName=ObjectsLayer,
+                                Path=Views}">
+                <layers:NodesLayer.Renderer>
+                    <renderers:NodesLayerRenderer />
+                </layers:NodesLayer.Renderer>
+            </layers:NodesLayer>
             <layers:RectangleSelectionLayer
                 x:Name="RectangleSelectionLayer"
                 EndPosition="{Binding ElementName=RectangleSelectionTool,
