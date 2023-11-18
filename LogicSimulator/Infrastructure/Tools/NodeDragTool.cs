@@ -82,7 +82,14 @@ public class NodeDragTool : BaseTool
     protected override void OnMouseLeftButtonUp(Scene2D scene, Vector2 pos)
     {
         if (ActivatedFromOtherTool)
+        {
             ToolsController.SwitchToDefaultTool();
+        }
+        else
+        {
+            _owner = null;
+            _node = null;
+        }
     }
 
     protected override Freezable CreateInstanceCore() => new NodeDragTool();

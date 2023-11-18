@@ -80,22 +80,6 @@ public class SelectionTool : BaseTool
 
     #endregion
 
-    //TODO
-    /*protected override void OnKeyDown(Scene2D scene, KeyEventArgs args, Vector2 pos)
-    {
-        if (args.Key == Key.Space)
-        {
-            pos = pos.InvertAndTransform(scene.Transform).ApplyGrid(25f);
-
-            var sceneObjects = scene.Objects.Where(x => x.IsSelected).ToList();
-
-            foreach (var o in sceneObjects)
-            {
-                o.Rotation = Utils.GetNextRotation(o.Rotation);
-            }
-        }
-    }*/
-
     protected override void OnMouseLeftButtonDown(Scene2D scene, Vector2 pos)
     {
         var isNodeThatIntersectPointExists = ObjectsLayer.Objects
