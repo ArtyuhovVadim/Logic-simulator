@@ -244,6 +244,8 @@ public class Scene2D : FrameworkElement, IDisposable
 
     private void OnRender(DirectXContext context)
     {
+        RenderDebugger.BeginRender(this, Context);
+
         Context.DrawingContext.BeginDraw();
         Context.DrawingContext.PushTransform(Transform);
 
@@ -253,6 +255,10 @@ public class Scene2D : FrameworkElement, IDisposable
         }
 
         Context.DrawingContext.PopTransform();
+
+        RenderDebugger.EndRender();
+        RenderDebugger.DrawStatistics(this, Context, new Vector2(5));
+
         Context.DrawingContext.EndDraw();
     }
 

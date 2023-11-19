@@ -69,47 +69,89 @@ public class D2DDrawingContext
 
     public void Clear(Color4 color) => _context.D2DDeviceContext.Clear(color);
 
-    public void DrawRectangle(RawRectangleF rect, Brush brush, float strokeWidth) =>
+    public void DrawRectangle(RawRectangleF rect, Brush brush, float strokeWidth)
+    {
         _context.D2DDeviceContext.DrawRectangle(rect, brush, strokeWidth);
+        RenderDebugger.DrawRectangleCalled();
+    }
 
-    public void DrawRectangle(RawRectangleF rect, Brush brush, float strokeWidth, StrokeStyle style) =>
+    public void DrawRectangle(RawRectangleF rect, Brush brush, float strokeWidth, StrokeStyle style)
+    {
         _context.D2DDeviceContext.DrawRectangle(rect, brush, strokeWidth, style);
+        RenderDebugger.DrawRectangleCalled();
+    }
 
-    public void FillRectangle(RawRectangleF rect, Brush brush) =>
+    public void FillRectangle(RawRectangleF rect, Brush brush)
+    {
         _context.D2DDeviceContext.FillRectangle(rect, brush);
+        RenderDebugger.FillRectangleCalled();
+    }
 
-    public void DrawLine(Vector2 p1, Vector2 p2, Brush brush, float strokeWidth) =>
+    public void DrawLine(Vector2 p1, Vector2 p2, Brush brush, float strokeWidth)
+    {
         _context.D2DDeviceContext.DrawLine(p1, p2, brush, strokeWidth);
+        RenderDebugger.DrawLineCalled();
+    }
 
-    public void DrawLine(Vector2 p1, Vector2 p2, Brush brush, float strokeWidth, StrokeStyle style) =>
+    public void DrawLine(Vector2 p1, Vector2 p2, Brush brush, float strokeWidth, StrokeStyle style)
+    {
         _context.D2DDeviceContext.DrawLine(p1, p2, brush, strokeWidth, style);
+        RenderDebugger.DrawLineCalled();
+    }
 
-    public void DrawEllipse(Ellipse ellipse, Brush brush, float strokeWidth) =>
+    public void DrawEllipse(Ellipse ellipse, Brush brush, float strokeWidth)
+    {
         _context.D2DDeviceContext.DrawEllipse(ellipse, brush, strokeWidth);
+        RenderDebugger.DrawEllipseCalled();
+    }
 
-    public void DrawEllipse(Ellipse ellipse, Brush brush, float strokeWidth, StrokeStyle style) =>
+    public void DrawEllipse(Ellipse ellipse, Brush brush, float strokeWidth, StrokeStyle style)
+    {
         _context.D2DDeviceContext.DrawEllipse(ellipse, brush, strokeWidth, style);
+        RenderDebugger.DrawEllipseCalled();
+    }
 
-    public void FillEllipse(Ellipse ellipse, Brush brush) =>
+    public void FillEllipse(Ellipse ellipse, Brush brush)
+    {
         _context.D2DDeviceContext.FillEllipse(ellipse, brush);
+        RenderDebugger.FillEllipseCalled();
+    }
 
-    public void DrawGeometry(Geometry geometry, Brush brush, float strokeWidth) =>
+    public void DrawGeometry(Geometry geometry, Brush brush, float strokeWidth)
+    {
         _context.D2DDeviceContext.DrawGeometry(geometry, brush, strokeWidth);
+        RenderDebugger.DrawGeometryCalled();
+    }
 
-    public void DrawGeometry(Geometry geometry, Brush brush, float strokeWidth, StrokeStyle style) =>
+    public void DrawGeometry(Geometry geometry, Brush brush, float strokeWidth, StrokeStyle style)
+    {
         _context.D2DDeviceContext.DrawGeometry(geometry, brush, strokeWidth, style);
+        RenderDebugger.DrawGeometryCalled();
+    }
 
-    public void FillGeometry(Geometry geometry, Brush brush) =>
+    public void FillGeometry(Geometry geometry, Brush brush)
+    {
         _context.D2DDeviceContext.FillGeometry(geometry, brush);
+        RenderDebugger.FillGeometryCalled();
+    }
 
-    public void DrawText(string text, TextFormat format, RectangleF rect, Brush brush, DrawTextOptions options) =>
+    public void DrawText(string text, TextFormat format, RectangleF rect, Brush brush, DrawTextOptions options)
+    {
         _context.D2DDeviceContext.DrawText(text, format, rect, brush, options);
+        RenderDebugger.DrawTextCalled();
+    }
 
-    public void DrawTextLayout(Vector2 pos, TextLayout layout, Brush brush, DrawTextOptions options) =>
+    public void DrawTextLayout(Vector2 pos, TextLayout layout, Brush brush, DrawTextOptions options)
+    {
         _context.D2DDeviceContext.DrawTextLayout(pos, layout, brush, options);
+        RenderDebugger.DrawTextLayoutCalled();
+    }
 
-    public void DrawBitmap(Bitmap bitmap, RectangleF rect, float opacity, BitmapInterpolationMode interpolationMode) =>
+    public void DrawBitmap(Bitmap bitmap, RectangleF rect, float opacity, BitmapInterpolationMode interpolationMode)
+    {
         _context.D2DDeviceContext.DrawBitmap(bitmap, rect, opacity, interpolationMode);
+        RenderDebugger.DrawBitmapCalled();
+    }
 
     public void DrawTriangles(IEnumerable<Triangle> triangles, Brush brush, float strokeWidth)
     {
@@ -119,5 +161,6 @@ public class D2DDrawingContext
             _context.D2DDeviceContext.DrawLine(triangle.Point2, triangle.Point3, brush, strokeWidth);
             _context.D2DDeviceContext.DrawLine(triangle.Point3, triangle.Point1, brush, strokeWidth);
         }
+        RenderDebugger.DrawTrianglesCalled();
     }
 }
