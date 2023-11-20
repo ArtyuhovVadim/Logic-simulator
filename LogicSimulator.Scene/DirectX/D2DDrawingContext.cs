@@ -87,6 +87,24 @@ public class D2DDrawingContext
         RenderDebugger.FillRectangleCalled();
     }
 
+    public void DrawRoundedRectangle(RoundedRectangle rect, Brush brush, float strokeWidth)
+    {
+        _context.D2DDeviceContext.DrawRoundedRectangle(rect, brush, strokeWidth);
+        RenderDebugger.DrawRoundedRectangleCalled();
+    }
+
+    public void DrawRoundedRectangle(RoundedRectangle rect, Brush brush, float strokeWidth, StrokeStyle style)
+    {
+        _context.D2DDeviceContext.DrawRoundedRectangle(rect, brush, strokeWidth, style);
+        RenderDebugger.DrawRoundedRectangleCalled();
+    }
+
+    public void FillRoundedRectangle(RoundedRectangle rect, Brush brush)
+    {
+        _context.D2DDeviceContext.FillRoundedRectangle(rect, brush);
+        RenderDebugger.FillRoundedRectangleCalled();
+    }
+
     public void DrawLine(Vector2 p1, Vector2 p2, Brush brush, float strokeWidth)
     {
         _context.D2DDeviceContext.DrawLine(p1, p2, brush, strokeWidth);

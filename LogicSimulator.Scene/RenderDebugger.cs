@@ -38,6 +38,8 @@ public static class RenderDebugger
         Stats[_currentScene].DrawTextLayoutCalledCount = 0;
         Stats[_currentScene].DrawBitmapCalledCount = 0;
         Stats[_currentScene].DrawTrianglesCalledCount = 0;
+        Stats[_currentScene].DrawRoundedRectangleCalledCount = 0;
+        Stats[_currentScene].FillRoundedRectangleCalledCount = 0;
 
         BetweenFramesTimeStopwatch.Restart();
     }
@@ -154,6 +156,24 @@ public static class RenderDebugger
     }
 
     [Conditional("DEBUG")]
+    public static void DrawRoundedRectangleCalled()
+    {
+        if (_currentScene is null)
+            return;
+
+        Stats[_currentScene].DrawRoundedRectangleCalledCount++;
+    }
+
+    [Conditional("DEBUG")]
+    public static void FillRoundedRectangleCalled()
+    {
+        if (_currentScene is null)
+            return;
+
+        Stats[_currentScene].FillRoundedRectangleCalledCount++;
+    }
+
+    [Conditional("DEBUG")]
     public static void DrawStatistics(Scene2D scene, D2DContext context, Vector2 pos)
     {
         if (!Stats.TryGetValue(scene, out var stats))
@@ -174,6 +194,8 @@ public static class RenderDebugger
                    DrawTextLayout calls count: {stats.DrawTextLayoutCalledCount}
                    DrawBitmap calls count: {stats.DrawBitmapCalledCount}
                    DrawTriangles calls count: {stats.DrawTrianglesCalledCount}
+                   FillRoundedRectangle calls count: {stats.FillRoundedRectangleCalledCount}
+                   DrawRoundedRectangle calls count: {stats.DrawRoundedRectangleCalledCount}
                    """;
 
         var padding = 5f;
@@ -225,5 +247,9 @@ public static class RenderDebugger
         public int DrawBitmapCalledCount { get; set; }
 
         public int DrawTrianglesCalledCount { get; set; }
+
+        public int FillRoundedRectangleCalledCount { get; set; }
+
+        public int DrawRoundedRectangleCalledCount { get; set; }
     }
 }
