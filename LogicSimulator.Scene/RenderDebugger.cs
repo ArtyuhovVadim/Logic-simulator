@@ -1,4 +1,5 @@
 ﻿using System.Diagnostics;
+using System.Runtime.CompilerServices;
 using LogicSimulator.Scene.DirectX;
 using SharpDX;
 using SharpDX.Direct2D1;
@@ -27,19 +28,8 @@ public static class RenderDebugger
         FrameTimeStopwatch.Restart();
 
         Stats[_currentScene].BetweenFramesTime = BetweenFramesTimeStopwatch.Elapsed.TotalMilliseconds;
-        Stats[_currentScene].DrawRectangleCalledCount = 0;
-        Stats[_currentScene].FillRectangleCalledCount = 0;
-        Stats[_currentScene].DrawLineCalledCount = 0;
-        Stats[_currentScene].DrawEllipseCalledCount = 0;
-        Stats[_currentScene].FillEllipseCalledCount = 0;
-        Stats[_currentScene].DrawGeometryCalledCount = 0;
-        Stats[_currentScene].FillGeometryCalledCount = 0;
-        Stats[_currentScene].DrawTextCalledCount = 0;
-        Stats[_currentScene].DrawTextLayoutCalledCount = 0;
-        Stats[_currentScene].DrawBitmapCalledCount = 0;
-        Stats[_currentScene].DrawTrianglesCalledCount = 0;
-        Stats[_currentScene].DrawRoundedRectangleCalledCount = 0;
-        Stats[_currentScene].FillRoundedRectangleCalledCount = 0;
+
+        ClearMethodCalledStatistic();
 
         BetweenFramesTimeStopwatch.Restart();
     }
@@ -57,120 +47,40 @@ public static class RenderDebugger
     }
 
     [Conditional("DEBUG")]
-    public static void DrawRectangleCalled()
+    public static void StartMethodCall([CallerMemberName] string? methodName = null)
     {
-        if (_currentScene is null)
+        if (_currentScene is null || methodName is null)
             return;
 
-        Stats[_currentScene].DrawRectangleCalledCount++;
+        if (!Stats[_currentScene].MethodsCallStatistics.TryGetValue(methodName, out var stats))
+        {
+            stats = new MethodCallStatistics();
+            Stats[_currentScene].MethodsCallStatistics[methodName] = stats;
+        }
+
+        stats.Name = methodName;
+        stats.StartTime = FrameTimeStopwatch.Elapsed.TotalMilliseconds;
     }
 
     [Conditional("DEBUG")]
-    public static void FillRectangleCalled()
+    public static void EndMethodCall([CallerMemberName] string? methodName = null)
     {
-        if (_currentScene is null)
+        if (_currentScene is null || methodName is null)
             return;
 
-        Stats[_currentScene].FillRectangleCalledCount++;
+        var stats = Stats[_currentScene].MethodsCallStatistics[methodName] ?? throw new InvalidOperationException();
+
+        stats.Count++;
+        stats.TotalTime += FrameTimeStopwatch.Elapsed.TotalMilliseconds - stats.StartTime;
     }
 
     [Conditional("DEBUG")]
-    public static void DrawLineCalled()
+    public static void ClearMethodCalledStatistic()
     {
         if (_currentScene is null)
             return;
 
-        Stats[_currentScene].DrawLineCalledCount++;
-    }
-
-    [Conditional("DEBUG")]
-    public static void DrawEllipseCalled()
-    {
-        if (_currentScene is null)
-            return;
-
-        Stats[_currentScene].DrawEllipseCalledCount++;
-    }
-
-    [Conditional("DEBUG")]
-    public static void FillEllipseCalled()
-    {
-        if (_currentScene is null)
-            return;
-
-        Stats[_currentScene].FillEllipseCalledCount++;
-    }
-
-    [Conditional("DEBUG")]
-    public static void DrawGeometryCalled()
-    {
-        if (_currentScene is null)
-            return;
-
-        Stats[_currentScene].DrawGeometryCalledCount++;
-    }
-
-    [Conditional("DEBUG")]
-    public static void FillGeometryCalled()
-    {
-        if (_currentScene is null)
-            return;
-
-        Stats[_currentScene].FillGeometryCalledCount++;
-    }
-
-    [Conditional("DEBUG")]
-    public static void DrawTextCalled()
-    {
-        if (_currentScene is null)
-            return;
-
-        Stats[_currentScene].DrawTextCalledCount++;
-    }
-
-    [Conditional("DEBUG")]
-    public static void DrawTextLayoutCalled()
-    {
-        if (_currentScene is null)
-            return;
-
-        Stats[_currentScene].DrawTextLayoutCalledCount++;
-    }
-
-    [Conditional("DEBUG")]
-    public static void DrawBitmapCalled()
-    {
-        if (_currentScene is null)
-            return;
-
-        Stats[_currentScene].DrawBitmapCalledCount++;
-    }
-
-    [Conditional("DEBUG")]
-    public static void DrawTrianglesCalled()
-    {
-        if (_currentScene is null)
-            return;
-
-        Stats[_currentScene].DrawTrianglesCalledCount++;
-    }
-
-    [Conditional("DEBUG")]
-    public static void DrawRoundedRectangleCalled()
-    {
-        if (_currentScene is null)
-            return;
-
-        Stats[_currentScene].DrawRoundedRectangleCalledCount++;
-    }
-
-    [Conditional("DEBUG")]
-    public static void FillRoundedRectangleCalled()
-    {
-        if (_currentScene is null)
-            return;
-
-        Stats[_currentScene].FillRoundedRectangleCalledCount++;
+        Stats[_currentScene].MethodsCallStatistics.Clear();
     }
 
     [Conditional("DEBUG")]
@@ -179,23 +89,17 @@ public static class RenderDebugger
         if (!Stats.TryGetValue(scene, out var stats))
             return;
 
+        var renderCallsTotalTime = stats.MethodsCallStatistics.Sum(x => x.Value.TotalTime);
+
         var text = $"""
-                   Frames count: {stats.FramesCount}
+                   Frame index: {stats.FramesCount}
                    Frame time: {stats.FrameTime:0.00 ms} [{1000d / stats.FrameTime:0.0 FPS}]
                    Time between frames: {stats.BetweenFramesTime:0.00 ms} [{1000d / stats.BetweenFramesTime:0.0 FPS}]
-                   DrawRectangle calls count: {stats.DrawRectangleCalledCount}
-                   FillRectangle calls count: {stats.FillRectangleCalledCount}
-                   DrawLine calls count: {stats.DrawLineCalledCount}
-                   DrawEllipse calls count: {stats.DrawEllipseCalledCount}
-                   FillEllipse calls count: {stats.FillEllipseCalledCount}
-                   DrawGeometry calls count: {stats.DrawGeometryCalledCount}
-                   FillGeometry calls count: {stats.FillGeometryCalledCount}
-                   DrawText calls count: {stats.DrawTextCalledCount}
-                   DrawTextLayout calls count: {stats.DrawTextLayoutCalledCount}
-                   DrawBitmap calls count: {stats.DrawBitmapCalledCount}
-                   DrawTriangles calls count: {stats.DrawTrianglesCalledCount}
-                   FillRoundedRectangle calls count: {stats.FillRoundedRectangleCalledCount}
-                   DrawRoundedRectangle calls count: {stats.DrawRoundedRectangleCalledCount}
+                   
+                   Render calls total time: {renderCallsTotalTime:0.00 ms}
+                   Other time {stats.FrameTime - renderCallsTotalTime:0.00 ms};
+                   
+                   {string.Join('\n', stats.MethodsCallStatistics.OrderBy(x => x.Key).Select(x => $"{x.Key} count: {x.Value.Count} [{x.Value.TotalTime:0.000 ms}]"))}
                    """;
 
         var padding = 5f;
@@ -218,6 +122,17 @@ public static class RenderDebugger
         context.DrawingContext.DrawTextLayout(pos + new Vector2(padding), textLayout, textBrush, DrawTextOptions.None);
     }
 
+    public class MethodCallStatistics
+    {
+        public string Name { get; set; } = string.Empty;
+
+        public int Count { get; set; }
+
+        public double StartTime { get; set; }
+
+        public double TotalTime { get; set; }
+    }
+
     public class Statistics
     {
         public double FrameTime { get; set; }
@@ -226,30 +141,6 @@ public static class RenderDebugger
 
         public int FramesCount { get; set; }
 
-        public int DrawRectangleCalledCount { get; set; }
-
-        public int FillRectangleCalledCount { get; set; }
-
-        public int DrawLineCalledCount { get; set; }
-
-        public int DrawEllipseCalledCount { get; set; }
-
-        public int FillEllipseCalledCount { get; set; }
-
-        public int DrawGeometryCalledCount { get; set; }
-
-        public int FillGeometryCalledCount { get; set; }
-
-        public int DrawTextCalledCount { get; set; }
-
-        public int DrawTextLayoutCalledCount { get; set; }
-
-        public int DrawBitmapCalledCount { get; set; }
-
-        public int DrawTrianglesCalledCount { get; set; }
-
-        public int FillRoundedRectangleCalledCount { get; set; }
-
-        public int DrawRoundedRectangleCalledCount { get; set; }
+        public readonly Dictionary<string, MethodCallStatistics> MethodsCallStatistics = new();
     }
 }

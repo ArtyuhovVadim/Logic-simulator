@@ -57,128 +57,155 @@ public class D2DDrawingContext
 
     public void PushTransform(Matrix3x2 transform)
     {
+        RenderDebugger.StartMethodCall();
         _transforms.Push(transform);
         Transform = _transforms.Peek() * Transform;
+        RenderDebugger.EndMethodCall();
     }
 
     public void PopTransform()
     {
+        RenderDebugger.StartMethodCall();
         Transform = Matrix3x2.Invert(_transforms.Peek()) * Transform;
         _transforms.Pop();
+        RenderDebugger.EndMethodCall();
     }
 
-    public void Clear(Color4 color) => _context.D2DDeviceContext.Clear(color);
+    public void Clear(Color4 color)
+    {
+        RenderDebugger.StartMethodCall();
+        _context.D2DDeviceContext.Clear(color);
+        RenderDebugger.EndMethodCall();
+    }
 
     public void DrawRectangle(RawRectangleF rect, Brush brush, float strokeWidth)
     {
+        RenderDebugger.StartMethodCall();
         _context.D2DDeviceContext.DrawRectangle(rect, brush, strokeWidth);
-        RenderDebugger.DrawRectangleCalled();
+        RenderDebugger.EndMethodCall();
     }
 
     public void DrawRectangle(RawRectangleF rect, Brush brush, float strokeWidth, StrokeStyle style)
     {
+        RenderDebugger.StartMethodCall();
         _context.D2DDeviceContext.DrawRectangle(rect, brush, strokeWidth, style);
-        RenderDebugger.DrawRectangleCalled();
+        RenderDebugger.EndMethodCall();
     }
 
     public void FillRectangle(RawRectangleF rect, Brush brush)
     {
+        RenderDebugger.StartMethodCall();
         _context.D2DDeviceContext.FillRectangle(rect, brush);
-        RenderDebugger.FillRectangleCalled();
+        RenderDebugger.EndMethodCall();
     }
 
     public void DrawRoundedRectangle(RoundedRectangle rect, Brush brush, float strokeWidth)
     {
+        RenderDebugger.StartMethodCall();
         _context.D2DDeviceContext.DrawRoundedRectangle(rect, brush, strokeWidth);
-        RenderDebugger.DrawRoundedRectangleCalled();
+        RenderDebugger.EndMethodCall();
     }
 
     public void DrawRoundedRectangle(RoundedRectangle rect, Brush brush, float strokeWidth, StrokeStyle style)
     {
+        RenderDebugger.StartMethodCall();
         _context.D2DDeviceContext.DrawRoundedRectangle(rect, brush, strokeWidth, style);
-        RenderDebugger.DrawRoundedRectangleCalled();
+        RenderDebugger.EndMethodCall();
     }
 
     public void FillRoundedRectangle(RoundedRectangle rect, Brush brush)
     {
+        RenderDebugger.StartMethodCall();
         _context.D2DDeviceContext.FillRoundedRectangle(rect, brush);
-        RenderDebugger.FillRoundedRectangleCalled();
+        RenderDebugger.EndMethodCall();
     }
 
     public void DrawLine(Vector2 p1, Vector2 p2, Brush brush, float strokeWidth)
     {
+        RenderDebugger.StartMethodCall();
         _context.D2DDeviceContext.DrawLine(p1, p2, brush, strokeWidth);
-        RenderDebugger.DrawLineCalled();
+        RenderDebugger.EndMethodCall();
     }
 
     public void DrawLine(Vector2 p1, Vector2 p2, Brush brush, float strokeWidth, StrokeStyle style)
     {
+        RenderDebugger.StartMethodCall();
         _context.D2DDeviceContext.DrawLine(p1, p2, brush, strokeWidth, style);
-        RenderDebugger.DrawLineCalled();
+        RenderDebugger.EndMethodCall();
     }
 
     public void DrawEllipse(Ellipse ellipse, Brush brush, float strokeWidth)
     {
+        RenderDebugger.StartMethodCall();
         _context.D2DDeviceContext.DrawEllipse(ellipse, brush, strokeWidth);
-        RenderDebugger.DrawEllipseCalled();
+        RenderDebugger.EndMethodCall();
     }
 
     public void DrawEllipse(Ellipse ellipse, Brush brush, float strokeWidth, StrokeStyle style)
     {
+        RenderDebugger.StartMethodCall();
         _context.D2DDeviceContext.DrawEllipse(ellipse, brush, strokeWidth, style);
-        RenderDebugger.DrawEllipseCalled();
+        RenderDebugger.EndMethodCall();
     }
 
     public void FillEllipse(Ellipse ellipse, Brush brush)
     {
+        RenderDebugger.StartMethodCall();
         _context.D2DDeviceContext.FillEllipse(ellipse, brush);
-        RenderDebugger.FillEllipseCalled();
+        RenderDebugger.EndMethodCall();
     }
 
     public void DrawGeometry(Geometry geometry, Brush brush, float strokeWidth)
     {
+        RenderDebugger.StartMethodCall();
         _context.D2DDeviceContext.DrawGeometry(geometry, brush, strokeWidth);
-        RenderDebugger.DrawGeometryCalled();
+        RenderDebugger.EndMethodCall();
     }
 
     public void DrawGeometry(Geometry geometry, Brush brush, float strokeWidth, StrokeStyle style)
     {
+        RenderDebugger.StartMethodCall();
         _context.D2DDeviceContext.DrawGeometry(geometry, brush, strokeWidth, style);
-        RenderDebugger.DrawGeometryCalled();
+        RenderDebugger.EndMethodCall();
     }
 
     public void FillGeometry(Geometry geometry, Brush brush)
     {
+        RenderDebugger.StartMethodCall();
         _context.D2DDeviceContext.FillGeometry(geometry, brush);
-        RenderDebugger.FillGeometryCalled();
+        RenderDebugger.EndMethodCall();
     }
 
     public void DrawText(string text, TextFormat format, RectangleF rect, Brush brush, DrawTextOptions options)
     {
+        RenderDebugger.StartMethodCall();
         _context.D2DDeviceContext.DrawText(text, format, rect, brush, options);
-        RenderDebugger.DrawTextCalled();
+        RenderDebugger.EndMethodCall();
     }
 
     public void DrawTextLayout(Vector2 pos, TextLayout layout, Brush brush, DrawTextOptions options)
     {
+        RenderDebugger.StartMethodCall();
         _context.D2DDeviceContext.DrawTextLayout(pos, layout, brush, options);
-        RenderDebugger.DrawTextLayoutCalled();
+        RenderDebugger.EndMethodCall();
     }
 
     public void DrawBitmap(Bitmap bitmap, RectangleF rect, float opacity, BitmapInterpolationMode interpolationMode)
     {
+        RenderDebugger.StartMethodCall();
         _context.D2DDeviceContext.DrawBitmap(bitmap, rect, opacity, interpolationMode);
-        RenderDebugger.DrawBitmapCalled();
+        RenderDebugger.EndMethodCall();
     }
 
     public void DrawTriangles(IEnumerable<Triangle> triangles, Brush brush, float strokeWidth)
     {
+        RenderDebugger.StartMethodCall();
         foreach (var triangle in triangles)
         {
             _context.D2DDeviceContext.DrawLine(triangle.Point1, triangle.Point2, brush, strokeWidth);
             _context.D2DDeviceContext.DrawLine(triangle.Point2, triangle.Point3, brush, strokeWidth);
             _context.D2DDeviceContext.DrawLine(triangle.Point3, triangle.Point1, brush, strokeWidth);
         }
-        RenderDebugger.DrawTrianglesCalled();
+        RenderDebugger.EndMethodCall();
     }
 }
