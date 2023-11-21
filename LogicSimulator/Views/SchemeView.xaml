@@ -125,6 +125,20 @@
                                     StrokeThickness="{Binding Path=StrokeThickness}" />
                             </DataTemplate>
                         </selectors:SceneObjectTemplateSelector.EllipseDataTemplate>
+                        <selectors:SceneObjectTemplateSelector.BezierCurveDataTemplate>
+                            <DataTemplate DataType="{x:Type local:BezierCurveViewModel}">
+                                <sceneViews:BezierCurveView
+                                    IsSelected="{Binding Path=IsSelected}"
+                                    Location="{Binding Path=Location}"
+                                    Point1="{Binding Path=Point1}"
+                                    Point2="{Binding Path=Point2}"
+                                    Point3="{Binding Path=Point3}"
+                                    Rotation="{Binding Path=Rotation,
+                                                       Converter={StaticResource RotationToFloatConverter}}"
+                                    StrokeColor="{Binding Path=StrokeColor}"
+                                    StrokeThickness="{Binding Path=StrokeThickness}" />
+                            </DataTemplate>
+                        </selectors:SceneObjectTemplateSelector.BezierCurveDataTemplate>
                     </selectors:SceneObjectTemplateSelector>
                 </layers:ObjectsLayer.ObjectTemplateSelector>
                 <layers:ObjectsLayer.Renderer>
