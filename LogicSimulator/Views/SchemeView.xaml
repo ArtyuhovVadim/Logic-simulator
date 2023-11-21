@@ -154,6 +154,23 @@
                                     StrokeThickness="{Binding Path=StrokeThickness}" />
                             </DataTemplate>
                         </selectors:SceneObjectTemplateSelector.ArcDataTemplate>
+                        <selectors:SceneObjectTemplateSelector.TextBlockDataTemplate>
+                            <DataTemplate DataType="{x:Type local:TextBlockViewModel}">
+                                <sceneViews:TextView
+                                    FontName="{Binding Path=FontName}"
+                                    FontSize="{Binding Path=FontSize}"
+                                    IsBold="{Binding Path=IsBold}"
+                                    IsCross="{Binding Path=IsCross}"
+                                    IsItalic="{Binding Path=IsItalic}"
+                                    IsSelected="{Binding Path=IsSelected}"
+                                    IsUnderlined="{Binding Path=IsUnderlined}"
+                                    Location="{Binding Path=Location}"
+                                    Rotation="{Binding Path=Rotation,
+                                                       Converter={StaticResource RotationToFloatConverter}}"
+                                    Text="{Binding Path=Text}"
+                                    TextColor="{Binding Path=TextColor}" />
+                            </DataTemplate>
+                        </selectors:SceneObjectTemplateSelector.TextBlockDataTemplate>
                     </selectors:SceneObjectTemplateSelector>
                 </layers:ObjectsLayer.ObjectTemplateSelector>
                 <layers:ObjectsLayer.Renderer>

@@ -27,6 +27,7 @@ public class SceneObjectTemplateSelector : DataTemplateSelector
         EllipseViewModel => EllipseDataTemplate,
         BezierCurveViewModel => BezierCurveDataTemplate,
         ArcViewModel => ArcDataTemplate,
+        TextBlockViewModel => TextBlockDataTemplate,
         _ => UnknownObjectDataTemplate,
     };
 }
