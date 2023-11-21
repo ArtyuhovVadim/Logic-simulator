@@ -83,10 +83,11 @@
                             Style="{StaticResource FontCheckBoxStyle}">
                             <cont:CheckBoxEx.Content>
                                 <Path
-                                    Height="11"
+                                    Height="13"
                                     Data="{StaticResource BoldTextIcon}"
                                     Fill="{Binding Path=Foreground,
-                                                   RelativeSource={RelativeSource AncestorType=cont:CheckBoxEx}}" />
+                                                   RelativeSource={RelativeSource AncestorType=cont:CheckBoxEx}}"
+                                    Stretch="Uniform" />
                             </cont:CheckBoxEx.Content>
                         </cont:CheckBoxEx>
                         <cont:CheckBoxEx
@@ -97,10 +98,11 @@
                             Style="{StaticResource FontCheckBoxStyle}">
                             <cont:CheckBoxEx.Content>
                                 <Path
-                                    Height="11"
+                                    Height="13"
                                     Data="{StaticResource ItalicTextIcon}"
                                     Fill="{Binding Path=Foreground,
-                                                   RelativeSource={RelativeSource AncestorType=cont:CheckBoxEx}}" />
+                                                   RelativeSource={RelativeSource AncestorType=cont:CheckBoxEx}}"
+                                    Stretch="Uniform" />
                             </cont:CheckBoxEx.Content>
                         </cont:CheckBoxEx>
                         <cont:CheckBoxEx
@@ -111,10 +113,11 @@
                             Style="{StaticResource FontCheckBoxStyle}">
                             <cont:CheckBoxEx.Content>
                                 <Path
-                                    Height="11"
+                                    Height="13"
                                     Data="{StaticResource UnderlinedTextIcon}"
                                     Fill="{Binding Path=Foreground,
-                                                   RelativeSource={RelativeSource AncestorType=cont:CheckBoxEx}}" />
+                                                   RelativeSource={RelativeSource AncestorType=cont:CheckBoxEx}}"
+                                    Stretch="Uniform" />
                             </cont:CheckBoxEx.Content>
                         </cont:CheckBoxEx>
                         <cont:CheckBoxEx
@@ -124,10 +127,11 @@
                             Style="{StaticResource FontCheckBoxStyle}">
                             <cont:CheckBoxEx.Content>
                                 <Path
-                                    Height="11"
+                                    Height="13"
                                     Data="{StaticResource CrossTextIcon}"
                                     Fill="{Binding Path=Foreground,
-                                                   RelativeSource={RelativeSource AncestorType=cont:CheckBoxEx}}" />
+                                                   RelativeSource={RelativeSource AncestorType=cont:CheckBoxEx}}"
+                                    Stretch="Uniform" />
                             </cont:CheckBoxEx.Content>
                         </cont:CheckBoxEx>
                     </Grid>
