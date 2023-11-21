@@ -26,6 +26,7 @@ public class SceneObjectTemplateSelector : DataTemplateSelector
         RectangleViewModel => RectangleDataTemplate,
         EllipseViewModel => EllipseDataTemplate,
         BezierCurveViewModel => BezierCurveDataTemplate,
+        ArcViewModel => ArcDataTemplate,
         _ => UnknownObjectDataTemplate,
     };
 }

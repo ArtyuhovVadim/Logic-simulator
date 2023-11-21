@@ -139,6 +139,21 @@
                                     StrokeThickness="{Binding Path=StrokeThickness}" />
                             </DataTemplate>
                         </selectors:SceneObjectTemplateSelector.BezierCurveDataTemplate>
+                        <selectors:SceneObjectTemplateSelector.ArcDataTemplate>
+                            <DataTemplate DataType="{x:Type local:ArcViewModel}">
+                                <sceneViews:ArcView
+                                    EndAngle="{Binding Path=EndAngle}"
+                                    IsSelected="{Binding Path=IsSelected}"
+                                    Location="{Binding Path=Location}"
+                                    RadiusX="{Binding Path=RadiusX}"
+                                    RadiusY="{Binding Path=RadiusY}"
+                                    Rotation="{Binding Path=Rotation,
+                                                       Converter={StaticResource RotationToFloatConverter}}"
+                                    StartAngle="{Binding Path=StartAngle}"
+                                    StrokeColor="{Binding Path=StrokeColor}"
+                                    StrokeThickness="{Binding Path=StrokeThickness}" />
+                            </DataTemplate>
+                        </selectors:SceneObjectTemplateSelector.ArcDataTemplate>
                     </selectors:SceneObjectTemplateSelector>
                 </layers:ObjectsLayer.ObjectTemplateSelector>
                 <layers:ObjectsLayer.Renderer>
