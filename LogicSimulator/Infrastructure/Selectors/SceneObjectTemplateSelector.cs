@@ -24,10 +24,7 @@ public class SceneObjectTemplateSelector : DataTemplateSelector
     {
         RoundedRectangleViewModel => RoundedRectangleDataTemplate,
         RectangleViewModel => RectangleDataTemplate,
-        ArcViewModel => UnknownObjectDataTemplate,
-        TextBlockViewModel => UnknownObjectDataTemplate,
-        EllipseViewModel => UnknownObjectDataTemplate,
-        BezierCurveViewModel => UnknownObjectDataTemplate,
+        EllipseViewModel => EllipseDataTemplate,
         _ => UnknownObjectDataTemplate,
     };
 }
