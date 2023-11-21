@@ -65,16 +65,16 @@ public class D2DResourceFactory : DisposableObject
         return new EllipseGeometry(_context.D2DFactory, ellipse);
     }
 
-    public PathGeometry CreatePolylineGeometry(Vector2 location, List<Vector2> vertices)
+    public PathGeometry CreatePolylineGeometry(Vector2 location, IEnumerable<Vector2> vertices)
     {
         var path = new PathGeometry(_context.D2DFactory);
 
         var sink = path.Open();
         sink.BeginFigure(location, FigureBegin.Hollow);
 
-        for (var i = 0; i < vertices.Count; i++)
+        foreach (var vertex in vertices)
         {
-            sink.AddLine(vertices[i]);
+            sink.AddLine(vertex);
         }
 
         sink.EndFigure(FigureEnd.Open);

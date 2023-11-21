@@ -253,7 +253,8 @@
                                 Command="{Binding Path=AddVertexCommand}">
                                 <Button.Content>
                                     <Path
-                                        Height="11"
+                                        Stretch="Uniform"
+                                        Height="13"
                                         Data="{StaticResource PlusIcon}"
                                         Fill="#FDFDFD" />
                                 </Button.Content>
@@ -261,7 +262,8 @@
                             <Button Padding="8,5" Command="{Binding Path=RemoveVertexCommand}">
                                 <Button.Content>
                                     <Path
-                                        Height="11"
+                                        Stretch="Uniform"
+                                        Height="13"
                                         Data="{StaticResource TrashIcon}"
                                         Fill="#FDFDFD" />
                                 </Button.Content>
