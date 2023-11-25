@@ -17,4 +17,20 @@ public class EditorGroup
             editorRow.PropertyChange(propName);
         }
     }
+
+    public void StartEdit()
+    {
+        foreach (var editorRow in EditorRows)
+        {
+            editorRow.StartEdit();
+        }
+    }
+
+    public void EndEdit()
+    {
+        foreach (var editorRow in EditorRows)
+        {
+            editorRow.EndEdit();
+        }
+    }
 }

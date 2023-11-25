@@ -17,4 +17,20 @@ public class EditorLayout
             group.PropertyChange(propName);
         }
     }
+
+    public void StartEdit()
+    {
+        foreach (var group in Groups)
+        {
+            group.StartEdit();
+        }
+    }
+
+    public void EndEdit()
+    {
+        foreach (var group in Groups)
+        {
+            group.EndEdit();
+        }
+    }
 }

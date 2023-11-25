@@ -20,4 +20,20 @@ public class EditorRow
             objectProperty.ProvidePropertyChanged(propName);
         }
     }
+
+    public void StartEdit()
+    {
+        foreach (var objectProperty in ObjectProperties)      
+        {
+            objectProperty.StartEdit();
+        }
+    }
+
+    public void EndEdit()
+    {
+        foreach (var objectProperty in ObjectProperties)      
+        {
+            objectProperty.EndEdit();
+        }
+    }
 }

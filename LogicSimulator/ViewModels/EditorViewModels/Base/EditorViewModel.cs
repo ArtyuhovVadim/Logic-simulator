@@ -23,10 +23,14 @@ public abstract class EditorViewModel : BindableBase
     {
         if (_objectsToEdit is not null)
         {
+            Layout.EndEdit();
+
             foreach (var obj in _objectsToEdit)
             {
                 obj.PropertyChanged -= OnPropertyChanged;
             }
+
+            _objectsToEdit = null;
         }
 
         if (!objects.Any()) return;
@@ -37,6 +41,8 @@ public abstract class EditorViewModel : BindableBase
         {
             obj.PropertyChanged += OnPropertyChanged;
         }
+
+        Layout.StartEdit();
 
         foreach (var prop in ObjectsType.GetProperties().Where(x => Attribute.IsDefined(x, typeof(EditableAttribute))))
         {
