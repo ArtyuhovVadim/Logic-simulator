@@ -18,6 +18,8 @@ public class SceneObjectTemplateSelector : DataTemplateSelector
 
     public DataTemplate BezierCurveDataTemplate { get; set; } = null!;
 
+    public DataTemplate LineDataTemplate { get; set; } = null!;
+
     public DataTemplate UnknownObjectDataTemplate { get; set; } = null!;
 
     public override DataTemplate SelectTemplate(object item, DependencyObject container) => item switch
@@ -28,6 +30,7 @@ public class SceneObjectTemplateSelector : DataTemplateSelector
         BezierCurveViewModel => BezierCurveDataTemplate,
         ArcViewModel => ArcDataTemplate,
         TextBlockViewModel => TextBlockDataTemplate,
+        LineViewModel => LineDataTemplate,
         _ => UnknownObjectDataTemplate,
     };
 }
