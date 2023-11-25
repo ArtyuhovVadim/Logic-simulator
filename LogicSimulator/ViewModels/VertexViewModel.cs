@@ -5,6 +5,18 @@ namespace LogicSimulator.ViewModels;
 
 public class VertexViewModel : BindableBase
 {
+    public VertexViewModel()
+    {
+        
+    }
+
+    public VertexViewModel(Vector2 pos, int index)
+    {
+        X = pos.X;
+        Y = pos.Y;
+        Index = index;
+    }
+
     #region Index
 
     private int _index;
@@ -24,13 +36,7 @@ public class VertexViewModel : BindableBase
     public float X
     {
         get => _x;
-        set
-        {
-            if (Set(ref _x, value))
-            {
-                OnPropertyChanged(nameof(Position));
-            }
-        }
+        set => Set(ref _x, value);
     }
 
     #endregion
@@ -42,27 +48,7 @@ public class VertexViewModel : BindableBase
     public float Y
     {
         get => _y;
-        set
-        {
-            if (Set(ref _y, value))
-            {
-                OnPropertyChanged(nameof(Position));
-            }
-        }
-    }
-
-    #endregion
-
-    #region Position
-
-    public Vector2 Position
-    {
-        get => new(_x, _y);
-        set
-        {
-            X = value.X;
-            Y = value.Y;
-        }
+        set => Set(ref _y, value);
     }
 
     #endregion

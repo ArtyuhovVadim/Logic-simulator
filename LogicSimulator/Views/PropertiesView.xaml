@@ -233,7 +233,6 @@
                                     Binding="{Binding Path=X}"
                                     CanUserSort="False"
                                     Header="X" />
-
                                 <DataGridTextColumn
                                     Width="*"
                                     Binding="{Binding Path=Y}"
@@ -253,19 +252,19 @@
                                 Command="{Binding Path=AddVertexCommand}">
                                 <Button.Content>
                                     <Path
-                                        Stretch="Uniform"
                                         Height="13"
                                         Data="{StaticResource PlusIcon}"
-                                        Fill="#FDFDFD" />
+                                        Fill="#FDFDFD"
+                                        Stretch="Uniform" />
                                 </Button.Content>
                             </Button>
                             <Button Padding="8,5" Command="{Binding Path=RemoveVertexCommand}">
                                 <Button.Content>
                                     <Path
-                                        Stretch="Uniform"
                                         Height="13"
                                         Data="{StaticResource TrashIcon}"
-                                        Fill="#FDFDFD" />
+                                        Fill="#FDFDFD"
+                                        Stretch="Uniform" />
                                 </Button.Content>
                             </Button>
                         </StackPanel>
@@ -282,7 +281,7 @@
                         Visibility="Collapsed" />
                 </Grid>
                 <DataTemplate.Triggers>
-                    <DataTrigger Binding="{Binding Path=IsVisible}" Value="False">
+                    <DataTrigger Binding="{Binding Path=Value}" Value="{x:Null}">
                         <Setter TargetName="VertexesGrid" Property="Visibility" Value="Collapsed" />
                         <Setter TargetName="Border" Property="Visibility" Value="Visible" />
                     </DataTrigger>

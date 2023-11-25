@@ -224,10 +224,22 @@
                                             </Border.Background>
                                         </Border>
 
-                                        <TextBlock Grid.Row="0" Grid.Column="0" Text="HEX" />
-                                        <TextBlock Grid.Row="0" Grid.Column="1" Text="R" />
-                                        <TextBlock Grid.Row="0" Grid.Column="2" Text="G" />
-                                        <TextBlock Grid.Row="0" Grid.Column="3" Text="B" />
+                                        <TextBlock
+                                            Grid.Row="0"
+                                            Grid.Column="0"
+                                            Text="HEX" />
+                                        <TextBlock
+                                            Grid.Row="0"
+                                            Grid.Column="1"
+                                            Text="R" />
+                                        <TextBlock
+                                            Grid.Row="0"
+                                            Grid.Column="2"
+                                            Text="G" />
+                                        <TextBlock
+                                            Grid.Row="0"
+                                            Grid.Column="3"
+                                            Text="B" />
 
                                     </Grid>
                                     <Grid Grid.Row="3" Margin="5">
