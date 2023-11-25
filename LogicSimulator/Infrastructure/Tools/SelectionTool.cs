@@ -63,7 +63,7 @@ public class SelectionTool : BaseTool
     }
 
     public static readonly DependencyProperty DragThresholdProperty =
-        DependencyProperty.Register(nameof(DragThreshold), typeof(double), typeof(SelectionTool), new PropertyMetadata(10d));
+        DependencyProperty.Register(nameof(DragThreshold), typeof(double), typeof(SelectionTool), new PropertyMetadata(5d));
 
     #endregion
 
@@ -106,7 +106,7 @@ public class SelectionTool : BaseTool
         if (_objectsUnderCursor.Any())
         {
             if ((pos - _startPos).Length() > DragThreshold)
-                ToolsController.SwitchTool<DragTool>(tool => tool.MouseLeftButtonDown(scene, pos));
+                ToolsController.SwitchTool<DragTool>(tool => tool.MouseLeftButtonDown(scene, _startPos));
         }
         else
         {
