@@ -1,5 +1,6 @@
 ﻿using LogicSimulator.Infrastructure;
 using LogicSimulator.ViewModels.EditorViewModels.Base;
+using LogicSimulator.ViewModels.EditorViewModels.Base.Properties;
 using LogicSimulator.ViewModels.EditorViewModels.Layout;
 using LogicSimulator.ViewModels.EditorViewModels.Layout.Builders;
 using LogicSimulator.ViewModels.ObjectViewModels;
@@ -36,7 +37,7 @@ public class BezierCurveEditorViewModel : EditorViewModel
             .WithRow(rowBuilder => rowBuilder
                 .WithRowName("Граница")
                 .WithSingleProperty<FloatPropertyViewModel>(nameof(BezierCurveViewModel.StrokeThickness))
-                .WithSingleProperty<Color4PropertyViewModel>(nameof(BezierCurveViewModel.StrokeColor))
+                .WithSingleProperty<ColorPropertyViewModel>(nameof(BezierCurveViewModel.StrokeColor))
                 .WithLayout(layoutBuilder => layoutBuilder
                     .WithRelativeSize(1)
                     .WithAutoSize())))

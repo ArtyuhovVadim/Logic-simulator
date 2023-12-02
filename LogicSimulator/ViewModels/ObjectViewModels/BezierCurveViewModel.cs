@@ -1,5 +1,4 @@
 ﻿using System.Windows.Media;
-using LogicSimulator.Infrastructure;
 using LogicSimulator.ViewModels.ObjectViewModels.Base;
 using SharpDX;
 using Color = System.Windows.Media.Color;
@@ -12,7 +11,6 @@ public class BezierCurveViewModel : BaseObjectViewModel
 
     private Vector2 _point1;
     
-    [Editable]
     public Vector2 Point1
     {
         get => _point1;
@@ -25,7 +23,6 @@ public class BezierCurveViewModel : BaseObjectViewModel
 
     private Vector2 _point2;
     
-    [Editable]
     public Vector2 Point2
     {
         get => _point2;
@@ -38,7 +35,6 @@ public class BezierCurveViewModel : BaseObjectViewModel
 
     private Vector2 _point3;
     
-    [Editable]
     public Vector2 Point3
     {
         get => _point3;
@@ -51,7 +47,6 @@ public class BezierCurveViewModel : BaseObjectViewModel
 
     private Color _strokeColor = Colors.Black;
     
-    [Editable]
     public Color StrokeColor
     {
         get => _strokeColor;
@@ -64,7 +59,6 @@ public class BezierCurveViewModel : BaseObjectViewModel
 
     private float _strokeThickness = 1f;
     
-    [Editable]
     public float StrokeThickness
     {
         get => _strokeThickness;

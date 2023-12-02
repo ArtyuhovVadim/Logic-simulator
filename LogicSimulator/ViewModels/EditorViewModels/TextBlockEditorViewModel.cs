@@ -1,5 +1,6 @@
 ﻿using LogicSimulator.Infrastructure;
 using LogicSimulator.ViewModels.EditorViewModels.Base;
+using LogicSimulator.ViewModels.EditorViewModels.Base.Properties;
 using LogicSimulator.ViewModels.EditorViewModels.Layout;
 using LogicSimulator.ViewModels.EditorViewModels.Layout.Builders;
 using LogicSimulator.ViewModels.ObjectViewModels;
@@ -29,7 +30,7 @@ public class TextBlockEditorViewModel : EditorViewModel
                 .WithRowName("Шрифт")
                 .WithSingleProperty<FontNamePropertyViewModel>(nameof(TextBlockViewModel.FontName))
                 .WithSingleProperty<FloatPropertyViewModel>(nameof(TextBlockViewModel.FontSize))
-                .WithSingleProperty<Color4PropertyViewModel>(nameof(TextBlockViewModel.TextColor))
+                .WithSingleProperty<ColorPropertyViewModel>(nameof(TextBlockViewModel.TextColor))
                 .WithLayout(layoutBuilder => layoutBuilder
                     .WithRelativeSize(1)
                     .WithRelativeSize(0.3)

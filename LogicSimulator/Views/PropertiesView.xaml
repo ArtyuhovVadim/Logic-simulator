@@ -3,12 +3,13 @@
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:avm="clr-namespace:LogicSimulator.ViewModels.AnchorableViewModels"
-    xmlns:base="clr-namespace:LogicSimulator.ViewModels.EditorViewModels.Base"
     xmlns:cont="clr-namespace:LogicSimulator.Controls;assembly=LogicSimulator.Controls"
     xmlns:converters="clr-namespace:LogicSimulator.Infrastructure.Converters"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:inf="clr-namespace:LogicSimulator.Infrastructure"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:me="clr-namespace:LogicSimulator.Infrastructure.MarkupExtensions"
+    xmlns:properties="clr-namespace:LogicSimulator.ViewModels.EditorViewModels.Base.Properties"
     d:DataContext="{d:DesignInstance Type=avm:PropertiesViewModel}"
     d:DesignHeight="450"
     d:DesignWidth="800"
@@ -22,44 +23,51 @@
 
             <converters:ColorToColor4Converter x:Key="ColorToColor4Converter" />
 
-            <DataTemplate DataType="{x:Type base:FloatPropertyViewModel}">
+            <DataTemplate DataType="{x:Type properties:FloatPropertyViewModel}">
                 <cont:NumberBox IsValueUndefined="{Binding Path=IsValueUndefined}" Number="{Binding Path=Value}" />
             </DataTemplate>
 
-            <DataTemplate DataType="{x:Type base:Vector2PropertyViewModel}">
+            <DataTemplate DataType="{x:Type properties:Vector2PropertyViewModel}">
                 <cont:Vector2Box
                     IsVectorXUndefined="{Binding Path=IsXUndefined}"
                     IsVectorYUndefined="{Binding Path=IsYUndefined}"
                     Vector="{Binding Path=Value}" />
             </DataTemplate>
 
-            <DataTemplate DataType="{x:Type base:Color4PropertyViewModel}">
-                <cont:ColorPicker IsValueUndefined="{Binding Path=IsValueUndefined}" Color="{Binding Path=Value, Converter={StaticResource ColorToColor4Converter}}" />
+            <DataTemplate DataType="{x:Type properties:ColorPropertyViewModel}">
+                <cont:ColorPicker
+                    HorizontalAlignment="Left"
+                    IsValueUndefined="{Binding Path=IsValueUndefined}"
+                    Color="{Binding Path=Value,
+                                    Converter={StaticResource ColorToColor4Converter}}" />
             </DataTemplate>
 
-            <DataTemplate DataType="{x:Type base:BoolPropertyViewModel}">
-                <cont:CheckBoxEx IsChecked="{Binding Path=Value}" IsValueUndefined="{Binding Path=IsValueUndefined}" />
+            <DataTemplate DataType="{x:Type properties:BoolPropertyViewModel}">
+                <cont:CheckBoxEx
+                    HorizontalAlignment="Left"
+                    IsChecked="{Binding Path=Value}"
+                    IsValueUndefined="{Binding Path=IsValueUndefined}" />
             </DataTemplate>
 
-            <DataTemplate DataType="{x:Type base:StringPropertyViewModel}">
+            <DataTemplate DataType="{x:Type properties:StringPropertyViewModel}">
                 <cont:StringBox IsValueUndefined="{Binding Path=IsValueUndefined}" String="{Binding Path=Value}" />
             </DataTemplate>
 
-            <DataTemplate DataType="{x:Type base:RotationEnumPropertyViewModel}">
+            <DataTemplate DataType="{x:Type properties:RotationEnumPropertyViewModel}">
                 <cont:ComboBoxEx
                     IsValueUndefined="{Binding Path=IsValueUndefined}"
-                    ItemsSource="{Binding Path=Rotations}"
+                    ItemsSource="{me:EnumToArray {x:Type inf:Rotation}}"
                     SelectedValue="{Binding Path=Value}" />
             </DataTemplate>
 
-            <DataTemplate DataType="{x:Type base:FontNamePropertyViewModel}">
+            <DataTemplate DataType="{x:Type properties:FontNamePropertyViewModel}">
                 <cont:ComboBoxEx
                     IsValueUndefined="{Binding Path=IsValueUndefined}"
                     ItemsSource="{Binding Source={me:SystemFontFamilies}}"
                     SelectedValue="{Binding Path=Value}" />
             </DataTemplate>
 
-            <DataTemplate DataType="{x:Type base:FontPropertyViewModel}">
+            <DataTemplate DataType="{x:Type properties:FontPropertyViewModel}">
                 <cont:ClippingBorder
                     Margin="4"
                     Background="#222222"
@@ -138,7 +146,7 @@
                 </cont:ClippingBorder>
             </DataTemplate>
 
-            <DataTemplate DataType="{x:Type base:VerticesPropertyViewModel}">
+            <DataTemplate DataType="{x:Type properties:VerticesPropertyViewModel}">
                 <Grid>
                     <Grid x:Name="VertexesGrid">
                         <Grid.RowDefinitions>
@@ -161,7 +169,6 @@
                             HorizontalGridLinesBrush="#353535"
                             ItemsSource="{Binding Path=Value}"
                             RowBackground="#3B3B3B"
-                            SelectedIndex="{Binding Path=SelectedVertexIndex}"
                             SelectionMode="Single"
                             SelectionUnit="FullRow"
                             SnapsToDevicePixels="True"
@@ -246,10 +253,7 @@
                             Margin="4"
                             HorizontalAlignment="Right"
                             Orientation="Horizontal">
-                            <Button
-                                Margin="0,0,4,0"
-                                Padding="8,5"
-                                Command="{Binding Path=AddVertexCommand}">
+                            <Button Margin="0,0,4,0" Padding="8,5">
                                 <Button.Content>
                                     <Path
                                         Height="13"
@@ -258,7 +262,7 @@
                                         Stretch="Uniform" />
                                 </Button.Content>
                             </Button>
-                            <Button Padding="8,5" Command="{Binding Path=RemoveVertexCommand}">
+                            <Button Padding="8,5">
                                 <Button.Content>
                                     <Path
                                         Height="13"

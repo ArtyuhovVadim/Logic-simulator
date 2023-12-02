@@ -1,4 +1,4 @@
-﻿namespace LogicSimulator.ViewModels.EditorViewModels.Base;
+﻿namespace LogicSimulator.ViewModels.EditorViewModels.Base.Properties;
 
 public class FloatPropertyViewModel : SinglePropertyViewModel
 {
@@ -16,17 +16,25 @@ public class FloatPropertyViewModel : SinglePropertyViewModel
 
     protected override object GetPropertyValue(IEnumerable<object> objects)
     {
-        IsValueUndefined = objects.Any(o => !Equals(PropertyInfo.GetValue(o), PropertyInfo.GetValue(objects.First())));
-        return Convert.ToDouble(PropertyInfo.GetValue(objects.First()));
+        var firstObj = objects.First();
+
+        IsValueUndefined = objects.Any(o => !Equals(GetValue<float>(o), GetValue<float>(firstObj)));
+
+        return Convert.ToDouble(GetValue<float>(firstObj));
     }
 
     protected override void SetPropertyValue(IEnumerable<object> objects, object value)
     {
         if (IsValueUndefined) return;
 
+        var newValue = Convert.ToSingle(value);
+
         foreach (var obj in objects)
         {
-            PropertyInfo.SetValue(obj, Convert.ToSingle(value));
+            SetValue(obj, newValue);
         }
     }
+
+    public override PropertyViewModel MakeCopy(EditorViewModel editor) =>
+        new FloatPropertyViewModel { PropertyName = PropertyName, EditorViewModel = editor };
 }

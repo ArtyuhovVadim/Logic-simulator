@@ -1,5 +1,6 @@
 ﻿using LogicSimulator.Infrastructure;
 using LogicSimulator.ViewModels.EditorViewModels.Base;
+using LogicSimulator.ViewModels.EditorViewModels.Base.Properties;
 using LogicSimulator.ViewModels.EditorViewModels.Layout;
 using LogicSimulator.ViewModels.EditorViewModels.Layout.Builders;
 using LogicSimulator.ViewModels.ObjectViewModels;
@@ -31,13 +32,13 @@ public class RectangleEditorViewModel : EditorViewModel
             .WithRow(rowBuilder => rowBuilder
                 .WithRowName("Граница")
                 .WithSingleProperty<FloatPropertyViewModel>(nameof(RectangleViewModel.StrokeThickness))
-                .WithSingleProperty<Color4PropertyViewModel>(nameof(RectangleViewModel.StrokeColor))
+                .WithSingleProperty<ColorPropertyViewModel>(nameof(RectangleViewModel.StrokeColor))
                 .WithLayout(layoutBuilder => layoutBuilder
                     .WithRelativeSize(1)
                     .WithAutoSize()))
             .WithRow(rowBuilder => rowBuilder
                 .WithRowName("Цвет заливки")
-                .WithSingleProperty<Color4PropertyViewModel>(nameof(RectangleViewModel.FillColor))
+                .WithSingleProperty<ColorPropertyViewModel>(nameof(RectangleViewModel.FillColor))
                 .WithSingleProperty<BoolPropertyViewModel>(nameof(RectangleViewModel.IsFilled))
                 .WithLayout(layoutBuilder => layoutBuilder
                     .WithAutoSize()

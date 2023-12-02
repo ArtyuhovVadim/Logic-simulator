@@ -1,5 +1,6 @@
 ﻿using LogicSimulator.Infrastructure;
 using LogicSimulator.ViewModels.EditorViewModels.Base;
+using LogicSimulator.ViewModels.EditorViewModels.Base.Properties;
 using LogicSimulator.ViewModels.EditorViewModels.Layout;
 using LogicSimulator.ViewModels.EditorViewModels.Layout.Builders;
 using LogicSimulator.ViewModels.ObjectViewModels;
@@ -35,7 +36,7 @@ public class ImageEditorViewModel : EditorViewModel
                 .WithRowName("Граница")
                 .WithSingleProperty<BoolPropertyViewModel>(nameof(ImageViewModel.IsBordered))
                 .WithSingleProperty<FloatPropertyViewModel>(nameof(ImageViewModel.StrokeThickness))
-                .WithSingleProperty<Color4PropertyViewModel>(nameof(ImageViewModel.StrokeColor))
+                .WithSingleProperty<ColorPropertyViewModel>(nameof(ImageViewModel.StrokeColor))
                 .WithLayout(layoutBuilder => layoutBuilder
                     .WithAutoSize()
                     .WithRelativeSize(1)

@@ -1,5 +1,6 @@
 ﻿using LogicSimulator.Infrastructure;
 using LogicSimulator.ViewModels.EditorViewModels.Base;
+using LogicSimulator.ViewModels.EditorViewModels.Base.Properties;
 using LogicSimulator.ViewModels.EditorViewModels.Layout;
 using LogicSimulator.ViewModels.EditorViewModels.Layout.Builders;
 using LogicSimulator.ViewModels.ObjectViewModels;
@@ -37,7 +38,7 @@ public class ArcEditorViewModel : EditorViewModel
             .WithRow(rowBuilder => rowBuilder
                 .WithRowName("Граница")
                 .WithSingleProperty<FloatPropertyViewModel>(nameof(ArcViewModel.StrokeThickness))
-                .WithSingleProperty<Color4PropertyViewModel>(nameof(ArcViewModel.StrokeColor))
+                .WithSingleProperty<ColorPropertyViewModel>(nameof(ArcViewModel.StrokeColor))
                 .WithLayout(layoutBuilder => layoutBuilder
                     .WithRelativeSize(1)
                     .WithAutoSize())))
