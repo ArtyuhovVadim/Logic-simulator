@@ -167,6 +167,7 @@
                             CanUserResizeRows="False"
                             Foreground="White"
                             HorizontalGridLinesBrush="#353535"
+                            SelectedIndex="{Binding Path=SelectedVertexIndex}"
                             ItemsSource="{Binding Path=Value}"
                             RowBackground="#3B3B3B"
                             SelectionMode="Single"
@@ -227,7 +228,6 @@
                                     <Setter Property="Template" Value="{x:Null}" />
                                 </Style>
                             </DataGrid.RowHeaderStyle>
-
                             <DataGrid.Columns>
                                 <DataGridTextColumn
                                     Width="Auto"
@@ -253,7 +253,10 @@
                             Margin="4"
                             HorizontalAlignment="Right"
                             Orientation="Horizontal">
-                            <Button Margin="0,0,4,0" Padding="8,5">
+                            <Button
+                                Margin="0,0,4,0"
+                                Padding="8,5"
+                                Command="{Binding Path=AddVertexCommand}">
                                 <Button.Content>
                                     <Path
                                         Height="13"
@@ -262,7 +265,7 @@
                                         Stretch="Uniform" />
                                 </Button.Content>
                             </Button>
-                            <Button Padding="8,5">
+                            <Button Padding="8,5" Command="{Binding Path=RemoveVertexCommand}">
                                 <Button.Content>
                                     <Path
                                         Height="13"

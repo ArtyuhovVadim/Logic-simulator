@@ -5,10 +5,7 @@ namespace LogicSimulator.ViewModels;
 
 public class VertexViewModel : BindableBase
 {
-    public VertexViewModel()
-    {
-        
-    }
+    public VertexViewModel() { }
 
     public VertexViewModel(Vector2 pos, int index)
     {
@@ -52,4 +49,6 @@ public class VertexViewModel : BindableBase
     }
 
     #endregion
+
+    public Vector2 Position => new(X, Y);
 }
