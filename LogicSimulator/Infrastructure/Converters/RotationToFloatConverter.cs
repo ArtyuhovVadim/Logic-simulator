@@ -12,7 +12,6 @@ public class RotationToFloatConverter : Converter
 
         return rotation switch
         {
-            Rotation.Undefined => throw new NotSupportedException(),
             Rotation.Degrees0 => 0,
             Rotation.Degrees90 => 90,
             Rotation.Degrees180 => 180,
@@ -32,7 +31,7 @@ public class RotationToFloatConverter : Converter
             90 => Rotation.Degrees90,
             180 => Rotation.Degrees180,
             270 => Rotation.Degrees270,
-            _ => Rotation.Undefined
+            _ => throw new ArgumentOutOfRangeException()
         };
     }
 }

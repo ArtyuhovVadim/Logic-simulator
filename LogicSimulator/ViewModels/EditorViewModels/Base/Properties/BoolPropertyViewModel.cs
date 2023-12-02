@@ -1,4 +1,4 @@
-﻿namespace LogicSimulator.ViewModels.EditorViewModels.Base;
+﻿namespace LogicSimulator.ViewModels.EditorViewModels.Base.Properties;
 
 public class BoolPropertyViewModel : SinglePropertyViewModel
 {
@@ -16,17 +16,25 @@ public class BoolPropertyViewModel : SinglePropertyViewModel
 
     protected override object GetPropertyValue(IEnumerable<object> objects)
     {
-        IsValueUndefined = objects.Any(o => !Equals(PropertyInfo.GetValue(o), PropertyInfo.GetValue(objects.First())));
-        return PropertyInfo.GetValue(objects.First());
+        var firstObj = objects.First();
+
+        IsValueUndefined = objects.Any(o => !Equals(GetValue<bool>(o), GetValue<bool>(firstObj)));
+
+        return GetValue<bool>(firstObj);
     }
 
     protected override void SetPropertyValue(IEnumerable<object> objects, object value)
     {
         if (IsValueUndefined) return;
 
+        var newValue = (bool)value;
+
         foreach (var obj in objects)
         {
-            PropertyInfo.SetValue(obj, value);
+            SetValue(obj, newValue);
         }
     }
+
+    public override PropertyViewModel MakeCopy(EditorViewModel editor) =>
+        new BoolPropertyViewModel { PropertyName = PropertyName, EditorViewModel = editor };
 }

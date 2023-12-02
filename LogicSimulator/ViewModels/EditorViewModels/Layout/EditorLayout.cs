@@ -10,6 +10,20 @@ public class EditorLayout
 
     public EditorViewModel EditorViewModel { get; set; }
 
+    public void RaisePropertyChangeForAllProperties()
+    {
+        foreach (var group in Groups)
+        {
+            foreach (var row in group.EditorRows)
+            {
+                foreach (var property in row.ObjectProperties)
+                {
+                    property.RaisePropertyChanged();
+                }
+            }
+        }
+    }
+
     public void PropertyChange(string propName)
     {
         foreach (var group in Groups)

@@ -6,9 +6,9 @@ public abstract class MultiPropertyViewModel : PropertyViewModel
 
     public IReadOnlyDictionary<string, SinglePropertyViewModel> Properties => _properties;
 
-    public void AddProperty<T>(string name) where T : SinglePropertyViewModel, new()
+    public void AddProperty<TPropertyViewModel>(string name) where TPropertyViewModel : SinglePropertyViewModel, new()
     {
-        _properties.Add(name, new T
+        _properties.Add(name, new TPropertyViewModel
         {
             EditorViewModel = EditorViewModel,
             PropertyName = name
@@ -20,6 +20,22 @@ public abstract class MultiPropertyViewModel : PropertyViewModel
         if (_properties.TryGetValue(propName, out var property))
         {
             property.ProvidePropertyChanged(propName);
+        }
+    }
+
+    public override void RaisePropertyChanged()
+    {
+        foreach (var property in _properties.Values)
+        {
+            property.RaisePropertyChanged();
+        }
+    }
+
+    protected void CopySinglePropertiesToOther(MultiPropertyViewModel other)
+    {
+        foreach (var prop in _properties)
+        {
+            other._properties[prop.Key] = (SinglePropertyViewModel)prop.Value.MakeCopy(other.EditorViewModel);
         }
     }
 }

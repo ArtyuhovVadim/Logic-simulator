@@ -1,5 +1,4 @@
 ﻿using System.ComponentModel;
-using LogicSimulator.Infrastructure;
 using LogicSimulator.ViewModels.Base;
 using LogicSimulator.ViewModels.EditorViewModels.Layout;
 
@@ -10,10 +9,6 @@ public abstract class EditorViewModel : BindableBase
     private EditorLayout _layout;
 
     private IEnumerable<INotifyPropertyChanged> _objectsToEdit;
-
-    private object FirstObject => _objectsToEdit.FirstOrDefault();
-
-    private Type ObjectsType => FirstObject.GetType();
 
     public EditorLayout Layout => _layout ??= CreateLayout();
 
@@ -43,12 +38,7 @@ public abstract class EditorViewModel : BindableBase
         }
 
         Layout.StartEdit();
-
-        foreach (var prop in ObjectsType.GetProperties().Where(x => Attribute.IsDefined(x, typeof(EditableAttribute))))
-        {
-            OnPropertyChanged(prop.Name);
-            Layout.PropertyChange(prop.Name);
-        }
+        Layout.RaisePropertyChangeForAllProperties();
 
         OnPropertyChanged(nameof(Layout));
     }

@@ -1,6 +1,7 @@
 ﻿using System.Reflection;
 using LogicSimulator.Infrastructure.Services.Interfaces;
 using LogicSimulator.ViewModels.AnchorableViewModels;
+using LogicSimulator.ViewModels.EditorViewModels;
 using LogicSimulator.ViewModels.EditorViewModels.Base;
 using LogicSimulator.ViewModels.ObjectViewModels.Base;
 
@@ -33,7 +34,13 @@ public class EditorSelectionService : IEditorSelectionService
 
         if (selectedSceneObjects.Any(x => x.GetType() != firstObjectType))
         {
-            SetEmptyEditor();
+            var layouts = selectedSceneObjects.Select(x => x.GetType()).Distinct().Select(x => EditorsMap[x]).Select(x => x.Layout);
+
+            var multiEditor = new MultiObjectsEditorViewModel(layouts);
+
+            multiEditor.SetObjectsToEdit(selectedSceneObjects);
+            _propertiesViewModel.CurrentEditorViewModel = multiEditor;
+
             return;
         }
 

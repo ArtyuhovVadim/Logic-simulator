@@ -1,5 +1,6 @@
 ﻿using LogicSimulator.Infrastructure;
 using LogicSimulator.ViewModels.EditorViewModels.Base;
+using LogicSimulator.ViewModels.EditorViewModels.Base.Properties;
 using LogicSimulator.ViewModels.EditorViewModels.Layout;
 using LogicSimulator.ViewModels.EditorViewModels.Layout.Builders;
 using LogicSimulator.ViewModels.ObjectViewModels;
@@ -37,14 +38,14 @@ public class RoundedRectangleEditorViewModel : EditorViewModel
             .WithRow(rowBuilder => rowBuilder
                 .WithRowName("Граница")
                 .WithSingleProperty<FloatPropertyViewModel>(nameof(RoundedRectangleViewModel.StrokeThickness))
-                .WithSingleProperty<Color4PropertyViewModel>(nameof(RoundedRectangleViewModel.StrokeColor))
+                .WithSingleProperty<ColorPropertyViewModel>(nameof(RoundedRectangleViewModel.StrokeColor))
                 .WithLayout(layoutBuilder => layoutBuilder
                     .WithRelativeSize(1)
                     .WithAutoSize()))
         .WithRow(rowBuilder => rowBuilder
                 .WithRowName("Цвет заливки")
-                .WithSingleProperty<Color4PropertyViewModel>(nameof(RoundedRectangleViewModel.FillColor))
-                .WithSingleProperty<BoolPropertyViewModel>(nameof(RoundedRectangleViewModel.IsFilled))
+               .WithSingleProperty<ColorPropertyViewModel>(nameof(RoundedRectangleViewModel.FillColor))
+               .WithSingleProperty<BoolPropertyViewModel>(nameof(RoundedRectangleViewModel.IsFilled))
                 .WithLayout(layoutBuilder => layoutBuilder
                     .WithAutoSize()
                     .WithAutoSize())))

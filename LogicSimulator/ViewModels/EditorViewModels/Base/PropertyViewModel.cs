@@ -8,9 +8,13 @@ public abstract class PropertyViewModel : BindableBase
 
     public abstract void ProvidePropertyChanged(string propName);
 
+    public abstract void RaisePropertyChanged();
+
     public void StartEdit() => OnStartEdit(EditorViewModel.Objects);
 
     public void EndEdit() => OnEndEdit(EditorViewModel.Objects);
+
+    public abstract PropertyViewModel MakeCopy(EditorViewModel editor);
 
     protected virtual void OnStartEdit(IEnumerable<object> objects) { }
 

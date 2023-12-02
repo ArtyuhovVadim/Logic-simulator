@@ -11,7 +11,6 @@ public abstract class BaseObjectViewModel : BindableBase
 
     private Vector2 _location;
 
-    [Editable]
     public Vector2 Location
     {
         get => _location;
@@ -24,7 +23,6 @@ public abstract class BaseObjectViewModel : BindableBase
 
     private Rotation _rotation = Rotation.Degrees0;
 
-    [Editable]
     public Rotation Rotation
     {
         get => _rotation;

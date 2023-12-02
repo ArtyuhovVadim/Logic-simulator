@@ -1,5 +1,6 @@
 ﻿using LogicSimulator.Infrastructure;
 using LogicSimulator.ViewModels.EditorViewModels.Base;
+using LogicSimulator.ViewModels.EditorViewModels.Base.Properties;
 using LogicSimulator.ViewModels.EditorViewModels.Layout;
 using LogicSimulator.ViewModels.EditorViewModels.Layout.Builders;
 using LogicSimulator.ViewModels.ObjectViewModels;
@@ -31,13 +32,13 @@ public class EllipseEditorViewModel : EditorViewModel
             .WithRow(rowBuilder => rowBuilder
                 .WithRowName("Граница")
                 .WithSingleProperty<FloatPropertyViewModel>(nameof(EllipseViewModel.StrokeThickness))
-                .WithSingleProperty<Color4PropertyViewModel>(nameof(EllipseViewModel.StrokeColor))
+                .WithSingleProperty<ColorPropertyViewModel>(nameof(EllipseViewModel.StrokeColor))
                 .WithLayout(layoutBuilder => layoutBuilder
                     .WithRelativeSize(1)
                     .WithAutoSize()))
             .WithRow(rowBuilder => rowBuilder
                 .WithRowName("Цвет заливки")
-                .WithSingleProperty<Color4PropertyViewModel>(nameof(EllipseViewModel.FillColor))
+                .WithSingleProperty<ColorPropertyViewModel>(nameof(EllipseViewModel.FillColor))
                 .WithSingleProperty<BoolPropertyViewModel>(nameof(EllipseViewModel.IsFilled))
                 .WithLayout(layoutBuilder => layoutBuilder
                     .WithAutoSize()
