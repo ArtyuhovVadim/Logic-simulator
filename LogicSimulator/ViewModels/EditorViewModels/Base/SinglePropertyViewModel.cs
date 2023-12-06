@@ -2,10 +2,6 @@
 
 public abstract class SinglePropertyViewModel : PropertyViewModel
 {
-    private readonly Dictionary<Type, Func<object, object>> _gettersMap = [];
-
-    private readonly Dictionary<Type, Action<object, object>> _settersMap = [];
-
     public string PropertyName { get; init; }
 
     #region Value
