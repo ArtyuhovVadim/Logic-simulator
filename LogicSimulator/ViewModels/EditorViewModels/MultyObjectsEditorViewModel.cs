@@ -47,10 +47,10 @@ public class MultiObjectsEditorViewModel(IEnumerable<EditorLayout> layouts) : Ed
         var result = props
             .Select(prop => (
                 name: string.Join('/', propTuples.Where(pair => comparer.Equals(pair.prop, prop)).Select(x => x.name).Distinct().Where(x => x != string.Empty)),
-                layout: propTuples.First(pair => comparer.Equals(pair.prop, prop)).layout,
+                propTuples.First(pair => comparer.Equals(pair.prop, prop)).layout,
                 prop: prop.MakeCopy(this)))
             .GroupBy(x => x.name)
-            .Select(x => (name: x.Key, layout: x.First().layout, props: x.Select(pair => pair.prop)));
+            .Select(x => (name: x.Key, x.First().layout, props: x.Select(pair => pair.prop)));
 
         return result;
     }
@@ -58,7 +58,7 @@ public class MultiObjectsEditorViewModel(IEnumerable<EditorLayout> layouts) : Ed
 
 file class PropertyViewModelComparer : IEqualityComparer<PropertyViewModel>
 {
-    public bool Equals(PropertyViewModel x, PropertyViewModel y)
+    public bool Equals(PropertyViewModel? x, PropertyViewModel? y)
     {
         if (ReferenceEquals(x, y)) return true;
         if (ReferenceEquals(x, null)) return false;

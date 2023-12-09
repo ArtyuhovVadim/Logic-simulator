@@ -91,7 +91,7 @@ public class RectangleSelectionTool : BaseTool
 
     #region ObjectSelectedCommand
 
-    public ICommand ObjectSelectedCommand
+    public ICommand? ObjectSelectedCommand
     {
         get => (ICommand)GetValue(ObjectSelectedCommandProperty);
         set => SetValue(ObjectSelectedCommandProperty, value);

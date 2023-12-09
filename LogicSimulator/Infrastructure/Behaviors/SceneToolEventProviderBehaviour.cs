@@ -14,7 +14,7 @@ public class SceneToolEventProviderBehaviour : Behavior<Scene2D>
 
     private ToolsController? _controller;
 
-    private BaseTool CurrentTool => (_controller ??= ToolsController.GetController(AssociatedObject)).CurrentTool;
+    private BaseTool? CurrentTool => (_controller ??= ToolsController.GetController(AssociatedObject)).CurrentTool;
 
     protected override void OnAttached()
     {

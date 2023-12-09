@@ -56,8 +56,10 @@ public class ProjectFileService : IProjectFileService
 
             foreach (var schemeFilePath in schemeFilePaths)
             {
-                _schemeFileService.ReadFromFile(schemeFilePath, out var scheme);
-                schemes.Add(scheme);
+                if (!_schemeFileService.ReadFromFile(schemeFilePath, out var scheme))
+                    throw new ApplicationException($"Can not load scheme file with '{schemeFilePath}' path");
+
+                schemes.Add(scheme!);
             }
 
             project.Schemes = schemes;

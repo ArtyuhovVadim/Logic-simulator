@@ -85,7 +85,7 @@ public class DragTool : BaseTool
             {
                 foreach (var o in ObjectsLayer.Objects.Select(ObjectsLayer.GetViewFromItem))
                 {
-                    if (o.IsSelected)
+                    if (o!.IsSelected)
                     {
                         StartDragObject(o, pos);
                     }

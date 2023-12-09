@@ -27,7 +27,7 @@ public class ProjectExplorerViewModel : ToolViewModel
 
     #endregion
 
-    public IEnumerable<ProjectViewModel> ProjectViewModels => [ProjectViewModel];
+    public IEnumerable<ProjectViewModel> ProjectViewModels => [ProjectViewModel!];
 
     #region OpenSchemeCommand
 
