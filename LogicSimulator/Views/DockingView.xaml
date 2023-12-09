@@ -3,8 +3,10 @@
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:avm="clr-namespace:LogicSimulator.ViewModels.AnchorableViewModels"
+    xmlns:b="clr-namespace:LogicSimulator.Infrastructure.Behaviors"
     xmlns:converters="clr-namespace:LogicSimulator.Infrastructure.Converters"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
     xmlns:infrastructure="clr-namespace:LogicSimulator.Infrastructure"
     xmlns:local="clr-namespace:LogicSimulator.Views"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
@@ -26,7 +28,11 @@
             <selectors:PanesTemplateSelector>
                 <selectors:PanesTemplateSelector.SchemeViewTemplate>
                     <DataTemplate DataType="{x:Type avm:SchemeViewModel}">
-                        <local:SchemeView />
+                        <local:SchemeView>
+                            <i:Interaction.Behaviors>
+                                <b:SchemeViewCloseBehaviour CloseCommand="{Binding Path=CloseCommand}" />
+                            </i:Interaction.Behaviors>
+                        </local:SchemeView>
                     </DataTemplate>
                 </selectors:PanesTemplateSelector.SchemeViewTemplate>
                 <selectors:PanesTemplateSelector.PropertiesViewTemplate>
@@ -45,6 +51,7 @@
             <selectors:PanesStyleSelector>
                 <selectors:PanesStyleSelector.DocumentViewStyle>
                     <Style TargetType="{x:Type LayoutDocumentItem}">
+
                         <Setter Property="Title" Value="{Binding Path=Model.Title}" />
                         <Setter Property="IsActive" Value="{Binding Path=Model.IsActive, Mode=TwoWay}" />
                         <Setter Property="IsSelected" Value="{Binding Path=Model.IsSelected, Mode=TwoWay}" />
