@@ -95,6 +95,11 @@ public class ObjectsLayer : BaseSceneLayer
             }
 
             _objects.Clear();
+
+            if (Objects is INotifyCollectionChanged collection)
+            {
+                collection.CollectionChanged -= OnObjectsCollectionChanged;
+            }
         }
 
         base.Dispose(disposingManaged);
