@@ -1,6 +1,6 @@
 ﻿using LogicSimulator.Infrastructure;
-using LogicSimulator.Infrastructure.Commands;
 using LogicSimulator.ViewModels.UserDialogViewModels.Base;
+using WpfExtensions.Mvvm.Commands;
 
 namespace LogicSimulator.ViewModels.UserDialogViewModels;
 
@@ -13,7 +13,7 @@ public class ErrorDialogWindowViewModel : BaseUserDialogViewModel
     public ICommand ConfirmCommand => _confirmCommand ??= new LambdaCommand(_ =>
     {
         OnCompleted(UserDialogResult.Ok);
-    }, _ => true);
+    });
 
     #endregion
 }

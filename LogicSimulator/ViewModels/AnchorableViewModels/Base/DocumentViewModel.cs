@@ -1,4 +1,4 @@
-﻿using LogicSimulator.Infrastructure.Commands;
+﻿using WpfExtensions.Mvvm.Commands;
 
 namespace LogicSimulator.ViewModels.AnchorableViewModels.Base;
 

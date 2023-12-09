@@ -1,5 +1,5 @@
-﻿using LogicSimulator.ViewModels.Base;
-using SharpDX;
+﻿using SharpDX;
+using WpfExtensions.Mvvm;
 
 namespace LogicSimulator.ViewModels;
 

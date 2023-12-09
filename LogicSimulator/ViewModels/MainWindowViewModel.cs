@@ -1,10 +1,10 @@
 ﻿using System.Windows;
-using LogicSimulator.Infrastructure.Commands;
 using LogicSimulator.Infrastructure.Services;
 using LogicSimulator.Infrastructure.Services.Interfaces;
 using LogicSimulator.ViewModels.AnchorableViewModels;
 using LogicSimulator.ViewModels.AnchorableViewModels.Base;
-using LogicSimulator.ViewModels.Base;
+using WpfExtensions.Mvvm;
+using WpfExtensions.Mvvm.Commands;
 
 namespace LogicSimulator.ViewModels;
 
@@ -112,7 +112,7 @@ public class MainWindowViewModel : BindableBase
         }
 
         ActiveProjectViewModel = new ProjectViewModel(project);
-    }, _ => true);
+    });
 
     #endregion
 

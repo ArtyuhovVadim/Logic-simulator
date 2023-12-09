@@ -1,5 +1,4 @@
-﻿using LogicSimulator.Infrastructure.Commands;
-using LogicSimulator.Infrastructure.Services.Interfaces;
+﻿using LogicSimulator.Infrastructure.Services.Interfaces;
 using LogicSimulator.Models;
 using LogicSimulator.ViewModels.AnchorableViewModels.Base;
 using LogicSimulator.ViewModels.ObjectViewModels.Base;
@@ -7,6 +6,7 @@ using LogicSimulator.ViewModels.Tools;
 using LogicSimulator.ViewModels.Tools.Base;
 using Microsoft.Extensions.DependencyInjection;
 using SharpDX;
+using WpfExtensions.Mvvm.Commands;
 
 namespace LogicSimulator.ViewModels.AnchorableViewModels;
 

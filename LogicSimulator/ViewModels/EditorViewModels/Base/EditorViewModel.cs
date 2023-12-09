@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel;
-using LogicSimulator.ViewModels.Base;
 using LogicSimulator.ViewModels.EditorViewModels.Layout;
+using WpfExtensions.Mvvm;
 
 namespace LogicSimulator.ViewModels.EditorViewModels.Base;
 

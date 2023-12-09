@@ -1,5 +1,5 @@
-﻿using LogicSimulator.Infrastructure.Commands;
-using LogicSimulator.ViewModels.AnchorableViewModels.Base;
+﻿using LogicSimulator.ViewModels.AnchorableViewModels.Base;
+using WpfExtensions.Mvvm.Commands;
 
 namespace LogicSimulator.ViewModels.AnchorableViewModels;
 
@@ -38,7 +38,7 @@ public class ProjectExplorerViewModel : ToolViewModel
         if (p is not SchemeViewModel schemeViewModel) return;
 
         SchemeOpened?.Invoke(schemeViewModel);
-    }, _ => true);
+    });
 
     #endregion
 }

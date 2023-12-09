@@ -1,5 +1,5 @@
-﻿using LogicSimulator.Infrastructure.Commands;
-using LogicSimulator.ViewModels.Base;
+﻿using WpfExtensions.Mvvm;
+using WpfExtensions.Mvvm.Commands;
 
 namespace LogicSimulator.ViewModels.Tools.Base;
 
@@ -37,7 +37,7 @@ public abstract class BaseSchemeToolViewModel : BindableBase
 
     private ICommand _selectedCommand;
 
-    public ICommand SelectedCommand => _selectedCommand ??= new LambdaCommand(_ => OnSelected());
+    public ICommand SelectedCommand => _selectedCommand ??= new LambdaCommand(OnSelected);
 
     #endregion
 

@@ -1,6 +1,6 @@
 ﻿using LogicSimulator.Models;
 using LogicSimulator.ViewModels.AnchorableViewModels;
-using LogicSimulator.ViewModels.Base;
+using WpfExtensions.Mvvm;
 
 namespace LogicSimulator.ViewModels;
 

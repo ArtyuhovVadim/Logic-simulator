@@ -1,4 +1,4 @@
-﻿using LogicSimulator.ViewModels.Base;
+﻿using WpfExtensions.Mvvm;
 
 namespace LogicSimulator.ViewModels.EditorViewModels.Base;
 

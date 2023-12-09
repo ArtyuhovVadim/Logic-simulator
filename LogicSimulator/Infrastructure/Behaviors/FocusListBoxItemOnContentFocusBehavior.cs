@@ -1,7 +1,7 @@
 ﻿using System.Windows;
 using System.Windows.Controls;
-using LogicSimulator.ViewModels.Base;
 using Microsoft.Xaml.Behaviors;
+using WpfExtensions.Mvvm;
 
 namespace LogicSimulator.Infrastructure.Behaviors;
 

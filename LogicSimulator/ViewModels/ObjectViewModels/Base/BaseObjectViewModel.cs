@@ -1,6 +1,6 @@
 ﻿using LogicSimulator.Infrastructure;
-using LogicSimulator.ViewModels.Base;
 using SharpDX;
+using WpfExtensions.Mvvm;
 using YamlDotNet.Serialization;
 
 namespace LogicSimulator.ViewModels.ObjectViewModels.Base;

@@ -22,6 +22,7 @@
     </ItemGroup>
 
     <ItemGroup>
+        <ProjectReference Include="..\..\WpfExtensions\WpfExtensions.Mvvm\WpfExtensions.Mvvm.csproj" />
         <ProjectReference Include="..\LogicSimulator.Controls\LogicSimulator.Controls.csproj" />
         <ProjectReference Include="..\LogicSimulator.Scene\LogicSimulator.Scene.csproj" />
     </ItemGroup>

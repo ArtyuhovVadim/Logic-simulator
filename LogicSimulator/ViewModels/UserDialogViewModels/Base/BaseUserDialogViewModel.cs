@@ -1,5 +1,5 @@
 ﻿using LogicSimulator.Infrastructure;
-using LogicSimulator.ViewModels.Base;
+using WpfExtensions.Mvvm;
 
 namespace LogicSimulator.ViewModels.UserDialogViewModels.Base;
 

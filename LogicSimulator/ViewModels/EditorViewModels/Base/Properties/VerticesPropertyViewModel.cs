@@ -1,7 +1,7 @@
 ﻿using System.Collections.Specialized;
 using System.ComponentModel;
-using LogicSimulator.Infrastructure.Commands;
 using SharpDX;
+using WpfExtensions.Mvvm.Commands;
 
 namespace LogicSimulator.ViewModels.EditorViewModels.Base.Properties;
 
