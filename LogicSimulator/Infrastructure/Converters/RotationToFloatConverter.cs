@@ -1,9 +1,13 @@
 ﻿using System.Globalization;
 using System.Windows;
+using System.Windows.Data;
+using System.Windows.Markup;
 using WpfExtensions.Converters.Base;
 
 namespace LogicSimulator.Infrastructure.Converters;
 
+[ValueConversion(typeof(Rotation), typeof(int))]
+[MarkupExtensionReturnType(typeof(RotationToFloatConverter))]
 public class RotationToFloatConverter : BaseConverter
 {
     public override object Convert(object? v, Type t, object? p, CultureInfo c)
