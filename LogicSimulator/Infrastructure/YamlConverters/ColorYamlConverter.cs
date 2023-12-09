@@ -41,9 +41,9 @@ public class ColorYamlConverter : IYamlTypeConverter
         return color.ToColor();
     }
 
-    public void WriteYaml(IEmitter emitter, object value, Type type)
+    public void WriteYaml(IEmitter emitter, object? value, Type type)
     {
-        var color = ((Color)value).ToColor4();
+        var color = ((Color)value!).ToColor4();
 
         emitter.Emit(new SequenceStart(AnchorName.Empty, TagName.Empty, false, SequenceStyle.Flow));
 

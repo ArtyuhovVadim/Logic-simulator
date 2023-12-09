@@ -11,9 +11,9 @@ namespace LogicSimulator.Infrastructure.Tools;
 
 public class NodeDragTool : BaseTool
 {
-    private AbstractNode _node;
+    private AbstractNode? _node;
 
-    private EditableSceneObjectView _owner;
+    private EditableSceneObjectView? _owner;
 
     #region GridSnap
 

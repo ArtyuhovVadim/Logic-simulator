@@ -2,7 +2,7 @@
 
 public abstract class SinglePropertyViewModel : PropertyViewModel
 {
-    public string PropertyName { get; init; }
+    public string PropertyName { get; init; } = string.Empty;
 
     #region Value
 
@@ -32,7 +32,7 @@ public abstract class SinglePropertyViewModel : PropertyViewModel
 
     protected TProperty GetValue<TProperty>(object obj) => (TProperty)GettersAndSettersCache.GetGetter(PropertyName, obj)(obj);
 
-    protected void SetValue<TProperty>(object obj, TProperty value) => GettersAndSettersCache.GetSetter<TProperty>(PropertyName, obj)(obj, value);
+    protected void SetValue<TProperty>(object obj, TProperty value) => GettersAndSettersCache.GetSetter<TProperty>(PropertyName, obj)(obj, value!);
 
     public override void RaisePropertyChanged() => OnPropertyChanged(nameof(Value));
 }

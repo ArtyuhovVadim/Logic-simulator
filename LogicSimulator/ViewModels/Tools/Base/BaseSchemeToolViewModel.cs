@@ -5,7 +5,7 @@ namespace LogicSimulator.ViewModels.Tools.Base;
 
 public abstract class BaseSchemeToolViewModel : BindableBase
 {
-    public event Action<BaseSchemeToolViewModel> ToolSelected;
+    public event Action<BaseSchemeToolViewModel>? ToolSelected;
 
     protected BaseSchemeToolViewModel(string name) => _name = name;
 
@@ -35,7 +35,7 @@ public abstract class BaseSchemeToolViewModel : BindableBase
 
     #region SelectedCommand
 
-    private ICommand _selectedCommand;
+    private ICommand? _selectedCommand;
 
     public ICommand SelectedCommand => _selectedCommand ??= new LambdaCommand(OnSelected);
 

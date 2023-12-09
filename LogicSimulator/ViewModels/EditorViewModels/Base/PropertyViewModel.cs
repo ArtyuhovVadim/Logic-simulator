@@ -4,7 +4,7 @@ namespace LogicSimulator.ViewModels.EditorViewModels.Base;
 
 public abstract class PropertyViewModel : BindableBase
 {
-    public EditorViewModel EditorViewModel { get; set; }
+    public EditorViewModel EditorViewModel { get; set; } = null!;
 
     public abstract void ProvidePropertyChanged(string propName);
 

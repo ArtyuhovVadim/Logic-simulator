@@ -6,7 +6,7 @@ namespace LogicSimulator.Infrastructure.Converters;
 
 public class RotationToFloatConverter : BaseConverter
 {
-    public override object Convert(object v, Type t, object p, CultureInfo c)
+    public override object Convert(object? v, Type t, object? p, CultureInfo c)
     {
         if (v is not Rotation rotation)
             return DependencyProperty.UnsetValue;
@@ -21,7 +21,7 @@ public class RotationToFloatConverter : BaseConverter
         };
     }
 
-    public override object ConvertBack(object v, Type t, object p, CultureInfo c)
+    public override object ConvertBack(object? v, Type t, object? p, CultureInfo c)
     {
         if (v is not float rotation)
             return DependencyProperty.UnsetValue;

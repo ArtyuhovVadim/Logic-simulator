@@ -22,7 +22,7 @@ public class SceneObjectTemplateSelector : DataTemplateSelector
 
     public DataTemplate UnknownObjectDataTemplate { get; set; } = null!;
 
-    public override DataTemplate SelectTemplate(object item, DependencyObject container) => item switch
+    public override DataTemplate SelectTemplate(object? item, DependencyObject container) => item switch
     {
         RoundedRectangleViewModel => RoundedRectangleDataTemplate,
         RectangleViewModel => RectangleDataTemplate,

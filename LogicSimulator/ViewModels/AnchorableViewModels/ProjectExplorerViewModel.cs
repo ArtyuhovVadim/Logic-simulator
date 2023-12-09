@@ -5,15 +5,15 @@ namespace LogicSimulator.ViewModels.AnchorableViewModels;
 
 public class ProjectExplorerViewModel : ToolViewModel
 {
-    public event Action<SchemeViewModel> SchemeOpened;
+    public event Action<SchemeViewModel>? SchemeOpened;
 
     public override string Title => "Обозреватель проекта";
 
     #region ProjectViewModel
 
-    private ProjectViewModel _projectViewModel;
+    private ProjectViewModel? _projectViewModel;
 
-    public ProjectViewModel ProjectViewModel
+    public ProjectViewModel? ProjectViewModel
     {
         get => _projectViewModel;
         set
@@ -27,11 +27,11 @@ public class ProjectExplorerViewModel : ToolViewModel
 
     #endregion
 
-    public IEnumerable<ProjectViewModel> ProjectViewModels => new[] { ProjectViewModel };
+    public IEnumerable<ProjectViewModel> ProjectViewModels => [ProjectViewModel];
 
     #region OpenSchemeCommand
 
-    private ICommand _openSchemeCommand;
+    private ICommand? _openSchemeCommand;
 
     public ICommand OpenSchemeCommand => _openSchemeCommand ??= new LambdaCommand(p =>
     {

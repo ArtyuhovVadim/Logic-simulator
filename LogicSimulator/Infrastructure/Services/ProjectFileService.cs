@@ -6,11 +6,6 @@ using YamlDotNet.Serialization;
 
 namespace LogicSimulator.Infrastructure.Services;
 
-public interface IProjectFileService
-{
-    public bool ReadFromFile(string path, out Project project);
-}
-
 public class ProjectFileService : IProjectFileService
 {
     private readonly ISchemeFileService _schemeFileService;
@@ -38,7 +33,7 @@ public class ProjectFileService : IProjectFileService
         _fileReadStreamOptions = new FileStreamOptions { Access = FileAccess.Read, Mode = FileMode.Open };
     }
 
-    public bool ReadFromFile(string path, out Project project)
+    public bool ReadFromFile(string path, out Project? project)
     {
         project = null;
 

@@ -4,11 +4,11 @@ namespace LogicSimulator.ViewModels.EditorViewModels.Layout;
 
 public class EditorLayout
 {
-    public string ObjectName { get; set; }
+    public string ObjectName { get; set; } = string.Empty;
 
-    public List<EditorGroup> Groups { get; set; } = new();
+    public List<EditorGroup> Groups { get; set; } = [];
 
-    public EditorViewModel EditorViewModel { get; set; }
+    public EditorViewModel EditorViewModel { get; set; }= null!;
 
     public void RaisePropertyChangeForAllProperties()
     {

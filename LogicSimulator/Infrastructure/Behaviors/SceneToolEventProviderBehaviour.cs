@@ -12,7 +12,7 @@ public class SceneToolEventProviderBehaviour : Behavior<Scene2D>
     private bool _isMouseRightButtonPressedOnScene;
     private bool _isMouseMiddleButtonPressedOnScene;
 
-    private ToolsController _controller;
+    private ToolsController? _controller;
 
     private BaseTool CurrentTool => (_controller ??= ToolsController.GetController(AssociatedObject)).CurrentTool;
 

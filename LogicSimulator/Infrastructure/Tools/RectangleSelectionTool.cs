@@ -129,11 +129,11 @@ public class RectangleSelectionTool : BaseTool
         {
             if (!isManySelectionKeyDown)
             {
-                sceneObject.Unselect();
+                sceneObject!.Unselect();
                 _isSelectionChanged = true;
             }
 
-            var compareResult = sceneObject.HitTest(Geometry, Matrix3x2.Identity);
+            var compareResult = sceneObject!.HitTest(Geometry, Matrix3x2.Identity);
 
             if (compareResult is GeometryRelation.Disjoint or GeometryRelation.Unknown)
                 continue;

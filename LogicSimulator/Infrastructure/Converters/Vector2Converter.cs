@@ -10,7 +10,7 @@ namespace LogicSimulator.Infrastructure.Converters;
 [MarkupExtensionReturnType(typeof(Vector2Converter))]
 public class Vector2Converter : BaseConverter
 {
-    public override object Convert(object v, Type t, object p, CultureInfo c)
+    public override object Convert(object? v, Type t, object? p, CultureInfo c)
     {
         var vec = (Vector2)v!;
 

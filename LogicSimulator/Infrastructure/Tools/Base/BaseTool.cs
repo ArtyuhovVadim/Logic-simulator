@@ -6,7 +6,7 @@ namespace LogicSimulator.Infrastructure.Tools.Base;
 
 public abstract class BaseTool : Freezable
 {
-    public event Action<BaseTool> ContextChanged;
+    public event Action<BaseTool>? ContextChanged;
 
     #region CancelKey
 
@@ -23,7 +23,7 @@ public abstract class BaseTool : Freezable
 
     #region Context
 
-    public object Context
+    public object? Context
     {
         get => GetValue(ContextProperty);
         set => SetValue(ContextProperty, value);
@@ -45,7 +45,7 @@ public abstract class BaseTool : Freezable
 
     public bool ActivatedFromOtherTool { get; private set; }
 
-    protected ToolsController ToolsController { get; private set; }
+    protected ToolsController ToolsController { get; private set; } = null!;
 
     public void Activate(ToolsController toolsController, bool activatedFromOtherTool = false)
     {

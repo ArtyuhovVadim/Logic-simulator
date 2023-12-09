@@ -1,5 +1,4 @@
 ﻿using System.Windows;
-using LogicSimulator.Infrastructure.Services;
 using LogicSimulator.Infrastructure.Services.Interfaces;
 using LogicSimulator.ViewModels.AnchorableViewModels;
 using LogicSimulator.ViewModels.AnchorableViewModels.Base;
@@ -38,16 +37,16 @@ public class MainWindowViewModel : BindableBase
             await Application.Current.Dispatcher.InvokeAsync(() =>
             {
                 LoadExampleCommand.Execute(null);
-                OnSchemeOpened(ActiveProjectViewModel.Schemes.First());
+                OnSchemeOpened(ActiveProjectViewModel!.Schemes.First());
             });
         });
     }
 
     #region ActiveContent
 
-    private AnchorableViewModel _activeAnchorable;
+    private AnchorableViewModel? _activeAnchorable;
 
-    public AnchorableViewModel ActiveContent
+    public AnchorableViewModel? ActiveContent
     {
         get => _activeAnchorable;
         set => Set(ref _activeAnchorable, value);
@@ -57,7 +56,7 @@ public class MainWindowViewModel : BindableBase
 
     #region AnchorableViewModels
 
-    private ObservableCollection<AnchorableViewModel> _anchorableViewModels = new();
+    private ObservableCollection<AnchorableViewModel> _anchorableViewModels = [];
 
     public ObservableCollection<AnchorableViewModel> AnchorableViewModels
     {
@@ -69,9 +68,9 @@ public class MainWindowViewModel : BindableBase
 
     #region ActiveProjectViewModel
 
-    private ProjectViewModel _activeProjectViewModel;
+    private ProjectViewModel? _activeProjectViewModel;
 
-    public ProjectViewModel ActiveProjectViewModel
+    public ProjectViewModel? ActiveProjectViewModel
     {
         get => _activeProjectViewModel;
         set
@@ -87,7 +86,7 @@ public class MainWindowViewModel : BindableBase
 
     #region OpenedSchemes
 
-    private ObservableCollection<SchemeViewModel> _openedSchemes = new();
+    private ObservableCollection<SchemeViewModel> _openedSchemes = [];
 
     public ObservableCollection<SchemeViewModel> OpenedSchemes
     {
@@ -99,11 +98,11 @@ public class MainWindowViewModel : BindableBase
 
     #region LoadExampleCommand
 
-    private ICommand _loadExampleCommand;
+    private ICommand? _loadExampleCommand;
 
     public ICommand LoadExampleCommand => _loadExampleCommand ??= new LambdaCommand(_ =>
     {
-        var projectPath = @"Data\ExampleProject\ExampleProject.lsproj";
+        const string projectPath = @"Data\ExampleProject\ExampleProject.lsproj";
 
         if (!_projectFileService.ReadFromFile(projectPath, out var project))
         {
@@ -111,26 +110,24 @@ public class MainWindowViewModel : BindableBase
             return;
         }
 
-        ActiveProjectViewModel = new ProjectViewModel(project);
+        ActiveProjectViewModel = new ProjectViewModel(project!);
     });
 
     #endregion
 
     #region SaveExampleCommand
 
-    private ICommand _saveExampleCommand;
+    private ICommand? _saveExampleCommand;
 
-    public ICommand SaveExampleCommand => _saveExampleCommand ??= new LambdaCommand(_ => { }, _ => true);
+    public ICommand SaveExampleCommand => _saveExampleCommand ??= new LambdaCommand(_ => { });
 
     #endregion
 
     #region TestCommand
 
-    private ICommand _testCommand;
+    private ICommand? _testCommand;
 
-    public ICommand TestCommand => _testCommand ??= new LambdaCommand(_ =>
-    {
-    }, _ => true);
+    public ICommand TestCommand => _testCommand ??= new LambdaCommand(_ => { });
 
     #endregion
 

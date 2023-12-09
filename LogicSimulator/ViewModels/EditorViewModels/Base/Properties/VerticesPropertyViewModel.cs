@@ -8,7 +8,7 @@ namespace LogicSimulator.ViewModels.EditorViewModels.Base.Properties;
 public class VerticesPropertyViewModel : SinglePropertyViewModel
 {
     private bool _suppressVertexChanged;
-    private object _firstObject;
+    private object _firstObject = null!;
     private readonly ObservableCollection<VertexViewModel> _vertexes = [];
 
     #region SelectedVertexIndex
@@ -25,7 +25,7 @@ public class VerticesPropertyViewModel : SinglePropertyViewModel
 
     #region AddVertexCommand
 
-    private ICommand _addVertexCommand;
+    private ICommand? _addVertexCommand;
 
     public ICommand AddVertexCommand => _addVertexCommand ??= new LambdaCommand(_ =>
     {
@@ -38,7 +38,7 @@ public class VerticesPropertyViewModel : SinglePropertyViewModel
 
     #region RemoveVertexCommand
 
-    private ICommand _removeVertexCommand;
+    private ICommand? _removeVertexCommand;
 
     public ICommand RemoveVertexCommand => _removeVertexCommand ??= new LambdaCommand(_ =>
     {
@@ -61,7 +61,7 @@ public class VerticesPropertyViewModel : SinglePropertyViewModel
     protected override object GetPropertyValue(IEnumerable<object> objects)
     {
         if (objects.Count() > 1)
-            return null;
+            return null!;
 
         var vertexes = GetValue<ObservableCollection<Vector2>>(_firstObject);
 
@@ -80,14 +80,14 @@ public class VerticesPropertyViewModel : SinglePropertyViewModel
         {
             vertex.PropertyChanged -= OnVertexChanged;
         }
-        _firstObject = null;
+        _firstObject = null!;
         _vertexes.Clear();
         SelectedVertexIndex = -1;
     }
 
-    private void OnVertexesCollectionChanged(object sender, NotifyCollectionChangedEventArgs e) => OnPropertyChanged(nameof(Value));
+    private void OnVertexesCollectionChanged(object? sender, NotifyCollectionChangedEventArgs e) => OnPropertyChanged(nameof(Value));
 
-    private void SynchronizeVertexes(ObservableCollection<Vector2> vertexes)
+    private void SynchronizeVertexes(IReadOnlyList<Vector2> vertexes)
     {
         _suppressVertexChanged = true;
         var diff = Math.Abs(_vertexes.Count - vertexes.Count);
@@ -122,11 +122,11 @@ public class VerticesPropertyViewModel : SinglePropertyViewModel
         _suppressVertexChanged = false;
     }
 
-    private void OnVertexChanged(object sender, PropertyChangedEventArgs e)
+    private void OnVertexChanged(object? sender, PropertyChangedEventArgs e)
     {
         if (_suppressVertexChanged || e.PropertyName is not (nameof(VertexViewModel.X) or nameof(VertexViewModel.Y))) return;
 
-        var vertex = (VertexViewModel)sender;
+        var vertex = (VertexViewModel)sender!;
         var vertexes = GetValue<ObservableCollection<Vector2>>(_firstObject);
         vertexes[vertex.Index] = new Vector2(vertex.X, vertex.Y);
     }

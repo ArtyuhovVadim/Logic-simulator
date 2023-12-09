@@ -5,14 +5,14 @@ using LogicSimulator.Infrastructure.Tools.Base;
 
 namespace LogicSimulator.Infrastructure.Tools;
 
-public class ToolsCollection : FreezableCollection<BaseTool> { }
+public class ToolsCollection : FreezableCollection<BaseTool>;
 
 [ContentProperty(nameof(Tools))]
 public class ToolsController : Freezable
 {
-    private BaseTool _currentTool;
+    private BaseTool? _currentTool;
 
-    public event Action<BaseTool, BaseTool> ToolChanged;
+    public event Action<BaseTool?, BaseTool?>? ToolChanged;
 
     #region Controller
 
@@ -77,12 +77,12 @@ public class ToolsController : Freezable
 
     public ToolsController()
     {
-        Tools = new ToolsCollection();
+        Tools = [];
 
         ((INotifyCollectionChanged)Tools).CollectionChanged += OnToolCollectionChanged;
     }
 
-    public BaseTool CurrentTool
+    public BaseTool? CurrentTool
     {
         get => _currentTool;
         set
@@ -93,7 +93,7 @@ public class ToolsController : Freezable
         }
     }
 
-    public void SwitchTool<T>(Action<T> actionToNextToolAfterActivating = null) where T : BaseTool
+    public void SwitchTool<T>(Action<T>? actionToNextToolAfterActivating = null) where T : BaseTool
     {
         var nextTool = Tools.FirstOrDefault(x => x.GetType() == typeof(T));
 
@@ -115,7 +115,7 @@ public class ToolsController : Freezable
 
     protected override Freezable CreateInstanceCore() => new ToolsController();
 
-    private void OnToolCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
+    private void OnToolCollectionChanged(object? sender, NotifyCollectionChangedEventArgs e)
     {
         if (e.NewItems?.Count == 0)
             return;
@@ -146,7 +146,7 @@ public class ToolsController : Freezable
         CurrentTool = newTool;
     }
 
-    private void OnToolChanged(BaseTool newTool, BaseTool oldTool, bool activatedFromOtherTool)
+    private void OnToolChanged(BaseTool? newTool, BaseTool? oldTool, bool activatedFromOtherTool)
     {
         if (oldTool is { CanSwitch: false })
             return;
@@ -155,7 +155,7 @@ public class ToolsController : Freezable
         newTool?.Activate(this, activatedFromOtherTool);
 
         _currentTool = newTool;
-        CurrentToolContext = newTool?.Context;
+        CurrentToolContext = newTool?.Context!;
 
         ToolChanged?.Invoke(newTool, oldTool);
     }

@@ -6,13 +6,13 @@ public abstract class DocumentViewModel : AnchorableViewModel
 {
     #region CloseCommand
 
-    private ICommand _closeCommand;
+    private ICommand? _closeCommand;
 
     public ICommand CloseCommand => _closeCommand ??= new LambdaCommand(Close, CanClose);
 
     #endregion
 
-    protected virtual bool CanClose(object p) => true;
+    protected virtual bool CanClose(object? p) => true;
 
-    protected abstract void Close(object p);
+    protected abstract void Close(object? p);
 }

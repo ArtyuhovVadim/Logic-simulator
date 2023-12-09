@@ -11,9 +11,9 @@ namespace LogicSimulator.Infrastructure.YamlConverters;
 
 public class LineYamlConverter : IYamlTypeConverter
 {
-    public IValueSerializer ValueSerializer { get; set; }
+    public IValueSerializer ValueSerializer { get; set; } = null!;
 
-    public IValueDeserializer ValueDeserializer { get; set; }
+    public IValueDeserializer ValueDeserializer { get; set; } = null!;
 
     public bool Accepts(Type type) => type == typeof(LineViewModel);
 
@@ -49,7 +49,7 @@ public class LineYamlConverter : IYamlTypeConverter
         if (!parser.TryConsume<Scalar>(out var vertexScalar) || vertexScalar.Value != nameof(LineViewModel.Vertexes))
             throw new YamlException(vertexScalar!.Start, vertexScalar.End, $"Expected a scalar named '{nameof(LineViewModel.Vertexes)}'");
 
-        var vertexes = (IEnumerable<Vector2>)ValueDeserializer.DeserializeValue(parser, typeof(IEnumerable<Vector2>), new SerializerState(), ValueDeserializer);
+        var vertexes = (IEnumerable<Vector2>)ValueDeserializer.DeserializeValue(parser, typeof(IEnumerable<Vector2>), new SerializerState(), ValueDeserializer)!;
 
         line.Vertexes = new ObservableCollection<Vector2>(vertexes);
 
@@ -58,9 +58,9 @@ public class LineYamlConverter : IYamlTypeConverter
         return line;
     }
 
-    public void WriteYaml(IEmitter emitter, object value, Type type)
+    public void WriteYaml(IEmitter emitter, object? value, Type type)
     {
-        var line = (LineViewModel)value;
+        var line = (LineViewModel)value!;
 
         emitter.Emit(new MappingStart(AnchorName.Empty, new TagName("!Line"), false, MappingStyle.Block));
 

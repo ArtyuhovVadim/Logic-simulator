@@ -6,14 +6,14 @@ namespace LogicSimulator.Infrastructure.Selectors;
 
 public class PanesStyleSelector : StyleSelector
 {
-    public Style ToolViewStyle { get; set; }
+    public Style ToolViewStyle { get; set; } = null!;
 
-    public Style DocumentViewStyle { get; set; }
+    public Style DocumentViewStyle { get; set; } = null!;
 
     public override Style SelectStyle(object item, DependencyObject container) => item switch
     {
         ToolViewModel => ToolViewStyle,
         DocumentViewModel => DocumentViewStyle,
-        _ => base.SelectStyle(item, container)
+        _ => base.SelectStyle(item, container)!
     };
 }

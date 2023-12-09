@@ -9,9 +9,9 @@ public class PropertiesViewModel : ToolViewModel
 
     #region CurrentEditorViewModel
 
-    private EditorViewModel _currentEditorViewModel;
+    private EditorViewModel? _currentEditorViewModel;
 
-    public EditorViewModel CurrentEditorViewModel
+    public EditorViewModel? CurrentEditorViewModel
     {
         get => _currentEditorViewModel;
         set => Set(ref _currentEditorViewModel, value);

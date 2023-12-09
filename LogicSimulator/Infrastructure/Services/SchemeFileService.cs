@@ -80,7 +80,7 @@ public class SchemeFileService : ISchemeFileService
         }
     }
 
-    public bool ReadFromFile(string path, out Scheme scheme)
+    public bool ReadFromFile(string path, out Scheme? scheme)
     {
         scheme = null;
 

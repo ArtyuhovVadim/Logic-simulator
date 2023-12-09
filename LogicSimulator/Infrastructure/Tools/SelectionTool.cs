@@ -13,7 +13,7 @@ public class SelectionTool : BaseTool
 {
     private Vector2 _startPos;
 
-    private IEnumerable<SceneObjectView> _objectsUnderCursor;
+    private List<SceneObjectView> _objectsUnderCursor = null!;
 
     #region ObjectsLayer
 
@@ -96,7 +96,8 @@ public class SelectionTool : BaseTool
         _objectsUnderCursor = ObjectsLayer.Objects
             .Select(ObjectsLayer.GetViewFromItem)
             .Where(objView => objView is not null && objView.HitTest(pos, Matrix3x2.Identity, (float)SelectionTolerance))
-            .Reverse();
+            .Reverse()
+            .ToList()!;
 
         _startPos = pos;
     }
@@ -183,7 +184,7 @@ public class SelectionTool : BaseTool
     {
         foreach (var sceneObject in layer.Objects.Select(layer.GetViewFromItem))
         {
-            sceneObject.Unselect();
+            sceneObject!.Unselect();
         }
     }
 

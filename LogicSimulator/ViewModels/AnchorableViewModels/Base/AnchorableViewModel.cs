@@ -42,7 +42,7 @@ public abstract class AnchorableViewModel : BindableBase
 
     #region ContentId
 
-    private string _contentId;
+    private string _contentId = string.Empty;
 
     public string ContentId
     {

@@ -10,9 +10,9 @@ namespace LogicSimulator.Infrastructure.Tools;
 
 public class DragTool : BaseTool
 {
-    private ICollection<SceneObjectView> _objectsUnderCursor;
+    private List<SceneObjectView>? _objectsUnderCursor;
 
-    private ICollection<SceneObjectView> _draggingSceneObjects;
+    private List<SceneObjectView>? _draggingSceneObjects;
 
     #region ObjectsLayer
 
@@ -53,10 +53,7 @@ public class DragTool : BaseTool
 
     #endregion
 
-    protected override void OnActivated()
-    {
-        _draggingSceneObjects = new List<SceneObjectView>();
-    }
+    protected override void OnActivated() => _draggingSceneObjects = [];
 
     protected override void OnKeyDown(Scene2D scene, KeyEventArgs args, Vector2 pos)
     {
@@ -71,12 +68,12 @@ public class DragTool : BaseTool
             .Select(ObjectsLayer.GetViewFromItem)
             .Where(objView => objView is not null && objView.HitTest(pos, Matrix3x2.Identity, (float)DragTolerance))
             .Reverse()
-            .ToList();
+            .ToList()!;
     }
 
     protected override void OnMouseLeftButtonDragged(Scene2D scene, Vector2 pos)
     {
-        if (!_objectsUnderCursor.Any()) return;
+        if (_objectsUnderCursor!.Count == 0) return;
 
         pos = pos.ApplyGrid((float)GridSnap);
 
@@ -119,12 +116,12 @@ public class DragTool : BaseTool
     private void StartDragObject(SceneObjectView sceneObject, Vector2 pos)
     {
         sceneObject.StartDrag(pos);
-        _draggingSceneObjects.Add(sceneObject);
+        _draggingSceneObjects!.Add(sceneObject);
     }
 
     private void UpdateDraggingPositions(Vector2 pos)
     {
-        foreach (var o in _draggingSceneObjects)
+        foreach (var o in _draggingSceneObjects!)
         {
             o.Drag(pos);
         }
@@ -132,7 +129,7 @@ public class DragTool : BaseTool
 
     private void EndDragObjects()
     {
-        foreach (var o in _draggingSceneObjects)
+        foreach (var o in _draggingSceneObjects!)
         {
             o.EndDrag();
         }

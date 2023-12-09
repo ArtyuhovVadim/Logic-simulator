@@ -6,15 +6,15 @@ namespace LogicSimulator.ViewModels.EditorViewModels.Base;
 
 public abstract class EditorViewModel : BindableBase
 {
-    private EditorLayout _layout;
+    private EditorLayout? _layout;
 
-    private IEnumerable<INotifyPropertyChanged> _objectsToEdit;
+    private IEnumerable<INotifyPropertyChanged>? _objectsToEdit;
 
     public EditorLayout Layout => _layout ??= CreateLayout();
 
-    public IEnumerable<object> Objects => _objectsToEdit;
+    public IEnumerable<object> Objects => _objectsToEdit!;
 
-    public void SetObjectsToEdit<T>(IEnumerable<T> objects) where T : class, INotifyPropertyChanged
+    public void SetObjectsToEdit<T>(ICollection<T> objects) where T : class, INotifyPropertyChanged
     {
         if (_objectsToEdit is not null)
         {
@@ -28,7 +28,7 @@ public abstract class EditorViewModel : BindableBase
             _objectsToEdit = null;
         }
 
-        if (!objects.Any()) return;
+        if (objects.Count == 0) return;
 
         _objectsToEdit = new List<INotifyPropertyChanged>(objects);
 
@@ -43,7 +43,7 @@ public abstract class EditorViewModel : BindableBase
         OnPropertyChanged(nameof(Layout));
     }
 
-    protected void OnPropertyChanged(object sender, PropertyChangedEventArgs e) => Layout.PropertyChange(e.PropertyName);
+    protected void OnPropertyChanged(object? sender, PropertyChangedEventArgs e) => Layout.PropertyChange(e.PropertyName!);
 
     protected abstract EditorLayout CreateLayout();
 }

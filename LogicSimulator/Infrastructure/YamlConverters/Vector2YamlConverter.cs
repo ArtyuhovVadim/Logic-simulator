@@ -33,9 +33,9 @@ public class Vector2YamlConverter : IYamlTypeConverter
         return vector;
     }
 
-    public void WriteYaml(IEmitter emitter, object value, Type type)
+    public void WriteYaml(IEmitter emitter, object? value, Type type)
     {
-        var vec = (Vector2)value;
+        var vec = (Vector2)value!;
 
         emitter.Emit(new SequenceStart(AnchorName.Empty, TagName.Empty, false, SequenceStyle.Flow));
 

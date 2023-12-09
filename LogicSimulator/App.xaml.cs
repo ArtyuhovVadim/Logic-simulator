@@ -13,19 +13,19 @@ namespace LogicSimulator;
 
 public partial class App
 {
-    private static IHost _host;
+    private static IHost? _host;
 
     public static IHost Host => _host ??= CreateHostBuilder(Environment.GetCommandLineArgs()).Build();
 
-    public static Window ActiveWindow => Current.Windows.OfType<Window>().FirstOrDefault(w => w.IsActive);
+    public static Window? ActiveWindow => Current.Windows.OfType<Window>().FirstOrDefault(w => w.IsActive);
 
-    public static Window FocusedWindow => Current.Windows.OfType<Window>().FirstOrDefault(w => w.IsFocused);
+    public static Window? FocusedWindow => Current.Windows.OfType<Window>().FirstOrDefault(w => w.IsFocused);
 
-    public static Window CurrentWindow => FocusedWindow ?? ActiveWindow;
+    public static Window? CurrentWindow => FocusedWindow ?? ActiveWindow;
 
     public static bool IsDesignMode { get; private set; } = true;
 
-    public static string CurrentDirectory => IsDesignMode ? Path.GetDirectoryName(GetSourceCodePath()) : Environment.CurrentDirectory;
+    public static string CurrentDirectory => IsDesignMode ? Path.GetDirectoryName(GetSourceCodePath())! : Environment.CurrentDirectory;
 
     protected override async void OnStartup(StartupEventArgs e)
     {
@@ -43,7 +43,7 @@ public partial class App
         base.OnExit(e);
 
         await Host.StopAsync().ConfigureAwait(false);
-        _host.Dispose();
+        _host!.Dispose();
     }
 
     private static void ConfigureServices(HostBuilderContext host, IServiceCollection services)
@@ -59,7 +59,7 @@ public partial class App
             .AddSingleton<IEditorSelectionService, EditorSelectionService>();
     }
 
-    private static string GetSourceCodePath([CallerFilePath] string path = null) => path;
+    private static string GetSourceCodePath([CallerFilePath] string? path = null) => path!;
 
     private static IHostBuilder CreateHostBuilder(string[] args) => Microsoft.Extensions.Hosting.Host
         .CreateDefaultBuilder(args)

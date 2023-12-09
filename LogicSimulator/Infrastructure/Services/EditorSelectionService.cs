@@ -9,7 +9,7 @@ namespace LogicSimulator.Infrastructure.Services;
 
 public class EditorSelectionService : IEditorSelectionService
 {
-    private static readonly Dictionary<Type, EditorViewModel> EditorsMap = new();
+    private static readonly Dictionary<Type, EditorViewModel> EditorsMap = [];
 
     private readonly PropertiesViewModel _propertiesViewModel;
 
@@ -22,9 +22,9 @@ public class EditorSelectionService : IEditorSelectionService
 
     public void Select(SchemeViewModel schemeViewModel)
     {
-        var selectedSceneObjects = schemeViewModel.Objects.Where(x => x.IsSelected);
+        var selectedSceneObjects = schemeViewModel.Objects.Where(x => x.IsSelected).ToArray();
 
-        if (!selectedSceneObjects.Any())
+        if (selectedSceneObjects.Length == 0)
         {
             SetEmptyEditor();
             return;
@@ -56,7 +56,7 @@ public class EditorSelectionService : IEditorSelectionService
 
     private void SetEmptyEditor()
     {
-        _propertiesViewModel.CurrentEditorViewModel?.SetObjectsToEdit(Enumerable.Empty<BaseObjectViewModel>());
+        _propertiesViewModel.CurrentEditorViewModel?.SetObjectsToEdit(Enumerable.Empty<BaseObjectViewModel>().ToList());
         _propertiesViewModel.CurrentEditorViewModel = null;
     }
 
@@ -70,7 +70,7 @@ public class EditorSelectionService : IEditorSelectionService
 
             if (attribute is EditorAttribute editorAttribute)
             {
-                EditorsMap.Add(editorAttribute.ObjectType, (EditorViewModel)Activator.CreateInstance(type));
+                EditorsMap.Add(editorAttribute.ObjectType, (EditorViewModel)Activator.CreateInstance(type)!);
             }
         }
     }

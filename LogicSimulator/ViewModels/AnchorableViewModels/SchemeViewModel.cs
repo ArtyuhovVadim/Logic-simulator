@@ -48,7 +48,7 @@ public class SchemeViewModel : DocumentViewModel
 
     #region Objects
 
-    private ObservableCollection<BaseObjectViewModel> _objects;
+    private ObservableCollection<BaseObjectViewModel> _objects = [];
 
     public IEnumerable<BaseObjectViewModel> Objects
     {
@@ -60,9 +60,9 @@ public class SchemeViewModel : DocumentViewModel
 
     #region CurrentTool
 
-    private BaseSchemeToolViewModel _currentTool;
+    private BaseSchemeToolViewModel? _currentTool;
 
-    public BaseSchemeToolViewModel CurrentTool
+    public BaseSchemeToolViewModel? CurrentTool
     {
         get => _currentTool;
         set
@@ -131,7 +131,7 @@ public class SchemeViewModel : DocumentViewModel
 
     #region ObjectSelectedCommand
 
-    private ICommand _objectSelectedCommand;
+    private ICommand? _objectSelectedCommand;
 
     public ICommand ObjectSelectedCommand => _objectSelectedCommand ??= new LambdaCommand(_ =>
     {
@@ -140,7 +140,7 @@ public class SchemeViewModel : DocumentViewModel
 
     #endregion
 
-    protected override void Close(object p) => _mainWindowViewModel.OpenedSchemes.Remove(this);
+    protected override void Close(object? p) => _mainWindowViewModel.OpenedSchemes.Remove(this);
 
     private void OnToolSelected(BaseSchemeToolViewModel tool) => CurrentTool = tool;
 }
