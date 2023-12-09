@@ -64,7 +64,13 @@
                 <cont:ComboBoxEx
                     IsValueUndefined="{Binding Path=IsValueUndefined}"
                     ItemsSource="{Binding Source={markupExtensions:SystemFontFamilies}}"
-                    SelectedValue="{Binding Path=Value}" />
+                    SelectedValue="{Binding Path=Value}">
+                    <cont:ComboBoxEx.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <VirtualizingStackPanel VirtualizationMode="Recycling" />
+                        </ItemsPanelTemplate>
+                    </cont:ComboBoxEx.ItemsPanel>
+                </cont:ComboBoxEx>
             </DataTemplate>
 
             <DataTemplate DataType="{x:Type properties:FontPropertyViewModel}">
