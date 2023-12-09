@@ -5,7 +5,6 @@ using LogicSimulator.Infrastructure.Services;
 using LogicSimulator.Infrastructure.Services.Interfaces;
 using LogicSimulator.ViewModels.AnchorableViewModels;
 using LogicSimulator.ViewModels;
-using LogicSimulator.ViewModels.UserDialogViewModels;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -53,12 +52,8 @@ public partial class App
             .AddSingleton<MainWindowViewModel>()
             .AddSingleton<PropertiesViewModel>()
             .AddSingleton<ProjectExplorerViewModel>()
-            .AddSingleton<InfoDialogWindowViewModel>()
-            .AddSingleton<ErrorDialogWindowViewModel>()
-            .AddSingleton<WarningDialogWindowViewModel>()
-            .AddSingleton<QuestionDialogWindowViewModel>()
 
-            .AddSingleton<IUserDialogService, UserDialogService>()
+            .AddSingleton<IUserDialogService, DefaultUserDialogService>()
             .AddSingleton<ISchemeFileService, SchemeFileService>()
             .AddSingleton<IProjectFileService, ProjectFileService>()
             .AddSingleton<IEditorSelectionService, EditorSelectionService>();
