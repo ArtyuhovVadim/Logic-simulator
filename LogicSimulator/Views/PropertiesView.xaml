@@ -8,8 +8,8 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:inf="clr-namespace:LogicSimulator.Infrastructure"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    xmlns:me="clr-namespace:LogicSimulator.Infrastructure.MarkupExtensions"
     xmlns:properties="clr-namespace:LogicSimulator.ViewModels.EditorViewModels.Base.Properties"
+    xmlns:markupExtensions="clr-namespace:WpfExtensions.MarkupExtensions;assembly=WpfExtensions"
     d:DataContext="{d:DesignInstance Type=avm:PropertiesViewModel}"
     d:DesignHeight="450"
     d:DesignWidth="800"
@@ -56,14 +56,14 @@
             <DataTemplate DataType="{x:Type properties:RotationEnumPropertyViewModel}">
                 <cont:ComboBoxEx
                     IsValueUndefined="{Binding Path=IsValueUndefined}"
-                    ItemsSource="{me:EnumToArray {x:Type inf:Rotation}}"
+                    ItemsSource="{markupExtensions:EnumToArray {x:Type inf:Rotation}}"
                     SelectedValue="{Binding Path=Value}" />
             </DataTemplate>
 
             <DataTemplate DataType="{x:Type properties:FontNamePropertyViewModel}">
                 <cont:ComboBoxEx
                     IsValueUndefined="{Binding Path=IsValueUndefined}"
-                    ItemsSource="{Binding Source={me:SystemFontFamilies}}"
+                    ItemsSource="{Binding Source={markupExtensions:SystemFontFamilies}}"
                     SelectedValue="{Binding Path=Value}" />
             </DataTemplate>
 

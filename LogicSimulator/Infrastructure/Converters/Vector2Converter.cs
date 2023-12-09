@@ -2,12 +2,13 @@
 using System.Windows.Data;
 using System.Windows.Markup;
 using SharpDX;
+using WpfExtensions.Converters.Base;
 
 namespace LogicSimulator.Infrastructure.Converters;
 
 [ValueConversion(typeof(Vector2), typeof(Vector2))]
 [MarkupExtensionReturnType(typeof(Vector2Converter))]
-public class Vector2Converter : Converter
+public class Vector2Converter : BaseConverter
 {
     public override object Convert(object v, Type t, object p, CultureInfo c)
     {

@@ -8,7 +8,6 @@
     xmlns:controls="clr-namespace:LogicSimulator.Controls;assembly=LogicSimulator.Controls"
     xmlns:converters="clr-namespace:LogicSimulator.Infrastructure.Converters"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-    xmlns:dataPiping="clr-namespace:LogicSimulator.Infrastructure.DataPiping"
     xmlns:layers="clr-namespace:LogicSimulator.Scene.Layers;assembly=LogicSimulator.Scene"
     xmlns:local="clr-namespace:LogicSimulator.ViewModels.ObjectViewModels"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
@@ -46,9 +45,9 @@
                 </tools:ToolsController>
             </tools:ToolsController.Controller>
 
-            <dataPiping:DataPiping.DataPipes>
-                <dataPiping:DataPipe Source="{Binding ElementName=Scene2D, Path=MousePosition}" Target="{Binding Path=MousePosition, Mode=OneWayToSource}" />
-            </dataPiping:DataPiping.DataPipes>
+            <DataPiping.DataPipes>
+                <DataPipe Source="{Binding ElementName=Scene2D, Path=MousePosition}" Target="{Binding Path=MousePosition, Mode=OneWayToSource}" />
+            </DataPiping.DataPipes>
 
             <b:Interaction.Behaviors>
                 <behaviors:SceneTransformBehaviour />
