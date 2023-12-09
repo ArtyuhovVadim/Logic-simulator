@@ -53,6 +53,7 @@ public partial class App
     {
         services
             .AddSingleton<MainWindowViewModel>()
+            .AddSingleton<DockingViewModel>()
             .AddSingleton<PropertiesViewModel>()
             .AddSingleton<ProjectExplorerViewModel>()
 

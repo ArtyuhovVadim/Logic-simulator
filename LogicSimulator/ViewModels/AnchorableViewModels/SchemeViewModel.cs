@@ -140,7 +140,17 @@ public class SchemeViewModel : DocumentViewModel
 
     #endregion
 
-    protected override void Close(object? p) => _mainWindowViewModel.OpenedSchemes.Remove(this);
+    protected override void OnDocumentActivated()
+    {
+        _editorSelectionService.Select(this);
+    }
+
+    protected override void OnDocumentDeactivated()
+    {
+        _editorSelectionService.SetEmptyEditor();
+    }
+
+    protected override void OnClose(object? p) => _mainWindowViewModel.DockingViewModel.RemoveDocumentViewModel(this);
 
     private void OnToolSelected(BaseSchemeToolViewModel tool) => CurrentTool = tool;
 }

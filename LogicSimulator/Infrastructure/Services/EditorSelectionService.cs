@@ -54,7 +54,7 @@ public class EditorSelectionService : IEditorSelectionService
         _propertiesViewModel.CurrentEditorViewModel = editor;
     }
 
-    private void SetEmptyEditor()
+    public void SetEmptyEditor()
     {
         _propertiesViewModel.CurrentEditorViewModel?.SetObjectsToEdit(Enumerable.Empty<BaseObjectViewModel>().ToList());
         _propertiesViewModel.CurrentEditorViewModel = null;

@@ -1,7 +1,5 @@
-﻿using System.Windows;
-using LogicSimulator.Infrastructure.Services.Interfaces;
+﻿using LogicSimulator.Infrastructure.Services.Interfaces;
 using LogicSimulator.ViewModels.AnchorableViewModels;
-using LogicSimulator.ViewModels.AnchorableViewModels.Base;
 using WpfExtensions.Mvvm;
 using WpfExtensions.Mvvm.Commands;
 
@@ -11,60 +9,32 @@ public class MainWindowViewModel : BindableBase
 {
     private readonly IUserDialogService _userDialogService;
     private readonly IProjectFileService _projectFileService;
+
+    private readonly DockingViewModel _dockingViewModel;
+
+    private readonly PropertiesViewModel _propertiesViewModel;
     private readonly ProjectExplorerViewModel _projectExplorerViewModel;
 
     public MainWindowViewModel(
         IUserDialogService userDialogService,
         IProjectFileService projectFileService,
+        DockingViewModel dockingViewModel,
         PropertiesViewModel propertiesViewModel,
         ProjectExplorerViewModel projectExplorerViewModel)
     {
         _userDialogService = userDialogService;
         _projectFileService = projectFileService;
-        _projectExplorerViewModel = projectExplorerViewModel;
 
-        propertiesViewModel.IsVisible = true;
-        projectExplorerViewModel.IsVisible = true;
+        _dockingViewModel = dockingViewModel;
+        _propertiesViewModel = propertiesViewModel;
+        _projectExplorerViewModel = projectExplorerViewModel;
 
         projectExplorerViewModel.SchemeOpened += OnSchemeOpened;
 
-        AnchorableViewModels.Add(propertiesViewModel);
-        AnchorableViewModels.Add(projectExplorerViewModel);
-
-        Task.Run(async () =>
-        {
-            await Task.Delay(100);
-            await Application.Current.Dispatcher.InvokeAsync(() =>
-            {
-                LoadExampleCommand.Execute(null);
-                OnSchemeOpened(ActiveProjectViewModel!.Schemes.First());
-            });
-        });
+        _dockingViewModel
+            .AddToolViewModel(_propertiesViewModel, true)
+            .AddToolViewModel(_projectExplorerViewModel, true);
     }
-
-    #region ActiveContent
-
-    private AnchorableViewModel? _activeAnchorable;
-
-    public AnchorableViewModel? ActiveContent
-    {
-        get => _activeAnchorable;
-        set => Set(ref _activeAnchorable, value);
-    }
-
-    #endregion
-
-    #region AnchorableViewModels
-
-    private ObservableCollection<AnchorableViewModel> _anchorableViewModels = [];
-
-    public ObservableCollection<AnchorableViewModel> AnchorableViewModels
-    {
-        get => _anchorableViewModels;
-        private set => Set(ref _anchorableViewModels, value);
-    }
-
-    #endregion
 
     #region ActiveProjectViewModel
 
@@ -84,15 +54,9 @@ public class MainWindowViewModel : BindableBase
 
     #endregion
 
-    #region OpenedSchemes
+    #region DockingViewModel
 
-    private ObservableCollection<SchemeViewModel> _openedSchemes = [];
-
-    public ObservableCollection<SchemeViewModel> OpenedSchemes
-    {
-        get => _openedSchemes;
-        set => Set(ref _openedSchemes, value);
-    }
+    public DockingViewModel DockingViewModel => _dockingViewModel;
 
     #endregion
 
@@ -131,13 +95,5 @@ public class MainWindowViewModel : BindableBase
 
     #endregion
 
-    private void OnSchemeOpened(SchemeViewModel scheme)
-    {
-        if (!OpenedSchemes.Contains(scheme))
-        {
-            OpenedSchemes.Add(scheme);
-        }
-
-        scheme.IsActive = true;
-    }
+    private void OnSchemeOpened(SchemeViewModel scheme) => _dockingViewModel.AddOrSelectDocumentViewModel(scheme);
 }
