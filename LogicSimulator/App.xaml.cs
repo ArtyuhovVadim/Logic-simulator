@@ -5,6 +5,7 @@ using LogicSimulator.Infrastructure.Services;
 using LogicSimulator.Infrastructure.Services.Interfaces;
 using LogicSimulator.ViewModels.AnchorableViewModels;
 using LogicSimulator.ViewModels;
+using LogicSimulator.Views.Windows;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -36,6 +37,8 @@ public partial class App
         Environment.CurrentDirectory = Path.GetDirectoryName(System.Reflection.Assembly.GetEntryAssembly()!.Location)!;
 
         await Host.StartAsync().ConfigureAwait(false);
+
+        Host.Services.GetRequiredService<MainWindow>().Show();
     }
 
     protected override async void OnExit(ExitEventArgs e)
@@ -53,10 +56,13 @@ public partial class App
             .AddSingleton<PropertiesViewModel>()
             .AddSingleton<ProjectExplorerViewModel>()
 
+            .AddSingleton<MainWindow>(serviceProvider => new MainWindow { DataContext = serviceProvider.GetRequiredService<MainWindowViewModel>() })
+
             .AddSingleton<IUserDialogService, DefaultUserDialogService>()
             .AddSingleton<ISchemeFileService, SchemeFileService>()
             .AddSingleton<IProjectFileService, ProjectFileService>()
-            .AddSingleton<IEditorSelectionService, EditorSelectionService>();
+            .AddSingleton<IEditorSelectionService, EditorSelectionService>()
+            ;
     }
 
     private static string GetSourceCodePath([CallerFilePath] string? path = null) => path!;

@@ -9,12 +9,12 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:selectors="clr-namespace:LogicSimulator.Infrastructure.Selectors"
+    xmlns:viewModels="clr-namespace:LogicSimulator.ViewModels"
     xmlns:views="clr-namespace:LogicSimulator.Views"
     Title="Logic-simulator"
     Width="1280"
     Height="720"
-    DataContext="{Binding Path=MainWindowViewModel,
-                          Source={StaticResource Locator}}"
+    d:DataContext="{d:DesignInstance Type=viewModels:MainWindowViewModel}"
     Icon="/Resources/Icons/icon512x512.png"
     mc:Ignorable="d">
 
