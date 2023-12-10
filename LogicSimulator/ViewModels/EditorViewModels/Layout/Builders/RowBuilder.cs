@@ -33,6 +33,20 @@ public class RowBuilder
         return this;
     }
 
+    public RowBuilder WithSingleProperty<TPropertyViewModel>(string name, Action<TPropertyViewModel> configureAction) where TPropertyViewModel : SinglePropertyViewModel, new()
+    {
+        var property = new TPropertyViewModel
+        {
+            EditorViewModel = _row.EditorViewModel,
+            PropertyName = name
+        };
+
+        configureAction(property);
+
+        _row.ObjectProperties.Add(property);
+        return this;
+    }
+
     public RowBuilder WithProperty(PropertyViewModel prop)
     {
         _row.ObjectProperties.Add(prop);

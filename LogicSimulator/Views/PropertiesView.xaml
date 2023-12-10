@@ -24,7 +24,11 @@
             <converters:ColorToColor4Converter x:Key="ColorToColor4Converter" />
 
             <DataTemplate DataType="{x:Type properties:FloatPropertyViewModel}">
-                <cont:NumberBox IsValueUndefined="{Binding Path=IsValueUndefined}" Number="{Binding Path=Value}" />
+                <cont:NumberBox
+                    IsValueUndefined="{Binding Path=IsValueUndefined}"
+                    MaxNumber="{Binding Path=MaxNumber}"
+                    MinNumber="{Binding Path=MinNumber}"
+                    Number="{Binding Path=Value}" />
             </DataTemplate>
 
             <DataTemplate DataType="{x:Type properties:Vector2PropertyViewModel}">

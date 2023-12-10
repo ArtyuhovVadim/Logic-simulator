@@ -14,6 +14,30 @@ public class FloatPropertyViewModel : SinglePropertyViewModel
 
     #endregion
 
+    #region MaxNumber
+
+    private float _maxNumber = float.MaxValue;
+
+    public float MaxNumber
+    {
+        get => _maxNumber;
+        set => Set(ref _maxNumber, value);
+    }
+
+    #endregion
+
+    #region MinNumber
+
+    private float _minNumber = float.MinValue;
+
+    public float MinNumber
+    {
+        get => _minNumber;
+        set => Set(ref _minNumber, value);
+    }
+
+    #endregion
+
     protected override object GetPropertyValue(IEnumerable<object> objects)
     {
         var firstObj = objects.First();
