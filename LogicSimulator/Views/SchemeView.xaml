@@ -18,7 +18,6 @@
     xmlns:tools="clr-namespace:LogicSimulator.Infrastructure.Tools"
     xmlns:views="clr-namespace:LogicSimulator.Views"
     d:DataContext="{d:DesignInstance Type=anchorableViewModels:SchemeViewModel}"
-    IsHitTestVisible="{Binding Path=IsActiveDocument}"
     mc:Ignorable="d">
 
     <UserControl.Resources>
