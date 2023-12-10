@@ -20,25 +20,23 @@ public class EditorSelectionService : IEditorSelectionService
         _propertiesViewModel = propertiesViewModel;
     }
 
-    public void Select(SchemeViewModel schemeViewModel)
+    public void SetObjectsEditor(ICollection<BaseObjectViewModel> objects)
     {
-        var selectedSceneObjects = schemeViewModel.Objects.Where(x => x.IsSelected).ToArray();
-
-        if (selectedSceneObjects.Length == 0)
+        if (objects.Count == 0)
         {
             SetEmptyEditor();
             return;
         }
 
-        var firstObjectType = selectedSceneObjects.First().GetType();
+        var firstObjectType = objects.First().GetType();
 
-        if (selectedSceneObjects.Any(x => x.GetType() != firstObjectType))
+        if (objects.Any(x => x.GetType() != firstObjectType))
         {
-            var layouts = selectedSceneObjects.Select(x => x.GetType()).Distinct().Select(x => EditorsMap[x]).Select(x => x.Layout);
+            var layouts = objects.Select(x => x.GetType()).Distinct().Select(x => EditorsMap[x]).Select(x => x.Layout);
 
             var multiEditor = new MultiObjectsEditorViewModel(layouts);
 
-            multiEditor.SetObjectsToEdit(selectedSceneObjects);
+            multiEditor.SetObjectsToEdit(objects);
             _propertiesViewModel.CurrentEditorViewModel = multiEditor;
 
             return;
@@ -50,7 +48,19 @@ public class EditorSelectionService : IEditorSelectionService
             return;
         }
 
-        editor.SetObjectsToEdit(selectedSceneObjects);
+        editor.SetObjectsToEdit(objects);
+        _propertiesViewModel.CurrentEditorViewModel = editor;
+    }
+
+    public void SetSchemeEditor(SchemeViewModel schemeViewModel)
+    {
+        if (!EditorsMap.TryGetValue(typeof(SchemeViewModel), out var editor))
+        {
+            SetEmptyEditor();
+            return;
+        }
+
+        editor.SetObjectsToEdit([schemeViewModel]);
         _propertiesViewModel.CurrentEditorViewModel = editor;
     }
 

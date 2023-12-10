@@ -129,20 +129,72 @@ public class SchemeViewModel : DocumentViewModel
 
     #endregion
 
+    #region GridStep
+
+    private float _gridStep = 25;
+
+    public float GridStep
+    {
+        get => _gridStep;
+        set => Set(ref _gridStep, value);
+    }
+
+    #endregion
+
+    #region GridWidth
+
+    private float _gridWidth = 2970;
+
+    public float GridWidth
+    {
+        get => _gridWidth;
+        set => Set(ref _gridWidth, value);
+    }
+
+    #endregion
+
+    #region GridHeight
+
+    private float _gridHeight = 2100;
+
+    public float GridHeight
+    {
+        get => _gridHeight;
+        set => Set(ref _gridHeight, value);
+    }
+
+    #endregion
+
     #region ObjectSelectedCommand
 
     private ICommand? _objectSelectedCommand;
 
     public ICommand ObjectSelectedCommand => _objectSelectedCommand ??= new LambdaCommand(_ =>
     {
-        _editorSelectionService.Select(this);
+        var selectedObjects = Objects.Where(x => x.IsSelected).ToArray();
+
+        if (selectedObjects.Length == 0)
+        {
+            _editorSelectionService.SetSchemeEditor(this);
+            return;
+        }
+
+        _editorSelectionService.SetObjectsEditor(selectedObjects);
     });
 
     #endregion
 
     protected override void OnDocumentActivated()
     {
-        _editorSelectionService.Select(this);
+        var selectedObjects = Objects.Where(x => x.IsSelected).ToArray();
+
+        if (selectedObjects.Length == 0)
+        {
+            _editorSelectionService.SetSchemeEditor(this);
+            return;
+        }
+
+        _editorSelectionService.SetObjectsEditor(selectedObjects);
     }
 
     protected override void OnDocumentDeactivated()

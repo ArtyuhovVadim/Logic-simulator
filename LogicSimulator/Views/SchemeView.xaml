@@ -33,7 +33,10 @@
                         Context="{Binding Path=SelectionTool}"
                         ObjectSelectedCommand="{Binding Path=ObjectSelectedCommand}"
                         ObjectsLayer="{Binding ElementName=ObjectsLayer}" />
-                    <tools:DragTool Context="{Binding Path=DragTool}" ObjectsLayer="{Binding ElementName=ObjectsLayer}" />
+                    <tools:DragTool
+                        Context="{Binding Path=DragTool}"
+                        GridSnap="{Binding Path=GridStep}"
+                        ObjectsLayer="{Binding ElementName=ObjectsLayer}" />
                     <tools:RectangleSelectionTool
                         x:Name="RectangleSelectionTool"
                         Context="{Binding Path=RectangleSelectionTool}"
@@ -42,7 +45,10 @@
                                            Mode=OneWay}"
                         ObjectSelectedCommand="{Binding Path=ObjectSelectedCommand}"
                         ObjectsLayer="{Binding ElementName=ObjectsLayer}" />
-                    <tools:NodeDragTool Context="{Binding Path=NodeDragTool}" ObjectsLayer="{Binding ElementName=ObjectsLayer}" />
+                    <tools:NodeDragTool
+                        Context="{Binding Path=NodeDragTool}"
+                        GridSnap="{Binding Path=GridStep}"
+                        ObjectsLayer="{Binding ElementName=ObjectsLayer}" />
                 </tools:ToolsController>
             </tools:ToolsController.Controller>
 
@@ -61,10 +67,11 @@
                 </layers:GradientClearLayer.Renderer>
             </layers:GradientClearLayer>
             <layers:GridLayer
-                Width="2970"
-                Height="2100"
+                Width="{Binding Path=GridWidth}"
+                Height="{Binding Path=GridHeight}"
                 Background="#FFFCF8"
                 BoldLineColor="#DCDCD7"
+                CellSize="{Binding Path=GridStep}"
                 LineColor="#F0F0EB">
                 <layers:GridLayer.Renderer>
                     <renderers:GridLayerRenderer />
