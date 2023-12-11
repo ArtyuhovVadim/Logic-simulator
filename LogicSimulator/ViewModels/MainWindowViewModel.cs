@@ -1,4 +1,5 @@
 ﻿using LogicSimulator.Infrastructure.Services.Interfaces;
+using LogicSimulator.Models;
 using LogicSimulator.ViewModels.AnchorableViewModels;
 using WpfExtensions.Mvvm;
 using WpfExtensions.Mvvm.Commands;
@@ -9,6 +10,7 @@ public class MainWindowViewModel : BindableBase
 {
     private readonly IUserDialogService _userDialogService;
     private readonly IProjectFileService _projectFileService;
+    private readonly IProjectViewModelFactory _projectFactory;
 
     private readonly DockingViewModel _dockingViewModel;
 
@@ -18,12 +20,14 @@ public class MainWindowViewModel : BindableBase
     public MainWindowViewModel(
         IUserDialogService userDialogService,
         IProjectFileService projectFileService,
+        IProjectViewModelFactory projectFactory,
         DockingViewModel dockingViewModel,
         PropertiesViewModel propertiesViewModel,
         ProjectExplorerViewModel projectExplorerViewModel)
     {
         _userDialogService = userDialogService;
         _projectFileService = projectFileService;
+        _projectFactory = projectFactory;
 
         _dockingViewModel = dockingViewModel;
         _propertiesViewModel = propertiesViewModel;
@@ -34,6 +38,10 @@ public class MainWindowViewModel : BindableBase
         _dockingViewModel
             .AddToolViewModel(_propertiesViewModel, true)
             .AddToolViewModel(_projectExplorerViewModel, true);
+
+        // TODO: Временно для быстрой загрузки тестового проекта
+        LoadExampleCommand.Execute(null);
+        _dockingViewModel.AddOrSelectDocumentViewModel(ActiveProjectViewModel!.Schemes.First());
     }
 
     #region ActiveProjectViewModel
@@ -74,7 +82,7 @@ public class MainWindowViewModel : BindableBase
             return;
         }
 
-        ActiveProjectViewModel = new ProjectViewModel(project!);
+        ActiveProjectViewModel = _projectFactory.Create(project!);
     });
 
     #endregion

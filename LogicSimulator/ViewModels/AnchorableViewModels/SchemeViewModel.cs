@@ -4,7 +4,6 @@ using LogicSimulator.ViewModels.AnchorableViewModels.Base;
 using LogicSimulator.ViewModels.ObjectViewModels.Base;
 using LogicSimulator.ViewModels.Tools;
 using LogicSimulator.ViewModels.Tools.Base;
-using Microsoft.Extensions.DependencyInjection;
 using SharpDX;
 using WpfExtensions.Mvvm.Commands;
 
@@ -12,16 +11,16 @@ namespace LogicSimulator.ViewModels.AnchorableViewModels;
 
 public class SchemeViewModel : DocumentViewModel
 {
-    private readonly MainWindowViewModel _mainWindowViewModel;
+    private readonly DockingViewModel _dockingViewModel;
     private readonly Scheme _scheme;
 
     private readonly IEditorSelectionService _editorSelectionService;
 
-    public SchemeViewModel(Scheme scheme)
+    public SchemeViewModel(Scheme scheme, DockingViewModel dockingViewModel, IEditorSelectionService editorSelectionService)
     {
         _scheme = scheme;
-        _mainWindowViewModel = App.Host.Services.GetRequiredService<MainWindowViewModel>();
-        _editorSelectionService = App.Host.Services.GetRequiredService<IEditorSelectionService>();
+        _dockingViewModel = dockingViewModel;
+        _editorSelectionService = editorSelectionService;
         Objects = _scheme.Objects;
 
         CurrentTool = SelectionTool;
@@ -202,7 +201,7 @@ public class SchemeViewModel : DocumentViewModel
         _editorSelectionService.SetEmptyEditor();
     }
 
-    protected override void OnClose(object? p) => _mainWindowViewModel.DockingViewModel.RemoveDocumentViewModel(this);
+    protected override void OnClose(object? p) => _dockingViewModel.RemoveDocumentViewModel(this);
 
     private void OnToolSelected(BaseSchemeToolViewModel tool) => CurrentTool = tool;
 }

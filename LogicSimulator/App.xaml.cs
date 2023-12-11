@@ -14,9 +14,7 @@ namespace LogicSimulator;
 
 public partial class App
 {
-    private static IHost? _host;
-
-    public static IHost Host => _host ??= CreateHostBuilder(Environment.GetCommandLineArgs()).Build();
+    private static readonly IHost Host = CreateHostBuilder(Environment.GetCommandLineArgs()).Build();
 
     public static Window? ActiveWindow => Current.Windows.OfType<Window>().FirstOrDefault(w => w.IsActive);
 
@@ -46,7 +44,7 @@ public partial class App
         base.OnExit(e);
 
         await Host.StopAsync().ConfigureAwait(false);
-        _host!.Dispose();
+        Host!.Dispose();
     }
 
     private static void ConfigureServices(HostBuilderContext host, IServiceCollection services)
@@ -63,6 +61,9 @@ public partial class App
             .AddSingleton<ISchemeFileService, SchemeFileService>()
             .AddSingleton<IProjectFileService, ProjectFileService>()
             .AddSingleton<IEditorSelectionService, EditorSelectionService>()
+
+            .AddSingleton<ISchemeViewModelFactory, SchemeViewModelFactory>()
+            .AddSingleton<IProjectViewModelFactory, ProjectViewModelFactory>()
             ;
     }
 
