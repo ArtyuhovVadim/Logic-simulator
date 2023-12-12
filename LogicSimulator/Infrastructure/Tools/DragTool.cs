@@ -115,6 +115,7 @@ public class DragTool : BaseTool
 
     private void StartDragObject(SceneObjectView sceneObject, Vector2 pos)
     {
+        sceneObject.Location = sceneObject.Location.ApplyGrid((float)GridSnap);
         sceneObject.StartDrag(pos);
         _draggingSceneObjects!.Add(sceneObject);
     }
