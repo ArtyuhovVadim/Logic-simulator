@@ -1,6 +1,8 @@
 ﻿using LogicSimulator.Infrastructure.Services.Interfaces;
-using LogicSimulator.Models;
 using LogicSimulator.ViewModels.AnchorableViewModels;
+using LogicSimulator.ViewModels.AnchorableViewModels.Base;
+using LogicSimulator.ViewModels.StatusViewModels;
+using LogicSimulator.ViewModels.StatusViewModels.Base;
 using WpfExtensions.Mvvm;
 using WpfExtensions.Mvvm.Commands;
 
@@ -39,6 +41,8 @@ public class MainWindowViewModel : BindableBase
             .AddToolViewModel(_propertiesViewModel, true)
             .AddToolViewModel(_projectExplorerViewModel, true);
 
+        _dockingViewModel.ActiveDocumentViewModelChanged += OnActiveDocumentViewModelChanged;
+
         // TODO: Временно для быстрой загрузки тестового проекта
         LoadExampleCommand.Execute(null);
         _dockingViewModel.AddOrSelectDocumentViewModel(ActiveProjectViewModel!.Schemes.First());
@@ -59,6 +63,12 @@ public class MainWindowViewModel : BindableBase
             }
         }
     }
+
+    #endregion
+
+    #region CurrentStatusViewModel
+
+    public BaseStatusViewModel? CurrentStatusViewModel => _dockingViewModel.ActiveDocumentViewModel?.StatusViewModel;
 
     #endregion
 
@@ -104,4 +114,6 @@ public class MainWindowViewModel : BindableBase
     #endregion
 
     private void OnSchemeOpened(SchemeViewModel scheme) => _dockingViewModel.AddOrSelectDocumentViewModel(scheme);
+
+    private void OnActiveDocumentViewModelChanged(DocumentViewModel? oldDocument, DocumentViewModel? newDocument) => OnPropertyChanged(nameof(CurrentStatusViewModel));
 }

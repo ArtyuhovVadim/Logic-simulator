@@ -1,9 +1,13 @@
-﻿using WpfExtensions.Mvvm.Commands;
+﻿using LogicSimulator.ViewModels.StatusViewModels;
+using LogicSimulator.ViewModels.StatusViewModels.Base;
+using WpfExtensions.Mvvm.Commands;
 
 namespace LogicSimulator.ViewModels.AnchorableViewModels.Base;
 
 public abstract class DocumentViewModel : AnchorableViewModel
 {
+    public virtual BaseStatusViewModel StatusViewModel { get; } = new EmptyStatusViewModel();
+
     #region IsActiveDocument
 
     private bool _isActiveDocument;

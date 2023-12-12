@@ -2,6 +2,8 @@
 using LogicSimulator.Models;
 using LogicSimulator.ViewModels.AnchorableViewModels.Base;
 using LogicSimulator.ViewModels.ObjectViewModels.Base;
+using LogicSimulator.ViewModels.StatusViewModels;
+using LogicSimulator.ViewModels.StatusViewModels.Base;
 using LogicSimulator.ViewModels.Tools;
 using LogicSimulator.ViewModels.Tools.Base;
 using SharpDX;
@@ -13,6 +15,8 @@ public class SchemeViewModel : DocumentViewModel
 {
     private readonly DockingViewModel _dockingViewModel;
     private readonly Scheme _scheme;
+
+    private readonly SchemeStatusViewModel _statusViewModel;
 
     private readonly IEditorSelectionService _editorSelectionService;
 
@@ -29,6 +33,10 @@ public class SchemeViewModel : DocumentViewModel
         DragTool.ToolSelected += OnToolSelected;
         RectangleSelectionTool.ToolSelected += OnToolSelected;
         NodeDragTool.ToolSelected += OnToolSelected;
+
+        _statusViewModel = new SchemeStatusViewModel(this);
+
+        _objects.CollectionChanged += (_, _) => _statusViewModel.RaisedPropertyChanged(nameof(SchemeStatusViewModel.ObjectsCount));
     }
 
     #region Title
@@ -111,7 +119,13 @@ public class SchemeViewModel : DocumentViewModel
     public float Scale
     {
         get => _scale;
-        set => Set(ref _scale, value);
+        set
+        {
+            if (Set(ref _scale, value))
+            {
+                _statusViewModel.RaisedPropertyChanged(nameof(SchemeStatusViewModel.Scale));
+            }
+        }
     }
 
     #endregion
@@ -123,7 +137,13 @@ public class SchemeViewModel : DocumentViewModel
     public Vector2 MousePosition
     {
         get => _mousePosition;
-        set => Set(ref _mousePosition, value);
+        set
+        {
+            if (Set(ref _mousePosition, value))
+            {
+                _statusViewModel.RaisedPropertyChanged(nameof(SchemeStatusViewModel.MousePosition));
+            }
+        }
     }
 
     #endregion
@@ -172,6 +192,8 @@ public class SchemeViewModel : DocumentViewModel
     {
         var selectedObjects = Objects.Where(x => x.IsSelected).ToArray();
 
+        _statusViewModel.RaisedPropertyChanged(nameof(SchemeStatusViewModel.SelectedObjectsCount));
+
         if (selectedObjects.Length == 0)
         {
             _editorSelectionService.SetSchemeEditor(this);
@@ -182,6 +204,8 @@ public class SchemeViewModel : DocumentViewModel
     });
 
     #endregion
+
+    public override BaseStatusViewModel StatusViewModel => _statusViewModel;
 
     protected override void OnDocumentActivated()
     {
