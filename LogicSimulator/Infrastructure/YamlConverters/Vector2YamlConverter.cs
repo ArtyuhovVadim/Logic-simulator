@@ -1,5 +1,5 @@
 ﻿using System.Globalization;
-using System.IO;
+using LogicSimulator.Utils;
 using SharpDX;
 using YamlDotNet.Core;
 using YamlDotNet.Core.Events;
@@ -14,27 +14,23 @@ public class Vector2YamlConverter : IYamlTypeConverter
     public object ReadYaml(IParser parser, Type type)
     {
         if (type != typeof(Vector2))
-            throw new InvalidDataException("Failed to retrieve Vector2!");
+            throw new YamlException("Wrong type.");
 
-        if (!parser.TryConsume<SequenceStart>(out _))
-            throw new InvalidDataException("Invalid YAML content.");
+        parser.BeginSequenceOrThrow();
 
-        var vector = Vector2.Zero;
+        var x = parser.ConsumeScalarOrThrow();
+        var y = parser.ConsumeScalarOrThrow();
 
-        parser.TryConsume<Scalar>(out var scalarX);
-        vector.X = (float)Convert.ToDouble(scalarX!.Value);
+        parser.EndSequenceOrThrow();
 
-        parser.TryConsume<Scalar>(out var scalarY);
-        vector.Y = (float)Convert.ToDouble(scalarY!.Value);
-
-        if (!parser.TryConsume<SequenceEnd>(out _))
-            throw new InvalidDataException("Invalid YAML content.");
-
-        return vector;
+        return new Vector2((float)x, (float)y);
     }
 
     public void WriteYaml(IEmitter emitter, object? value, Type type)
     {
+        if (type != typeof(Vector2))
+            throw new YamlException("Wrong type.");
+
         var vec = (Vector2)value!;
 
         emitter.Emit(new SequenceStart(AnchorName.Empty, TagName.Empty, false, SequenceStyle.Flow));
