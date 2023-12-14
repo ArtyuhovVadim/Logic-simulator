@@ -3,8 +3,8 @@ Objects:
 - !Rectangle
   Width: 200
   Height: 200
-  FillColor: [1, 1, 1, 1]
-  StrokeColor: [0, 0, 0, 1]
+  FillColor: [1, 1, 1]
+  StrokeColor: [0, 0, 0]
   StrokeThickness: 1
   IsFilled: true
   Location: [525, 25]
@@ -12,8 +12,8 @@ Objects:
 - !Rectangle
   Width: 200
   Height: 200
-  FillColor: [1, 1, 1, 1]
-  StrokeColor: [0, 0, 0, 1]
+  FillColor: [1, 1, 1]
+  StrokeColor: [0, 0, 0]
   StrokeThickness: 1
   IsFilled: true
   Location: [275, 25]
@@ -21,8 +21,8 @@ Objects:
 - !Rectangle
   Width: 200
   Height: 200
-  FillColor: [1, 1, 1, 1]
-  StrokeColor: [0, 0, 0, 1]
+  FillColor: [1, 1, 1]
+  StrokeColor: [0, 0, 0]
   StrokeThickness: 1
   IsFilled: true
   Location: [25, 25]
@@ -30,8 +30,8 @@ Objects:
 - !Ellipse
   RadiusX: 100
   RadiusY: 100
-  FillColor: [1, 0, 0, 1]
-  StrokeColor: [0, 0, 0, 1]
+  FillColor: [1, 1, 1]
+  StrokeColor: [0, 0, 0]
   StrokeThickness: 3
   IsFilled: true
   Location: [125, 625]
@@ -39,8 +39,8 @@ Objects:
 - !Ellipse
   RadiusX: 100
   RadiusY: 100
-  FillColor: [1, 1, 1, 1]
-  StrokeColor: [0, 0, 0, 1]
+  FillColor: [1, 1, 1]
+  StrokeColor: [0, 0, 0]
   StrokeThickness: 3
   IsFilled: true
   Location: [625, 625]
@@ -48,63 +48,114 @@ Objects:
 - !Ellipse
   RadiusX: 100
   RadiusY: 100
-  FillColor: [1, 1, 1, 1]
-  StrokeColor: [0, 0, 0, 1]
+  FillColor: [1, 1, 1]
+  StrokeColor: [0, 0, 0]
   StrokeThickness: 3
   IsFilled: true
   Location: [375, 625]
   Rotation: Degrees0
 - !RoundedRectangle
-  Width: 200
-  Height: 200
   RadiusX: 25
   RadiusY: 25
-  FillColor: [1, 1, 1, 1]
-  StrokeColor: [0, 0, 0, 1]
+  Width: 200
+  Height: 200
+  FillColor: [1, 1, 1]
+  StrokeColor: [0, 0, 0]
   StrokeThickness: 1
   IsFilled: true
   Location: [525, 275]
   Rotation: Degrees0
 - !RoundedRectangle
-  Width: 200
-  Height: 200
   RadiusX: 25
   RadiusY: 25
-  FillColor: [1, 1, 1, 1]
-  StrokeColor: [0, 0, 0, 1]
+  Width: 200
+  Height: 200
+  FillColor: [1, 1, 1]
+  StrokeColor: [0, 0, 0]
   StrokeThickness: 1
   IsFilled: true
   Location: [25, 275]
   Rotation: Degrees0
 - !RoundedRectangle
-  Width: 200
-  Height: 200
   RadiusX: 25
   RadiusY: 25
-  FillColor: [1, 1, 1, 1]
-  StrokeColor: [0, 0, 0, 1]
+  Width: 200
+  Height: 200
+  FillColor: [1, 1, 1]
+  StrokeColor: [0, 0, 0]
   StrokeThickness: 1
   IsFilled: true
   Location: [275, 275]
   Rotation: Degrees0
 - !Line
+  Vertexes:
+  - [200, 0]
+  - [200, 200]
+  - [0, 200]
+  - [0, 25]
+  - [175, 25]
+  - [175, 175]
+  - [25, 175]
+  - [25, 50]
+  - [150, 50]
+  - [150, 150]
+  - [50, 150]
+  - [50, 75]
+  - [125, 75]
+  - [125, 125]
+  - [75, 125]
+  - [75, 100]
+  - [100, 100]
+  StrokeColor: [0, 0, 0]
+  StrokeThickness: 1
   Location: [775, 525]
   Rotation: Degrees0
-  StrokeThickness: 1
-  StrokeColor: [0, 0, 0, 1]
-  Vertexes: [[200, 0], [200, 200], [0, 200], [0, 25], [175, 25], [175, 175], [25, 175], [25, 50], [150, 50], [150, 150], [50, 150], [50, 75], [125, 75], [125, 125], [75, 125], [75, 100], [100, 100]]
 - !Line
+  Vertexes:
+  - [200, 0]
+  - [200, 200]
+  - [0, 200]
+  - [0, 25]
+  - [175, 25]
+  - [175, 175]
+  - [25, 175]
+  - [25, 50]
+  - [150, 50]
+  - [150, 150]
+  - [50, 150]
+  - [50, 75]
+  - [125, 75]
+  - [125, 125]
+  - [75, 125]
+  - [75, 100]
+  - [100, 100]
+  StrokeColor: [0, 0, 0]
+  StrokeThickness: 1
   Location: [1025, 525]
   Rotation: Degrees0
-  StrokeThickness: 1
-  StrokeColor: [0, 0, 0, 1]
-  Vertexes: [[200, 0], [200, 200], [0, 200], [0, 25], [175, 25], [175, 175], [25, 175], [25, 50], [150, 50], [150, 150], [50, 150], [50, 75], [125, 75], [125, 125], [75, 125], [75, 100], [100, 100]]
 - !Line
+  Vertexes:
+  - [200, 0]
+  - [200, 200]
+  - [0, 200]
+  - [0, 25]
+  - [175, 25]
+  - [175, 175]
+  - [25, 175]
+  - [25, 50]
+  - [150, 50]
+  - [150, 150]
+  - [50, 150]
+  - [50, 75]
+  - [125, 75]
+  - [125, 125]
+  - [75, 125]
+  - [75, 100]
+  - [100, 100]
+  StrokeColor: [0, 0, 0]
+  StrokeThickness: 1
   Location: [1275, 525]
   Rotation: Degrees0
-  StrokeThickness: 1
-  StrokeColor: [0, 0, 0, 1]
-  Vertexes: [[200, 0], [200, 200], [0, 200], [0, 25], [175, 25], [175, 175], [25, 175], [25, 50], [150, 50], [150, 150], [50, 150], [50, 75], [125, 75], [125, 125], [75, 125], [75, 100], [100, 100]]
 - !TextBlock
   Text: >-
     #include <iostream>
@@ -122,7 +173,7 @@ Objects:
   IsItalic: false
   IsUnderlined: false
   IsCross: false
-  TextColor: [0, 0, 0, 1]
+  TextColor: [0, 0, 0]
   Location: [25, 775]
   Rotation: Degrees0
 - !TextBlock
@@ -133,14 +184,14 @@ Objects:
   IsItalic: true
   IsUnderlined: false
   IsCross: false
-  TextColor: [0, 0, 0, 1]
+  TextColor: [0, 0, 0]
   Location: [25, 1000]
   Rotation: Degrees0
 - !BezierCurve
   Point1: [200, 0]
   Point2: [0, 200]
   Point3: [200, 200]
-  StrokeColor: [0, 0, 0, 1]
+  StrokeColor: [0, 0, 0]
   StrokeThickness: 1
   Location: [775, 25]
   Rotation: Degrees0
@@ -148,7 +199,7 @@ Objects:
   Point1: [200, 0]
   Point2: [0, 200]
   Point3: [200, 200]
-  StrokeColor: [0, 0, 0, 1]
+  StrokeColor: [0, 0, 0]
   StrokeThickness: 1
   Location: [1025, 25]
   Rotation: Degrees0
@@ -156,7 +207,7 @@ Objects:
   Point1: [200, 0]
   Point2: [0, 200]
   Point3: [200, 200]
-  StrokeColor: [0, 0, 0, 1]
+  StrokeColor: [0, 0, 0]
   StrokeThickness: 1
   Location: [1275, 25]
   Rotation: Degrees0
@@ -165,7 +216,7 @@ Objects:
   RadiusY: 100
   StartAngle: 135
   EndAngle: 45
-  StrokeColor: [0, 0, 0, 1]
+  StrokeColor: [0, 0, 0]
   StrokeThickness: 2
   Location: [875, 375]
   Rotation: Degrees0
@@ -174,7 +225,7 @@ Objects:
   RadiusY: 100
   StartAngle: 135
   EndAngle: 45
-  StrokeColor: [0, 0, 0, 1]
+  StrokeColor: [0, 0, 0]
   StrokeThickness: 2
   Location: [1375, 375]
   Rotation: Degrees0
@@ -183,34 +234,7 @@ Objects:
   RadiusY: 100
   StartAngle: 315
   EndAngle: 225
-  StrokeColor: [0, 0, 0, 1]
+  StrokeColor: [0, 0, 0]
   StrokeThickness: 2
   Location: [1125, 375]
-  Rotation: Degrees0
-- !Image
-  FilePath: C:\Users\Vadim\Desktop\Logic-simulator\LogicSimulator\bin\x64\Debug\net7.0-windows\Data/image.png
-  Width: 200
-  Height: 200
-  StrokeColor: [0, 0, 0, 1]
-  StrokeThickness: 1
-  IsBordered: false
-  Location: [1275, 775]
-  Rotation: Degrees0
-- !Image
-  FilePath: C:\Users\Vadim\Desktop\Logic-simulator\LogicSimulator\bin\x64\Debug\net7.0-windows\Data/image.png
-  Width: 200
-  Height: 200
-  StrokeColor: [0, 0, 0, 1]
-  StrokeThickness: 1
-  IsBordered: false
-  Location: [1025, 775]
-  Rotation: Degrees0
-- !Image
-  FilePath: C:\Users\Vadim\Desktop\Logic-simulator\LogicSimulator\bin\x64\Debug\net7.0-windows\Data/image.png
-  Width: 200
-  Height: 200
-  StrokeColor: [0, 0, 0, 1]
-  StrokeThickness: 1
-  IsBordered: false
-  Location: [775, 775]
   Rotation: Degrees0
