@@ -25,7 +25,7 @@ public class BoolPropertyViewModel : SinglePropertyViewModel
 
     protected override void SetPropertyValue(IEnumerable<object> objects, object value)
     {
-        if (IsValueUndefined) return;
+        IsValueUndefined = false;
 
         var newValue = (bool)value;
 

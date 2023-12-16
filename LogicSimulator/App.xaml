@@ -5,8 +5,11 @@
     <Application.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary Source="/LogicSimulator.Controls;component/Themes/Dark/DarkTheme.xaml" />
+                <ResourceDictionary Source="/WpfExtensions.Controls;component/Resources/Brushes/DarkBrushes.xaml" />
+                <ResourceDictionary Source="/WpfExtensions.Controls;component/Themes/Generic.xaml" />
                 <ResourceDictionary Source="/Resources/Icons.xaml" />
+
+                <ResourceDictionary Source="/LogicSimulator.Controls;component/Themes/Dark/DarkTheme.xaml" />
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </Application.Resources>

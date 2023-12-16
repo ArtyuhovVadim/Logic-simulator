@@ -17,6 +17,7 @@
     </ItemGroup>
 
     <ItemGroup>
+        <ProjectReference Include="..\..\WpfExtensions\WpfExtencions.Controls\WpfExtensions.Controls.csproj" />
         <ProjectReference Include="..\LogicSimulator.Utils\LogicSimulator.Utils.csproj" />
     </ItemGroup>
 

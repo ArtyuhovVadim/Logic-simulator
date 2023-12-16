@@ -225,7 +225,7 @@
             </layers:RectangleSelectionLayer>
         </scene:Scene2D>
 
-        <controls:ClippingBorder
+        <ClippingBorder
             Height="28"
             Margin="5"
             HorizontalAlignment="Center"
@@ -263,6 +263,6 @@
                         Stretch="Uniform" />
                 </views:SchemeToolView>
             </StackPanel>
-        </controls:ClippingBorder>
+        </ClippingBorder>
     </Grid>
 </UserControl>

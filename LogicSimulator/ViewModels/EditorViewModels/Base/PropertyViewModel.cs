@@ -2,7 +2,7 @@
 
 namespace LogicSimulator.ViewModels.EditorViewModels.Base;
 
-public abstract class PropertyViewModel : BindableBase
+public abstract class PropertyViewModel : ValidatableBindableBase
 {
     public EditorViewModel EditorViewModel { get; set; } = null!;
 
