@@ -7,7 +7,6 @@
         <UseWPF>true</UseWPF>
         <Platforms>x64;x86</Platforms>
         <StartupObject>LogicSimulator.Program</StartupObject>
-        <LangVersion>latest</LangVersion>
         <ApplicationIcon>Resources\Icons\icon512x512.ico</ApplicationIcon>
 	    <VersionPrefix>0.3.1</VersionPrefix>
 	    <ImplicitUsings>enable</ImplicitUsings>

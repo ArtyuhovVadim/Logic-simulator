@@ -300,7 +300,7 @@ public static class AvalonDockResourceKeys
 
     #endregion
 
-    private static ComponentResourceKey CreateInstance([CallerMemberName] string fieldName = null)
+    private static ComponentResourceKey CreateInstance([CallerMemberName] string? fieldName = null)
     {
         return new ComponentResourceKey(typeof(ResourceKeys), fieldName!);
     }

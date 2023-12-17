@@ -4,7 +4,7 @@
 		<TargetFramework>net8.0-windows</TargetFramework>
 		<ImplicitUsings>enable</ImplicitUsings>
 		<UseWpf>true</UseWpf>
-		<Nullable>disable</Nullable>
+		<Nullable>enable</Nullable>
 		<Platforms>x64;x86</Platforms>
 	</PropertyGroup>
 

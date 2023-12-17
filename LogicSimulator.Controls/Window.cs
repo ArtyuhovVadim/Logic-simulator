@@ -1,6 +1,6 @@
 ﻿using System.Windows;
+using System.Windows.Automation;
 using System.Windows.Controls;
-using LogicSimulator.Utils;
 
 namespace LogicSimulator.Controls;
 
@@ -13,9 +13,9 @@ public class Window : System.Windows.Window
     private const string MaximizeButtonName = "PART_MaximizeButton";
     private const string CloseButtonName = "PART_CloseButton";
 
-    private Button _minimizeButton;
-    private Button _maximizeButton;
-    private Button _closeButton;
+    private Button _minimizeButton = null!;
+    private Button _maximizeButton = null!;
+    private Button _closeButton = null!;
 
     static Window()
     {
@@ -25,10 +25,10 @@ public class Window : System.Windows.Window
     public override void OnApplyTemplate()
     {
         base.OnApplyTemplate();
-        
-        _minimizeButton = this.GetTemplateChildOrThrowIfNull<Button>(GetTemplateChild(MinimizeButtonName));
-        _maximizeButton = this.GetTemplateChildOrThrowIfNull<Button>(GetTemplateChild(MaximizeButtonName));
-        _closeButton = this.GetTemplateChildOrThrowIfNull<Button>(GetTemplateChild(CloseButtonName));
+
+        _minimizeButton = GetTemplateChild(MinimizeButtonName) as Button ?? throw new ElementNotAvailableException($"Part element is not available in {GetType().Name} template!");
+        _maximizeButton = GetTemplateChild(MaximizeButtonName) as Button ?? throw new ElementNotAvailableException($"Part element is not available in {GetType().Name} template!"); ;
+        _closeButton = GetTemplateChild(CloseButtonName) as Button ?? throw new ElementNotAvailableException($"Part element is not available in {GetType().Name} template!"); ;
 
         _minimizeButton.Click += OnMinimizeButtonClicked;
         _maximizeButton.Click += OnMaximizeButtonClicked;
