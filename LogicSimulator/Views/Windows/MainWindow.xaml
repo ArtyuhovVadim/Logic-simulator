@@ -5,7 +5,6 @@
     xmlns:c="clr-namespace:LogicSimulator.Controls;assembly=LogicSimulator.Controls"
     xmlns:commands="clr-namespace:LogicSimulator.Infrastructure.Commands"
     xmlns:conv="clr-namespace:WpfExtensions.Converters;assembly=WpfExtensions"
-    xmlns:converters="clr-namespace:LogicSimulator.Infrastructure.Converters"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:svm="clr-namespace:LogicSimulator.ViewModels.StatusViewModels"
@@ -53,37 +52,28 @@
             </Button>
         </Grid>
 
-        <Grid DockPanel.Dock="Bottom">
-            <StatusBar Background="#424242">
-                <TextBlock Foreground="White" Text="{Binding Path=DockingViewModel.ActiveDocumentViewModel.Title, StringFormat='Активный документ: {0}', FallbackValue='Нет активных файлов'}" />
+        <Grid Background="#424242" DockPanel.Dock="Bottom">
+            <StackPanelEx
+                Margin="5,0,0,0"
+                VerticalAlignment="Center"
+                Gap="5"
+                Orientation="Horizontal">
+                <StackPanelEx.Resources>
+                    <Style BasedOn="{StaticResource VerticalSeparator}" TargetType="{x:Type Separator}" />
+                </StackPanelEx.Resources>
+                <TextBlock Text="{Binding Path=DockingViewModel.ActiveDocumentViewModel.Title, StringFormat='Активный документ: {0}', FallbackValue='Нет активных файлов'}" />
                 <Separator Visibility="{Binding Path=CurrentStatusViewModel, Converter={conv:NullToVisibilityConverter}}" />
                 <ContentControl Content="{Binding Path=CurrentStatusViewModel, TargetNullValue=''}">
                     <ContentControl.Resources>
                         <DataTemplate DataType="{x:Type svm:SchemeStatusViewModel}">
-                            <StatusBar Margin="-3" Background="#424242">
-                                <TextBlock>
-                                    <Run Text="Кол-во объектов" />
-                                    <Run Text="{Binding Path=ObjectsCount, Mode=OneWay}" />
-                                    <Run Text="{Binding Path=SelectedObjectsCount, Mode=OneWay, StringFormat='(Выделено {0})'}" />
-                                </TextBlock>
-                                <Separator />
-                                <TextBlock>
-                                    <Run Text="Масштаб" />
-                                    <Run Text="{Binding Path=Scale, Mode=OneWay, StringFormat='0.00'}" />
-                                </TextBlock>
-                                <Separator />
-                                <TextBlock>
-                                    <Run Text="Позиция курсора" />
-                                    <Run Text="{Binding Path=MousePosition, Mode=OneWay, Converter={converters:Vector2Converter}}" />
-                                </TextBlock>
-                            </StatusBar>
+                            <views:SchemeStatusBarView />
                         </DataTemplate>
                         <DataTemplate DataType="{x:Type svm:EmptyStatusViewModel}">
                             <TextBlock Text="Нет активных файлов" />
                         </DataTemplate>
                     </ContentControl.Resources>
                 </ContentControl>
-            </StatusBar>
+            </StackPanelEx>
 
             <Menu HorizontalAlignment="Right">
                 <MenuItem Header="Панели" ItemsSource="{Binding Path=DockingViewModel.ToolViewModels}">
