@@ -129,8 +129,7 @@ public class Scene2D : FrameworkElement, IDisposable
 
     public Size2F PixelSize => Context.DrawingContext.DrawingSize;
 
-    //TODO: Оптимизировать (кешировать)
-    public float Dpi => (float)VisualTreeHelper.GetDpi(this).PixelsPerInchX;
+    public float Dpi { private set; get; }
 
     public Scene2D()
     {
@@ -201,6 +200,8 @@ public class Scene2D : FrameworkElement, IDisposable
         if (_renderer is not null)
             return;
 
+        Dpi = (float)VisualTreeHelper.GetDpi(this).PixelsPerInchX;
+
         var rootWindow = Window.GetWindow(this);
 
         if (rootWindow is null)
@@ -210,6 +211,7 @@ public class Scene2D : FrameworkElement, IDisposable
 
         _renderer = new SceneRenderer(OnRender, handle);
         _renderer.Resize(RenderSize, Dpi, renderAfterResize: false);
+        _renderer.IsFrontBufferAvailableChanged += OnIsFrontBufferAvailableChanged;
 
         foreach (var layer in Layers)
         {
@@ -232,6 +234,7 @@ public class Scene2D : FrameworkElement, IDisposable
         {
             if (_isRenderRequested || Layers.Any(x => x.IsDirty))
             {
+
                 _renderer!.RequestRender();
                 _isRenderRequested = false;
             }
@@ -244,22 +247,67 @@ public class Scene2D : FrameworkElement, IDisposable
 
     private void OnRender(DirectXContext context)
     {
-        RenderDebugger.BeginRender(this, Context);
+        try
+        {
+            RenderDebugger.BeginRender(this, Context);
 
-        Context.DrawingContext.BeginDraw();
-        Context.DrawingContext.PushTransform(Transform);
+            Context.DrawingContext.BeginDraw();
+            Context.DrawingContext.PushTransform(Transform);
+
+            foreach (var layer in Layers)
+            {
+                layer.Render(this, Context);
+            }
+
+            Context.DrawingContext.PopTransform();
+
+            RenderDebugger.EndRender();
+            RenderDebugger.DrawStatistics(this, Context, new Vector2(5));
+
+            Context.DrawingContext.EndDraw();
+        }
+        catch (Exception ex)
+        {
+            Reinitialize();
+            Console.WriteLine(ex);
+        }
+    }
+
+    private void OnIsFrontBufferAvailableChanged(bool newValue)
+    {
+        if (newValue)
+        {
+            Reinitialize();
+        }
+    }
+
+    private void Reinitialize()
+    {
+        CompositionTarget.Rendering -= OnCompositionTargetRendering;
+
+        Utilities.Dispose(ref _renderer);
+        GC.Collect();
+
+        var rootWindow = Window.GetWindow(this);
+
+        if (rootWindow is null)
+            throw new ApplicationException("Can't find scene root window.");
+
+        var handle = new WindowInteropHelper(rootWindow).Handle;
+
+        _renderer = new SceneRenderer(OnRender, handle);
+        _renderer.Resize(RenderSize, Dpi, renderAfterResize: false);
 
         foreach (var layer in Layers)
         {
-            layer.Render(this, Context);
+            layer.InitializeCache(Context.Cache);
         }
 
-        Context.DrawingContext.PopTransform();
+        InvalidateVisual();
 
-        RenderDebugger.EndRender();
-        RenderDebugger.DrawStatistics(this, Context, new Vector2(5));
+        CompositionTarget.Rendering += OnCompositionTargetRendering;
 
-        Context.DrawingContext.EndDraw();
+        _renderer.RequestRender();
     }
 
     public void Dispose()
@@ -267,6 +315,9 @@ public class Scene2D : FrameworkElement, IDisposable
         CompositionTarget.Rendering -= OnCompositionTargetRendering;
         Layers.CollectionChanged -= OnLayersCollectionChanged;
         Loaded -= OnLoaded;
+
+        if (_renderer is not null)
+            _renderer.IsFrontBufferAvailableChanged -= OnIsFrontBufferAvailableChanged;
 
         Utilities.Dispose(ref _renderer);
 

@@ -1,4 +1,5 @@
-﻿using System.Windows;
+﻿using System.Diagnostics;
+using System.Windows;
 using System.Windows.Media;
 using LogicSimulator.Scene.DirectX;
 using SharpDX;
@@ -12,8 +13,10 @@ public class SceneRenderer : DisposableObject
 
     private DirectXContext _context;
     private D2DContext? _d2dContext;
-    private readonly D3D11Image _image;
+    private  D3D11Image _image;
     private readonly Action<DirectXContext> _onRender;
+
+    public event Action<bool> IsFrontBufferAvailableChanged;
 
     public DirectXContext DirectXContext => _context;
     public D2DContext D2DContext => _d2dContext ?? throw new ApplicationException("D2DContext is not initialized.");
@@ -87,8 +90,15 @@ public class SceneRenderer : DisposableObject
 
     private void OnIsFrontBufferAvailableChanged(object sender, DependencyPropertyChangedEventArgs e)
     {
-        //TODO: Implement
-        throw new NotImplementedException();
+        try
+        {
+            IsFrontBufferAvailableChanged?.Invoke((bool)e.NewValue);
+        }
+        catch
+        {
+            Debug.Assert(false);
+            throw;
+        }
     }
 
     protected override void Dispose(bool disposingManaged)
