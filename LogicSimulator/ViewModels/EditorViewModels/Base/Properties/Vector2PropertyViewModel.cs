@@ -1,170 +1,155 @@
-﻿using System.ComponentModel;
-using System.Globalization;
+﻿using System.Globalization;
 using LogicSimulator.Utils;
 using MathExpressionParser;
 using SharpDX;
-using WpfExtensions.Mvvm;
 
 namespace LogicSimulator.ViewModels.EditorViewModels.Base.Properties;
 
 public class Vector2PropertyViewModel : SinglePropertyViewModel
 {
-    private Vector2ViewModel _vm = null!;
-    private bool _suppressPropertyChanged;
+    private static readonly MathParser Parser = MathParserBuilder.BuildDefaultParser();
 
-    protected override void OnStartEdit(IEnumerable<object> objects)
+    private ChangedVectorComponent _changedVectorComponent = ChangedVectorComponent.None;
+
+    private bool _suppressPropertyGetter;
+
+    private string _invalidXExpr = string.Empty;
+
+    private string _invalidYExpr = string.Empty;
+
+    private string VectorXAsStr => IsPropertyHasErrors(nameof(XExpr)) ? _invalidXExpr : ((Vector2)Value).X.ToString(CultureInfo.InvariantCulture);
+
+    private string VectorYAsStr => IsPropertyHasErrors(nameof(YExpr)) ? _invalidYExpr : ((Vector2)Value).Y.ToString(CultureInfo.InvariantCulture);
+
+    #region XExpr
+
+    public string XExpr
     {
-        _vm = new Vector2ViewModel(0, 0);
-        _vm.PropertyChanged += OnVectorPropertyChanged;
+        get => VectorXAsStr;
+        set
+        {
+            ClearErrors();
+
+            if (!Parser.TryParse(value, out var x, out var e))
+            {
+                _invalidXExpr = value;
+                AddError($"Выражение '{value}' не может быть вычислено.\n{e!.Message}");
+                OnPropertyChanged();
+                return;
+            }
+
+            IsXValueUndefined = false;
+            _suppressPropertyGetter = true;
+            _changedVectorComponent = ChangedVectorComponent.X;
+            Value = (Vector2)Value with { X = (float)x };
+        }
     }
 
-    protected override void OnEndEdit(IEnumerable<object> objects)
+    #endregion
+
+    #region IsXValueUndefined
+
+    private bool _isXValueUndefined;
+
+    public bool IsXValueUndefined
     {
-        _vm.PropertyChanged -= OnVectorPropertyChanged;
+        get => _isXValueUndefined;
+        set => Set(ref _isXValueUndefined, value);
     }
+
+    #endregion
+
+    #region YExpr
+
+    public string YExpr
+    {
+        get => VectorYAsStr;
+        set
+        {
+            ClearErrors();
+
+            if (!Parser.TryParse(value, out var y, out var e))
+            {
+                _invalidYExpr = value;
+                AddError($"Выражение '{value}' не может быть вычислено.\n{e!.Message}");
+                OnPropertyChanged();
+                return;
+            }
+
+            IsYValueUndefined = false;
+            _suppressPropertyGetter = true;
+            _changedVectorComponent = ChangedVectorComponent.Y;
+            Value = (Vector2)Value with { Y = (float)y };
+        }
+    }
+
+    #endregion
+
+    #region IsYValueUndefined
+
+    private bool _isYValueUndefined;
+
+    public bool IsYValueUndefined
+    {
+        get => _isYValueUndefined;
+        set => Set(ref _isYValueUndefined, value);
+    }
+
+    #endregion
 
     protected override object GetPropertyValue(IEnumerable<object> objects)
     {
+        if (_suppressPropertyGetter)
+            return Vector2.Zero;
+
         var firstObj = objects.First();
 
-        if (!_vm.HasErrors)
-        {
-            _suppressPropertyChanged = true;
-            var value = GetValue<Vector2>(firstObj);
+        IsXValueUndefined = objects.Any(o => !MathUtil.NearEqual(GetValue<Vector2>(o).X, GetValue<Vector2>(firstObj).X));
+        IsYValueUndefined = objects.Any(o => !MathUtil.NearEqual(GetValue<Vector2>(o).Y, GetValue<Vector2>(firstObj).Y));
 
-            _vm.X = value.X.ToString(CultureInfo.InvariantCulture);
-            _vm.Y = value.Y.ToString(CultureInfo.InvariantCulture);
-
-            _vm.IsXUndefined = objects.Any(o => !MathUtil.NearEqual(GetValue<Vector2>(o).X, GetValue<Vector2>(firstObj).X));
-            _vm.IsYUndefined = objects.Any(o => !MathUtil.NearEqual(GetValue<Vector2>(o).Y, GetValue<Vector2>(firstObj).Y));
-            _suppressPropertyChanged = false;
-        }
-
-        return _vm;
+        return GetValue<Vector2>(firstObj);
     }
 
     protected override void SetPropertyValue(IEnumerable<object> objects, object value)
     {
-        var newVectorX = ((Vector2ViewModel)value).X;
-        var newVectorY = ((Vector2ViewModel)value).Y;
-
-        var newVectorXUndefined = ((Vector2ViewModel)value).IsXUndefined;
-        var newVectorYUndefined = ((Vector2ViewModel)value).IsYUndefined;
-
-        var newVectorXError = ((Vector2ViewModel)value).IsPropertyHasErrors(nameof(Vector2ViewModel.X));
-        var newVectorYError = ((Vector2ViewModel)value).IsPropertyHasErrors(nameof(Vector2ViewModel.Y));
+        var newVector = (Vector2)value;
 
         foreach (var obj in objects)
         {
             var oldVec = GetValue<Vector2>(obj);
-            if (!newVectorXUndefined && !newVectorXError) oldVec.X = float.Parse(newVectorX);
-            if (!newVectorYUndefined && !newVectorYError) oldVec.Y = float.Parse(newVectorY);
+
+            if (_changedVectorComponent == ChangedVectorComponent.X) oldVec.X = newVector.X;
+            if (_changedVectorComponent == ChangedVectorComponent.Y) oldVec.Y = newVector.Y;
+
             SetValue(obj, oldVec);
+        }
+
+        _suppressPropertyGetter = false;
+        _changedVectorComponent = ChangedVectorComponent.None;
+    }
+    
+    protected override void OnEndEdit(IEnumerable<object> objects) => ClearAllErrors();
+
+    protected override void OnPropertyChanged(string? propertyName = null)
+    {
+        if (propertyName == nameof(Value))
+        {
+            base.OnPropertyChanged(nameof(XExpr));
+            base.OnPropertyChanged(nameof(YExpr));
+        }
+        else
+        {
+            base.OnPropertyChanged(propertyName);
         }
     }
 
     public override PropertyViewModel MakeCopy(EditorViewModel editor) =>
         new Vector2PropertyViewModel { PropertyName = PropertyName, EditorViewModel = editor };
 
-    private void OnVectorPropertyChanged(object? sender, PropertyChangedEventArgs e)
+    private enum ChangedVectorComponent
     {
-        if (e.PropertyName != nameof(Vector2ViewModel.X) && e.PropertyName != nameof(Vector2ViewModel.Y)) return;
-
-        if (_suppressPropertyChanged)
-            return;
-
-        Value = _vm;
-    }
-
-    private class Vector2ViewModel : ValidatableBindableBase
-    {
-        private static readonly MathParser Parser = MathParserBuilder.BuildDefaultParser();
-
-        private string _invalidXValue = string.Empty;
-        private string _invalidYValue = string.Empty;
-
-        public Vector2ViewModel(float x, float y)
-        {
-            _x = x.ToString(CultureInfo.InvariantCulture);
-            _y = y.ToString(CultureInfo.InvariantCulture);
-        }
-
-        #region IsXUndedined
-
-        private bool _isXUndefined;
-
-        public bool IsXUndefined
-        {
-            get => _isXUndefined;
-            set => Set(ref _isXUndefined, value);
-        }
-
-        #endregion
-
-        #region IsYUndefinded
-
-        private bool _isYUndefined;
-
-        public bool IsYUndefined
-        {
-            get => _isYUndefined;
-            set => Set(ref _isYUndefined, value);
-        }
-
-        #endregion
-
-        #region X
-
-        private string _x;
-
-        public string X
-        {
-            get => _x;
-            set
-            {
-                ClearErrors();
-
-                if (!Parser.TryParse(value, out var x, out var e))
-                {
-                    _invalidXValue = value;
-                    AddError($"Выражение '{value}' не может быть вычислено.\n{e!.Message}");
-                    Set(ref _x, _invalidXValue);
-                    return;
-                }
-
-                IsXUndefined = false;
-
-                Set(ref _x, x.ToString(CultureInfo.InvariantCulture));
-            }
-        }
-
-        #endregion
-
-        #region Y
-
-        private string _y;
-
-        public string Y
-        {
-            get => _y;
-            set
-            {
-                ClearErrors();
-
-                if (!Parser.TryParse(value, out var y, out var e))
-                {
-                    _invalidYValue = value;
-                    AddError($"Выражение '{value}' не может быть вычислено.\n{e!.Message}");
-                    Set(ref _y, _invalidYValue);
-                    return;
-                }
-
-                IsYUndefined = false;
-
-                Set(ref _y, y.ToString(CultureInfo.InvariantCulture));
-            }
-        }
-
-        #endregion
+        None,
+        X,
+        Y
     }
 }

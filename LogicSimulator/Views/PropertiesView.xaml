@@ -365,14 +365,11 @@
         </DataTemplate>
 
         <DataTemplate DataType="{x:Type properties:Vector2PropertyViewModel}">
-            <Grid
-                Margin="0,0,6,0"
-                DataContext="{Binding Path=Value}"
-                GridProps.ColumnDefinitionsEx="* 6 *">
+            <Grid Margin="0,0,6,0" GridProps.ColumnDefinitionsEx="* 6 *">
                 <AdornedControl
                     x:Name="AdornedControlX"
                     Grid.Column="0"
-                    IsAdornerVisible="{Binding Path=IsXUndefined}">
+                    IsAdornerVisible="{Binding Path=IsXValueUndefined}">
                     <AdornedControl.AdornerContent>
                         <Border
                             Margin="5,5,20,5"
@@ -390,12 +387,12 @@
                     <TextBoxEx
                         x:Name="TextBoxExX"
                         SelectAllTextOnFocus="True"
-                        Text="{Binding Path=X}" />
+                        Text="{Binding Path=XExpr}" />
                 </AdornedControl>
                 <AdornedControl
                     x:Name="AdornedControlY"
                     Grid.Column="2"
-                    IsAdornerVisible="{Binding Path=IsYUndefined}">
+                    IsAdornerVisible="{Binding Path=IsYValueUndefined}">
                     <AdornedControl.AdornerContent>
                         <Border
                             Margin="5,5,20,5"
@@ -413,7 +410,7 @@
                     <TextBoxEx
                         x:Name="TextBoxExY"
                         SelectAllTextOnFocus="True"
-                        Text="{Binding Path=Y}" />
+                        Text="{Binding Path=YExpr}" />
                 </AdornedControl>
             </Grid>
             <DataTemplate.Triggers>
