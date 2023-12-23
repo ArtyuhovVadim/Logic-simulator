@@ -25,7 +25,12 @@
     </UserControl.Resources>
 
     <Grid>
-        <scene:Scene2D x:Name="Scene2D" Scale="{Binding Path=Scale, Mode=TwoWay}">
+        <scene:Scene2D
+            x:Name="Scene2D"
+            Scale="{Binding Path=Scale,
+                            Mode=TwoWay}"
+            Translation="{Binding Path=Translation,
+                                  Mode=TwoWay}">
             <tools:ToolsController.Controller>
                 <tools:ToolsController CurrentToolContext="{Binding Path=CurrentTool, Mode=TwoWay}" DefaultToolContext="{Binding Path=SelectionTool, Mode=OneTime}">
                     <tools:SelectionTool

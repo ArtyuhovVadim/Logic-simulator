@@ -130,6 +130,18 @@ public class SchemeViewModel : DocumentViewModel
 
     #endregion
 
+    #region Translation
+
+    private Vector2 _translation = Vector2.Zero;
+
+    public Vector2 Translation
+    {
+        get => _translation;
+        set => Set(ref _translation, value);
+    }
+
+    #endregion
+
     #region MousePosition
 
     private Vector2 _mousePosition = Vector2.Zero;
