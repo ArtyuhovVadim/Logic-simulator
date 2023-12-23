@@ -43,6 +43,20 @@ public abstract class EditorViewModel : BindableBase
         OnPropertyChanged(nameof(Layout));
     }
 
+    public void StopObjectsEdit()
+    {
+        if (_objectsToEdit is null) return;
+
+        Layout.EndEdit();
+
+        foreach (var obj in _objectsToEdit)
+        {
+            obj.PropertyChanged -= OnPropertyChanged;
+        }
+
+        _objectsToEdit = null;
+    }
+
     protected void OnPropertyChanged(object? sender, PropertyChangedEventArgs e) => Layout.PropertyChange(e.PropertyName!);
 
     protected abstract EditorLayout CreateLayout();

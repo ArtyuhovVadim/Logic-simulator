@@ -36,6 +36,7 @@ public class EditorSelectionService : IEditorSelectionService
 
             var multiEditor = new MultiObjectsEditorViewModel(layouts);
 
+            _propertiesViewModel.CurrentEditorViewModel?.StopObjectsEdit();
             multiEditor.SetObjectsToEdit(objects);
             _propertiesViewModel.CurrentEditorViewModel = multiEditor;
 
@@ -48,6 +49,7 @@ public class EditorSelectionService : IEditorSelectionService
             return;
         }
 
+        _propertiesViewModel.CurrentEditorViewModel?.StopObjectsEdit();
         editor.SetObjectsToEdit(objects);
         _propertiesViewModel.CurrentEditorViewModel = editor;
     }
@@ -60,6 +62,7 @@ public class EditorSelectionService : IEditorSelectionService
             return;
         }
 
+        _propertiesViewModel.CurrentEditorViewModel?.StopObjectsEdit();
         editor.SetObjectsToEdit([schemeViewModel]);
         _propertiesViewModel.CurrentEditorViewModel = editor;
     }
