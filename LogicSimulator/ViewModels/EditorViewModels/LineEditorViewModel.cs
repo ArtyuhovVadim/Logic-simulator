@@ -20,7 +20,7 @@ public class LineEditorViewModel : EditorViewModel
                 .WithSingleProperty<Vector2PropertyViewModel>(nameof(LineViewModel.Location)))
             .WithRow(rowBuilder => rowBuilder
                 .WithRowName("Поворот")
-                .WithSingleProperty<RotationEnumPropertyViewModel>(nameof(LineViewModel.Rotation))))
+                .WithSingleProperty<EnumPropertyViewModel>(nameof(LineViewModel.Rotation))))
          .WithGroup(groupBuilder => groupBuilder
              .WithGroupName("Вершины")
              .WithRow(rowBuilder => rowBuilder
@@ -29,10 +29,9 @@ public class LineEditorViewModel : EditorViewModel
             .WithGroupName("Свойства")
             .WithRow(rowBuilder => rowBuilder
                 .WithRowName("Граница")
-                .WithSingleProperty<FloatPropertyViewModel>(nameof(LineViewModel.StrokeThickness))
-                .WithSingleProperty<ColorPropertyViewModel>(nameof(LineViewModel.StrokeColor))
-                .WithLayout(layoutBuilder => layoutBuilder
-                    .WithRelativeSize(1)
-                    .WithAutoSize())))
+                .WithMultiProperty<StrokePropertiesViewModel>(multiPropertyBuilder => multiPropertyBuilder
+                    .WithProperty<EnumPropertyViewModel>(nameof(LineViewModel.StrokeThicknessType))
+                    .WithProperty<FloatPropertyViewModel>(nameof(LineViewModel.StrokeThickness))
+                    .WithProperty<ColorPropertyViewModel>(nameof(LineViewModel.StrokeColor)))))
         .Build();
 }

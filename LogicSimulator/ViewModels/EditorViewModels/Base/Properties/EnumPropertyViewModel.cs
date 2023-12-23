@@ -1,8 +1,6 @@
-﻿using LogicSimulator.Infrastructure;
+﻿namespace LogicSimulator.ViewModels.EditorViewModels.Base.Properties;
 
-namespace LogicSimulator.ViewModels.EditorViewModels.Base.Properties;
-
-public class RotationEnumPropertyViewModel : SinglePropertyViewModel
+public class EnumPropertyViewModel : SinglePropertyViewModel
 {
     #region IsValueUndefined
 
@@ -20,23 +18,23 @@ public class RotationEnumPropertyViewModel : SinglePropertyViewModel
     {
         var firstObj = objects.First();
 
-        IsValueUndefined = objects.Any(o => !Equals(GetValue<Rotation>(o), GetValue<Rotation>(firstObj)));
+        IsValueUndefined = objects.Any(o => !Equals(GetValue<Enum>(o), GetValue<Enum>(firstObj)));
 
-        return GetValue<Rotation>(firstObj);
+        return GetValue<Enum>(firstObj);
     }
 
     protected override void SetPropertyValue(IEnumerable<object> objects, object value)
     {
         IsValueUndefined = false;
 
-        var newValue = (Rotation)value;
+        var valueType = value.GetType();
 
         foreach (var obj in objects)
         {
-            SetValue(obj, newValue);
+            SetValue(obj, value, valueType);
         }
     }
 
     public override PropertyViewModel MakeCopy(EditorViewModel editor) =>
-        new RotationEnumPropertyViewModel { PropertyName = PropertyName, EditorViewModel = editor };
+        new EnumPropertyViewModel { PropertyName = PropertyName, EditorViewModel = editor };
 }

@@ -11,7 +11,7 @@ using Colors = System.Windows.Media.Colors;
 
 namespace LogicSimulator.Scene.Views;
 
-public class BezierCurveView : EditableSceneObjectView
+public class BezierCurveView : EditableSceneObjectView, IStroked
 {
     public static readonly IResource GeometryResource =
         ResourceCache.Register<BezierCurveView>((factory, user) => factory.CreateBezierCurveGeometry(Vector2.Zero, user.Point1, user.Point2, user.Point3));
@@ -113,11 +113,24 @@ public class BezierCurveView : EditableSceneObjectView
 
     #endregion
 
+    #region StrokeThicknessType
+
+    public StrokeThicknessType StrokeThicknessType
+    {
+        get => (StrokeThicknessType)GetValue(StrokeThicknessTypeProperty);
+        set => SetValue(StrokeThicknessTypeProperty, value);
+    }
+
+    public static readonly DependencyProperty StrokeThicknessTypeProperty =
+        DependencyProperty.Register(nameof(StrokeThicknessType), typeof(StrokeThicknessType), typeof(BezierCurveView), new FrameworkPropertyMetadata(StrokeThicknessType.Smallest, FrameworkPropertyMetadataOptions.BindsTwoWayByDefault, DefaultPropertyChangedHandler));
+
+    #endregion
+
     public override bool HitTest(Vector2 pos, Matrix3x2 worldTransform, float tolerance = 0.25f)
     {
         var geometry = Cache.Get<PathGeometry>(this, GeometryResource);
 
-        return geometry.StrokeContainsPoint(pos, StrokeThickness, null, TransformMatrix * worldTransform, tolerance);
+        return geometry.StrokeContainsPoint(pos, this.GetStrokeThickness(), null, TransformMatrix * worldTransform, tolerance);
     }
 
     public override GeometryRelation HitTest(Geometry inputGeometry, Matrix3x2 worldTransform, float tolerance = 0.25f)
@@ -132,7 +145,7 @@ public class BezierCurveView : EditableSceneObjectView
         var geometry = Cache.Get<PathGeometry>(this, GeometryResource);
         var strokeBrush = Cache.Get<SolidColorBrush>(this, StrokeBrushResource);
 
-        context.DrawingContext.DrawGeometry(geometry, strokeBrush, StrokeThickness);
+        context.DrawingContext.DrawGeometry(geometry, strokeBrush, this.GetStrokeThickness(scene));
     }
 
     protected override void OnRenderSelection(Scene2D scene, D2DContext context)

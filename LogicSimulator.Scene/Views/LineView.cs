@@ -12,7 +12,7 @@ using Colors = System.Windows.Media.Colors;
 
 namespace LogicSimulator.Scene.Views;
 
-public class LineView : EditableSceneObjectView
+public class LineView : EditableSceneObjectView, IStroked
 {
     public static readonly IResource StrokeBrushResource =
         ResourceCache.Register<LineView>((factory, user) => factory.CreateSolidColorBrush(user.StrokeColor.ToColor4()));
@@ -57,6 +57,19 @@ public class LineView : EditableSceneObjectView
 
     public static readonly DependencyProperty StrokeThicknessProperty =
         DependencyProperty.Register(nameof(StrokeThickness), typeof(float), typeof(LineView), new FrameworkPropertyMetadata(default(float), FrameworkPropertyMetadataOptions.BindsTwoWayByDefault, DefaultPropertyChangedHandler));
+
+    #endregion
+
+    #region StrokeThicknessType
+
+    public StrokeThicknessType StrokeThicknessType
+    {
+        get => (StrokeThicknessType)GetValue(StrokeThicknessTypeProperty);
+        set => SetValue(StrokeThicknessTypeProperty, value);
+    }
+
+    public static readonly DependencyProperty StrokeThicknessTypeProperty =
+        DependencyProperty.Register(nameof(StrokeThicknessType), typeof(StrokeThicknessType), typeof(LineView), new FrameworkPropertyMetadata(StrokeThicknessType.Smallest, FrameworkPropertyMetadataOptions.BindsTwoWayByDefault, DefaultPropertyChangedHandler));
 
     #endregion
 
@@ -134,7 +147,7 @@ public class LineView : EditableSceneObjectView
     public override bool HitTest(Vector2 pos, Matrix3x2 worldTransform, float tolerance = 0.25f)
     {
         var geometry = Cache.Get<PathGeometry>(this, GeometryResource);
-        return geometry.StrokeContainsPoint(pos, StrokeThickness, null, TransformMatrix * worldTransform, tolerance);
+        return geometry.StrokeContainsPoint(pos, this.GetStrokeThickness(), null, TransformMatrix * worldTransform, tolerance);
     }
 
     public override GeometryRelation HitTest(Geometry inputGeometry, Matrix3x2 worldTransform, float tolerance = 0.25f)
@@ -149,7 +162,7 @@ public class LineView : EditableSceneObjectView
         var strokeBrush = Cache.Get<SolidColorBrush>(this, StrokeBrushResource);
         var strokeStyle = Cache.Get<StrokeStyle>(this, StrokeStyleResource);
 
-        context.DrawingContext.DrawGeometry(geometry, strokeBrush, StrokeThickness, strokeStyle);
+        context.DrawingContext.DrawGeometry(geometry, strokeBrush, this.GetStrokeThickness(scene), strokeStyle);
     }
 
     protected override void OnRenderSelection(Scene2D scene, D2DContext context)

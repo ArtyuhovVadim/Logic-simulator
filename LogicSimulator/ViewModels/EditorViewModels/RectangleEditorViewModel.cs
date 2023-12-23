@@ -20,7 +20,7 @@ public class RectangleEditorViewModel : EditorViewModel
                 .WithSingleProperty<Vector2PropertyViewModel>(nameof(RectangleViewModel.Location)))
             .WithRow(rowBuilder => rowBuilder
                 .WithRowName("Поворот")
-                .WithSingleProperty<RotationEnumPropertyViewModel>(nameof(RectangleViewModel.Rotation))))
+                .WithSingleProperty<EnumPropertyViewModel>(nameof(RectangleViewModel.Rotation))))
         .WithGroup(groupBuilder => groupBuilder
             .WithGroupName("Свойства")
             .WithRow(rowBuilder => rowBuilder
@@ -31,11 +31,10 @@ public class RectangleEditorViewModel : EditorViewModel
                 .WithSingleProperty<FloatPropertyViewModel>(nameof(RectangleViewModel.Height)))
             .WithRow(rowBuilder => rowBuilder
                 .WithRowName("Граница")
-                .WithSingleProperty<FloatPropertyViewModel>(nameof(RectangleViewModel.StrokeThickness))
-                .WithSingleProperty<ColorPropertyViewModel>(nameof(RectangleViewModel.StrokeColor))
-                .WithLayout(layoutBuilder => layoutBuilder
-                    .WithRelativeSize(1)
-                    .WithAutoSize()))
+                .WithMultiProperty<StrokePropertiesViewModel>(multiPropertyBuilder => multiPropertyBuilder
+                    .WithProperty<EnumPropertyViewModel>(nameof(RectangleViewModel.StrokeThicknessType))
+                    .WithProperty<FloatPropertyViewModel>(nameof(RectangleViewModel.StrokeThickness))
+                    .WithProperty<ColorPropertyViewModel>(nameof(RectangleViewModel.StrokeColor))))
             .WithRow(rowBuilder => rowBuilder
                 .WithRowName("Цвет заливки")
                 .WithSingleProperty<ColorPropertyViewModel>(nameof(RectangleViewModel.FillColor))

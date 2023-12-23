@@ -20,7 +20,7 @@ public class TextBlockEditorViewModel : EditorViewModel
                 .WithSingleProperty<Vector2PropertyViewModel>(nameof(TextBlockViewModel.Location)))
             .WithRow(rowBuilder => rowBuilder
                 .WithRowName("Поворот")
-                .WithSingleProperty<RotationEnumPropertyViewModel>(nameof(TextBlockViewModel.Rotation))))
+                .WithSingleProperty<EnumPropertyViewModel>(nameof(TextBlockViewModel.Rotation))))
         .WithGroup(groupBuilder => groupBuilder
             .WithGroupName("Свойства")
             .WithRow(rowBuilder => rowBuilder
@@ -36,7 +36,7 @@ public class TextBlockEditorViewModel : EditorViewModel
                     .WithRelativeSize(0.3)
                     .WithAutoSize()))
             .WithRow(rowBuilder => rowBuilder.
-                WithMultiProperty<FontPropertyViewModel>(multiPropertyBuilder => multiPropertyBuilder
+                WithMultiProperty<FontPropertiesViewModel>(multiPropertyBuilder => multiPropertyBuilder
                     .WithProperty<BoolPropertyViewModel>(nameof(TextBlockViewModel.IsBold))
                     .WithProperty<BoolPropertyViewModel>(nameof(TextBlockViewModel.IsItalic))
                     .WithProperty<BoolPropertyViewModel>(nameof(TextBlockViewModel.IsUnderlined))

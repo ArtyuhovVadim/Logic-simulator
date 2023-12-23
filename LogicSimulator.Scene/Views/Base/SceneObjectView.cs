@@ -29,7 +29,7 @@ public abstract class SceneObjectView : DisposableFrameworkContentElement, ISele
         {
             DashStyle = DashStyle.Custom,
             DashCap = CapStyle.Flat
-        }, new[] { 2f, 2f }));
+        }, [2f, 2f]));
 
     #region Location
 

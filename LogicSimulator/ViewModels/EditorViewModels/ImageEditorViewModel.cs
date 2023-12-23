@@ -20,7 +20,7 @@ public class ImageEditorViewModel : EditorViewModel
                 .WithSingleProperty<Vector2PropertyViewModel>(nameof(ImageViewModel.Location)))
             .WithRow(rowBuilder => rowBuilder
                 .WithRowName("Поворот")
-                .WithSingleProperty<RotationEnumPropertyViewModel>(nameof(ImageViewModel.Rotation))))
+                .WithSingleProperty<EnumPropertyViewModel>(nameof(ImageViewModel.Rotation))))
         .WithGroup(groupBuilder => groupBuilder
             .WithGroupName("Свойства")
             .WithRow(rowBuilder => rowBuilder
@@ -35,11 +35,12 @@ public class ImageEditorViewModel : EditorViewModel
             .WithRow(rowBuilder => rowBuilder
                 .WithRowName("Граница")
                 .WithSingleProperty<BoolPropertyViewModel>(nameof(ImageViewModel.IsBordered))
-                .WithSingleProperty<FloatPropertyViewModel>(nameof(ImageViewModel.StrokeThickness))
-                .WithSingleProperty<ColorPropertyViewModel>(nameof(ImageViewModel.StrokeColor))
+                .WithMultiProperty<StrokePropertiesViewModel>(multiPropertyBuilder => multiPropertyBuilder
+                    .WithProperty<EnumPropertyViewModel>(nameof(ImageViewModel.StrokeThicknessType))
+                    .WithProperty<FloatPropertyViewModel>(nameof(ImageViewModel.StrokeThickness))
+                    .WithProperty<ColorPropertyViewModel>(nameof(ImageViewModel.StrokeColor)))
                 .WithLayout(layoutBuilder => layoutBuilder
                     .WithAutoSize()
-                    .WithRelativeSize(1)
-                    .WithAutoSize())))
+                    .WithRelativeSize(1))))
         .Build();
 }

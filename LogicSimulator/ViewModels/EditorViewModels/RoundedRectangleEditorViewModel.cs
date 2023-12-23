@@ -20,7 +20,7 @@ public class RoundedRectangleEditorViewModel : EditorViewModel
                 .WithSingleProperty<Vector2PropertyViewModel>(nameof(RoundedRectangleViewModel.Location)))
             .WithRow(rowBuilder => rowBuilder
                 .WithRowName("Поворот")
-                .WithSingleProperty<RotationEnumPropertyViewModel>(nameof(RoundedRectangleViewModel.Rotation))))
+                .WithSingleProperty<EnumPropertyViewModel>(nameof(RoundedRectangleViewModel.Rotation))))
         .WithGroup(groupBuilder => groupBuilder
             .WithGroupName("Свойства")
             .WithRow(rowBuilder => rowBuilder
@@ -37,11 +37,10 @@ public class RoundedRectangleEditorViewModel : EditorViewModel
                 .WithSingleProperty<FloatPropertyViewModel>(nameof(RoundedRectangleViewModel.RadiusY)))
             .WithRow(rowBuilder => rowBuilder
                 .WithRowName("Граница")
-                .WithSingleProperty<FloatPropertyViewModel>(nameof(RoundedRectangleViewModel.StrokeThickness))
-                .WithSingleProperty<ColorPropertyViewModel>(nameof(RoundedRectangleViewModel.StrokeColor))
-                .WithLayout(layoutBuilder => layoutBuilder
-                    .WithRelativeSize(1)
-                    .WithAutoSize()))
+                .WithMultiProperty<StrokePropertiesViewModel>(multiPropertyBuilder => multiPropertyBuilder
+                    .WithProperty<EnumPropertyViewModel>(nameof(RoundedRectangleViewModel.StrokeThicknessType))
+                    .WithProperty<FloatPropertyViewModel>(nameof(RoundedRectangleViewModel.StrokeThickness))
+                    .WithProperty<ColorPropertyViewModel>(nameof(RoundedRectangleViewModel.StrokeColor))))
         .WithRow(rowBuilder => rowBuilder
                 .WithRowName("Цвет заливки")
                .WithSingleProperty<ColorPropertyViewModel>(nameof(RoundedRectangleViewModel.FillColor))

@@ -11,7 +11,7 @@ using Colors = System.Windows.Media.Colors;
 
 namespace LogicSimulator.Scene.Views;
 
-public class ArcView : EditableSceneObjectView
+public class ArcView : EditableSceneObjectView, IStroked
 {
     private Vector2 _startAnglePos;
     private Vector2 _endAnglePos;
@@ -135,10 +135,23 @@ public class ArcView : EditableSceneObjectView
 
     #endregion
 
+    #region StrokeThicknessType
+
+    public StrokeThicknessType StrokeThicknessType
+    {
+        get => (StrokeThicknessType)GetValue(StrokeThicknessTypeProperty);
+        set => SetValue(StrokeThicknessTypeProperty, value);
+    }
+
+    public static readonly DependencyProperty StrokeThicknessTypeProperty =
+        DependencyProperty.Register(nameof(StrokeThicknessType), typeof(StrokeThicknessType), typeof(ArcView), new FrameworkPropertyMetadata(StrokeThicknessType.Smallest, FrameworkPropertyMetadataOptions.BindsTwoWayByDefault, DefaultPropertyChangedHandler));
+
+    #endregion
+
     public override bool HitTest(Vector2 pos, Matrix3x2 worldTransform, float tolerance = 0.25f)
     {
         var geometry = Cache.Get<PathGeometry>(this, GeometryResource);
-        return geometry.StrokeContainsPoint(pos, StrokeThickness, null, TransformMatrix * worldTransform, tolerance);
+        return geometry.StrokeContainsPoint(pos, this.GetStrokeThickness(), null, TransformMatrix * worldTransform, tolerance);
     }
 
     public override GeometryRelation HitTest(Geometry inputGeometry, Matrix3x2 worldTransform, float tolerance = 0.25f)
@@ -152,7 +165,7 @@ public class ArcView : EditableSceneObjectView
         var geometry = Cache.Get<Geometry>(this, GeometryResource);
         var strokeBrush = Cache.Get<SolidColorBrush>(this, StrokeBrushResource);
 
-        context.DrawingContext.DrawGeometry(geometry, strokeBrush, StrokeThickness);
+        context.DrawingContext.DrawGeometry(geometry, strokeBrush, this.GetStrokeThickness(scene));
     }
 
     protected override void OnRenderSelection(Scene2D scene, D2DContext context)

@@ -20,7 +20,7 @@ public class BezierCurveEditorViewModel : EditorViewModel
                 .WithSingleProperty<Vector2PropertyViewModel>(nameof(BezierCurveViewModel.Location)))
             .WithRow(rowBuilder => rowBuilder
                 .WithRowName("Поворот")
-                .WithSingleProperty<RotationEnumPropertyViewModel>(nameof(BezierCurveViewModel.Rotation))))
+                .WithSingleProperty<EnumPropertyViewModel>(nameof(BezierCurveViewModel.Rotation))))
         .WithGroup(groupBuilder => groupBuilder
             .WithGroupName("Вершины")
             .WithRow(rowBuilder => rowBuilder
@@ -36,10 +36,9 @@ public class BezierCurveEditorViewModel : EditorViewModel
             .WithGroupName("Свойства")
             .WithRow(rowBuilder => rowBuilder
                 .WithRowName("Граница")
-                .WithSingleProperty<FloatPropertyViewModel>(nameof(BezierCurveViewModel.StrokeThickness))
-                .WithSingleProperty<ColorPropertyViewModel>(nameof(BezierCurveViewModel.StrokeColor))
-                .WithLayout(layoutBuilder => layoutBuilder
-                    .WithRelativeSize(1)
-                    .WithAutoSize())))
+                .WithMultiProperty<StrokePropertiesViewModel>(multiPropertyBuilder => multiPropertyBuilder
+                    .WithProperty<EnumPropertyViewModel>(nameof(BezierCurveViewModel.StrokeThicknessType))
+                    .WithProperty<FloatPropertyViewModel>(nameof(BezierCurveViewModel.StrokeThickness))
+                    .WithProperty<ColorPropertyViewModel>(nameof(BezierCurveViewModel.StrokeColor)))))
         .Build();
 }

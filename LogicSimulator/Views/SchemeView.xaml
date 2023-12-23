@@ -5,7 +5,6 @@
     xmlns:anchorableViewModels="clr-namespace:LogicSimulator.ViewModels.AnchorableViewModels"
     xmlns:b="http://schemas.microsoft.com/xaml/behaviors"
     xmlns:behaviors="clr-namespace:LogicSimulator.Infrastructure.Behaviors"
-    xmlns:controls="clr-namespace:LogicSimulator.Controls;assembly=LogicSimulator.Controls"
     xmlns:converters="clr-namespace:LogicSimulator.Infrastructure.Converters"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:layers="clr-namespace:LogicSimulator.Scene.Layers;assembly=LogicSimulator.Scene"
@@ -61,7 +60,7 @@
             </DataPiping.DataPipes>
 
             <b:Interaction.Behaviors>
-                <behaviors:SceneTransformBehaviour />
+                <behaviors:SceneTransformBehaviour MinScale="0.125" />
                 <behaviors:SceneToolEventProviderBehaviour />
             </b:Interaction.Behaviors>
 
@@ -101,7 +100,8 @@
                                     Rotation="{Binding Path=Rotation,
                                                        Converter={StaticResource RotationToFloatConverter}}"
                                     StrokeColor="{Binding Path=StrokeColor}"
-                                    StrokeThickness="{Binding Path=StrokeThickness}" />
+                                    StrokeThickness="{Binding Path=StrokeThickness}"
+                                    StrokeThicknessType="{Binding Path=StrokeThicknessType}" />
                             </DataTemplate>
                         </selectors:SceneObjectTemplateSelector.RectangleDataTemplate>
                         <selectors:SceneObjectTemplateSelector.RoundedRectangleDataTemplate>
@@ -118,7 +118,8 @@
                                     Rotation="{Binding Path=Rotation,
                                                        Converter={StaticResource RotationToFloatConverter}}"
                                     StrokeColor="{Binding Path=StrokeColor}"
-                                    StrokeThickness="{Binding Path=StrokeThickness}" />
+                                    StrokeThickness="{Binding Path=StrokeThickness}"
+                                    StrokeThicknessType="{Binding Path=StrokeThicknessType}" />
                             </DataTemplate>
                         </selectors:SceneObjectTemplateSelector.RoundedRectangleDataTemplate>
                         <selectors:SceneObjectTemplateSelector.EllipseDataTemplate>
@@ -133,7 +134,8 @@
                                     Rotation="{Binding Path=Rotation,
                                                        Converter={StaticResource RotationToFloatConverter}}"
                                     StrokeColor="{Binding Path=StrokeColor}"
-                                    StrokeThickness="{Binding Path=StrokeThickness}" />
+                                    StrokeThickness="{Binding Path=StrokeThickness}"
+                                    StrokeThicknessType="{Binding Path=StrokeThicknessType}" />
                             </DataTemplate>
                         </selectors:SceneObjectTemplateSelector.EllipseDataTemplate>
                         <selectors:SceneObjectTemplateSelector.BezierCurveDataTemplate>
@@ -147,7 +149,8 @@
                                     Rotation="{Binding Path=Rotation,
                                                        Converter={StaticResource RotationToFloatConverter}}"
                                     StrokeColor="{Binding Path=StrokeColor}"
-                                    StrokeThickness="{Binding Path=StrokeThickness}" />
+                                    StrokeThickness="{Binding Path=StrokeThickness}"
+                                    StrokeThicknessType="{Binding Path=StrokeThicknessType}" />
                             </DataTemplate>
                         </selectors:SceneObjectTemplateSelector.BezierCurveDataTemplate>
                         <selectors:SceneObjectTemplateSelector.ArcDataTemplate>
@@ -162,7 +165,8 @@
                                                        Converter={StaticResource RotationToFloatConverter}}"
                                     StartAngle="{Binding Path=StartAngle}"
                                     StrokeColor="{Binding Path=StrokeColor}"
-                                    StrokeThickness="{Binding Path=StrokeThickness}" />
+                                    StrokeThickness="{Binding Path=StrokeThickness}"
+                                    StrokeThicknessType="{Binding Path=StrokeThicknessType}" />
                             </DataTemplate>
                         </selectors:SceneObjectTemplateSelector.ArcDataTemplate>
                         <selectors:SceneObjectTemplateSelector.TextBlockDataTemplate>
@@ -191,6 +195,7 @@
                                                        Converter={StaticResource RotationToFloatConverter}}"
                                     StrokeColor="{Binding Path=StrokeColor}"
                                     StrokeThickness="{Binding Path=StrokeThickness}"
+                                    StrokeThicknessType="{Binding Path=StrokeThicknessType}"
                                     Vertexes="{Binding Path=Vertexes}" />
                             </DataTemplate>
                         </selectors:SceneObjectTemplateSelector.LineDataTemplate>

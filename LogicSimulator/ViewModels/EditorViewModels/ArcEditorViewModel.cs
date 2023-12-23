@@ -20,7 +20,7 @@ public class ArcEditorViewModel : EditorViewModel
                 .WithSingleProperty<Vector2PropertyViewModel>(nameof(ArcViewModel.Location)))
             .WithRow(rowBuilder => rowBuilder
                 .WithRowName("Поворот")
-                .WithSingleProperty<RotationEnumPropertyViewModel>(nameof(ArcViewModel.Rotation))))
+                .WithSingleProperty<EnumPropertyViewModel>(nameof(ArcViewModel.Rotation))))
         .WithGroup(groupBuilder => groupBuilder
             .WithGroupName("Свойства")
             .WithRow(rowBuilder => rowBuilder
@@ -37,10 +37,9 @@ public class ArcEditorViewModel : EditorViewModel
                 .WithSingleProperty<FloatPropertyViewModel>(nameof(ArcViewModel.RadiusY)))
             .WithRow(rowBuilder => rowBuilder
                 .WithRowName("Граница")
-                .WithSingleProperty<FloatPropertyViewModel>(nameof(ArcViewModel.StrokeThickness))
-                .WithSingleProperty<ColorPropertyViewModel>(nameof(ArcViewModel.StrokeColor))
-                .WithLayout(layoutBuilder => layoutBuilder
-                    .WithRelativeSize(1)
-                    .WithAutoSize())))
+                .WithMultiProperty<StrokePropertiesViewModel>(multiPropertyBuilder => multiPropertyBuilder
+                    .WithProperty<EnumPropertyViewModel>(nameof(ArcViewModel.StrokeThicknessType))
+                    .WithProperty<FloatPropertyViewModel>(nameof(ArcViewModel.StrokeThickness))
+                    .WithProperty<ColorPropertyViewModel>(nameof(ArcViewModel.StrokeColor)))))
         .Build();
 }

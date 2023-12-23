@@ -5,8 +5,8 @@
     xmlns:avm="clr-namespace:LogicSimulator.ViewModels.AnchorableViewModels"
     xmlns:b="clr-namespace:WpfExtensions.Controls.Resources.Brushes;assembly=WpfExtensions.Controls"
     xmlns:cont="clr-namespace:LogicSimulator.Controls;assembly=LogicSimulator.Controls"
+    xmlns:converters="clr-namespace:LogicSimulator.Infrastructure.Converters"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-    xmlns:inf="clr-namespace:LogicSimulator.Infrastructure"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:me="clr-namespace:WpfExtensions.MarkupExtensions;assembly=WpfExtensions"
     xmlns:properties="clr-namespace:LogicSimulator.ViewModels.EditorViewModels.Base.Properties"
@@ -50,7 +50,7 @@
             </DataTemplate.Triggers>
         </DataTemplate>
 
-        <DataTemplate DataType="{x:Type properties:RotationEnumPropertyViewModel}">
+        <DataTemplate DataType="{x:Type properties:EnumPropertyViewModel}">
             <AdornedControl
                 x:Name="AdornedControl"
                 Margin="0,0,6,0"
@@ -72,7 +72,9 @@
                 </AdornedControl.AdornerContent>
                 <ComboBox
                     x:Name="ComboBox"
-                    ItemsSource="{me:EnumToArray {x:Type inf:Rotation}}"
+                    ItemsSource="{Binding Path=Value,
+                                          Converter={converters:EnumValueToArrayConverter},
+                                          Mode=OneTime}"
                     SelectedItem="{Binding Path=Value}" />
             </AdornedControl>
             <DataTemplate.Triggers>
@@ -182,59 +184,6 @@
                     <Setter TargetName="ComboBox" Property="ToolTip" Value="Значение не определено." />
                 </Trigger>
             </DataTemplate.Triggers>
-        </DataTemplate>
-
-        <DataTemplate DataType="{x:Type properties:FontPropertyViewModel}">
-            <DataTemplate.Resources>
-                <Style TargetType="{x:Type Path}">
-                    <Setter Property="Height" Value="13" />
-                    <Setter Property="Stretch" Value="Uniform" />
-                    <Setter Property="Margin" Value="2" />
-                    <Setter Property="Fill" Value="{Binding RelativeSource={RelativeSource AncestorType={x:Type ToggleButton}}, Path=Foreground}" />
-                </Style>
-                <Style BasedOn="{StaticResource {x:Type ToggleButton}}" TargetType="{x:Type ToggleButton}">
-                    <Style.Triggers>
-                        <DataTrigger Binding="{Binding Path=Tag, RelativeSource={RelativeSource Self}}" Value="True">
-                            <Setter Property="Foreground" Value="#F4E48C" />
-                            <Setter Property="ToolTip" Value="Значение не определено." />
-                        </DataTrigger>
-                    </Style.Triggers>
-                </Style>
-            </DataTemplate.Resources>
-            <Grid Margin="0,0,6,0" GridProps.ColumnDefinitionsEx="* 2 * 2 * 2 *">
-                <ToggleButton
-                    Grid.Column="0"
-                    IsChecked="{Binding Path=Properties[IsBold].Value}"
-                    Tag="{Binding Path=Properties[IsBold].IsValueUndefined}">
-                    <ToggleButton.Content>
-                        <Path Data="{StaticResource BoldTextIcon}" />
-                    </ToggleButton.Content>
-                </ToggleButton>
-                <ToggleButton
-                    Grid.Column="2"
-                    IsChecked="{Binding Path=Properties[IsItalic].Value}"
-                    Tag="{Binding Path=Properties[IsItalic].IsValueUndefined}">
-                    <ToggleButton.Content>
-                        <Path Data="{StaticResource ItalicTextIcon}" />
-                    </ToggleButton.Content>
-                </ToggleButton>
-                <ToggleButton
-                    Grid.Column="4"
-                    IsChecked="{Binding Path=Properties[IsUnderlined].Value}"
-                    Tag="{Binding Path=Properties[IsUnderlined].IsValueUndefined}">
-                    <ToggleButton.Content>
-                        <Path Data="{StaticResource UnderlinedTextIcon}" />
-                    </ToggleButton.Content>
-                </ToggleButton>
-                <ToggleButton
-                    Grid.Column="6"
-                    IsChecked="{Binding Path=Properties[IsCross].Value}"
-                    Tag="{Binding Path=Properties[IsCross].IsValueUndefined}">
-                    <ToggleButton.Content>
-                        <Path Data="{StaticResource CrossTextIcon}" />
-                    </ToggleButton.Content>
-                </ToggleButton>
-            </Grid>
         </DataTemplate>
 
         <DataTemplate DataType="{x:Type properties:StringPropertyViewModel}">
@@ -427,6 +376,79 @@
                     <Setter TargetName="TextBoxExY" Property="ToolTip" Value="Значение не определено." />
                 </Trigger>
             </DataTemplate.Triggers>
+        </DataTemplate>
+
+        <DataTemplate DataType="{x:Type properties:StrokePropertiesViewModel}">
+            <Grid x:Name="Root" GridProps.ColumnDefinitionsEx="2* * auto">
+                <ContentControl Grid.Column="0" Content="{Binding Path=Properties[StrokeThicknessType]}" />
+                <ContentControl
+                    x:Name="StrokeThicknessContentControl"
+                    Grid.Column="1"
+                    Content="{Binding Path=Properties[StrokeThickness]}"
+                    IsEnabled="False" />
+                <ContentControl Grid.Column="2" Content="{Binding Path=Properties[StrokeColor]}" />
+            </Grid>
+            <DataTemplate.Triggers>
+                <DataTrigger Binding="{Binding Path=Properties[StrokeThicknessType].Value}" Value="Other">
+                    <Setter TargetName="StrokeThicknessContentControl" Property="IsEnabled" Value="True" />
+                </DataTrigger>
+                <DataTrigger Binding="{Binding Path=IsMoreThenOneObject}" Value="True">
+                    <Setter TargetName="StrokeThicknessContentControl" Property="IsEnabled" Value="True" />
+                </DataTrigger>
+            </DataTemplate.Triggers>
+        </DataTemplate>
+
+        <DataTemplate DataType="{x:Type properties:FontPropertiesViewModel}">
+            <DataTemplate.Resources>
+                <Style TargetType="{x:Type Path}">
+                    <Setter Property="Height" Value="13" />
+                    <Setter Property="Stretch" Value="Uniform" />
+                    <Setter Property="Margin" Value="2" />
+                    <Setter Property="Fill" Value="{Binding RelativeSource={RelativeSource AncestorType={x:Type ToggleButton}}, Path=Foreground}" />
+                </Style>
+                <Style BasedOn="{StaticResource {x:Type ToggleButton}}" TargetType="{x:Type ToggleButton}">
+                    <Style.Triggers>
+                        <DataTrigger Binding="{Binding Path=Tag, RelativeSource={RelativeSource Self}}" Value="True">
+                            <Setter Property="Foreground" Value="#F4E48C" />
+                            <Setter Property="ToolTip" Value="Значение не определено." />
+                        </DataTrigger>
+                    </Style.Triggers>
+                </Style>
+            </DataTemplate.Resources>
+            <Grid Margin="0,0,6,0" GridProps.ColumnDefinitionsEx="* 2 * 2 * 2 *">
+                <ToggleButton
+                    Grid.Column="0"
+                    IsChecked="{Binding Path=Properties[IsBold].Value}"
+                    Tag="{Binding Path=Properties[IsBold].IsValueUndefined}">
+                    <ToggleButton.Content>
+                        <Path Data="{StaticResource BoldTextIcon}" />
+                    </ToggleButton.Content>
+                </ToggleButton>
+                <ToggleButton
+                    Grid.Column="2"
+                    IsChecked="{Binding Path=Properties[IsItalic].Value}"
+                    Tag="{Binding Path=Properties[IsItalic].IsValueUndefined}">
+                    <ToggleButton.Content>
+                        <Path Data="{StaticResource ItalicTextIcon}" />
+                    </ToggleButton.Content>
+                </ToggleButton>
+                <ToggleButton
+                    Grid.Column="4"
+                    IsChecked="{Binding Path=Properties[IsUnderlined].Value}"
+                    Tag="{Binding Path=Properties[IsUnderlined].IsValueUndefined}">
+                    <ToggleButton.Content>
+                        <Path Data="{StaticResource UnderlinedTextIcon}" />
+                    </ToggleButton.Content>
+                </ToggleButton>
+                <ToggleButton
+                    Grid.Column="6"
+                    IsChecked="{Binding Path=Properties[IsCross].Value}"
+                    Tag="{Binding Path=Properties[IsCross].IsValueUndefined}">
+                    <ToggleButton.Content>
+                        <Path Data="{StaticResource CrossTextIcon}" />
+                    </ToggleButton.Content>
+                </ToggleButton>
+            </Grid>
         </DataTemplate>
     </UserControl.Resources>
 

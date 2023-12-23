@@ -1,4 +1,5 @@
 ﻿using System.Windows.Media;
+using LogicSimulator.Scene;
 using LogicSimulator.ViewModels.ObjectViewModels.Base;
 using Color = System.Windows.Media.Color;
 
@@ -74,6 +75,18 @@ public class ArcViewModel : BaseObjectViewModel
     {
         get => _strokeThickness;
         set => Set(ref _strokeThickness, value);
+    }
+
+    #endregion
+
+    #region StrokeThicknessType
+
+    private StrokeThicknessType _strokeThicknessType = StrokeThicknessType.Smallest;
+
+    public StrokeThicknessType StrokeThicknessType
+    {
+        get => _strokeThicknessType;
+        set => Set(ref _strokeThicknessType, value);
     }
 
     #endregion

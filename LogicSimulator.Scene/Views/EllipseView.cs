@@ -11,7 +11,7 @@ using Colors = System.Windows.Media.Colors;
 
 namespace LogicSimulator.Scene.Views;
 
-public class EllipseView : EditableSceneObjectView
+public class EllipseView : EditableSceneObjectView, IStroked
 {
     public static readonly IResource FillBrushResource =
         ResourceCache.Register<EllipseView>((factory, user) => factory.CreateSolidColorBrush(user.FillColor.ToColor4()));
@@ -117,6 +117,19 @@ public class EllipseView : EditableSceneObjectView
 
     #endregion
 
+    #region StrokeThicknessType
+
+    public StrokeThicknessType StrokeThicknessType
+    {
+        get => (StrokeThicknessType)GetValue(StrokeThicknessTypeProperty);
+        set => SetValue(StrokeThicknessTypeProperty, value);
+    }
+
+    public static readonly DependencyProperty StrokeThicknessTypeProperty =
+        DependencyProperty.Register(nameof(StrokeThicknessType), typeof(StrokeThicknessType), typeof(EllipseView), new FrameworkPropertyMetadata(StrokeThicknessType.Smallest, FrameworkPropertyMetadataOptions.BindsTwoWayByDefault, DefaultPropertyChangedHandler));
+
+    #endregion
+
     #region IsFilled
 
     public bool IsFilled
@@ -136,7 +149,7 @@ public class EllipseView : EditableSceneObjectView
 
         return IsFilled ?
             geometry.FillContainsPoint(pos, TransformMatrix * worldTransform, tolerance) :
-            geometry.StrokeContainsPoint(pos, StrokeThickness, null, TransformMatrix * worldTransform, tolerance);
+            geometry.StrokeContainsPoint(pos, this.GetStrokeThickness(), null, TransformMatrix * worldTransform, tolerance);
     }
 
     public override GeometryRelation HitTest(Geometry inputGeometry, Matrix3x2 worldTransform, float tolerance = 0.25f)
@@ -161,7 +174,7 @@ public class EllipseView : EditableSceneObjectView
 
         var strokeBrush = Cache.Get<SolidColorBrush>(this, StrokeBrushResource);
 
-        context.DrawingContext.DrawEllipse(ellipse, strokeBrush, StrokeThickness);
+        context.DrawingContext.DrawEllipse(ellipse, strokeBrush, this.GetStrokeThickness(scene));
     }
 
     protected override void OnRenderSelection(Scene2D scene, D2DContext context)

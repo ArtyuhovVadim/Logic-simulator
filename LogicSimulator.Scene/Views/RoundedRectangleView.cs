@@ -14,7 +14,7 @@ using SolidColorBrush = SharpDX.Direct2D1.SolidColorBrush;
 
 namespace LogicSimulator.Scene.Views;
 
-public class RoundedRectangleView : EditableSceneObjectView
+public class RoundedRectangleView : EditableSceneObjectView, IStroked
 {
     public static readonly IResource FillBrushResource =
         ResourceCache.Register<RoundedRectangleView>((factory, user) => factory.CreateSolidColorBrush(user.FillColor.ToColor4()));
@@ -182,6 +182,19 @@ public class RoundedRectangleView : EditableSceneObjectView
 
     #endregion
 
+    #region StrokeThicknessType
+
+    public StrokeThicknessType StrokeThicknessType
+    {
+        get => (StrokeThicknessType)GetValue(StrokeThicknessTypeProperty);
+        set => SetValue(StrokeThicknessTypeProperty, value);
+    }
+
+    public static readonly DependencyProperty StrokeThicknessTypeProperty =
+        DependencyProperty.Register(nameof(StrokeThicknessType), typeof(StrokeThicknessType), typeof(RoundedRectangleView), new FrameworkPropertyMetadata(StrokeThicknessType.Smallest, FrameworkPropertyMetadataOptions.BindsTwoWayByDefault, DefaultPropertyChangedHandler));
+
+    #endregion
+
     #region IsFilled
 
     public bool IsFilled
@@ -201,7 +214,7 @@ public class RoundedRectangleView : EditableSceneObjectView
 
         return IsFilled ?
             geometry.FillContainsPoint(pos, TransformMatrix * worldTransform, tolerance) :
-            geometry.StrokeContainsPoint(pos, StrokeThickness, null, TransformMatrix * worldTransform, tolerance);
+            geometry.StrokeContainsPoint(pos, this.GetStrokeThickness(), null, TransformMatrix * worldTransform, tolerance);
     }
 
     public override GeometryRelation HitTest(Geometry inputGeometry, Matrix3x2 worldTransform, float tolerance = 0.25f)
@@ -231,7 +244,7 @@ public class RoundedRectangleView : EditableSceneObjectView
 
         var strokeBrush = Cache.Get<SolidColorBrush>(this, StrokeBrushResource);
 
-        context.DrawingContext.DrawRoundedRectangle(rect, strokeBrush, StrokeThickness);
+        context.DrawingContext.DrawRoundedRectangle(rect, strokeBrush, this.GetStrokeThickness(scene));
     }
 
     protected override void OnRenderSelection(Scene2D scene, D2DContext context)

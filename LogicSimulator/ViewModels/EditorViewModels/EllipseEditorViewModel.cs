@@ -20,7 +20,7 @@ public class EllipseEditorViewModel : EditorViewModel
                 .WithSingleProperty<Vector2PropertyViewModel>(nameof(EllipseViewModel.Location)))
             .WithRow(rowBuilder => rowBuilder
                 .WithRowName("Поворот")
-                .WithSingleProperty<RotationEnumPropertyViewModel>(nameof(EllipseViewModel.Rotation))))
+                .WithSingleProperty<EnumPropertyViewModel>(nameof(EllipseViewModel.Rotation))))
         .WithGroup(groupBuilder => groupBuilder
             .WithGroupName("Свойства")
             .WithRow(rowBuilder => rowBuilder
@@ -31,11 +31,10 @@ public class EllipseEditorViewModel : EditorViewModel
                 .WithSingleProperty<FloatPropertyViewModel>(nameof(EllipseViewModel.RadiusY)))
             .WithRow(rowBuilder => rowBuilder
                 .WithRowName("Граница")
-                .WithSingleProperty<FloatPropertyViewModel>(nameof(EllipseViewModel.StrokeThickness))
-                .WithSingleProperty<ColorPropertyViewModel>(nameof(EllipseViewModel.StrokeColor))
-                .WithLayout(layoutBuilder => layoutBuilder
-                    .WithRelativeSize(1)
-                    .WithAutoSize()))
+                .WithMultiProperty<StrokePropertiesViewModel>(multiPropertyBuilder => multiPropertyBuilder
+                    .WithProperty<EnumPropertyViewModel>(nameof(EllipseViewModel.StrokeThicknessType))
+                    .WithProperty<FloatPropertyViewModel>(nameof(EllipseViewModel.StrokeThickness))
+                    .WithProperty<ColorPropertyViewModel>(nameof(EllipseViewModel.StrokeColor))))
             .WithRow(rowBuilder => rowBuilder
                 .WithRowName("Цвет заливки")
                 .WithSingleProperty<ColorPropertyViewModel>(nameof(EllipseViewModel.FillColor))

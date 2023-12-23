@@ -40,4 +40,22 @@ public static class GettersAndSettersCache
 
         return setter;
     }
+
+    public static Action<object, object> GetSetter(string propertyName, object obj, Type valueType)
+    {
+        var objType = obj.GetType();
+        var key = (propertyName, objType);
+
+        if (!SettersMap.TryGetValue(key, out var setter))
+        {
+            var propertyParameter = Expression.Parameter(typeof(object), "Object");
+            var valueParameter = Expression.Parameter(typeof(object), "Value");
+            setter = Expression.Lambda<Action<object, object>>(
+                Expression.Assign(Expression.Property(Expression.Convert(propertyParameter, objType), propertyName), Expression.Convert(valueParameter, valueType)),
+                propertyParameter, valueParameter).Compile();
+            SettersMap[key] = setter;
+        }
+
+        return setter;
+    }
 }
