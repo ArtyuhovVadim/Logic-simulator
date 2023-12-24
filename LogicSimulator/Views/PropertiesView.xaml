@@ -22,23 +22,21 @@
                 Margin="0,0,6,0"
                 IsAdornerVisible="{Binding Path=IsValueUndefined}">
                 <AdornedControl.AdornerContent>
-                    <Border
-                        Margin="5,5,20,5"
-                        Background="{StaticResource {x:Static b:BrushesKeys+TextBoxEx.Background}}"
-                        IsHitTestVisible="False">
-                        <Rectangle
-                            Width="11"
-                            Height="11"
-                            HorizontalAlignment="Left"
-                            Fill="#F4E48C"
-                            RadiusX="3"
-                            RadiusY="3" />
-                    </Border>
+                    <Rectangle
+                        Width="11"
+                        Height="11"
+                        Margin="5"
+                        HorizontalAlignment="Left"
+                        Fill="#F4E48C"
+                        IsHitTestVisible="False"
+                        RadiusX="3"
+                        RadiusY="3" />
                 </AdornedControl.AdornerContent>
                 <TextBoxEx
                     x:Name="TextBoxEx"
                     SelectAllTextOnFocus="True"
-                    Text="{Binding Path=Value, StringFormat='0.###'}" />
+                    Text="{Binding Path=Value,
+                                   StringFormat='0.###'}" />
             </AdornedControl>
             <DataTemplate.Triggers>
                 <Trigger SourceName="TextBoxEx" Property="IsFocused" Value="True">
@@ -46,6 +44,7 @@
                 </Trigger>
                 <Trigger SourceName="AdornedControl" Property="IsAdornerVisible" Value="True">
                     <Setter TargetName="TextBoxEx" Property="ToolTip" Value="Значение не определено." />
+                    <Setter TargetName="TextBoxEx" Property="Foreground" Value="Transparent" />
                 </Trigger>
             </DataTemplate.Triggers>
         </DataTemplate>
@@ -320,18 +319,15 @@
                     Grid.Column="0"
                     IsAdornerVisible="{Binding Path=IsXValueUndefined}">
                     <AdornedControl.AdornerContent>
-                        <Border
-                            Margin="5,5,20,5"
-                            Background="{StaticResource {x:Static b:BrushesKeys+TextBoxEx.Background}}"
-                            IsHitTestVisible="False">
-                            <Rectangle
-                                Width="11"
-                                Height="11"
-                                HorizontalAlignment="Left"
-                                Fill="#F4E48C"
-                                RadiusX="3"
-                                RadiusY="3" />
-                        </Border>
+                        <Rectangle
+                            Width="11"
+                            Height="11"
+                            Margin="5"
+                            HorizontalAlignment="Left"
+                            Fill="#F4E48C"
+                            IsHitTestVisible="False"
+                            RadiusX="3"
+                            RadiusY="3" />
                     </AdornedControl.AdornerContent>
                     <TextBoxEx
                         x:Name="TextBoxExX"
@@ -343,18 +339,15 @@
                     Grid.Column="2"
                     IsAdornerVisible="{Binding Path=IsYValueUndefined}">
                     <AdornedControl.AdornerContent>
-                        <Border
-                            Margin="5,5,20,5"
-                            Background="{StaticResource {x:Static b:BrushesKeys+TextBoxEx.Background}}"
-                            IsHitTestVisible="False">
-                            <Rectangle
-                                Width="11"
-                                Height="11"
-                                HorizontalAlignment="Left"
-                                Fill="#F4E48C"
-                                RadiusX="3"
-                                RadiusY="3" />
-                        </Border>
+                        <Rectangle
+                            Width="11"
+                            Height="11"
+                            Margin="5"
+                            HorizontalAlignment="Left"
+                            Fill="#F4E48C"
+                            IsHitTestVisible="False"
+                            RadiusX="3"
+                            RadiusY="3" />
                     </AdornedControl.AdornerContent>
                     <TextBoxEx
                         x:Name="TextBoxExY"
@@ -368,12 +361,14 @@
                 </Trigger>
                 <Trigger SourceName="AdornedControlX" Property="IsAdornerVisible" Value="True">
                     <Setter TargetName="TextBoxExX" Property="ToolTip" Value="Значение не определено." />
+                    <Setter TargetName="TextBoxExX" Property="Foreground" Value="Transparent" />
                 </Trigger>
                 <Trigger SourceName="TextBoxExY" Property="IsFocused" Value="True">
                     <Setter TargetName="AdornedControlY" Property="IsAdornerVisible" Value="False" />
                 </Trigger>
                 <Trigger SourceName="AdornedControlY" Property="IsAdornerVisible" Value="True">
                     <Setter TargetName="TextBoxExY" Property="ToolTip" Value="Значение не определено." />
+                    <Setter TargetName="TextBoxExY" Property="Foreground" Value="Transparent" />
                 </Trigger>
             </DataTemplate.Triggers>
         </DataTemplate>
