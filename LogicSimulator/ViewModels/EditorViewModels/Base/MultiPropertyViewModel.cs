@@ -51,4 +51,20 @@ public abstract class MultiPropertyViewModel : PropertyViewModel
             other._properties[prop.Key] = (SinglePropertyViewModel)prop.Value.MakeCopy(other.EditorViewModel);
         }
     }
+
+    protected override void OnStartEdit(IEnumerable<object> objects)
+    {
+        foreach (var property in _properties.Values)
+        {
+            property.StartEdit();
+        }
+    }
+
+    protected override void OnEndEdit(IEnumerable<object> objects)
+    {
+        foreach (var property in _properties.Values)
+        {
+            property.EndEdit();
+        }
+    }
 }

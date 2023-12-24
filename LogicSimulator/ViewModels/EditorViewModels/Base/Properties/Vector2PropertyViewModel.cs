@@ -17,9 +17,9 @@ public class Vector2PropertyViewModel : SinglePropertyViewModel
 
     private string _invalidYExpr = string.Empty;
 
-    private string VectorXAsStr => IsPropertyHasErrors(nameof(XExpr)) ? _invalidXExpr : ((Vector2)Value).X.ToString(CultureInfo.InvariantCulture);
+    private string VectorXAsStr => IsPropertyHasErrors(nameof(XExpr)) ? _invalidXExpr : string.Format(CultureInfo.InvariantCulture, "{0:0.###}{1}", ((Vector2)Value).X / DisplayCoefficient, NumberSuffix);
 
-    private string VectorYAsStr => IsPropertyHasErrors(nameof(YExpr)) ? _invalidYExpr : ((Vector2)Value).Y.ToString(CultureInfo.InvariantCulture);
+    private string VectorYAsStr => IsPropertyHasErrors(nameof(YExpr)) ? _invalidYExpr : string.Format(CultureInfo.InvariantCulture, "{0:0.###}{1}", ((Vector2)Value).Y / DisplayCoefficient, NumberSuffix);
 
     #region XExpr
 
@@ -29,6 +29,11 @@ public class Vector2PropertyViewModel : SinglePropertyViewModel
         set
         {
             ClearErrors();
+
+            if (NumberSuffix.Length != 0 && value.EndsWith(NumberSuffix))
+            {
+                value = value[..^NumberSuffix.Length];
+            }
 
             if (!Parser.TryParse(value, out var x, out var e))
             {
@@ -41,7 +46,7 @@ public class Vector2PropertyViewModel : SinglePropertyViewModel
             IsXValueUndefined = false;
             _suppressPropertyGetter = true;
             _changedVectorComponent = ChangedVectorComponent.X;
-            Value = (Vector2)Value with { X = (float)x };
+            Value = (Vector2)Value with { X = (float)x * DisplayCoefficient };
         }
     }
 
@@ -68,6 +73,11 @@ public class Vector2PropertyViewModel : SinglePropertyViewModel
         {
             ClearErrors();
 
+            if (NumberSuffix.Length != 0 && value.EndsWith(NumberSuffix))
+            {
+                value = value[..^NumberSuffix.Length];
+            }
+
             if (!Parser.TryParse(value, out var y, out var e))
             {
                 _invalidYExpr = value;
@@ -79,7 +89,7 @@ public class Vector2PropertyViewModel : SinglePropertyViewModel
             IsYValueUndefined = false;
             _suppressPropertyGetter = true;
             _changedVectorComponent = ChangedVectorComponent.Y;
-            Value = (Vector2)Value with { Y = (float)y };
+            Value = (Vector2)Value with { Y = (float)y * DisplayCoefficient };
         }
     }
 
@@ -93,6 +103,30 @@ public class Vector2PropertyViewModel : SinglePropertyViewModel
     {
         get => _isYValueUndefined;
         set => Set(ref _isYValueUndefined, value);
+    }
+
+    #endregion
+
+    #region NumberSuffix
+
+    private string _numberSuffix = string.Empty;
+
+    public string NumberSuffix
+    {
+        get => _numberSuffix;
+        set => Set(ref _numberSuffix, value);
+    }
+
+    #endregion
+
+    #region DisplayCoefficient
+
+    private float _displayCoefficient = 1f;
+
+    public float DisplayCoefficient
+    {
+        get => _displayCoefficient;
+        set => Set(ref _displayCoefficient, value);
     }
 
     #endregion
@@ -127,7 +161,7 @@ public class Vector2PropertyViewModel : SinglePropertyViewModel
         _suppressPropertyGetter = false;
         _changedVectorComponent = ChangedVectorComponent.None;
     }
-    
+
     protected override void OnEndEdit(IEnumerable<object> objects) => ClearAllErrors();
 
     protected override void OnPropertyChanged(string? propertyName = null)
@@ -144,7 +178,7 @@ public class Vector2PropertyViewModel : SinglePropertyViewModel
     }
 
     public override PropertyViewModel MakeCopy(EditorViewModel editor) =>
-        new Vector2PropertyViewModel { PropertyName = PropertyName, EditorViewModel = editor };
+        new Vector2PropertyViewModel { PropertyName = PropertyName, EditorViewModel = editor, DisplayCoefficient = DisplayCoefficient, NumberSuffix = NumberSuffix };
 
     private enum ChangedVectorComponent
     {

@@ -1,4 +1,5 @@
-﻿using LogicSimulator.Utils;
+﻿using System.Globalization;
+using LogicSimulator.Utils;
 using MathExpressionParser;
 
 namespace LogicSimulator.ViewModels.EditorViewModels.Base.Properties;
@@ -44,6 +45,30 @@ public class FloatPropertyViewModel : SinglePropertyViewModel
 
     #endregion
 
+    #region NumberSuffix
+
+    private string _numberSuffix = string.Empty;
+
+    public string NumberSuffix
+    {
+        get => _numberSuffix;
+        set => Set(ref _numberSuffix, value);
+    }
+
+    #endregion
+
+    #region DisplayCoefficient
+
+    private float _displayCoefficient = 1f;
+
+    public float DisplayCoefficient
+    {
+        get => _displayCoefficient;
+        set => Set(ref _displayCoefficient, value);
+    }
+
+    #endregion
+
     protected override object GetPropertyValue(IEnumerable<object> objects)
     {
         if (HasErrors)
@@ -53,7 +78,10 @@ public class FloatPropertyViewModel : SinglePropertyViewModel
 
         IsValueUndefined = objects.Any(o => !Equals(GetValue<float>(o), GetValue<float>(firstObj)));
 
-        return Convert.ToDouble(GetValue<float>(firstObj));
+        if (NumberSuffix.Length != 0)
+            return string.Format(CultureInfo.InvariantCulture, "{0:0.###}{1}", GetValue<float>(firstObj) / DisplayCoefficient, NumberSuffix);
+
+        return GetValue<float>(firstObj);
     }
 
     protected override void SetPropertyValue(IEnumerable<object> objects, object value)
@@ -61,6 +89,11 @@ public class FloatPropertyViewModel : SinglePropertyViewModel
         ClearAllErrors();
 
         var expr = (string)value;
+
+        if (NumberSuffix.Length != 0 && expr.EndsWith(NumberSuffix))
+        {
+            expr = expr[..^NumberSuffix.Length];
+        }
 
         if (!Parser.TryParse(expr, out var number, out var e))
         {
@@ -78,7 +111,7 @@ public class FloatPropertyViewModel : SinglePropertyViewModel
 
         IsValueUndefined = false;
 
-        var newValue = (float)number;
+        var newValue = (float)number * DisplayCoefficient;
 
         foreach (var obj in objects)
         {
@@ -88,6 +121,13 @@ public class FloatPropertyViewModel : SinglePropertyViewModel
 
     protected override void OnEndEdit(IEnumerable<object> objects) => ClearAllErrors();
 
-    public override PropertyViewModel MakeCopy(EditorViewModel editor) =>
-        new FloatPropertyViewModel { PropertyName = PropertyName, EditorViewModel = editor, MinNumber = MinNumber, MaxNumber = MaxNumber };
+    public override PropertyViewModel MakeCopy(EditorViewModel editor) => new FloatPropertyViewModel
+    {
+        PropertyName = PropertyName,
+        EditorViewModel = editor,
+        MinNumber = MinNumber,
+        MaxNumber = MaxNumber,
+        DisplayCoefficient = DisplayCoefficient,
+        NumberSuffix = NumberSuffix
+    };
 }
