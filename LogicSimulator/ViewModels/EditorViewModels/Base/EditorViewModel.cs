@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel;
+using LogicSimulator.ViewModels.EditorViewModels.Base.Properties;
 using LogicSimulator.ViewModels.EditorViewModels.Layout;
 using WpfExtensions.Mvvm;
 
@@ -60,4 +61,9 @@ public abstract class EditorViewModel : BindableBase
     protected void OnPropertyChanged(object? sender, PropertyChangedEventArgs e) => Layout.PropertyChange(e.PropertyName!);
 
     protected abstract EditorLayout CreateLayout();
+
+    protected static void OneOrMoreConfigure(FloatPropertyViewModel prop)
+    {
+        prop.MinNumber = 1;
+    }
 }

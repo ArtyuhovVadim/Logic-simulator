@@ -38,7 +38,7 @@
                 <TextBoxEx
                     x:Name="TextBoxEx"
                     SelectAllTextOnFocus="True"
-                    Text="{Binding Path=Value}" />
+                    Text="{Binding Path=Value, StringFormat='0.###'}" />
             </AdornedControl>
             <DataTemplate.Triggers>
                 <Trigger SourceName="TextBoxEx" Property="IsFocused" Value="True">

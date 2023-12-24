@@ -2,7 +2,7 @@
 
 public abstract class MultiPropertyViewModel : PropertyViewModel
 {
-    private readonly Dictionary<string, SinglePropertyViewModel> _properties = new();
+    private readonly Dictionary<string, SinglePropertyViewModel> _properties = [];
 
     public IReadOnlyDictionary<string, SinglePropertyViewModel> Properties => _properties;
 
@@ -13,6 +13,19 @@ public abstract class MultiPropertyViewModel : PropertyViewModel
             EditorViewModel = EditorViewModel,
             PropertyName = name
         });
+    }
+
+    public void AddProperty<TPropertyViewModel>(string name, Action<TPropertyViewModel> configureAction) where TPropertyViewModel : SinglePropertyViewModel, new()
+    {
+        var prop = new TPropertyViewModel
+        {
+            EditorViewModel = EditorViewModel,
+            PropertyName = name
+        };
+
+        configureAction.Invoke(prop);
+
+        _properties.Add(name, prop);
     }
 
     public override void ProvidePropertyChanged(string propName)

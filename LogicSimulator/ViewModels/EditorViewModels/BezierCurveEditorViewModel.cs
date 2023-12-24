@@ -38,7 +38,7 @@ public class BezierCurveEditorViewModel : EditorViewModel
                 .WithRowName("Граница")
                 .WithMultiProperty<StrokePropertiesViewModel>(multiPropertyBuilder => multiPropertyBuilder
                     .WithProperty<EnumPropertyViewModel>(nameof(BezierCurveViewModel.StrokeThicknessType))
-                    .WithProperty<FloatPropertyViewModel>(nameof(BezierCurveViewModel.StrokeThickness))
+                    .WithProperty<FloatPropertyViewModel>(nameof(BezierCurveViewModel.StrokeThickness), OneOrMoreConfigure)
                     .WithProperty<ColorPropertyViewModel>(nameof(BezierCurveViewModel.StrokeColor)))))
         .Build();
 }

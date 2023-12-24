@@ -25,26 +25,26 @@ public class RoundedRectangleEditorViewModel : EditorViewModel
             .WithGroupName("Свойства")
             .WithRow(rowBuilder => rowBuilder
                 .WithRowName("Ширина")
-                .WithSingleProperty<FloatPropertyViewModel>(nameof(RoundedRectangleViewModel.Width)))
+                .WithSingleProperty<FloatPropertyViewModel>(nameof(RoundedRectangleViewModel.Width), OneOrMoreConfigure))
             .WithRow(rowBuilder => rowBuilder
                 .WithRowName("Высота")
-                .WithSingleProperty<FloatPropertyViewModel>(nameof(RoundedRectangleViewModel.Height)))
+                .WithSingleProperty<FloatPropertyViewModel>(nameof(RoundedRectangleViewModel.Height), OneOrMoreConfigure))
             .WithRow(rowBuilder => rowBuilder
                 .WithRowName("Радиус X")
-                .WithSingleProperty<FloatPropertyViewModel>(nameof(RoundedRectangleViewModel.RadiusX)))
+                .WithSingleProperty<FloatPropertyViewModel>(nameof(RoundedRectangleViewModel.RadiusX), OneOrMoreConfigure))
             .WithRow(rowBuilder => rowBuilder
                 .WithRowName("Радиус Y")
-                .WithSingleProperty<FloatPropertyViewModel>(nameof(RoundedRectangleViewModel.RadiusY)))
+                .WithSingleProperty<FloatPropertyViewModel>(nameof(RoundedRectangleViewModel.RadiusY), OneOrMoreConfigure))
             .WithRow(rowBuilder => rowBuilder
                 .WithRowName("Граница")
                 .WithMultiProperty<StrokePropertiesViewModel>(multiPropertyBuilder => multiPropertyBuilder
                     .WithProperty<EnumPropertyViewModel>(nameof(RoundedRectangleViewModel.StrokeThicknessType))
-                    .WithProperty<FloatPropertyViewModel>(nameof(RoundedRectangleViewModel.StrokeThickness))
+                    .WithProperty<FloatPropertyViewModel>(nameof(RoundedRectangleViewModel.StrokeThickness), OneOrMoreConfigure)
                     .WithProperty<ColorPropertyViewModel>(nameof(RoundedRectangleViewModel.StrokeColor))))
         .WithRow(rowBuilder => rowBuilder
                 .WithRowName("Цвет заливки")
-               .WithSingleProperty<ColorPropertyViewModel>(nameof(RoundedRectangleViewModel.FillColor))
-               .WithSingleProperty<BoolPropertyViewModel>(nameof(RoundedRectangleViewModel.IsFilled))
+                    .WithSingleProperty<ColorPropertyViewModel>(nameof(RoundedRectangleViewModel.FillColor))
+                    .WithSingleProperty<BoolPropertyViewModel>(nameof(RoundedRectangleViewModel.IsFilled))
                 .WithLayout(layoutBuilder => layoutBuilder
                     .WithAutoSize()
                     .WithAutoSize())))

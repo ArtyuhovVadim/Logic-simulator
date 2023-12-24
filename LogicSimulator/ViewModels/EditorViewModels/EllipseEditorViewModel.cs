@@ -25,15 +25,15 @@ public class EllipseEditorViewModel : EditorViewModel
             .WithGroupName("Свойства")
             .WithRow(rowBuilder => rowBuilder
                 .WithRowName("Радиус X")
-                .WithSingleProperty<FloatPropertyViewModel>(nameof(EllipseViewModel.RadiusX)))
+                .WithSingleProperty<FloatPropertyViewModel>(nameof(EllipseViewModel.RadiusX), OneOrMoreConfigure))
             .WithRow(rowBuilder => rowBuilder
                 .WithRowName("Радиус Y")
-                .WithSingleProperty<FloatPropertyViewModel>(nameof(EllipseViewModel.RadiusY)))
+                .WithSingleProperty<FloatPropertyViewModel>(nameof(EllipseViewModel.RadiusY), OneOrMoreConfigure))
             .WithRow(rowBuilder => rowBuilder
                 .WithRowName("Граница")
                 .WithMultiProperty<StrokePropertiesViewModel>(multiPropertyBuilder => multiPropertyBuilder
                     .WithProperty<EnumPropertyViewModel>(nameof(EllipseViewModel.StrokeThicknessType))
-                    .WithProperty<FloatPropertyViewModel>(nameof(EllipseViewModel.StrokeThickness))
+                    .WithProperty<FloatPropertyViewModel>(nameof(EllipseViewModel.StrokeThickness), OneOrMoreConfigure)
                     .WithProperty<ColorPropertyViewModel>(nameof(EllipseViewModel.StrokeColor))))
             .WithRow(rowBuilder => rowBuilder
                 .WithRowName("Цвет заливки")

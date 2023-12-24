@@ -69,7 +69,7 @@ public class FloatPropertyViewModel : SinglePropertyViewModel
             return;
         }
 
-        if (number >= MaxNumber || number <= MinNumber)
+        if (number > MaxNumber || number < MinNumber)
         {
             _invalidValue = expr;
             AddError($"Число должно находиться в интервале [{MinNumber}, {MaxNumber}]", nameof(Value));
@@ -89,5 +89,5 @@ public class FloatPropertyViewModel : SinglePropertyViewModel
     protected override void OnEndEdit(IEnumerable<object> objects) => ClearAllErrors();
 
     public override PropertyViewModel MakeCopy(EditorViewModel editor) =>
-        new FloatPropertyViewModel { PropertyName = PropertyName, EditorViewModel = editor };
+        new FloatPropertyViewModel { PropertyName = PropertyName, EditorViewModel = editor, MinNumber = MinNumber, MaxNumber = MaxNumber };
 }

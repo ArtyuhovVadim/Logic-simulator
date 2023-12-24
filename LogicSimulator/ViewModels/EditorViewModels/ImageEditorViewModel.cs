@@ -28,16 +28,16 @@ public class ImageEditorViewModel : EditorViewModel
                 .WithSingleProperty<StringPropertyViewModel>(nameof(ImageViewModel.FilePath)))
             .WithRow(rowBuilder => rowBuilder
                 .WithRowName("Ширина")
-                .WithSingleProperty<FloatPropertyViewModel>(nameof(ImageViewModel.Width)))
+                .WithSingleProperty<FloatPropertyViewModel>(nameof(ImageViewModel.Width), OneOrMoreConfigure))
             .WithRow(rowBuilder => rowBuilder
                 .WithRowName("Высота")
-                .WithSingleProperty<FloatPropertyViewModel>(nameof(ImageViewModel.Height)))
+                .WithSingleProperty<FloatPropertyViewModel>(nameof(ImageViewModel.Height), OneOrMoreConfigure))
             .WithRow(rowBuilder => rowBuilder
                 .WithRowName("Граница")
                 .WithSingleProperty<BoolPropertyViewModel>(nameof(ImageViewModel.IsBordered))
                 .WithMultiProperty<StrokePropertiesViewModel>(multiPropertyBuilder => multiPropertyBuilder
                     .WithProperty<EnumPropertyViewModel>(nameof(ImageViewModel.StrokeThicknessType))
-                    .WithProperty<FloatPropertyViewModel>(nameof(ImageViewModel.StrokeThickness))
+                    .WithProperty<FloatPropertyViewModel>(nameof(ImageViewModel.StrokeThickness), OneOrMoreConfigure)
                     .WithProperty<ColorPropertyViewModel>(nameof(ImageViewModel.StrokeColor)))
                 .WithLayout(layoutBuilder => layoutBuilder
                     .WithAutoSize()

@@ -60,7 +60,7 @@
             </DataPiping.DataPipes>
 
             <b:Interaction.Behaviors>
-                <behaviors:SceneTransformBehaviour MinScale="0.125" />
+                <behaviors:SceneTransformBehaviour MinScale="0.2" />
                 <behaviors:SceneToolEventProviderBehaviour />
             </b:Interaction.Behaviors>
 

@@ -31,15 +31,15 @@ public class ArcEditorViewModel : EditorViewModel
                 .WithSingleProperty<FloatPropertyViewModel>(nameof(ArcViewModel.EndAngle)))
             .WithRow(rowBuilder => rowBuilder
                 .WithRowName("Радиус X")
-                .WithSingleProperty<FloatPropertyViewModel>(nameof(ArcViewModel.RadiusX)))
+                .WithSingleProperty<FloatPropertyViewModel>(nameof(ArcViewModel.RadiusX), OneOrMoreConfigure))
             .WithRow(rowBuilder => rowBuilder
                 .WithRowName("Радиус Y")
-                .WithSingleProperty<FloatPropertyViewModel>(nameof(ArcViewModel.RadiusY)))
+                .WithSingleProperty<FloatPropertyViewModel>(nameof(ArcViewModel.RadiusY), OneOrMoreConfigure))
             .WithRow(rowBuilder => rowBuilder
                 .WithRowName("Граница")
                 .WithMultiProperty<StrokePropertiesViewModel>(multiPropertyBuilder => multiPropertyBuilder
                     .WithProperty<EnumPropertyViewModel>(nameof(ArcViewModel.StrokeThicknessType))
-                    .WithProperty<FloatPropertyViewModel>(nameof(ArcViewModel.StrokeThickness))
+                    .WithProperty<FloatPropertyViewModel>(nameof(ArcViewModel.StrokeThickness), OneOrMoreConfigure)
                     .WithProperty<ColorPropertyViewModel>(nameof(ArcViewModel.StrokeColor)))))
         .Build();
 }

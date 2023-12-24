@@ -31,7 +31,7 @@ public class LineEditorViewModel : EditorViewModel
                 .WithRowName("Граница")
                 .WithMultiProperty<StrokePropertiesViewModel>(multiPropertyBuilder => multiPropertyBuilder
                     .WithProperty<EnumPropertyViewModel>(nameof(LineViewModel.StrokeThicknessType))
-                    .WithProperty<FloatPropertyViewModel>(nameof(LineViewModel.StrokeThickness))
+                    .WithProperty<FloatPropertyViewModel>(nameof(LineViewModel.StrokeThickness), OneOrMoreConfigure)
                     .WithProperty<ColorPropertyViewModel>(nameof(LineViewModel.StrokeColor)))))
         .Build();
 }
