@@ -17,7 +17,7 @@ public class EllipseEditorViewModel : EditorViewModel
             .WithGroupName("Расположение")
             .WithRow(rowBuilder => rowBuilder
                 .WithRowName("(X/Y)")
-                .WithSingleProperty<Vector2PropertyViewModel>(nameof(EllipseViewModel.Location)))
+                .WithSingleProperty<Vector2PropertyViewModel>(nameof(EllipseViewModel.Location), ConfigureAsPositionVector))
             .WithRow(rowBuilder => rowBuilder
                 .WithRowName("Поворот")
                 .WithSingleProperty<EnumPropertyViewModel>(nameof(EllipseViewModel.Rotation))))
@@ -25,15 +25,15 @@ public class EllipseEditorViewModel : EditorViewModel
             .WithGroupName("Свойства")
             .WithRow(rowBuilder => rowBuilder
                 .WithRowName("Радиус X")
-                .WithSingleProperty<FloatPropertyViewModel>(nameof(EllipseViewModel.RadiusX), OneOrMoreConfigure))
+                .WithSingleProperty<FloatPropertyViewModel>(nameof(EllipseViewModel.RadiusX), ConfigureAsSizeNumber))
             .WithRow(rowBuilder => rowBuilder
                 .WithRowName("Радиус Y")
-                .WithSingleProperty<FloatPropertyViewModel>(nameof(EllipseViewModel.RadiusY), OneOrMoreConfigure))
+                .WithSingleProperty<FloatPropertyViewModel>(nameof(EllipseViewModel.RadiusY), ConfigureAsSizeNumber))
             .WithRow(rowBuilder => rowBuilder
                 .WithRowName("Граница")
                 .WithMultiProperty<StrokePropertiesViewModel>(multiPropertyBuilder => multiPropertyBuilder
                     .WithProperty<EnumPropertyViewModel>(nameof(EllipseViewModel.StrokeThicknessType))
-                    .WithProperty<FloatPropertyViewModel>(nameof(EllipseViewModel.StrokeThickness), OneOrMoreConfigure)
+                    .WithProperty<FloatPropertyViewModel>(nameof(EllipseViewModel.StrokeThickness), ConfigureAsSizeNumber)
                     .WithProperty<ColorPropertyViewModel>(nameof(EllipseViewModel.StrokeColor))))
             .WithRow(rowBuilder => rowBuilder
                 .WithRowName("Цвет заливки")

@@ -62,8 +62,21 @@ public abstract class EditorViewModel : BindableBase
 
     protected abstract EditorLayout CreateLayout();
 
-    protected static void OneOrMoreConfigure(FloatPropertyViewModel prop)
+    protected static void ConfigureAsPositionVector(Vector2PropertyViewModel prop)
+    {
+        prop.NumberSuffix = "mm";
+        prop.DisplayCoefficient = 10;
+    }
+
+    protected static void ConfigureAsSizeNumber(FloatPropertyViewModel prop)
     {
         prop.MinNumber = 1;
+        prop.NumberSuffix = "mm";
+        prop.DisplayCoefficient = 10;
+    }
+
+    protected static void ConfigureAsAngleNumber(FloatPropertyViewModel prop)
+    {
+        prop.NumberSuffix = "\u00b0";
     }
 }

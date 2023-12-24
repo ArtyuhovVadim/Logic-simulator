@@ -17,7 +17,7 @@ public class ImageEditorViewModel : EditorViewModel
             .WithGroupName("Расположение")
             .WithRow(rowBuilder => rowBuilder
                 .WithRowName("(X/Y)")
-                .WithSingleProperty<Vector2PropertyViewModel>(nameof(ImageViewModel.Location)))
+                .WithSingleProperty<Vector2PropertyViewModel>(nameof(ImageViewModel.Location), ConfigureAsPositionVector))
             .WithRow(rowBuilder => rowBuilder
                 .WithRowName("Поворот")
                 .WithSingleProperty<EnumPropertyViewModel>(nameof(ImageViewModel.Rotation))))
@@ -28,16 +28,16 @@ public class ImageEditorViewModel : EditorViewModel
                 .WithSingleProperty<StringPropertyViewModel>(nameof(ImageViewModel.FilePath)))
             .WithRow(rowBuilder => rowBuilder
                 .WithRowName("Ширина")
-                .WithSingleProperty<FloatPropertyViewModel>(nameof(ImageViewModel.Width), OneOrMoreConfigure))
+                .WithSingleProperty<FloatPropertyViewModel>(nameof(ImageViewModel.Width), ConfigureAsSizeNumber))
             .WithRow(rowBuilder => rowBuilder
                 .WithRowName("Высота")
-                .WithSingleProperty<FloatPropertyViewModel>(nameof(ImageViewModel.Height), OneOrMoreConfigure))
+                .WithSingleProperty<FloatPropertyViewModel>(nameof(ImageViewModel.Height), ConfigureAsSizeNumber))
             .WithRow(rowBuilder => rowBuilder
                 .WithRowName("Граница")
                 .WithSingleProperty<BoolPropertyViewModel>(nameof(ImageViewModel.IsBordered))
                 .WithMultiProperty<StrokePropertiesViewModel>(multiPropertyBuilder => multiPropertyBuilder
                     .WithProperty<EnumPropertyViewModel>(nameof(ImageViewModel.StrokeThicknessType))
-                    .WithProperty<FloatPropertyViewModel>(nameof(ImageViewModel.StrokeThickness), OneOrMoreConfigure)
+                    .WithProperty<FloatPropertyViewModel>(nameof(ImageViewModel.StrokeThickness), ConfigureAsSizeNumber)
                     .WithProperty<ColorPropertyViewModel>(nameof(ImageViewModel.StrokeColor)))
                 .WithLayout(layoutBuilder => layoutBuilder
                     .WithAutoSize()

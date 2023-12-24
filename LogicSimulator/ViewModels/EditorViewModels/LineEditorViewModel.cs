@@ -17,7 +17,7 @@ public class LineEditorViewModel : EditorViewModel
             .WithGroupName("Расположение")
             .WithRow(rowBuilder => rowBuilder
                 .WithRowName("(X/Y)")
-                .WithSingleProperty<Vector2PropertyViewModel>(nameof(LineViewModel.Location)))
+                .WithSingleProperty<Vector2PropertyViewModel>(nameof(LineViewModel.Location), ConfigureAsPositionVector))
             .WithRow(rowBuilder => rowBuilder
                 .WithRowName("Поворот")
                 .WithSingleProperty<EnumPropertyViewModel>(nameof(LineViewModel.Rotation))))
@@ -31,7 +31,7 @@ public class LineEditorViewModel : EditorViewModel
                 .WithRowName("Граница")
                 .WithMultiProperty<StrokePropertiesViewModel>(multiPropertyBuilder => multiPropertyBuilder
                     .WithProperty<EnumPropertyViewModel>(nameof(LineViewModel.StrokeThicknessType))
-                    .WithProperty<FloatPropertyViewModel>(nameof(LineViewModel.StrokeThickness), OneOrMoreConfigure)
+                    .WithProperty<FloatPropertyViewModel>(nameof(LineViewModel.StrokeThickness), ConfigureAsSizeNumber)
                     .WithProperty<ColorPropertyViewModel>(nameof(LineViewModel.StrokeColor)))))
         .Build();
 }

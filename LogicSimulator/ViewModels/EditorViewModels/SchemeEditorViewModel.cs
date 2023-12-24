@@ -28,12 +28,14 @@ public class SchemeEditorViewModel : EditorViewModel
 
     private static void GridStepConfigure(FloatPropertyViewModel prop)
     {
+        ConfigureAsSizeNumber(prop);
         prop.MaxNumber = 1000;
         prop.MinNumber = 5;
     }
 
     private static void SizeStepConfigure(FloatPropertyViewModel prop)
     {
+        ConfigureAsSizeNumber(prop);
         prop.MaxNumber = 10000;
         prop.MinNumber = 100;
     }

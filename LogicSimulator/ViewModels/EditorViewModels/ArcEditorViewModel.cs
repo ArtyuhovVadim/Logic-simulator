@@ -17,7 +17,7 @@ public class ArcEditorViewModel : EditorViewModel
             .WithGroupName("Расположение")
             .WithRow(rowBuilder => rowBuilder
                 .WithRowName("(X/Y)")
-                .WithSingleProperty<Vector2PropertyViewModel>(nameof(ArcViewModel.Location)))
+                .WithSingleProperty<Vector2PropertyViewModel>(nameof(ArcViewModel.Location), ConfigureAsPositionVector))
             .WithRow(rowBuilder => rowBuilder
                 .WithRowName("Поворот")
                 .WithSingleProperty<EnumPropertyViewModel>(nameof(ArcViewModel.Rotation))))
@@ -25,21 +25,21 @@ public class ArcEditorViewModel : EditorViewModel
             .WithGroupName("Свойства")
             .WithRow(rowBuilder => rowBuilder
                 .WithRowName("Начальный угол")
-                .WithSingleProperty<FloatPropertyViewModel>(nameof(ArcViewModel.StartAngle)))
+                .WithSingleProperty<FloatPropertyViewModel>(nameof(ArcViewModel.StartAngle), ConfigureAsAngleNumber))
             .WithRow(rowBuilder => rowBuilder
                 .WithRowName("Конечный угол")
-                .WithSingleProperty<FloatPropertyViewModel>(nameof(ArcViewModel.EndAngle)))
+                .WithSingleProperty<FloatPropertyViewModel>(nameof(ArcViewModel.EndAngle), ConfigureAsAngleNumber))
             .WithRow(rowBuilder => rowBuilder
                 .WithRowName("Радиус X")
-                .WithSingleProperty<FloatPropertyViewModel>(nameof(ArcViewModel.RadiusX), OneOrMoreConfigure))
+                .WithSingleProperty<FloatPropertyViewModel>(nameof(ArcViewModel.RadiusX), ConfigureAsSizeNumber))
             .WithRow(rowBuilder => rowBuilder
                 .WithRowName("Радиус Y")
-                .WithSingleProperty<FloatPropertyViewModel>(nameof(ArcViewModel.RadiusY), OneOrMoreConfigure))
+                .WithSingleProperty<FloatPropertyViewModel>(nameof(ArcViewModel.RadiusY), ConfigureAsSizeNumber))
             .WithRow(rowBuilder => rowBuilder
                 .WithRowName("Граница")
                 .WithMultiProperty<StrokePropertiesViewModel>(multiPropertyBuilder => multiPropertyBuilder
                     .WithProperty<EnumPropertyViewModel>(nameof(ArcViewModel.StrokeThicknessType))
-                    .WithProperty<FloatPropertyViewModel>(nameof(ArcViewModel.StrokeThickness), OneOrMoreConfigure)
+                    .WithProperty<FloatPropertyViewModel>(nameof(ArcViewModel.StrokeThickness), ConfigureAsSizeNumber)
                     .WithProperty<ColorPropertyViewModel>(nameof(ArcViewModel.StrokeColor)))))
         .Build();
 }

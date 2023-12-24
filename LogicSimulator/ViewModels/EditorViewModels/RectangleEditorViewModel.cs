@@ -17,7 +17,7 @@ public class RectangleEditorViewModel : EditorViewModel
             .WithGroupName("Расположение")
             .WithRow(rowBuilder => rowBuilder
                 .WithRowName("(X/Y)")
-                .WithSingleProperty<Vector2PropertyViewModel>(nameof(RectangleViewModel.Location)))
+                .WithSingleProperty<Vector2PropertyViewModel>(nameof(RectangleViewModel.Location), ConfigureAsPositionVector))
             .WithRow(rowBuilder => rowBuilder
                 .WithRowName("Поворот")
                 .WithSingleProperty<EnumPropertyViewModel>(nameof(RectangleViewModel.Rotation))))
@@ -25,15 +25,15 @@ public class RectangleEditorViewModel : EditorViewModel
             .WithGroupName("Свойства")
             .WithRow(rowBuilder => rowBuilder
                 .WithRowName("Ширина")
-                .WithSingleProperty<FloatPropertyViewModel>(nameof(RectangleViewModel.Width), OneOrMoreConfigure))
+                .WithSingleProperty<FloatPropertyViewModel>(nameof(RectangleViewModel.Width), ConfigureAsSizeNumber))
             .WithRow(rowBuilder => rowBuilder
                 .WithRowName("Высота")
-                .WithSingleProperty<FloatPropertyViewModel>(nameof(RectangleViewModel.Height), OneOrMoreConfigure))
+                .WithSingleProperty<FloatPropertyViewModel>(nameof(RectangleViewModel.Height), ConfigureAsSizeNumber))
             .WithRow(rowBuilder => rowBuilder
                 .WithRowName("Граница")
                 .WithMultiProperty<StrokePropertiesViewModel>(multiPropertyBuilder => multiPropertyBuilder
                     .WithProperty<EnumPropertyViewModel>(nameof(RectangleViewModel.StrokeThicknessType))
-                    .WithProperty<FloatPropertyViewModel>(nameof(RectangleViewModel.StrokeThickness), OneOrMoreConfigure)
+                    .WithProperty<FloatPropertyViewModel>(nameof(RectangleViewModel.StrokeThickness), ConfigureAsSizeNumber)
                     .WithProperty<ColorPropertyViewModel>(nameof(RectangleViewModel.StrokeColor))))
             .WithRow(rowBuilder => rowBuilder
                 .WithRowName("Цвет заливки")

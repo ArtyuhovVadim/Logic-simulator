@@ -29,7 +29,7 @@ public class TextBlockEditorViewModel : EditorViewModel
             .WithRow(rowBuilder => rowBuilder
                 .WithRowName("Шрифт")
                 .WithSingleProperty<FontNamePropertyViewModel>(nameof(TextBlockViewModel.FontName))
-                .WithSingleProperty<FloatPropertyViewModel>(nameof(TextBlockViewModel.FontSize), OneOrMoreConfigure)
+                .WithSingleProperty<FloatPropertyViewModel>(nameof(TextBlockViewModel.FontSize), ConfigureAsSizeNumber)
                 .WithSingleProperty<ColorPropertyViewModel>(nameof(TextBlockViewModel.TextColor))
                 .WithLayout(layoutBuilder => layoutBuilder
                     .WithRelativeSize(1)

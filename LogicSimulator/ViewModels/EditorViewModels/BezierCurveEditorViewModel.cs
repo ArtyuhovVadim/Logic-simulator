@@ -17,7 +17,7 @@ public class BezierCurveEditorViewModel : EditorViewModel
             .WithGroupName("Расположение")
             .WithRow(rowBuilder => rowBuilder
                 .WithRowName("(X/Y)")
-                .WithSingleProperty<Vector2PropertyViewModel>(nameof(BezierCurveViewModel.Location)))
+                .WithSingleProperty<Vector2PropertyViewModel>(nameof(BezierCurveViewModel.Location), ConfigureAsPositionVector))
             .WithRow(rowBuilder => rowBuilder
                 .WithRowName("Поворот")
                 .WithSingleProperty<EnumPropertyViewModel>(nameof(BezierCurveViewModel.Rotation))))
@@ -25,20 +25,20 @@ public class BezierCurveEditorViewModel : EditorViewModel
             .WithGroupName("Вершины")
             .WithRow(rowBuilder => rowBuilder
                 .WithRowName("(X/Y)")
-                .WithSingleProperty<Vector2PropertyViewModel>(nameof(BezierCurveViewModel.Point1)))
+                .WithSingleProperty<Vector2PropertyViewModel>(nameof(BezierCurveViewModel.Point1), ConfigureAsPositionVector))
             .WithRow(rowBuilder => rowBuilder
                 .WithRowName("(X/Y)")
-                .WithSingleProperty<Vector2PropertyViewModel>(nameof(BezierCurveViewModel.Point2)))
+                .WithSingleProperty<Vector2PropertyViewModel>(nameof(BezierCurveViewModel.Point2), ConfigureAsPositionVector))
             .WithRow(rowBuilder => rowBuilder
                 .WithRowName("(X/Y)")
-                .WithSingleProperty<Vector2PropertyViewModel>(nameof(BezierCurveViewModel.Point3))))
+                .WithSingleProperty<Vector2PropertyViewModel>(nameof(BezierCurveViewModel.Point3), ConfigureAsPositionVector)))
         .WithGroup(groupBuilder => groupBuilder
             .WithGroupName("Свойства")
             .WithRow(rowBuilder => rowBuilder
                 .WithRowName("Граница")
                 .WithMultiProperty<StrokePropertiesViewModel>(multiPropertyBuilder => multiPropertyBuilder
                     .WithProperty<EnumPropertyViewModel>(nameof(BezierCurveViewModel.StrokeThicknessType))
-                    .WithProperty<FloatPropertyViewModel>(nameof(BezierCurveViewModel.StrokeThickness), OneOrMoreConfigure)
+                    .WithProperty<FloatPropertyViewModel>(nameof(BezierCurveViewModel.StrokeThickness), ConfigureAsSizeNumber)
                     .WithProperty<ColorPropertyViewModel>(nameof(BezierCurveViewModel.StrokeColor)))))
         .Build();
 }
