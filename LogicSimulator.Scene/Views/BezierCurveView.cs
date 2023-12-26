@@ -20,7 +20,7 @@ public class BezierCurveView : EditableSceneObjectView, IStroked
         ResourceCache.Register<BezierCurveView>((factory, user) => factory.CreateSolidColorBrush(user.StrokeColor.ToColor4()));
 
     private static readonly AbstractNode[] AbstractNodes =
-    {
+    [
         new Node<BezierCurveView>(o => o.LocalToWorldSpace(Vector2.Zero), (o, p) =>
         {
             var localPos = o.WorldToLocalSpace(p);
@@ -33,7 +33,7 @@ public class BezierCurveView : EditableSceneObjectView, IStroked
         new Node<BezierCurveView>(o => o.LocalToWorldSpace(o.Point1), (o, p)=> o.Point1 = o.WorldToLocalSpace(p)),
         new Node<BezierCurveView>(o => o.LocalToWorldSpace(o.Point2), (o, p)=> o.Point2 = o.WorldToLocalSpace(p)),
         new Node<BezierCurveView>(o => o.LocalToWorldSpace(o.Point3), (o, p)=> o.Point3 = o.WorldToLocalSpace(p))
-    };
+    ];
 
     public override IEnumerable<AbstractNode> Nodes => AbstractNodes;
 

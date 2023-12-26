@@ -26,7 +26,7 @@ public class RectangleView : EditableSceneObjectView, IStroked
         ResourceCache.Register<RectangleView>((factory, user) => factory.CreateRectangleGeometry(user.Width, user.Height));
 
     private static readonly AbstractNode[] AbstractNodes =
-    {
+    [
         new Node<RectangleView>(o => o.LocalToWorldSpace(Vector2.Zero), (o, p)=>
         {
             var localPos = o.WorldToLocalSpace(p);
@@ -58,7 +58,7 @@ public class RectangleView : EditableSceneObjectView, IStroked
             o.Width -= localPos.X;
             o.Height = localPos.Y;
         })
-    };
+    ];
 
     public override IEnumerable<AbstractNode> Nodes => AbstractNodes;
 

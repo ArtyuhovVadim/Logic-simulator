@@ -26,7 +26,7 @@ public class RoundedRectangleView : EditableSceneObjectView, IStroked
         ResourceCache.Register<RoundedRectangleView>((factory, user) => factory.CreateRectangleGeometry(user.Width, user.Height));
 
     private static readonly AbstractNode[] AbstractNodes =
-    {
+    [
         new Node<RoundedRectangleView>(o => o.LocalToWorldSpace(Vector2.Zero), (o, p)=>
         {
             var localPos = o.WorldToLocalSpace(p);
@@ -65,7 +65,7 @@ public class RoundedRectangleView : EditableSceneObjectView, IStroked
             o.RadiusX = radius.X;
             o.RadiusY = radius.Y;
         }, useGridSnap: false)
-    };
+    ];
 
     public override IEnumerable<AbstractNode> Nodes => AbstractNodes;
 

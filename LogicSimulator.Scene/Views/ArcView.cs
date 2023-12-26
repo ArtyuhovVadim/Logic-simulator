@@ -27,7 +27,7 @@ public class ArcView : EditableSceneObjectView, IStroked
     });
 
     private static readonly AbstractNode[] AbstractNodes =
-    {
+    [
         new Node<ArcView>(o =>
         {
             var start = -o.StartAngle;
@@ -41,8 +41,8 @@ public class ArcView : EditableSceneObjectView, IStroked
         new Node<ArcView>(o => o.LocalToWorldSpace(o._startAnglePos), (o, p) =>
             o.StartAngle = MathHelper.GetAngleForArc(Vector2.Zero, o.RadiusX, o.WorldToLocalSpace(p)), false),
         new Node<ArcView>(o => o.LocalToWorldSpace(o._endAnglePos), (o, p) =>
-            o.EndAngle = MathHelper.GetAngleForArc(Vector2.Zero, o.RadiusY, o.WorldToLocalSpace(p)), false),
-    };
+            o.EndAngle = MathHelper.GetAngleForArc(Vector2.Zero, o.RadiusY, o.WorldToLocalSpace(p)), false)
+    ];
 
     public override IEnumerable<AbstractNode> Nodes => AbstractNodes;
 

@@ -23,10 +23,10 @@ public class EllipseView : EditableSceneObjectView, IStroked
         ResourceCache.Register<EllipseView>((factory, user) => factory.CreateEllipseGeometry(new Ellipse { RadiusX = user.RadiusX, RadiusY = user.RadiusY }));
 
     private static readonly AbstractNode[] AbstractNodes =
-    {
+    [
         new Node<EllipseView>(o => o.LocalToWorldSpace(new Vector2(o.RadiusX, 0)), (o, p) => o.RadiusX = Math.Abs(o.WorldToLocalSpace(p).X)),
         new Node<EllipseView>(o => o.LocalToWorldSpace(new Vector2(0, -o.RadiusY)), (o, p) => o.RadiusY = Math.Abs(o.WorldToLocalSpace(p).Y))
-    };
+    ];
 
     public override IEnumerable<AbstractNode> Nodes => AbstractNodes;
 
