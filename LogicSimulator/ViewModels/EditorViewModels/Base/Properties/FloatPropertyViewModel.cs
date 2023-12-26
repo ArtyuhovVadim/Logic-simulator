@@ -23,9 +23,9 @@ public class FloatPropertyViewModel : SinglePropertyViewModel
 
     #region MaxNumber
 
-    private float _maxNumber = float.MaxValue;
+    private double _maxNumber = double.MaxValue;
 
-    public float MaxNumber
+    public double MaxNumber
     {
         get => _maxNumber;
         set => Set(ref _maxNumber, value);
@@ -35,9 +35,9 @@ public class FloatPropertyViewModel : SinglePropertyViewModel
 
     #region MinNumber
 
-    private float _minNumber = float.MinValue;
+    private double _minNumber = double.MinValue;
 
-    public float MinNumber
+    public double MinNumber
     {
         get => _minNumber;
         set => Set(ref _minNumber, value);
@@ -59,9 +59,9 @@ public class FloatPropertyViewModel : SinglePropertyViewModel
 
     #region DisplayCoefficient
 
-    private float _displayCoefficient = 1f;
+    private double _displayCoefficient = 1f;
 
-    public float DisplayCoefficient
+    public double DisplayCoefficient
     {
         get => _displayCoefficient;
         set => Set(ref _displayCoefficient, value);
@@ -88,30 +88,31 @@ public class FloatPropertyViewModel : SinglePropertyViewModel
     {
         ClearAllErrors();
 
-        var expr = (string)value;
+        var originalExpr = (string)value;
+        var exprWithoutSuffix = originalExpr;
 
-        if (NumberSuffix.Length != 0 && expr.EndsWith(NumberSuffix))
+        if (NumberSuffix.Length != 0 && originalExpr.EndsWith(NumberSuffix))
         {
-            expr = expr[..^NumberSuffix.Length];
+            exprWithoutSuffix = originalExpr[..^NumberSuffix.Length];
         }
 
-        if (!Parser.TryParse(expr, out var number, out var e))
+        if (!Parser.TryParse(exprWithoutSuffix, out var number, out var e))
         {
-            _invalidValue = expr;
-            AddError($"Выражение '{expr}' не может быть вычислено.\n{e!.Message}", nameof(Value));
+            _invalidValue = originalExpr;
+            AddError($"Выражение '{originalExpr}' не может быть вычислено.\n{e!.Message}", nameof(Value));
             return;
         }
 
         if (number > MaxNumber || number < MinNumber)
         {
-            _invalidValue = expr;
+            _invalidValue = originalExpr;
             AddError($"Число должно находиться в интервале [{MinNumber}, {MaxNumber}]", nameof(Value));
             return;
         }
 
         IsValueUndefined = false;
 
-        var newValue = (float)number * DisplayCoefficient;
+        var newValue = (float)(number * DisplayCoefficient);
 
         foreach (var obj in objects)
         {

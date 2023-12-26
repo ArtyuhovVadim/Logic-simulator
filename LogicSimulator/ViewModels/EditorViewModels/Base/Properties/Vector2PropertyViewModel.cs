@@ -30,12 +30,14 @@ public class Vector2PropertyViewModel : SinglePropertyViewModel
         {
             ClearErrors();
 
+            var exprWithoutSuffix = value;
+
             if (NumberSuffix.Length != 0 && value.EndsWith(NumberSuffix))
             {
-                value = value[..^NumberSuffix.Length];
+                exprWithoutSuffix = value[..^NumberSuffix.Length];
             }
 
-            if (!Parser.TryParse(value, out var x, out var e))
+            if (!Parser.TryParse(exprWithoutSuffix, out var x, out var e))
             {
                 _invalidXExpr = value;
                 AddError($"Выражение '{value}' не может быть вычислено.\n{e!.Message}");
@@ -46,7 +48,7 @@ public class Vector2PropertyViewModel : SinglePropertyViewModel
             IsXValueUndefined = false;
             _suppressPropertyGetter = true;
             _changedVectorComponent = ChangedVectorComponent.X;
-            Value = (Vector2)Value with { X = (float)x * DisplayCoefficient };
+            Value = (Vector2)Value with { X = (float)(x * DisplayCoefficient) };
         }
     }
 
@@ -73,12 +75,14 @@ public class Vector2PropertyViewModel : SinglePropertyViewModel
         {
             ClearErrors();
 
+            var exprWithoutSuffix = value;
+
             if (NumberSuffix.Length != 0 && value.EndsWith(NumberSuffix))
             {
-                value = value[..^NumberSuffix.Length];
+                exprWithoutSuffix = value[..^NumberSuffix.Length];
             }
 
-            if (!Parser.TryParse(value, out var y, out var e))
+            if (!Parser.TryParse(exprWithoutSuffix, out var y, out var e))
             {
                 _invalidYExpr = value;
                 AddError($"Выражение '{value}' не может быть вычислено.\n{e!.Message}");
@@ -89,7 +93,7 @@ public class Vector2PropertyViewModel : SinglePropertyViewModel
             IsYValueUndefined = false;
             _suppressPropertyGetter = true;
             _changedVectorComponent = ChangedVectorComponent.Y;
-            Value = (Vector2)Value with { Y = (float)y * DisplayCoefficient };
+            Value = (Vector2)Value with { Y = (float)(y * DisplayCoefficient) };
         }
     }
 
@@ -121,9 +125,9 @@ public class Vector2PropertyViewModel : SinglePropertyViewModel
 
     #region DisplayCoefficient
 
-    private float _displayCoefficient = 1f;
+    private double _displayCoefficient = 1f;
 
-    public float DisplayCoefficient
+    public double DisplayCoefficient
     {
         get => _displayCoefficient;
         set => Set(ref _displayCoefficient, value);
