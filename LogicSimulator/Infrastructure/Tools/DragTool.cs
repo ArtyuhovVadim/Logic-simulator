@@ -87,7 +87,7 @@ public class DragTool : BaseTool
                 {
                     if (o!.IsSelected)
                     {
-                        StartDragObject(o, pos);
+                        StartDragObject(o, pos, correctLocation: false);
                     }
                 }
             }
@@ -113,9 +113,10 @@ public class DragTool : BaseTool
         EndDragObjects();
     }
 
-    private void StartDragObject(SceneObjectView sceneObject, Vector2 pos)
+    private void StartDragObject(SceneObjectView sceneObject, Vector2 pos, bool correctLocation = true)
     {
-        sceneObject.Location = sceneObject.Location.ApplyGrid((float)GridSnap);
+        if (correctLocation)
+            sceneObject.Location = sceneObject.Location.ApplyGrid((float)GridSnap);
         sceneObject.StartDrag(pos);
         _draggingSceneObjects!.Add(sceneObject);
     }
