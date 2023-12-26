@@ -83,12 +83,12 @@ public class DragTool : BaseTool
         {
             if (obj.IsSelected)
             {
-                foreach (var o in ObjectsLayer.Objects.Select(ObjectsLayer.GetViewFromItem))
+                var objectViews = ObjectsLayer.Objects.Select(ObjectsLayer.GetViewFromItem).Where(x => x!.IsSelected).ToList();
+                var correctLocation = objectViews.Count == 1;
+
+                foreach (var o in objectViews)
                 {
-                    if (o!.IsSelected)
-                    {
-                        StartDragObject(o, pos, correctLocation: false);
-                    }
+                    StartDragObject(o!, pos, correctLocation);
                 }
             }
             else

@@ -75,6 +75,12 @@ public abstract class EditorViewModel : BindableBase
         prop.DisplayCoefficient = 10;
     }
 
+    protected static void ConfigureAsFontSizeNumber(FloatPropertyViewModel prop)
+    {
+        prop.MinNumber = 6;
+        prop.NumberSuffix = "px";
+    }
+
     protected static void ConfigureAsAngleNumber(FloatPropertyViewModel prop)
     {
         prop.NumberSuffix = "\u00b0";
