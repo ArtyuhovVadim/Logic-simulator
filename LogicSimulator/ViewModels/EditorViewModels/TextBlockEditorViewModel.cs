@@ -17,7 +17,7 @@ public class TextBlockEditorViewModel : EditorViewModel
             .WithGroupName("Расположение")
             .WithRow(rowBuilder => rowBuilder
                 .WithRowName("(X/Y)")
-                .WithSingleProperty<Vector2PropertyViewModel>(nameof(TextBlockViewModel.Location)))
+                .WithSingleProperty<Vector2PropertyViewModel>(nameof(TextBlockViewModel.Location), ConfigureAsPositionVector))
             .WithRow(rowBuilder => rowBuilder
                 .WithRowName("Поворот")
                 .WithSingleProperty<EnumPropertyViewModel>(nameof(TextBlockViewModel.Rotation))))
