@@ -110,7 +110,10 @@
                             Stretch="UniformToFill" />
                     </Grid>
                 </AdornedControl.AdornerContent>
-                <MinimizedColorPickerControl x:Name="ColorPicker" SelectedColor="{Binding Path=Value}" />
+                <MinimizedColorPickerControl
+                    x:Name="ColorPicker"
+                    RecentBrushesGroupName="ColorPropertyViewModelRecentBrushesGroup"
+                    SelectedColor="{Binding Path=Value}" />
             </AdornedControl>
             <DataTemplate.Triggers>
                 <Trigger SourceName="AdornedControl" Property="IsAdornerVisible" Value="True">
