@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel;
+using LogicSimulator.Infrastructure;
 using LogicSimulator.ViewModels.EditorViewModels.Base.Properties;
 using LogicSimulator.ViewModels.EditorViewModels.Layout;
 using WpfExtensions.Mvvm;
@@ -64,25 +65,25 @@ public abstract class EditorViewModel : BindableBase
 
     protected static void ConfigureAsPositionVector(Vector2PropertyViewModel prop)
     {
-        prop.NumberSuffix = "mm";
-        prop.DisplayCoefficient = 10;
+        prop.NumberSuffix = Constants.MillimetreSuffix;
+        prop.DisplayCoefficient = Constants.MillimetreToPixelFactor;
     }
 
     protected static void ConfigureAsSizeNumber(FloatPropertyViewModel prop)
     {
         prop.MinNumber = 1;
-        prop.NumberSuffix = "mm";
-        prop.DisplayCoefficient = 10;
+        prop.NumberSuffix = Constants.MillimetreSuffix;
+        prop.DisplayCoefficient = Constants.MillimetreToPixelFactor;
     }
 
     protected static void ConfigureAsFontSizeNumber(FloatPropertyViewModel prop)
     {
         prop.MinNumber = 6;
-        prop.NumberSuffix = "px";
+        prop.NumberSuffix = Constants.PixelSuffix;
     }
 
     protected static void ConfigureAsAngleNumber(FloatPropertyViewModel prop)
     {
-        prop.NumberSuffix = "\u00b0";
+        prop.NumberSuffix = Constants.AngleSuffix;
     }
 }

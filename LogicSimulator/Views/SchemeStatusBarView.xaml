@@ -4,7 +4,10 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:converters="clr-namespace:LogicSimulator.Infrastructure.Converters"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:inf="clr-namespace:LogicSimulator.Infrastructure"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:svm="clr-namespace:LogicSimulator.ViewModels.StatusViewModels"
+    d:DataContext="{d:DesignInstance svm:SchemeStatusViewModel}"
     d:DesignWidth="300"
     mc:Ignorable="d">
     <StackPanelEx Gap="5" Orientation="Horizontal">
@@ -21,7 +24,7 @@
         <Separator />
         <TextBlock>
             <Run Text="Позиция курсора" />
-            <Run Text="{Binding Path=MousePosition, Mode=OneWay, Converter={converters:Vector2Converter}}" />
+            <Run Text="{Binding Path=MousePosition, Mode=OneWay, Converter={converters:Vector2Converter NumberSuffix={x:Static inf:Constants.MillimetreSuffix}, DisplayCoefficient={x:Static inf:Constants.MillimetreToPixelFactor}}}" />
         </TextBlock>
     </StackPanelEx>
 </UserControl>
