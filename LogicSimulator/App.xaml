@@ -9,7 +9,8 @@
                 <ResourceDictionary Source="/WpfExtensions.Controls;component/Themes/Generic.xaml" />
                 <ResourceDictionary Source="/Resources/Icons.xaml" />
 
-                <ResourceDictionary Source="/LogicSimulator.Controls;component/Themes/Dark/DarkTheme.xaml" />
+                <ResourceDictionary Source="/LogicSimulator.Controls;component/Themes/Dark/AvalonDockDarkBrushes.xaml" />
+                <ResourceDictionary Source="/LogicSimulator.Controls;component/Styles/AvaloneDockStyle.xaml" />
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </Application.Resources>

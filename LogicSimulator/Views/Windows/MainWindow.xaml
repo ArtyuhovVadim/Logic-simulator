@@ -1,8 +1,7 @@
-﻿<c:Window
+﻿<WindowEx
     x:Class="LogicSimulator.Views.Windows.MainWindow"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:c="clr-namespace:LogicSimulator.Controls;assembly=LogicSimulator.Controls"
     xmlns:commands="clr-namespace:LogicSimulator.Infrastructure.Commands"
     xmlns:conv="clr-namespace:WpfExtensions.Converters;assembly=WpfExtensions"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
@@ -15,11 +14,12 @@
     Height="720"
     d:DataContext="{d:DesignInstance Type=viewModels:MainWindowViewModel}"
     Icon="/Resources/Icons/icon512x512.png"
+    Style="{StaticResource {x:Type WindowEx}}"
     mc:Ignorable="d">
 
-    <c:Window.Resources>
+    <WindowEx.Resources>
         <commands:AppExitCommand x:Key="AppExitCommand" />
-    </c:Window.Resources>
+    </WindowEx.Resources>
 
     <DockPanel>
         <Grid DockPanel.Dock="Top">
@@ -90,4 +90,4 @@
 
         <views:DockingView DataContext="{Binding Path=DockingViewModel}" />
     </DockPanel>
-</c:Window>
+</WindowEx>

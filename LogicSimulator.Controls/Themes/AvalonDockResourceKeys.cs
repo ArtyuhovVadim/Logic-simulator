@@ -302,6 +302,6 @@ public static class AvalonDockResourceKeys
 
     private static ComponentResourceKey CreateInstance([CallerMemberName] string? fieldName = null)
     {
-        return new ComponentResourceKey(typeof(ResourceKeys), fieldName!);
+        return new ComponentResourceKey(typeof(AvalonDockResourceKeys), fieldName!);
     }
 }
