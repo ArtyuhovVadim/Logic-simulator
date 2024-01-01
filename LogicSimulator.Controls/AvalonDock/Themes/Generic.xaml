@@ -18,130 +18,24 @@
     xmlns:avalonDockProperties="clr-namespace:AvalonDock.Properties;assembly=AvalonDock"
     xmlns:reskeys="clr-namespace:LogicSimulator.Controls.AvalonDock.Themes"
     xmlns:shell="clr-namespace:Microsoft.Windows.Shell;assembly=AvalonDock">
+
     <ResourceDictionary.MergedDictionaries>
         <ResourceDictionary Source="../OverlayButtons.xaml" />
-        <ResourceDictionary Source="Menu/MenuItem.xaml" />
         <ResourceDictionary Source="Icons/IconGeometry.xaml" />
     </ResourceDictionary.MergedDictionaries>
 
     <Style x:Key="DropDownControlArea" TargetType="avalonDockControls:DropDownControlArea" />
 
-    <!--
-	dirkster99: Removing this ToolTip style:
-	1) As it does not appear to add any additional value?
-	2) As it overwrites other Tooltip styles (eg using MLib in Edi or Aehnlich)
-	
-	<Style TargetType="ToolTip">
-        <Setter Property="Background" Value="{DynamicResource {x:Static reskeys:ResourceKeys.Background}}" />
-        <Setter Property="Foreground" Value="{DynamicResource {x:Static reskeys:ResourceKeys.NavigatorWindowForeground}}" />
-        <Setter Property="BorderBrush" Value="{DynamicResource {x:Static reskeys:ResourceKeys.PanelBorderBrush}}" />
-        <Setter Property="BorderThickness" Value="1" />
-        <Setter Property="MaxWidth" Value="246" />
-        <Setter Property="Template">
-            <Setter.Value>
-                <ControlTemplate TargetType="ToolTip">
-                    <Border
-						Padding="5"
-						Background="{TemplateBinding Background}"
-						BorderBrush="{TemplateBinding BorderBrush}"
-						BorderThickness="{TemplateBinding BorderThickness}"
-						CornerRadius="2"
-						SnapsToDevicePixels="True"
-						Style="{DynamicResource DarkBorder}">
-                        <TextBlock
-							Margin="0"
-							HorizontalAlignment="Left"
-							VerticalAlignment="Center"
-							Background="Transparent"
-							FontFamily="{TemplateBinding FontFamily}"
-							FontSize="{TemplateBinding FontSize}"
-							Foreground="{TemplateBinding Foreground}"
-							Text="{TemplateBinding Content}"
-							TextWrapping="Wrap" />
-                    </Border>
-                </ControlTemplate>
-            </Setter.Value>
-        </Setter>
-    </Style>	-->
-
-    <!--
-        Re-styling this in AvalonDock since the menu on the drop-down button for more documents is otherwise black
-        BugFix for Issue http://avalondock.codeplex.com/workitem/15743
-    -->
-    <Style
-        x:Key="AvalonDockThemeVs2013MenuItemStyle"
-        BasedOn="{StaticResource {x:Type MenuItem}}"
-        TargetType="{x:Type MenuItem}">
+    <Style TargetType="{x:Type avalonDockControls:MenuItemEx}" BasedOn="{StaticResource {x:Type MenuItem}}">
         <Setter Property="HeaderTemplate" Value="{Binding Path=Root.Manager.DocumentPaneMenuItemHeaderTemplate}" />
         <Setter Property="HeaderTemplateSelector" Value="{Binding Path=Root.Manager.DocumentPaneMenuItemHeaderTemplateSelector}" />
-        <Setter Property="BorderThickness" Value="0" />
-        <Setter Property="Template" Value="{StaticResource MLibMenuItem}" />
-    </Style>
-
-    <Style BasedOn="{StaticResource AvalonDockThemeVs2013MenuItemStyle}" TargetType="{x:Type avalonDockControls:MenuItemEx}">
         <Setter Property="IconTemplate" Value="{Binding Path=Root.Manager.IconContentTemplate}" />
         <Setter Property="IconTemplateSelector" Value="{Binding Path=Root.Manager.IconContentTemplateSelector}" />
         <Setter Property="Command" Value="{Binding Path=., Converter={avalonDockConverters:ActivateCommandLayoutItemFromLayoutModelConverter}}" />
-        <!--
-            Retemplate ControlTemplate of MenuItem to get rid of blue'ish highlighting colors on menu item
-            https://stackoverflow.com/questions/34888636/change-background-color-of-menuitem-on-mouseover
-        -->
     </Style>
 
-    <!--
-	dirkster99: Removing this ContextMenu style:
-	1) As it does not appear to add any additional value?
-	2) As it overwrites other ContextMenu styles (eg using MLib in Edi or Aehnlich)
-	<Style BasedOn="{StaticResource {x:Type ContextMenu}}" TargetType="{x:Type ContextMenu}">
-		<Setter Property="TextOptions.TextFormattingMode" Value="Display" />
-		<Setter Property="Background" Value="{DynamicResource {x:Static reskeys:ResourceKeys.Background}}" />
-		<Setter Property="Foreground" Value="{DynamicResource {x:Static reskeys:ResourceKeys.NavigatorWindowForeground}}" />
-		<Setter Property="BorderBrush" Value="{DynamicResource {x:Static reskeys:ResourceKeys.PanelBorderBrush}}" />
-		<Setter Property="BorderThickness" Value="1" />
-		<Setter Property="VerticalContentAlignment" Value="Center" />
-		<Setter Property="Padding" Value="0,6,0,6" />
-		<Setter Property="Grid.IsSharedSizeScope" Value="true" />
-		<Setter Property="ScrollViewer.PanningMode" Value="Both" />
-		<Setter Property="Stylus.IsFlicksEnabled" Value="False" />
-		<Setter Property="Focusable" Value="False" />
-		<Setter Property="Template">
-			<Setter.Value>
-				<ControlTemplate TargetType="{x:Type ContextMenu}">
-					<Grid Margin="4">
-						<Border
-							x:Name="ContextMenuBorder"
-							Margin="0"
-							Background="{TemplateBinding Background}"
-							BorderBrush="{TemplateBinding BorderBrush}"
-							BorderThickness="1">
-							<ScrollViewer Name="ContextMenuScrollViewer" ScrollViewer.VerticalScrollBarVisibility="Auto">
-								<Grid RenderOptions.ClearTypeHint="Enabled">
-									<Canvas
-										Width="0"
-										Height="0"
-										HorizontalAlignment="Left"
-										VerticalAlignment="Top">
-										<Rectangle
-											Name="OpaqueRect"
-											Width="{Binding ElementName=ContextMenuBorder, Path=ActualWidth}"
-											Height="{Binding ElementName=ContextMenuBorder, Path=ActualHeight}"
-											Fill="{Binding ElementName=ContextMenuBorder, Path=Background}" />
-									</Canvas>
-									<ItemsPresenter
-										Name="ItemsPresenter"
-										KeyboardNavigation.DirectionalNavigation="Contained"
-										SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" />
-								</Grid>
-							</ScrollViewer>
-						</Border>
-					</Grid>
-				</ControlTemplate>
-			</Setter.Value>
-		</Setter>
-	</Style>
-	-->
-
     <Style BasedOn="{StaticResource {x:Type ContextMenu}}" TargetType="{x:Type avalonDockControls:ContextMenuEx}" />
+
     <Style x:Key="AvalonDockThemeVs2013ToolButtonStyle" TargetType="ToggleButton">
         <Setter Property="Background" Value="Transparent" />
         <Setter Property="BorderThickness" Value="1" />
