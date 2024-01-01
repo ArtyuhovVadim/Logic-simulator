@@ -52,7 +52,7 @@
             <selectors:PanesStyleSelector>
                 <selectors:PanesStyleSelector.DocumentViewStyle>
                     <Style TargetType="{x:Type LayoutDocumentItem}">
-
+                        <Setter Property="IconSource" Value="{Binding Path=Model.IconSource, Converter={converters:UriToImageSourceConverter}}" />
                         <Setter Property="Title" Value="{Binding Path=Model.Title}" />
                         <Setter Property="IsActive" Value="{Binding Path=Model.IsActive, Mode=TwoWay}" />
                         <Setter Property="IsSelected" Value="{Binding Path=Model.IsSelected, Mode=TwoWay}" />
@@ -62,6 +62,7 @@
                 </selectors:PanesStyleSelector.DocumentViewStyle>
                 <selectors:PanesStyleSelector.ToolViewStyle>
                     <Style TargetType="{x:Type LayoutAnchorableItem}">
+                        <Setter Property="IconSource" Value="{Binding Path=Model.IconSource, Converter={converters:UriToImageSourceConverter}}" />
                         <Setter Property="Title" Value="{Binding Path=Model.Title}" />
                         <Setter Property="IsActive" Value="{Binding Path=Model.IsActive, Mode=TwoWay}" />
                         <Setter Property="IsSelected" Value="{Binding Path=Model.IsSelected, Mode=TwoWay}" />

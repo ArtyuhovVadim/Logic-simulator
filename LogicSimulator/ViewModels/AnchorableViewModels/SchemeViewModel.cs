@@ -1,4 +1,5 @@
-﻿using LogicSimulator.Infrastructure.Services.Interfaces;
+﻿using System.Windows.Media;
+using LogicSimulator.Infrastructure.Services.Interfaces;
 using LogicSimulator.Models;
 using LogicSimulator.ViewModels.AnchorableViewModels.Base;
 using LogicSimulator.ViewModels.ObjectViewModels.Base;
@@ -37,6 +38,8 @@ public class SchemeViewModel : DocumentViewModel
         _statusViewModel = new SchemeStatusViewModel(this);
 
         _objects.CollectionChanged += (_, _) => _statusViewModel.RaisedPropertyChanged(nameof(SchemeStatusViewModel.ObjectsCount));
+
+        IconSource = new Uri("pack://application:,,,/Resources/Icons/scheme-icon16x16.png");
     }
 
     #region Title
