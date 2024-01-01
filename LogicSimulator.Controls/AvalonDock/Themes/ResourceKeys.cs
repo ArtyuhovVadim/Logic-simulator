@@ -65,6 +65,7 @@ namespace LogicSimulator.Controls.AvalonDock.Themes
 		public static readonly ComponentResourceKey DocumentWellTabUnselectedHoveredText = new ComponentResourceKey(typeof(ResourceKeys), "DocumentWellTabUnselectedHoveredText");
 
 		// Document Well : Tab : Button
+		public static readonly ComponentResourceKey DocumentCloseButtonHoveredGlyph = new ComponentResourceKey(typeof(ResourceKeys), "DocumentCloseButtonHoveredGlyph");
 		public static readonly ComponentResourceKey DocumentWellTabButtonSelectedActiveGlyph = new ComponentResourceKey(typeof(ResourceKeys), "DocumentWellTabButtonSelectedActiveGlyph");
 
 		// AccentColor
@@ -145,6 +146,7 @@ namespace LogicSimulator.Controls.AvalonDock.Themes
 		// Floating Document Window
 		public static readonly ComponentResourceKey FloatingDocumentWindowBackground = new ComponentResourceKey(typeof(ResourceKeys), "FloatingDocumentWindowBackground");
 		public static readonly ComponentResourceKey FloatingDocumentWindowBorder = new ComponentResourceKey(typeof(ResourceKeys), "FloatingDocumentWindowBorder");
+		public static readonly ComponentResourceKey FloatingDocumentActiveWindowBorder = new ComponentResourceKey(typeof(ResourceKeys), "FloatingDocumentActiveWindowBorder");
 
 		// Floating Tool Window
 		public static readonly ComponentResourceKey FloatingToolWindowBackground = new ComponentResourceKey(typeof(ResourceKeys), "FloatingToolWindowBackground");
