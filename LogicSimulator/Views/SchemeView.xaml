@@ -26,6 +26,7 @@
     <Grid>
         <scene:Scene2D
             x:Name="Scene2D"
+            FocusVisualStyle="{x:Null}"
             Scale="{Binding Path=Scale,
                             Mode=TwoWay}"
             Translation="{Binding Path=Translation,
