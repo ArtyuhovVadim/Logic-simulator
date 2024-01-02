@@ -63,7 +63,7 @@
                 </StackPanelEx.Resources>
                 <TextBlock Text="{Binding Path=DockingViewModel.ActiveDocumentViewModel.Title, StringFormat='Активный документ: {0}', FallbackValue='Нет активных файлов'}" />
                 <Separator Visibility="{Binding Path=CurrentStatusViewModel, Converter={conv:NullToVisibilityConverter}}" />
-                <ContentControl Content="{Binding Path=CurrentStatusViewModel, TargetNullValue=''}">
+                <ContentControl Content="{Binding Path=CurrentStatusViewModel, TargetNullValue=''}" Focusable="False">
                     <ContentControl.Resources>
                         <DataTemplate DataType="{x:Type svm:SchemeStatusViewModel}">
                             <views:SchemeStatusBarView />

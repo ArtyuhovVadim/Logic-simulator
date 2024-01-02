@@ -1,0 +1,217 @@
+<ResourceDictionary
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:o="http://schemas.microsoft.com/winfx/2006/xaml/presentation/options"
+    xmlns:r="clr-namespace:LogicSimulator.Controls.AvalonDock.Themes">
+
+    <!--#region Generic brushes-->
+
+    <SolidColorBrush
+        x:Key="{x:Static r:ResourceKeys.Background}"
+        o:Freeze="true"
+        Color="#353535" />
+    <SolidColorBrush
+        x:Key="{x:Static r:ResourceKeys.PanelBorderBrush}"
+        o:Freeze="true"
+        Color="#222222" />
+    <SolidColorBrush
+        x:Key="{x:Static r:ResourceKeys.TabBackground}"
+        o:Freeze="true"
+        Color="#404040" />
+    <SolidColorBrush
+        x:Key="{x:Static r:ResourceKeys.MenuItemIconBrush}"
+        o:Freeze="true"
+        Color="White" />
+
+    <!--#endregion-->
+
+    <!--#region ToolButton-->
+
+    <SolidColorBrush
+        x:Key="{x:Static r:ResourceKeys.ToolButtonBackground}"
+        o:Freeze="true"
+        Color="Transparent" />
+    <SolidColorBrush
+        x:Key="{x:Static r:ResourceKeys.ToolButtonForeground}"
+        o:Freeze="true"
+        Color="White" />
+    <SolidColorBrush
+        x:Key="{x:Static r:ResourceKeys.ToolButtonHoveredBackground}"
+        o:Freeze="true"
+        Color="#5C5C5C" />
+    <SolidColorBrush
+        x:Key="{x:Static r:ResourceKeys.ToolButtonHoveredForeground}"
+        o:Freeze="true"
+        Color="#BBDEFD" />
+    <SolidColorBrush
+        x:Key="{x:Static r:ResourceKeys.ToolButtonCheckedBackground}"
+        o:Freeze="true"
+        Color="#5C5C5C" />
+    <SolidColorBrush
+        x:Key="{x:Static r:ResourceKeys.ToolButtonCheckedForeground}"
+        o:Freeze="true"
+        Color="#BBDEFD" />
+    <SolidColorBrush
+        x:Key="{x:Static r:ResourceKeys.ToolButtonPressedBackground}"
+        o:Freeze="true"
+        Color="#5C5C5C" />
+    <SolidColorBrush
+        x:Key="{x:Static r:ResourceKeys.ToolButtonPressedForeground}"
+        o:Freeze="true"
+        Color="#BBDEFD" />
+
+    <!--#endregion-->
+
+    <!--#region Button-->
+
+    <SolidColorBrush
+        x:Key="{x:Static r:ResourceKeys.ButtonBackground}"
+        o:Freeze="true"
+        Color="Transparent" />
+    <SolidColorBrush
+        x:Key="{x:Static r:ResourceKeys.ButtonForeground}"
+        o:Freeze="true"
+        Color="White" />
+    <SolidColorBrush
+        x:Key="{x:Static r:ResourceKeys.ButtonHoveredBackground}"
+        o:Freeze="true"
+        Color="#5C5C5C" />
+    <SolidColorBrush
+        x:Key="{x:Static r:ResourceKeys.ButtonHoveredForeground}"
+        o:Freeze="true"
+        Color="#BBDEFD" />
+    <SolidColorBrush
+        x:Key="{x:Static r:ResourceKeys.ButtonPressedBackground}"
+        o:Freeze="true"
+        Color="#5C5C5C" />
+    <SolidColorBrush
+        x:Key="{x:Static r:ResourceKeys.ButtonPressedForeground}"
+        o:Freeze="true"
+        Color="#BBDEFD" />
+
+    <!--#endregion-->
+
+    <!--#region AutoHideTab-->
+
+    <SolidColorBrush
+        x:Key="{x:Static r:ResourceKeys.AutoHideTabDefaultBackground}"
+        o:Freeze="true"
+        Color="#545454" />
+    <SolidColorBrush
+        x:Key="{x:Static r:ResourceKeys.AutoHideTabHoveredBackground}"
+        o:Freeze="true"
+        Color="#5C5C5C" />
+    <SolidColorBrush
+        x:Key="{x:Static r:ResourceKeys.AutoHideTabDefaultBorder}"
+        o:Freeze="true"
+        Color="#222222" />
+
+    <!--#endregion-->
+
+    <!--#region Document-->
+
+    <SolidColorBrush
+        x:Key="{x:Static r:ResourceKeys.DocumentTabSelectedBackground}"
+        o:Freeze="true"
+        Color="#5C5C5C" />
+    <SolidColorBrush
+        x:Key="{x:Static r:ResourceKeys.DocumentTabUnselectedBackground}"
+        o:Freeze="true"
+        Color="Transparent" />
+    <SolidColorBrush
+        x:Key="{x:Static r:ResourceKeys.DocumentTabUnselectedHoveredBackground}"
+        o:Freeze="true"
+        Color="#4E4E4E" />
+
+    <!--#endregion-->
+
+    <!--#region ToolWindow-->
+
+    <SolidColorBrush
+        x:Key="{x:Static r:ResourceKeys.ToolWindowCaptionActiveBackground}"
+        o:Freeze="true"
+        Color="#6283A2" />
+    <SolidColorBrush
+        x:Key="{x:Static r:ResourceKeys.ToolWindowCaptionInactiveBackground}"
+        o:Freeze="true"
+        Color="#4E4E4E" />
+    <SolidColorBrush
+        x:Key="{x:Static r:ResourceKeys.ToolWindowTabSelectedBackground}"
+        o:Freeze="true"
+        Color="#404040" />
+    <SolidColorBrush
+        x:Key="{x:Static r:ResourceKeys.ToolWindowTabUnselectedBackground}"
+        o:Freeze="true"
+        Color="#353535" />
+    <SolidColorBrush
+        x:Key="{x:Static r:ResourceKeys.ToolWindowTabUnselectedHoveredBackground}"
+        o:Freeze="true"
+        Color="#4E4E4E" />
+
+    <!--#endregion-->
+
+    <!--#region FloatingDocument-->
+
+    <SolidColorBrush
+        x:Key="{x:Static r:ResourceKeys.FloatingDocumentWindowBackground}"
+        o:Freeze="true"
+        Color="#353535" />
+    <SolidColorBrush
+        x:Key="{x:Static r:ResourceKeys.FloatingDocumentWindowBorder}"
+        o:Freeze="true"
+        Color="#474747" />
+    <SolidColorBrush
+        x:Key="{x:Static r:ResourceKeys.FloatingDocumentActiveWindowBorder}"
+        o:Freeze="true"
+        Color="#4E4E4E" />
+
+    <!--#endregion-->
+
+    <!--#region FloatingTool-->
+
+    <SolidColorBrush
+        x:Key="{x:Static r:ResourceKeys.FloatingToolWindowBackground}"
+        o:Freeze="true"
+        Color="#404040" />
+    <SolidColorBrush
+        x:Key="{x:Static r:ResourceKeys.FloatingToolWindowBorder}"
+        o:Freeze="true"
+        Color="#222222" />
+
+    <!--#endregion-->
+
+    <!--#region DockingButtons-->
+
+    <SolidColorBrush
+        x:Key="{x:Static r:ResourceKeys.DockingButtonForegroundBrushKey}"
+        o:Freeze="true"
+        Color="#A2D2FD" />
+    <SolidColorBrush
+        x:Key="{x:Static r:ResourceKeys.DockingButtonForegroundArrowBrushKey}"
+        o:Freeze="true"
+        Color="White" />
+    <SolidColorBrush
+        x:Key="{x:Static r:ResourceKeys.DockingButtonStarBorderBrushKey}"
+        o:Freeze="true"
+        Color="#40808080" />
+    <SolidColorBrush
+        x:Key="{x:Static r:ResourceKeys.DockingButtonStarBackgroundBrushKey}"
+        o:Freeze="true"
+        Color="#4C181818" />
+
+    <!--#endregion-->
+
+    <!--#region PreviewBox-->
+
+    <SolidColorBrush
+        x:Key="{x:Static r:ResourceKeys.PreviewBoxBorderBrushKey}"
+        o:Freeze="true"
+        Color="#6283A2" />
+    <SolidColorBrush
+        x:Key="{x:Static r:ResourceKeys.PreviewBoxBackgroundBrushKey}"
+        o:Freeze="true"
+        Opacity="0.5"
+        Color="#A2D2FD" />
+
+    <!--#endregion-->
+</ResourceDictionary>
