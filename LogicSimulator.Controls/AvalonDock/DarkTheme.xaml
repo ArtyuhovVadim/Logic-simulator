@@ -1,6 +1,0 @@
-﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation">
-    <ResourceDictionary.MergedDictionaries>
-        <ResourceDictionary Source="DarkBrushs.xaml" />
-        <ResourceDictionary Source="Themes/Generic.xaml" />
-    </ResourceDictionary.MergedDictionaries>
-</ResourceDictionary>
