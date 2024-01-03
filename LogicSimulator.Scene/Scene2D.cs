@@ -297,6 +297,7 @@ public class Scene2D : FrameworkElement, IDisposable
 
         _renderer = new SceneRenderer(OnRender, handle);
         _renderer.Resize(RenderSize, Dpi, renderAfterResize: false);
+        _renderer.IsFrontBufferAvailableChanged += OnIsFrontBufferAvailableChanged;
 
         foreach (var layer in Layers)
         {
