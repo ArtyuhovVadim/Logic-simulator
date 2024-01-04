@@ -10,30 +10,27 @@
     d:DesignHeight="480"
     d:DesignWidth="360"
     mc:Ignorable="d">
-    <DockPanel>
-        <TreeView
-            Padding="0"
-            Background="Transparent"
-            BorderThickness="0"
-            ItemsSource="{Binding Path=ProjectViewModels}">
-            <TreeView.ItemTemplate>
-                <HierarchicalDataTemplate DataType="{x:Type vm:ProjectViewModel}" ItemsSource="{Binding Path=Schemes}">
-                    <TextBlock Text="{Binding Path=Name}" />
-                    <HierarchicalDataTemplate.ItemTemplate>
-                        <HierarchicalDataTemplate DataType="{x:Type avm:SchemeViewModel}">
-                            <TextBlock Text="{Binding Path=Title}">
-                                <TextBlock.InputBindings>
-                                    <MouseBinding
-                                        Command="{Binding Path=DataContext.OpenSchemeCommand,
-                                                          RelativeSource={RelativeSource AncestorType=UserControl}}"
-                                        CommandParameter="{Binding}"
-                                        MouseAction="LeftDoubleClick" />
-                                </TextBlock.InputBindings>
-                            </TextBlock>
-                        </HierarchicalDataTemplate>
-                    </HierarchicalDataTemplate.ItemTemplate>
-                </HierarchicalDataTemplate>
-            </TreeView.ItemTemplate>
-        </TreeView>
-    </DockPanel>
+    <TreeView
+        Margin="6"
+        HorizontalContentAlignment="Stretch"
+        ItemsSource="{Binding Path=ProjectViewModels}">
+        <TreeView.ItemTemplate>
+            <HierarchicalDataTemplate DataType="{x:Type vm:ProjectViewModel}" ItemsSource="{Binding Path=Schemes}">
+                <TextBlock Text="{Binding Path=Name}" />
+                <HierarchicalDataTemplate.ItemTemplate>
+                    <HierarchicalDataTemplate DataType="{x:Type avm:SchemeViewModel}">
+                        <TextBlock Text="{Binding Path=Title}">
+                            <TextBlock.InputBindings>
+                                <MouseBinding
+                                    Command="{Binding Path=DataContext.OpenSchemeCommand,
+                                                      RelativeSource={RelativeSource AncestorType=UserControl}}"
+                                    CommandParameter="{Binding}"
+                                    MouseAction="LeftDoubleClick" />
+                            </TextBlock.InputBindings>
+                        </TextBlock>
+                    </HierarchicalDataTemplate>
+                </HierarchicalDataTemplate.ItemTemplate>
+            </HierarchicalDataTemplate>
+        </TreeView.ItemTemplate>
+    </TreeView>
 </UserControl>
