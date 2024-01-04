@@ -5,6 +5,7 @@
     xmlns:avm="clr-namespace:LogicSimulator.ViewModels.AnchorableViewModels"
     xmlns:b="clr-namespace:WpfExtensions.Behaviors;assembly=WpfExtensions"
     xmlns:br="clr-namespace:WpfExtensions.Controls.Resources.Brushes;assembly=WpfExtensions.Controls"
+    xmlns:bruh="clr-namespace:LogicSimulator.Resources.Brushes"
     xmlns:cont="clr-namespace:LogicSimulator.Controls;assembly=LogicSimulator.Controls"
     xmlns:converters="clr-namespace:LogicSimulator.Infrastructure.Converters"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
@@ -29,7 +30,7 @@
                         Height="11"
                         Margin="5"
                         HorizontalAlignment="Left"
-                        Fill="#F4E48C"
+                        Fill="{DynamicResource {x:Static bruh:BrushesKeys+PropertiesView.UndefinedValueBrush}}"
                         IsHitTestVisible="False"
                         RadiusX="3"
                         RadiusY="3" />
@@ -66,7 +67,7 @@
                             Width="11"
                             Height="11"
                             HorizontalAlignment="Left"
-                            Fill="#F4E48C"
+                            Fill="{DynamicResource {x:Static bruh:BrushesKeys+PropertiesView.UndefinedValueBrush}}"
                             RadiusX="3"
                             RadiusY="3" />
                     </Border>
@@ -102,11 +103,11 @@
                         UseLayoutRounding="True">
                         <Path
                             Data="M 0 0 L 1 0 L 0 1 Z"
-                            Fill="#F4E48C"
+                            Fill="{DynamicResource {x:Static bruh:BrushesKeys+PropertiesView.UndefinedValueBrush}}"
                             Stretch="UniformToFill" />
                         <Path
                             Data="M 1 0 L 1 1 L 0 1 Z"
-                            Fill="#999999"
+                            Fill="{DynamicResource {x:Static bruh:BrushesKeys+PropertiesView.ColorPickerSecondUndefinedValueBrush}}"
                             Stretch="UniformToFill" />
                     </Grid>
                 </AdornedControl.AdornerContent>
@@ -133,7 +134,7 @@
                         Height="6"
                         HorizontalAlignment="Center"
                         VerticalAlignment="Center"
-                        Fill="#F4E48C"
+                        Fill="{DynamicResource {x:Static bruh:BrushesKeys+PropertiesView.UndefinedValueBrush}}"
                         IsHitTestVisible="False"
                         RadiusX="2"
                         RadiusY="2"
@@ -164,7 +165,7 @@
                             Width="11"
                             Height="11"
                             HorizontalAlignment="Left"
-                            Fill="#F4E48C"
+                            Fill="{DynamicResource {x:Static bruh:BrushesKeys+PropertiesView.UndefinedValueBrush}}"
                             RadiusX="3"
                             RadiusY="3" />
                     </Border>
@@ -202,7 +203,7 @@
                         Margin="5"
                         HorizontalAlignment="Left"
                         VerticalAlignment="Top"
-                        Fill="#F4E48C"
+                        Fill="{DynamicResource {x:Static bruh:BrushesKeys+PropertiesView.UndefinedValueBrush}}"
                         IsHitTestVisible="False"
                         RadiusX="3"
                         RadiusY="3" />
@@ -284,7 +285,7 @@
                                 <Path
                                     Height="13"
                                     Data="{StaticResource PlusIcon}"
-                                    Fill="#FDFDFD"
+                                    Fill="{DynamicResource {x:Static bruh:BrushesKeys+PropertiesView.AddVertexIconBrush}}"
                                     Stretch="Uniform" />
                             </Button.Content>
                         </Button>
@@ -293,7 +294,7 @@
                                 <Path
                                     Height="13"
                                     Data="{StaticResource TrashIcon}"
-                                    Fill="#FDFDFD"
+                                    Fill="{DynamicResource {x:Static bruh:BrushesKeys+PropertiesView.RemoveVertexIconBrush}}"
                                     Stretch="Uniform" />
                             </Button.Content>
                         </Button>
@@ -329,7 +330,7 @@
                             Height="11"
                             Margin="5"
                             HorizontalAlignment="Left"
-                            Fill="#F4E48C"
+                            Fill="{DynamicResource {x:Static bruh:BrushesKeys+PropertiesView.UndefinedValueBrush}}"
                             IsHitTestVisible="False"
                             RadiusX="3"
                             RadiusY="3" />
@@ -349,7 +350,7 @@
                             Height="11"
                             Margin="5"
                             HorizontalAlignment="Left"
-                            Fill="#F4E48C"
+                            Fill="{DynamicResource {x:Static bruh:BrushesKeys+PropertiesView.UndefinedValueBrush}}"
                             IsHitTestVisible="False"
                             RadiusX="3"
                             RadiusY="3" />
@@ -416,7 +417,7 @@
                 <Style BasedOn="{StaticResource {x:Type ToggleButton}}" TargetType="{x:Type ToggleButton}">
                     <Style.Triggers>
                         <DataTrigger Binding="{Binding Path=Tag, RelativeSource={RelativeSource Self}}" Value="True">
-                            <Setter Property="Foreground" Value="#F4E48C" />
+                            <Setter Property="Foreground" Value="{DynamicResource {x:Static bruh:BrushesKeys+PropertiesView.UndefinedValueBrush}}" />
                             <Setter Property="ToolTip" Value="Значение не определено." />
                         </DataTrigger>
                     </Style.Triggers>

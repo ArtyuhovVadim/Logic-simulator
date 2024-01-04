@@ -5,6 +5,7 @@
     xmlns:anchorableViewModels="clr-namespace:LogicSimulator.ViewModels.AnchorableViewModels"
     xmlns:b="http://schemas.microsoft.com/xaml/behaviors"
     xmlns:behaviors="clr-namespace:LogicSimulator.Infrastructure.Behaviors"
+    xmlns:brushes="clr-namespace:LogicSimulator.Resources.Brushes"
     xmlns:converters="clr-namespace:LogicSimulator.Infrastructure.Converters"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:layers="clr-namespace:LogicSimulator.Scene.Layers;assembly=LogicSimulator.Scene"
@@ -65,7 +66,7 @@
                 <behaviors:SceneToolEventProviderBehaviour />
             </b:Interaction.Behaviors>
 
-            <layers:GradientClearLayer EndColor="#E2E2E2" StartColor="#C1C1C1">
+            <layers:GradientClearLayer EndColor="{DynamicResource {x:Static brushes:BrushesKeys+SchemeView.EndBackgroundColor}}" StartColor="{DynamicResource {x:Static brushes:BrushesKeys+SchemeView.StartBackgroundColor}}">
                 <layers:GradientClearLayer.Renderer>
                     <renderers:GradientClearRenderer />
                 </layers:GradientClearLayer.Renderer>
@@ -73,10 +74,10 @@
             <layers:GridLayer
                 Width="{Binding Path=GridWidth}"
                 Height="{Binding Path=GridHeight}"
-                Background="#FFFCF8"
-                BoldLineColor="#DCDCD7"
+                Background="{DynamicResource {x:Static brushes:BrushesKeys+SchemeView.GridBackgroundColor}}"
+                BoldLineColor="{DynamicResource {x:Static brushes:BrushesKeys+SchemeView.GridBoldLineColor}}"
                 CellSize="{Binding Path=GridStep}"
-                LineColor="#F0F0EB">
+                LineColor="{DynamicResource {x:Static brushes:BrushesKeys+SchemeView.GridLineColor}}">
                 <layers:GridLayer.Renderer>
                     <renderers:GridLayerRenderer />
                 </layers:GridLayer.Renderer>
@@ -212,8 +213,8 @@
                 </layers:ObjectsSelectionLayer.Renderer>
             </layers:ObjectsSelectionLayer>
             <layers:NodesLayer
-                FillColor="#00FF00"
-                StrokeColor="#000000"
+                FillColor="{DynamicResource {x:Static brushes:BrushesKeys+SchemeView.NodeFillColor}}"
+                StrokeColor="{DynamicResource {x:Static brushes:BrushesKeys+SchemeView.NodeStrokeColor}}"
                 Views="{Binding ElementName=ObjectsLayer,
                                 Path=Views}">
                 <layers:NodesLayer.Renderer>
@@ -226,8 +227,8 @@
                                       Path=EndPosition}"
                 IsVisible="{Binding ElementName=RectangleSelectionTool,
                                     Path=IsSelectionStarted}"
-                NormalColor="#7DADFF"
-                SecantColor="#63C763"
+                NormalColor="{DynamicResource {x:Static brushes:BrushesKeys+SchemeView.RectangleSelectionNormalColor}}"
+                SecantColor="{DynamicResource {x:Static brushes:BrushesKeys+SchemeView.RectangleSelectionSecantColor}}"
                 StartPosition="{Binding ElementName=RectangleSelectionTool,
                                         Path=StartPosition}">
                 <layers:RectangleSelectionLayer.Renderer>
@@ -241,7 +242,7 @@
             Margin="5"
             HorizontalAlignment="Center"
             VerticalAlignment="Top"
-            Background="#404040"
+            Background="{DynamicResource {x:Static brushes:BrushesKeys+SchemeView.ToolsPanelBackground}}"
             CornerRadius="5"
             RenderOptions.EdgeMode="Unspecified"
             SnapsToDevicePixels="True"
@@ -250,27 +251,27 @@
                 <views:SchemeToolView DataContext="{Binding Path=SelectionTool}">
                     <Path
                         Data="{StaticResource SelectionToolIcon}"
-                        Fill="White"
+                        Fill="{DynamicResource {x:Static brushes:BrushesKeys+SchemeView.ToolIconBrush}}"
                         Stretch="Uniform" />
                 </views:SchemeToolView>
                 <views:SchemeToolView DataContext="{Binding Path=DragTool}">
                     <Path
                         Margin="-1"
                         Data="{StaticResource DragToolIcon}"
-                        Fill="White"
+                        Fill="{DynamicResource {x:Static brushes:BrushesKeys+SchemeView.ToolIconBrush}}"
                         Stretch="Uniform" />
                 </views:SchemeToolView>
                 <views:SchemeToolView DataContext="{Binding Path=RectangleSelectionTool}">
                     <Path
                         Data="{StaticResource RectangleSelectionToolIcon}"
-                        Fill="White"
+                        Fill="{DynamicResource {x:Static brushes:BrushesKeys+SchemeView.ToolIconBrush}}"
                         Stretch="Uniform" />
                 </views:SchemeToolView>
                 <views:SchemeToolView DataContext="{Binding Path=NodeDragTool}">
                     <Path
                         Margin="-1"
                         Data="{StaticResource NodeDragToolIcon}"
-                        Fill="White"
+                        Fill="{DynamicResource {x:Static brushes:BrushesKeys+SchemeView.ToolIconBrush}}"
                         Stretch="Uniform" />
                 </views:SchemeToolView>
             </StackPanel>

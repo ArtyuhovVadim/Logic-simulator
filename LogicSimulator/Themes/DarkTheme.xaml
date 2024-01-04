@@ -2,6 +2,7 @@
     <ResourceDictionary.MergedDictionaries>
         <ResourceDictionary Source="/WpfExtensions.Controls;component/Resources/Brushes/DarkBrushes.xaml" />
         <ResourceDictionary Source="/LogicSimulator.Controls;component/AvalonDock/DarkBrushes.xaml" />
+        <ResourceDictionary Source="/LogicSimulator;component/Resources/Brushes/DarkBrushes.xaml" />
         <ResourceDictionary Source="/LogicSimulator.Controls;component/Themes/Generic.xaml" />
     </ResourceDictionary.MergedDictionaries>
 </ResourceDictionary>
