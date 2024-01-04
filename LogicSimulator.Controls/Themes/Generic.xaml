@@ -1,6 +1,6 @@
 <ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation">
     <ResourceDictionary.MergedDictionaries>
         <ResourceDictionary Source="/WpfExtensions.Controls;component/Themes/Generic.xaml" />
-        <ResourceDictionary Source="../AvalonDock/Themes/Generic.xaml" />
+        <ResourceDictionary Source="/LogicSimulator.Controls;component/AvalonDock/Themes/Generic.xaml" />
     </ResourceDictionary.MergedDictionaries>
 </ResourceDictionary>

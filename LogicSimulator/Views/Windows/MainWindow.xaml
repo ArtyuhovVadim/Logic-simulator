@@ -36,9 +36,9 @@
             </Menu>
 
             <Button
-                Height="21"
-                Margin="2,0,2,0"
-                Padding="4"
+                Height="18"
+                Margin="2"
+                Padding="3"
                 HorizontalAlignment="Right"
                 VerticalAlignment="Center"
                 Background="Transparent"
