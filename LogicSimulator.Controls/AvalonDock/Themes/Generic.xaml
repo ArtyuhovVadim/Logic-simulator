@@ -11,6 +11,8 @@
     <ResourceDictionary.MergedDictionaries>
         <ResourceDictionary Source="../OverlayButtons.xaml" />
         <ResourceDictionary Source="Icons/IconGeometry.xaml" />
+        <ResourceDictionary Source="/WpfExtensions.Controls;component/Styles/ContextMenuStyle.xaml" />
+        <ResourceDictionary Source="/WpfExtensions.Controls;component/Styles/MenuItemStyle.xaml" />
     </ResourceDictionary.MergedDictionaries>
 
     <Style x:Key="DropDownControlArea" TargetType="adc:DropDownControlArea" />
@@ -244,7 +246,7 @@
                                 Focusable="False"
                                 Style="{StaticResource ToolButtonStyle}">
                                 <adc:DropDownButton.DropDownContextMenu>
-                                    <adc:ContextMenuEx ItemsSource="{Binding Model.ChildrenSorted, RelativeSource={RelativeSource TemplatedParent}}" />
+                                    <adc:ContextMenuEx ItemsSource="{Binding Model.ChildrenSorted, RelativeSource={RelativeSource TemplatedParent}}" Style="{StaticResource {x:Type ContextMenu}}" />
                                 </adc:DropDownButton.DropDownContextMenu>
                                 <Path
                                     Height="8"
