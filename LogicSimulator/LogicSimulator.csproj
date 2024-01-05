@@ -22,9 +22,6 @@
     </ItemGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\..\WpfExtensions\WpfExtencions.Controls\WpfExtensions.Controls.csproj" />
-        <ProjectReference Include="..\..\WpfExtensions\WpfExtensions.Mvvm\WpfExtensions.Mvvm.csproj" />
-        <ProjectReference Include="..\..\WpfExtensions\WpfExtensions\WpfExtensions.csproj" />
         <ProjectReference Include="..\LogicSimulator.Controls\LogicSimulator.Controls.csproj" />
         <ProjectReference Include="..\LogicSimulator.Scene\LogicSimulator.Scene.csproj" />
     </ItemGroup>
@@ -61,6 +58,7 @@
         <PackageReference Include="Microsoft.Extensions.Hosting" Version="8.0.0" />
         <PackageReference Include="Microsoft.Extensions.Hosting.Abstractions" Version="8.0.0" />
         <PackageReference Include="Microsoft.Xaml.Behaviors.Wpf" Version="1.1.77" />
+        <PackageReference Include="WpfExtensions.Controls.DotNet" Version="1.0.0" />
         <PackageReference Include="YamlDotNet" Version="13.7.1" />
     </ItemGroup>
 

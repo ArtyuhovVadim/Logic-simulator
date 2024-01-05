@@ -13,10 +13,10 @@
       <PackageReference Include="MathExpressionParser" Version="1.0.0" />
       <PackageReference Include="SharpDX" Version="4.2.0" />
       <PackageReference Include="SharpDX.Mathematics" Version="4.2.0" />
+      <PackageReference Include="WpfExtensions.Controls.DotNet" Version="1.0.0" />
     </ItemGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\..\WpfExtensions\WpfExtencions.Controls\WpfExtensions.Controls.csproj" />
         <ProjectReference Include="..\LogicSimulator.Utils\LogicSimulator.Utils.csproj" />
     </ItemGroup>
 
