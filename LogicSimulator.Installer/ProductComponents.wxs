@@ -1,0 +1,62 @@
+<Wix xmlns="http://wixtoolset.org/schemas/v4/wxs">
+	<Fragment>
+		<ComponentGroup Id="ProductComponents">
+			<ComponentRef Id="MainAppSchortcut" />
+			<ComponentRef Id="DesktopAppSchortcut" />
+		</ComponentGroup>
+
+		<DirectoryRef Id="INSTALLFOLDER">
+			<Component Id="DesktopAppSchortcut"
+			           Guid="{746B814E-BFF7-46F5-B40B-388CA22F13E4}">
+				<Shortcut
+					Id="DesktopAppSchortcut"
+					Name="!(loc.ProductNameWithoutPlatform)"
+					Target="[INSTALLFOLDER]LogicSimulator.exe"
+					Directory="DesktopDir"
+					WorkingDirectory="INSTALLFOLDER"
+					Icon="Icon" />
+
+				<RegistryValue
+					Id="RegDesktopShortcutKey"
+					Root="HKCU"
+					Key="SOFTWARE\!(loc.ProductNameWithoutPlatform)"
+					Name="DesktopShortcut"
+					Value="1"
+					Type="integer"
+					KeyPath="yes" />
+
+				<RemoveFolder
+					Id="RemoveDesktopShortcut"
+					Directory="DesktopDir"
+					On="uninstall"/>
+			</Component>
+
+			<Component Id="MainAppSchortcut"
+					   Guid="{EA61252F-92DA-4D48-837F-B6BE64225A63}">
+
+				<Shortcut
+					Id="MainAppSchortcut"
+					Name="!(loc.ProductNameWithoutPlatform)"
+					Target="[INSTALLFOLDER]LogicSimulator.exe"
+					Directory="InstallProgramMenuFolder"
+					WorkingDirectory="INSTALLFOLDER"
+					Icon="Icon" />
+
+				<RegistryValue
+					Id="RegShortcutKey"
+					Root="HKCU"
+					Key="SOFTWARE\!(loc.ProductNameWithoutPlatform)"
+					Name="Shortcut"
+					Value="1"
+					Type="integer"
+					KeyPath="yes" />
+
+				<RemoveFolder
+					Id="RemoveStartMenu"
+					Directory="InstallProgramMenuFolder"
+					On="uninstall"/>
+
+			</Component>
+		</DirectoryRef>
+	</Fragment>
+</Wix>

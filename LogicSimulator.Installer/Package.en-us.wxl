@@ -1,8 +1,20 @@
-﻿<!--
-This file contains the declaration of all the localizable strings.
--->
-<WixLocalization xmlns="http://wixtoolset.org/schemas/v4/wxl" Culture="en-US">
+﻿<WixLocalization xmlns="http://wixtoolset.org/schemas/v4/wxl" Culture="en-US">
 
-  <String Id="DowngradeError" Value="A newer version of [ProductName] is already installed." />
+	<?define ProductName="!(loc.ProductName_$(var.Platform))"?>
+
+	<String Id="ProductNameFolder" Value="Logic-simulator" />
+
+	<String Id="ProductNameWithoutPlatform" Value="Logic-simulator" />
+
+	<String Id="ProductName_x64" Value="Logic-simulator-x64" />
+	<String Id="ProductName_x86" Value="Logic-simulator-x86" />
+
+	<String Id="Manufacturer" Value="Artyuhov Vadim" />
+	<String Id="Description" Value="Logic-simulator" />
+	<String Id="Keywords" Value="LogicSimulator" />
+
+	<String Id="DowngradeError" Value="A newer version of $(var.ProductName) is already installed." />
+
+	<String Id="Language" Value="1033" />
 
 </WixLocalization>

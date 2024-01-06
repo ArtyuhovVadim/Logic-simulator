@@ -1,2 +1,29 @@
 ﻿<Project Sdk="WixToolset.Sdk/4.0.3">
+	<PropertyGroup>
+		<Platforms>x86;x64</Platforms>
+		<OutputName>LogicSimulator-$(Configuration)-$(Platform)</OutputName>
+		<PreBuildEvent>
+			echo Build for $(Configuration) configuration and $(Platform) platform
+			rd /s /q $(SolutionDir)Publish\$(Configuration)-$(Platform)
+			dotnet publish $(SolutionDir)LogicSimulator/LogicSimulator.csproj -o $(SolutionDir)Publish/$(Configuration)-$(Platform) -c $(Configuration) -r win-$(Platform)
+		</PreBuildEvent>
+	</PropertyGroup>
+	<ItemGroup>
+		<PackageReference Include="WixToolset.UI.wixext" Version="4.0.3" />
+		<PackageReference Include="WixToolset.Heat" Version="4.0.3" />
+		<PackageReference Include="WixToolset.Util.wixext" Version="4.0.3" />
+	</ItemGroup>
+	<ItemGroup>
+		<ProjectReference Include="..\LogicSimulator\LogicSimulator.csproj" />
+	</ItemGroup>
+	<ItemGroup>
+		<HarvestDirectory Include=" $(SolutionDir)Publish/$(Configuration)-$(Platform)">
+			<ComponentGroupName>GeneratedComponents</ComponentGroupName>
+			<DirectoryRefId>INSTALLFOLDER</DirectoryRefId>
+			<SuppressRootDirectory>true</SuppressRootDirectory>
+			<SuppressRegistry>true</SuppressRegistry>
+			<SuppressCom>true</SuppressCom>
+		</HarvestDirectory>
+		<BindPath Include=" $(SolutionDir)Publish/$(Configuration)-$(Platform)" />
+	</ItemGroup>
 </Project>
