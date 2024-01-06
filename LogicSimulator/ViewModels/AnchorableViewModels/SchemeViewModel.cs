@@ -1,112 +1,44 @@
 ﻿using LogicSimulator.Infrastructure.Services.Interfaces;
 using LogicSimulator.Models;
-using LogicSimulator.Scene;
-using LogicSimulator.Scene.Components;
-using LogicSimulator.Scene.Components.Base;
-using LogicSimulator.Scene.SceneObjects.Base;
-using LogicSimulator.Scene.Tools;
-using LogicSimulator.Scene.Tools.Base;
-using LogicSimulator.Scene.Tools.PlacingTools;
 using LogicSimulator.ViewModels.AnchorableViewModels.Base;
-using Microsoft.Extensions.DependencyInjection;
+using LogicSimulator.ViewModels.ObjectViewModels.Base;
+using LogicSimulator.ViewModels.StatusViewModels;
+using LogicSimulator.ViewModels.StatusViewModels.Base;
+using LogicSimulator.ViewModels.Tools;
+using LogicSimulator.ViewModels.Tools.Base;
 using SharpDX;
+using WpfExtensions.Mvvm.Commands;
 
 namespace LogicSimulator.ViewModels.AnchorableViewModels;
 
 public class SchemeViewModel : DocumentViewModel
 {
-    #region Tools
-
-    private readonly TransformTool _transformTool = new();
-
-    private readonly SelectionTool _selectionTool = new();
-    private readonly RectangleSelectionTool _rectangleSelectionTool = new();
-    private readonly DragTool _dragTool = new();
-    private readonly NodeDragTool _nodeDragTool = new();
-
-    private readonly RectanglePlacingTool _rectanglePlacingTool = new();
-    private readonly EllipsePlacingTool _ellipsePlacingTool = new();
-    private readonly TextBlockPlacingTool _textBlockPlacingTool = new();
-    private readonly WirePlacingTool _wirePlacingTool = new();
-
-    #endregion
-
-    #region Components
-
-    private readonly GradientClearRenderingComponent _gradientClearRenderingComponent = new()
-    {
-        StartColor = new Color4(0.755f, 0.755f, 0.755f, 1f),
-        EndColor = new Color4(0.887f, 0.887f, 0.887f, 1f)
-    };
-    private readonly GridRenderingComponent _gridRenderingComponent = new()
-    {
-        Width = 2970,
-        Height = 2100,
-        CellSize = 25,
-        Background = new Color4(1, 0.9882353f, 0.972549f, 1f),
-        LineColor = new Color4(0.9411765f, 0.9411765f, 0.9215686f, 1f),
-        BoldLineColor = new Color4(0.8627451f, 0.8627451f, 0.8431373f, 1f),
-    };
-    private readonly SceneObjectsRenderingComponent _sceneObjectsRenderingComponent = new();
-    private readonly SelectionRenderingComponent _selectionRenderingComponent = new();
-    private readonly SelectionRectangleRenderingComponent _selectionRectangleRenderingComponent = new();
-    private readonly NodeRenderingComponent _nodeRenderingComponent = new()
-    {
-        BackgroundColor = new Color4(0f, 1f, 0f, 1f)
-    };
-
-    #endregion
-
-    private readonly MainWindowViewModel _mainWindowViewModel;
-
+    private readonly DockingViewModel _dockingViewModel;
     private readonly Scheme _scheme;
+
+    private readonly SchemeStatusViewModel _statusViewModel;
 
     private readonly IEditorSelectionService _editorSelectionService;
 
-    public SchemeViewModel(Scheme scheme)
+    public SchemeViewModel(Scheme scheme, DockingViewModel dockingViewModel, IEditorSelectionService editorSelectionService)
     {
         _scheme = scheme;
+        _dockingViewModel = dockingViewModel;
+        _editorSelectionService = editorSelectionService;
+        Objects = _scheme.Objects;
 
-        Objects = new ObservableCollection<BaseSceneObject>(_scheme.Objects);
+        CurrentTool = SelectionTool;
 
-        _components = new ObservableCollection<BaseRenderingComponent>()
-        {
-            _gradientClearRenderingComponent,
-            _gridRenderingComponent,
-            _sceneObjectsRenderingComponent,
-            _selectionRenderingComponent,
-            _selectionRectangleRenderingComponent,
-            _nodeRenderingComponent
-        };
+        SelectionTool.ToolSelected += OnToolSelected;
+        DragTool.ToolSelected += OnToolSelected;
+        RectangleSelectionTool.ToolSelected += OnToolSelected;
+        NodeDragTool.ToolSelected += OnToolSelected;
 
-        var tools = new List<BaseTool>()
-        {
-            _selectionTool,
-            _rectangleSelectionTool,
-            _dragTool,
-            _nodeDragTool,
+        _statusViewModel = new SchemeStatusViewModel(this);
 
-            _rectanglePlacingTool,
-            _ellipsePlacingTool,
-            _textBlockPlacingTool,
-            _wirePlacingTool
-        };
+        _objects.CollectionChanged += (_, _) => _statusViewModel.RaisedPropertyChanged(nameof(SchemeStatusViewModel.ObjectsCount));
 
-        ToolsController = new ToolsController(_selectionTool)
-        {
-            Tools = tools,
-            AlwaysUpdatingTools = new[] { _transformTool }
-        };
-
-        ToolsController.SelectedObjectsChanged += OnSelectedObjectsChanged;
-
-        _editorSelectionService = App.Host.Services.GetRequiredService<IEditorSelectionService>();
-        _mainWindowViewModel = App.Host.Services.GetRequiredService<MainWindowViewModel>();
-    }
-
-    private void OnSelectedObjectsChanged()
-    {
-        _editorSelectionService.Select(this);
+        IconSource = new Uri("pack://application:,,,/Resources/Icons/scheme-icon16x16.png");
     }
 
     #region Title
@@ -123,6 +55,65 @@ public class SchemeViewModel : DocumentViewModel
 
     #endregion
 
+    #region Objects
+
+    private ObservableCollection<BaseObjectViewModel> _objects = [];
+
+    public IEnumerable<BaseObjectViewModel> Objects
+    {
+        get => _objects;
+        private set => Set(ref _objects, new ObservableCollection<BaseObjectViewModel>(value));
+    }
+
+    #endregion
+
+    #region CurrentTool
+
+    private BaseSchemeToolViewModel? _currentTool;
+
+    public BaseSchemeToolViewModel? CurrentTool
+    {
+        get => _currentTool;
+        set
+        {
+            var tmp = _currentTool;
+
+            if (!Set(ref _currentTool, value)) return;
+
+            if (tmp is not null)
+                tmp.IsActive = false;
+
+            if (_currentTool is not null)
+                _currentTool.IsActive = true;
+        }
+    }
+
+    #endregion
+
+    #region SelectionTool
+
+    public SchemeSelectionToolViewModel SelectionTool { get; } = new("Selection tool");
+
+    #endregion
+
+    #region DragTool
+
+    public SchemeDragToolViewModel DragTool { get; } = new("Drag tool");
+
+    #endregion
+
+    #region RectangleSelectionTool
+
+    public SchemeRectangleSelectionToolViewModel RectangleSelectionTool { get; } = new("Rectangle selection tool");
+
+    #endregion
+
+    #region NodeDragTool
+
+    public SchemeNodeDragToolViewModel NodeDragTool { get; } = new("Node drag tool");
+
+    #endregion
+
     #region Scale
 
     private float _scale = 1f;
@@ -130,7 +121,25 @@ public class SchemeViewModel : DocumentViewModel
     public float Scale
     {
         get => _scale;
-        set => Set(ref _scale, value);
+        set
+        {
+            if (Set(ref _scale, value))
+            {
+                _statusViewModel.RaisedPropertyChanged(nameof(SchemeStatusViewModel.Scale));
+            }
+        }
+    }
+
+    #endregion
+
+    #region Translation
+
+    private Vector2 _translation = Vector2.Zero;
+
+    public Vector2 Translation
+    {
+        get => _translation;
+        set => Set(ref _translation, value);
     }
 
     #endregion
@@ -142,48 +151,95 @@ public class SchemeViewModel : DocumentViewModel
     public Vector2 MousePosition
     {
         get => _mousePosition;
-        set => Set(ref _mousePosition, value);
+        set
+        {
+            if (Set(ref _mousePosition, value))
+            {
+                _statusViewModel.RaisedPropertyChanged(nameof(SchemeStatusViewModel.MousePosition));
+            }
+        }
     }
 
     #endregion
 
-    #region Objects
+    #region GridStep
 
-    private ObservableCollection<BaseSceneObject> _objects;
+    private float _gridStep = 25;
 
-    public ObservableCollection<BaseSceneObject> Objects
+    public float GridStep
     {
-        get => _objects;
-        private set => Set(ref _objects, value);
+        get => _gridStep;
+        set => Set(ref _gridStep, value);
     }
 
     #endregion
 
-    #region Components
+    #region GridWidth
 
-    private ObservableCollection<BaseRenderingComponent> _components;
-    public ObservableCollection<BaseRenderingComponent> Components
+    private float _gridWidth = 2970;
+
+    public float GridWidth
     {
-        get => _components;
-        set => Set(ref _components, value);
+        get => _gridWidth;
+        set => Set(ref _gridWidth, value);
     }
 
     #endregion
 
-    #region ToolsController
+    #region GridHeight
 
-    private ToolsController _toolsController;
+    private float _gridHeight = 2100;
 
-    public ToolsController ToolsController
+    public float GridHeight
     {
-        get => _toolsController;
-        set => Set(ref _toolsController, value);
+        get => _gridHeight;
+        set => Set(ref _gridHeight, value);
     }
 
     #endregion
 
-    protected override void Close(object p)
+    #region ObjectSelectedCommand
+
+    private ICommand? _objectSelectedCommand;
+
+    public ICommand ObjectSelectedCommand => _objectSelectedCommand ??= new LambdaCommand(_ =>
     {
-        _mainWindowViewModel.OpenedSchemes.Remove(this);
+        var selectedObjects = Objects.Where(x => x.IsSelected).ToArray();
+
+        _statusViewModel.RaisedPropertyChanged(nameof(SchemeStatusViewModel.SelectedObjectsCount));
+
+        if (selectedObjects.Length == 0)
+        {
+            _editorSelectionService.SetSchemeEditor(this);
+            return;
+        }
+
+        _editorSelectionService.SetObjectsEditor(selectedObjects);
+    });
+
+    #endregion
+
+    public override BaseStatusViewModel StatusViewModel => _statusViewModel;
+
+    protected override void OnDocumentActivated()
+    {
+        var selectedObjects = Objects.Where(x => x.IsSelected).ToArray();
+
+        if (selectedObjects.Length == 0)
+        {
+            _editorSelectionService.SetSchemeEditor(this);
+            return;
+        }
+
+        _editorSelectionService.SetObjectsEditor(selectedObjects);
     }
+
+    protected override void OnDocumentDeactivated()
+    {
+        _editorSelectionService.SetEmptyEditor();
+    }
+
+    protected override void OnClose(object? p) => _dockingViewModel.RemoveDocumentViewModel(this);
+
+    private void OnToolSelected(BaseSchemeToolViewModel tool) => CurrentTool = tool;
 }

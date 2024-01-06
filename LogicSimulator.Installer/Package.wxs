@@ -1,0 +1,52 @@
+﻿<Wix xmlns="http://wixtoolset.org/schemas/v4/wxs" xmlns:ui="http://wixtoolset.org/schemas/v4/wxs/ui">
+
+	<!-- Steps to publish new version-->
+	<!-- 1. Change ProductCode -->
+	<!-- 2. Change Version -->
+	
+	<!-- ProductCode changes for each new version -->
+	<?if $(var.Platform)=x64?>
+	<!-- ProductCode for x64 platform -->
+	<?define ProductCode="{F69309DB-DA2D-4500-B56A-8F869171E4B7}"?>
+	<?else?>
+	<!-- ProductCode for x86 platform -->
+	<?define ProductCode="{0F57FE76-9B6D-47ED-88CB-7D6E8F131A01}"?>
+	<?endif?>
+
+	<!-- UpgradeCode stay the same for each app versions -->
+	<?define UpgradeCode="{A8968570-401C-472C-BFC3-32F1A193F96A}"?>
+
+	<!-- App version -->
+	<?define Version="0.4.0"?>
+
+	<Package
+		Name="!(loc.ProductName_$(var.Platform))"
+		Language="!(loc.Language)"
+		Manufacturer="!(loc.Manufacturer)"
+		ProductCode="$(var.ProductCode)"
+		Version="$(var.Version)"
+		UpgradeCode="$(var.UpgradeCode)"
+		InstallerVersion="200"
+		Compressed="true"
+		Scope="perMachine">
+
+		<SummaryInformation Manufacturer="!(loc.Manufacturer)" Description="!(loc.Description)" Keywords="!(loc.Keywords)" />
+
+		<MajorUpgrade DowngradeErrorMessage="!(loc.DowngradeError)" />
+
+		<MediaTemplate EmbedCab="yes" />
+
+		<Icon Id="Icon" SourceFile="$(var.LogicSimulator.ProjectDir)Resources/Icons/icon512x512.ico" />
+		<Property Id="ARPPRODUCTICON" Value="Icon" />
+		<Property Id="ARPURLINFOABOUT" Value="https://github.com/ArtyuhovVadism/Logic-simulator" />
+
+		<WixVariable Id="WixUILicenseRtf" Value="$(var.ProjectDir)\License.rtf" />
+
+		<ui:WixUI Id="WixUI_Minimal" />
+
+		<Feature Id="Main">
+			<ComponentGroupRef Id="ProductComponents" />
+			<ComponentGroupRef Id="GeneratedComponents" />
+		</Feature>
+	</Package>
+</Wix>

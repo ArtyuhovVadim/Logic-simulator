@@ -3,300 +3,472 @@
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:avm="clr-namespace:LogicSimulator.ViewModels.AnchorableViewModels"
-    xmlns:base="clr-namespace:LogicSimulator.ViewModels.EditorViewModels.Base"
+    xmlns:b="clr-namespace:WpfExtensions.Behaviors;assembly=WpfExtensions"
+    xmlns:br="clr-namespace:WpfExtensions.Controls.Resources.Brushes;assembly=WpfExtensions.Controls"
+    xmlns:bruh="clr-namespace:LogicSimulator.Resources.Brushes"
     xmlns:cont="clr-namespace:LogicSimulator.Controls;assembly=LogicSimulator.Controls"
+    xmlns:converters="clr-namespace:LogicSimulator.Infrastructure.Converters"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-    xmlns:fa="http://schemas.fontawesome.io/icons/"
+    xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    xmlns:me="clr-namespace:LogicSimulator.Infrastructure.MarkupExtensions"
+    xmlns:me="clr-namespace:WpfExtensions.MarkupExtensions;assembly=WpfExtensions"
+    xmlns:properties="clr-namespace:LogicSimulator.ViewModels.EditorViewModels.Base.Properties"
     d:DataContext="{d:DesignInstance Type=avm:PropertiesViewModel}"
     d:DesignHeight="450"
     d:DesignWidth="800"
     mc:Ignorable="d">
 
     <UserControl.Resources>
-        <ResourceDictionary>
-            <ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary Source="/LogicSimulator.Controls;component/Styles/PropertiesEditorStyles.xaml" />
-            </ResourceDictionary.MergedDictionaries>
+        <DataTemplate DataType="{x:Type properties:FloatPropertyViewModel}">
+            <AdornedControl
+                x:Name="AdornedControl"
+                Margin="0,0,6,0"
+                IsAdornerVisible="{Binding Path=IsValueUndefined}">
+                <AdornedControl.AdornerContent>
+                    <Rectangle
+                        Width="11"
+                        Height="11"
+                        Margin="5"
+                        HorizontalAlignment="Left"
+                        Fill="{DynamicResource {x:Static bruh:BrushesKeys+PropertiesView.UndefinedValueBrush}}"
+                        IsHitTestVisible="False"
+                        RadiusX="3"
+                        RadiusY="3" />
+                </AdornedControl.AdornerContent>
+                <TextBoxEx
+                    x:Name="TextBoxEx"
+                    SelectAllTextOnFocus="True"
+                    Text="{Binding Path=Value,
+                                   StringFormat='0.###'}" />
+            </AdornedControl>
+            <DataTemplate.Triggers>
+                <Trigger SourceName="TextBoxEx" Property="IsFocused" Value="True">
+                    <Setter TargetName="AdornedControl" Property="IsAdornerVisible" Value="False" />
+                </Trigger>
+                <Trigger SourceName="AdornedControl" Property="IsAdornerVisible" Value="True">
+                    <Setter TargetName="TextBoxEx" Property="ToolTip" Value="Значение не определено." />
+                    <Setter TargetName="TextBoxEx" Property="Foreground" Value="Transparent" />
+                </Trigger>
+            </DataTemplate.Triggers>
+        </DataTemplate>
 
-            <DataTemplate DataType="{x:Type base:FloatPropertyViewModel}">
-                <cont:NumberBox IsValueUndefined="{Binding Path=IsValueUndefined}" Number="{Binding Path=Value}" />
-            </DataTemplate>
-
-            <DataTemplate DataType="{x:Type base:Vector2PropertyViewModel}">
-                <cont:Vector2Box
-                    IsVectorXUndefined="{Binding Path=IsXUndefined}"
-                    IsVectorYUndefined="{Binding Path=IsYUndefined}"
-                    Vector="{Binding Path=Value}" />
-            </DataTemplate>
-
-            <DataTemplate DataType="{x:Type base:Color4PropertyViewModel}">
-                <cont:ColorPicker IsValueUndefined="{Binding Path=IsValueUndefined}" Color="{Binding Path=Value}" />
-            </DataTemplate>
-
-            <DataTemplate DataType="{x:Type base:BoolPropertyViewModel}">
-                <cont:CheckBoxEx IsChecked="{Binding Path=Value}" IsValueUndefined="{Binding Path=IsValueUndefined}" />
-            </DataTemplate>
-
-            <DataTemplate DataType="{x:Type base:StringPropertyViewModel}">
-                <cont:StringBox IsValueUndefined="{Binding Path=IsValueUndefined}" String="{Binding Path=Value}" />
-            </DataTemplate>
-
-            <DataTemplate DataType="{x:Type base:RotationEnumPropertyViewModel}">
-                <cont:ComboBoxEx
-                    IsValueUndefined="{Binding Path=IsValueUndefined}"
-                    ItemsSource="{Binding Path=Rotations}"
-                    SelectedValue="{Binding Path=Value}" />
-            </DataTemplate>
-
-            <DataTemplate DataType="{x:Type base:FontNamePropertyViewModel}">
-                <cont:ComboBoxEx
-                    IsValueUndefined="{Binding Path=IsValueUndefined}"
-                    ItemsSource="{Binding Source={me:SystemFontFamilies}}"
-                    SelectedValue="{Binding Path=Value}" />
-            </DataTemplate>
-
-            <DataTemplate DataType="{x:Type base:FontPropertyViewModel}">
-                <cont:ClippingBorder
-                    Margin="4"
-                    Background="#222222"
-                    BorderBrush="#222222"
-                    BorderThickness="1"
-                    CornerRadius="5"
-                    SnapsToDevicePixels="True"
-                    UseLayoutRounding="True">
-                    <Grid>
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition />
-                            <ColumnDefinition />
-                            <ColumnDefinition />
-                            <ColumnDefinition />
-                        </Grid.ColumnDefinitions>
-                        <cont:CheckBoxEx
-                            Grid.Column="0"
-                            Margin="0,0,1,0"
-                            IsChecked="{Binding Path=Properties[IsBold].Value}"
-                            IsValueUndefined="{Binding Path=Properties[IsBold].IsValueUndefined}"
-                            Style="{StaticResource FontCheckBoxStyle}">
-                            <cont:CheckBoxEx.Content>
-                                <fa:ImageAwesome
-                                    Height="11"
-                                    Foreground="{Binding Path=Foreground,
-                                                         RelativeSource={RelativeSource AncestorType=cont:CheckBoxEx}}"
-                                    Icon="Bold" />
-                            </cont:CheckBoxEx.Content>
-                        </cont:CheckBoxEx>
-                        <cont:CheckBoxEx
-                            Grid.Column="1"
-                            Margin="0,0,1,0"
-                            IsChecked="{Binding Path=Properties[IsItalic].Value}"
-                            IsValueUndefined="{Binding Path=Properties[IsItalic].IsValueUndefined}"
-                            Style="{StaticResource FontCheckBoxStyle}">
-                            <cont:CheckBoxEx.Content>
-                                <fa:ImageAwesome
-                                    Height="11"
-                                    Foreground="{Binding Path=Foreground,
-                                                         RelativeSource={RelativeSource AncestorType=cont:CheckBoxEx}}"
-                                    Icon="Italic" />
-                            </cont:CheckBoxEx.Content>
-                        </cont:CheckBoxEx>
-                        <cont:CheckBoxEx
-                            Grid.Column="2"
-                            Margin="0,0,1,0"
-                            IsChecked="{Binding Path=Properties[IsUnderlined].Value}"
-                            IsValueUndefined="{Binding Path=Properties[IsUnderlined].IsValueUndefined}"
-                            Style="{StaticResource FontCheckBoxStyle}">
-                            <cont:CheckBoxEx.Content>
-                                <fa:ImageAwesome
-                                    Height="11"
-                                    Foreground="{Binding Path=Foreground,
-                                                         RelativeSource={RelativeSource AncestorType=cont:CheckBoxEx}}"
-                                    Icon="Underline" />
-                            </cont:CheckBoxEx.Content>
-                        </cont:CheckBoxEx>
-                        <cont:CheckBoxEx
-                            Grid.Column="3"
-                            IsChecked="{Binding Path=Properties[IsCross].Value}"
-                            IsValueUndefined="{Binding Path=Properties[IsCross].IsValueUndefined}"
-                            Style="{StaticResource FontCheckBoxStyle}">
-                            <cont:CheckBoxEx.Content>
-                                <fa:ImageAwesome
-                                    Height="11"
-                                    Foreground="{Binding Path=Foreground,
-                                                         RelativeSource={RelativeSource AncestorType=cont:CheckBoxEx}}"
-                                    Icon="Strikethrough" />
-                            </cont:CheckBoxEx.Content>
-                        </cont:CheckBoxEx>
-                    </Grid>
-                </cont:ClippingBorder>
-            </DataTemplate>
-
-            <DataTemplate DataType="{x:Type base:VerticesPropertyViewModel}">
-                <Grid>
-                    <Grid x:Name="VertexesGrid">
-                        <Grid.RowDefinitions>
-                            <RowDefinition Height="*" />
-                            <RowDefinition Height="Auto" />
-                        </Grid.RowDefinitions>
-
-                        <DataGrid
-                            MaxHeight="156"
-                            Margin="4"
-                            AutoGenerateColumns="False"
-                            Background="#484848"
-                            BorderBrush="#232323"
-                            BorderThickness="1"
-                            CanUserAddRows="False"
-                            CanUserDeleteRows="False"
-                            CanUserReorderColumns="False"
-                            CanUserResizeRows="False"
-                            Foreground="White"
-                            HorizontalGridLinesBrush="#353535"
-                            ItemsSource="{Binding Path=Value}"
-                            RowBackground="#3B3B3B"
-                            SelectedIndex="{Binding Path=SelectedVertexIndex}"
-                            SelectionMode="Single"
-                            SelectionUnit="FullRow"
-                            SnapsToDevicePixels="True"
-                            UseLayoutRounding="True"
-                            VerticalGridLinesBrush="#353535">
-                            <DataGrid.ColumnHeaderStyle>
-                                <Style TargetType="{x:Type DataGridColumnHeader}">
-                                    <Setter Property="VerticalContentAlignment" Value="Center" />
-                                    <Setter Property="Template">
-                                        <Setter.Value>
-                                            <ControlTemplate TargetType="{x:Type DataGridColumnHeader}">
-                                                <Grid>
-                                                    <Border
-                                                        x:Name="columnHeaderBorder"
-                                                        Background="#484848"
-                                                        BorderBrush="#232323"
-                                                        BorderThickness="0,0,0,1">
-                                                        <ContentPresenter
-                                                            Margin="5,3"
-                                                            HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
-                                                            VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
-                                                            SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" />
-                                                    </Border>
-
-                                                    <Thumb
-                                                        x:Name="PART_LeftHeaderGripper"
-                                                        Width="6"
-                                                        HorizontalAlignment="Left"
-                                                        Cursor="SizeWE">
-                                                        <Thumb.Template>
-                                                            <ControlTemplate TargetType="{x:Type Thumb}">
-                                                                <Border
-                                                                    Margin="-1,3,0,3"
-                                                                    Background="Transparent"
-                                                                    BorderBrush="#222222"
-                                                                    BorderThickness="1,0,0,0" />
-                                                            </ControlTemplate>
-                                                        </Thumb.Template>
-                                                    </Thumb>
-                                                </Grid>
-                                            </ControlTemplate>
-                                        </Setter.Value>
-                                    </Setter>
-                                    <Setter Property="Background">
-                                        <Setter.Value>
-                                            <LinearGradientBrush StartPoint="0.5,0" EndPoint="0.5,1">
-                                                <GradientStop Offset="0" Color="{DynamicResource ControlLightColor}" />
-                                                <GradientStop Offset="1" Color="{DynamicResource ControlMediumColor}" />
-                                            </LinearGradientBrush>
-                                        </Setter.Value>
-                                    </Setter>
-                                </Style>
-                            </DataGrid.ColumnHeaderStyle>
-                            <DataGrid.RowHeaderStyle>
-                                <Style TargetType="{x:Type DataGridRowHeader}">
-                                    <Setter Property="Template" Value="{x:Null}" />
-                                </Style>
-                            </DataGrid.RowHeaderStyle>
-
-                            <DataGrid.Columns>
-                                <DataGridTextColumn
-                                    Width="Auto"
-                                    Binding="{Binding Path=Index}"
-                                    CanUserSort="True"
-                                    Header="№"
-                                    IsReadOnly="True" />
-                                <DataGridTextColumn
-                                    Width="*"
-                                    Binding="{Binding Path=X}"
-                                    CanUserSort="False"
-                                    Header="X" />
-
-                                <DataGridTextColumn
-                                    Width="*"
-                                    Binding="{Binding Path=Y}"
-                                    CanUserSort="False"
-                                    Header="Y" />
-                            </DataGrid.Columns>
-                        </DataGrid>
-
-                        <StackPanel
-                            Grid.Row="1"
-                            Margin="4"
-                            HorizontalAlignment="Right"
-                            Orientation="Horizontal">
-                            <Button
-                                Margin="0,0,4,0"
-                                Padding="8,5"
-                                Command="{Binding Path=AddVertexCommand}">
-                                <Button.Content>
-                                    <fa:ImageAwesome
-                                        Height="11"
-                                        Foreground="#FDFDFD"
-                                        Icon="Plus" />
-                                </Button.Content>
-                            </Button>
-                            <Button Padding="8,5" Command="{Binding Path=RemoveVertexCommand}">
-                                <Button.Content>
-                                    <fa:ImageAwesome
-                                        Height="11"
-                                        Foreground="#FDFDFD"
-                                        Icon="Trash" />
-                                </Button.Content>
-                            </Button>
-                        </StackPanel>
-                    </Grid>
-                    <TextBox
+        <DataTemplate DataType="{x:Type properties:EnumPropertyViewModel}">
+            <AdornedControl
+                x:Name="AdornedControl"
+                Margin="0,0,6,0"
+                IsAdornerVisible="{Binding Path=IsValueUndefined}">
+                <AdornedControl.AdornerContent>
+                    <Border
                         x:Name="Border"
-                        Height="100"
-                        Margin="4"
-                        HorizontalContentAlignment="Center"
-                        VerticalContentAlignment="Center"
-                        IsReadOnly="True"
-                        Text="Одновременное редактирование недоступно"
-                        TextWrapping="Wrap"
-                        Visibility="Collapsed" />
-                </Grid>
-                <DataTemplate.Triggers>
-                    <DataTrigger Binding="{Binding Path=IsVisible}" Value="False">
-                        <Setter TargetName="VertexesGrid" Property="Visibility" Value="Collapsed" />
-                        <Setter TargetName="Border" Property="Visibility" Value="Visible" />
-                    </DataTrigger>
-                </DataTemplate.Triggers>
-            </DataTemplate>
+                        Margin="5,3,30,3"
+                        Background="{StaticResource {x:Static br:BrushesKeys+ComboBox.Background}}"
+                        IsHitTestVisible="False">
+                        <Rectangle
+                            Width="11"
+                            Height="11"
+                            HorizontalAlignment="Left"
+                            Fill="{DynamicResource {x:Static bruh:BrushesKeys+PropertiesView.UndefinedValueBrush}}"
+                            RadiusX="3"
+                            RadiusY="3" />
+                    </Border>
+                </AdornedControl.AdornerContent>
+                <ComboBox
+                    x:Name="ComboBox"
+                    ItemsSource="{Binding Path=Value,
+                                          Converter={converters:EnumValueToArrayConverter},
+                                          Mode=OneTime}"
+                    SelectedItem="{Binding Path=Value}" />
+            </AdornedControl>
+            <DataTemplate.Triggers>
+                <Trigger SourceName="ComboBox" Property="IsMouseOver" Value="True">
+                    <Setter TargetName="Border" Property="Background" Value="{StaticResource {x:Static br:BrushesKeys+ComboBox.MouseOverBackground}}" />
+                </Trigger>
+                <Trigger SourceName="AdornedControl" Property="IsAdornerVisible" Value="True">
+                    <Setter TargetName="ComboBox" Property="ToolTip" Value="Значение не определено." />
+                </Trigger>
+            </DataTemplate.Triggers>
+        </DataTemplate>
 
-        </ResourceDictionary>
+        <DataTemplate DataType="{x:Type properties:ColorPropertyViewModel}">
+            <AdornedControl
+                x:Name="AdornedControl"
+                Margin="0,0,6,0"
+                IsAdornerVisible="{Binding Path=IsValueUndefined}">
+                <AdornedControl.AdornerContent>
+                    <Grid
+                        Width="12"
+                        Height="12"
+                        IsHitTestVisible="False"
+                        SnapsToDevicePixels="True"
+                        UseLayoutRounding="True">
+                        <Path
+                            Data="M 0 0 L 1 0 L 0 1 Z"
+                            Fill="{DynamicResource {x:Static bruh:BrushesKeys+PropertiesView.UndefinedValueBrush}}"
+                            Stretch="UniformToFill" />
+                        <Path
+                            Data="M 1 0 L 1 1 L 0 1 Z"
+                            Fill="{DynamicResource {x:Static bruh:BrushesKeys+PropertiesView.ColorPickerSecondUndefinedValueBrush}}"
+                            Stretch="UniformToFill" />
+                    </Grid>
+                </AdornedControl.AdornerContent>
+                <MinimizedColorPickerControl
+                    x:Name="ColorPicker"
+                    RecentBrushesGroupName="ColorPropertyViewModelRecentBrushesGroup"
+                    SelectedColor="{Binding Path=Value}" />
+            </AdornedControl>
+            <DataTemplate.Triggers>
+                <Trigger SourceName="AdornedControl" Property="IsAdornerVisible" Value="True">
+                    <Setter TargetName="ColorPicker" Property="ToolTip" Value="Значение не определено." />
+                </Trigger>
+            </DataTemplate.Triggers>
+        </DataTemplate>
+
+        <DataTemplate DataType="{x:Type properties:BoolPropertyViewModel}">
+            <AdornedControl
+                x:Name="AdornedControl"
+                Margin="0,0,6,0"
+                IsAdornerVisible="{Binding Path=IsValueUndefined}">
+                <AdornedControl.AdornerContent>
+                    <Rectangle
+                        Width="6"
+                        Height="6"
+                        HorizontalAlignment="Center"
+                        VerticalAlignment="Center"
+                        Fill="{DynamicResource {x:Static bruh:BrushesKeys+PropertiesView.UndefinedValueBrush}}"
+                        IsHitTestVisible="False"
+                        RadiusX="2"
+                        RadiusY="2"
+                        SnapsToDevicePixels="True"
+                        UseLayoutRounding="True" />
+                </AdornedControl.AdornerContent>
+                <CheckBox x:Name="CheckBox" IsChecked="{Binding Path=Value}" />
+            </AdornedControl>
+            <DataTemplate.Triggers>
+                <Trigger SourceName="AdornedControl" Property="IsAdornerVisible" Value="True">
+                    <Setter TargetName="CheckBox" Property="ToolTip" Value="Значение не определено." />
+                </Trigger>
+            </DataTemplate.Triggers>
+        </DataTemplate>
+
+        <DataTemplate DataType="{x:Type properties:FontNamePropertyViewModel}">
+            <AdornedControl
+                x:Name="AdornedControl"
+                Margin="0,0,6,0"
+                IsAdornerVisible="{Binding Path=IsValueUndefined}">
+                <AdornedControl.AdornerContent>
+                    <Border
+                        x:Name="Border"
+                        Margin="5,3,30,3"
+                        Background="{StaticResource {x:Static br:BrushesKeys+ComboBox.Background}}"
+                        IsHitTestVisible="False">
+                        <Rectangle
+                            Width="11"
+                            Height="11"
+                            HorizontalAlignment="Left"
+                            Fill="{DynamicResource {x:Static bruh:BrushesKeys+PropertiesView.UndefinedValueBrush}}"
+                            RadiusX="3"
+                            RadiusY="3" />
+                    </Border>
+                </AdornedControl.AdornerContent>
+                <ComboBox
+                    x:Name="ComboBox"
+                    ItemsSource="{Binding Source={me:SystemFontFamilies}}"
+                    SelectedValue="{Binding Path=Value}">
+                    <ComboBox.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <VirtualizingStackPanel VirtualizationMode="Recycling" />
+                        </ItemsPanelTemplate>
+                    </ComboBox.ItemsPanel>
+                </ComboBox>
+            </AdornedControl>
+            <DataTemplate.Triggers>
+                <Trigger SourceName="ComboBox" Property="IsMouseOver" Value="True">
+                    <Setter TargetName="Border" Property="Background" Value="{StaticResource {x:Static br:BrushesKeys+ComboBox.MouseOverBackground}}" />
+                </Trigger>
+                <Trigger SourceName="AdornedControl" Property="IsAdornerVisible" Value="True">
+                    <Setter TargetName="ComboBox" Property="ToolTip" Value="Значение не определено." />
+                </Trigger>
+            </DataTemplate.Triggers>
+        </DataTemplate>
+
+        <DataTemplate DataType="{x:Type properties:StringPropertyViewModel}">
+            <AdornedControl
+                x:Name="AdornedControl"
+                Margin="0,0,6,0"
+                IsAdornerVisible="{Binding Path=IsValueUndefined}">
+                <AdornedControl.AdornerContent>
+                    <Rectangle
+                        Width="11"
+                        Height="11"
+                        Margin="5"
+                        HorizontalAlignment="Left"
+                        VerticalAlignment="Top"
+                        Fill="{DynamicResource {x:Static bruh:BrushesKeys+PropertiesView.UndefinedValueBrush}}"
+                        IsHitTestVisible="False"
+                        RadiusX="3"
+                        RadiusY="3" />
+                </AdornedControl.AdornerContent>
+                <TextBoxEx
+                    x:Name="TextBoxEx"
+                    VerticalContentAlignment="Top"
+                    HorizontalScrollBarVisibility="Auto"
+                    MaxLines="8"
+                    MinLines="8"
+                    SelectAllTextOnFocus="False"
+                    Text="{Binding Path=Value}"
+                    VerticalScrollBarVisibility="Auto">
+                    <i:Interaction.Behaviors>
+                        <b:MultilineTextBoxReturnBehaviour />
+                    </i:Interaction.Behaviors>
+                </TextBoxEx>
+            </AdornedControl>
+            <DataTemplate.Triggers>
+                <Trigger SourceName="TextBoxEx" Property="IsFocused" Value="True">
+                    <Setter TargetName="AdornedControl" Property="IsAdornerVisible" Value="False" />
+                </Trigger>
+                <Trigger SourceName="AdornedControl" Property="IsAdornerVisible" Value="True">
+                    <Setter TargetName="TextBoxEx" Property="ToolTip" Value="Значение не определено." />
+                    <Setter TargetName="TextBoxEx" Property="Foreground" Value="Transparent" />
+                </Trigger>
+            </DataTemplate.Triggers>
+        </DataTemplate>
+
+        <DataTemplate DataType="{x:Type properties:VerticesPropertyViewModel}">
+            <Grid Margin="0,0,6,0">
+                <Grid x:Name="VertexesGrid">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="*" />
+                        <RowDefinition Height="Auto" />
+                    </Grid.RowDefinitions>
+
+                    <DataGrid
+                        MaxHeight="150"
+                        AutoGenerateColumns="False"
+                        BorderThickness="1"
+                        CanUserAddRows="False"
+                        CanUserDeleteRows="False"
+                        CanUserReorderColumns="False"
+                        CanUserResizeRows="False"
+                        HeadersVisibility="Column"
+                        ItemsSource="{Binding Path=Value}"
+                        SelectedIndex="{Binding Path=SelectedVertexIndex}"
+                        SelectionMode="Single"
+                        SelectionUnit="FullRow">
+                        <DataGrid.Columns>
+                            <DataGridTextColumn
+                                Width="Auto"
+                                Binding="{Binding Path=Index}"
+                                CanUserSort="True"
+                                Header="№"
+                                IsReadOnly="True" />
+                            <DataGridTextColumn
+                                Width="*"
+                                Binding="{Binding Path=X}"
+                                CanUserSort="False"
+                                Header="X" />
+                            <DataGridTextColumn
+                                Width="*"
+                                Binding="{Binding Path=Y}"
+                                CanUserSort="False"
+                                Header="Y" />
+                        </DataGrid.Columns>
+                    </DataGrid>
+
+                    <StackPanelEx
+                        Grid.Row="1"
+                        Margin="0,6,0,0"
+                        HorizontalAlignment="Right"
+                        Gap="6"
+                        Orientation="Horizontal">
+                        <Button Padding="8,3" Command="{Binding Path=AddVertexCommand}">
+                            <Button.Content>
+                                <Path
+                                    Height="13"
+                                    Data="{StaticResource PlusIcon}"
+                                    Fill="{DynamicResource {x:Static bruh:BrushesKeys+PropertiesView.AddVertexIconBrush}}"
+                                    Stretch="Uniform" />
+                            </Button.Content>
+                        </Button>
+                        <Button Padding="8,3" Command="{Binding Path=RemoveVertexCommand}">
+                            <Button.Content>
+                                <Path
+                                    Height="13"
+                                    Data="{StaticResource TrashIcon}"
+                                    Fill="{DynamicResource {x:Static bruh:BrushesKeys+PropertiesView.RemoveVertexIconBrush}}"
+                                    Stretch="Uniform" />
+                            </Button.Content>
+                        </Button>
+                    </StackPanelEx>
+                </Grid>
+                <TextBox
+                    x:Name="Border"
+                    Height="150"
+                    HorizontalContentAlignment="Center"
+                    VerticalContentAlignment="Center"
+                    IsReadOnly="True"
+                    Text="Одновременное редактирование недоступно"
+                    TextWrapping="Wrap"
+                    Visibility="Collapsed" />
+            </Grid>
+            <DataTemplate.Triggers>
+                <DataTrigger Binding="{Binding Path=Value}" Value="{x:Null}">
+                    <Setter TargetName="VertexesGrid" Property="Visibility" Value="Collapsed" />
+                    <Setter TargetName="Border" Property="Visibility" Value="Visible" />
+                </DataTrigger>
+            </DataTemplate.Triggers>
+        </DataTemplate>
+
+        <DataTemplate DataType="{x:Type properties:Vector2PropertyViewModel}">
+            <Grid Margin="0,0,6,0" GridProps.ColumnDefinitionsEx="* 6 *">
+                <AdornedControl
+                    x:Name="AdornedControlX"
+                    Grid.Column="0"
+                    IsAdornerVisible="{Binding Path=IsXValueUndefined}">
+                    <AdornedControl.AdornerContent>
+                        <Rectangle
+                            Width="11"
+                            Height="11"
+                            Margin="5"
+                            HorizontalAlignment="Left"
+                            Fill="{DynamicResource {x:Static bruh:BrushesKeys+PropertiesView.UndefinedValueBrush}}"
+                            IsHitTestVisible="False"
+                            RadiusX="3"
+                            RadiusY="3" />
+                    </AdornedControl.AdornerContent>
+                    <TextBoxEx
+                        x:Name="TextBoxExX"
+                        SelectAllTextOnFocus="True"
+                        Text="{Binding Path=XExpr}" />
+                </AdornedControl>
+                <AdornedControl
+                    x:Name="AdornedControlY"
+                    Grid.Column="2"
+                    IsAdornerVisible="{Binding Path=IsYValueUndefined}">
+                    <AdornedControl.AdornerContent>
+                        <Rectangle
+                            Width="11"
+                            Height="11"
+                            Margin="5"
+                            HorizontalAlignment="Left"
+                            Fill="{DynamicResource {x:Static bruh:BrushesKeys+PropertiesView.UndefinedValueBrush}}"
+                            IsHitTestVisible="False"
+                            RadiusX="3"
+                            RadiusY="3" />
+                    </AdornedControl.AdornerContent>
+                    <TextBoxEx
+                        x:Name="TextBoxExY"
+                        SelectAllTextOnFocus="True"
+                        Text="{Binding Path=YExpr}" />
+                </AdornedControl>
+            </Grid>
+            <DataTemplate.Triggers>
+                <Trigger SourceName="TextBoxExX" Property="IsFocused" Value="True">
+                    <Setter TargetName="AdornedControlX" Property="IsAdornerVisible" Value="False" />
+                </Trigger>
+                <Trigger SourceName="AdornedControlX" Property="IsAdornerVisible" Value="True">
+                    <Setter TargetName="TextBoxExX" Property="ToolTip" Value="Значение не определено." />
+                    <Setter TargetName="TextBoxExX" Property="Foreground" Value="Transparent" />
+                </Trigger>
+                <Trigger SourceName="TextBoxExY" Property="IsFocused" Value="True">
+                    <Setter TargetName="AdornedControlY" Property="IsAdornerVisible" Value="False" />
+                </Trigger>
+                <Trigger SourceName="AdornedControlY" Property="IsAdornerVisible" Value="True">
+                    <Setter TargetName="TextBoxExY" Property="ToolTip" Value="Значение не определено." />
+                    <Setter TargetName="TextBoxExY" Property="Foreground" Value="Transparent" />
+                </Trigger>
+            </DataTemplate.Triggers>
+        </DataTemplate>
+
+        <DataTemplate DataType="{x:Type properties:StrokePropertiesViewModel}">
+            <Grid x:Name="Root" GridProps.ColumnDefinitionsEx="2* * auto">
+                <ContentControl
+                    Grid.Column="0"
+                    Content="{Binding Path=Properties[StrokeThicknessType]}"
+                    Focusable="False" />
+                <ContentControl
+                    x:Name="StrokeThicknessContentControl"
+                    Grid.Column="1"
+                    Content="{Binding Path=Properties[StrokeThickness]}"
+                    Focusable="False"
+                    IsEnabled="False" />
+                <ContentControl
+                    Grid.Column="2"
+                    Content="{Binding Path=Properties[StrokeColor]}"
+                    Focusable="False" />
+            </Grid>
+            <DataTemplate.Triggers>
+                <DataTrigger Binding="{Binding Path=Properties[StrokeThicknessType].Value}" Value="Other">
+                    <Setter TargetName="StrokeThicknessContentControl" Property="IsEnabled" Value="True" />
+                </DataTrigger>
+                <DataTrigger Binding="{Binding Path=IsMoreThenOneObject}" Value="True">
+                    <Setter TargetName="StrokeThicknessContentControl" Property="IsEnabled" Value="True" />
+                </DataTrigger>
+            </DataTemplate.Triggers>
+        </DataTemplate>
+
+        <DataTemplate DataType="{x:Type properties:FontPropertiesViewModel}">
+            <DataTemplate.Resources>
+                <Style TargetType="{x:Type Path}">
+                    <Setter Property="Height" Value="13" />
+                    <Setter Property="Stretch" Value="Uniform" />
+                    <Setter Property="Margin" Value="2" />
+                    <Setter Property="Fill" Value="{Binding RelativeSource={RelativeSource AncestorType={x:Type ToggleButton}}, Path=Foreground}" />
+                </Style>
+                <Style BasedOn="{StaticResource {x:Type ToggleButton}}" TargetType="{x:Type ToggleButton}">
+                    <Style.Triggers>
+                        <DataTrigger Binding="{Binding Path=Tag, RelativeSource={RelativeSource Self}}" Value="True">
+                            <Setter Property="Foreground" Value="{DynamicResource {x:Static bruh:BrushesKeys+PropertiesView.UndefinedValueBrush}}" />
+                            <Setter Property="ToolTip" Value="Значение не определено." />
+                        </DataTrigger>
+                    </Style.Triggers>
+                </Style>
+            </DataTemplate.Resources>
+            <Grid Margin="0,0,6,0" GridProps.ColumnDefinitionsEx="* 2 * 2 * 2 *">
+                <ToggleButton
+                    Grid.Column="0"
+                    IsChecked="{Binding Path=Properties[IsBold].Value}"
+                    Tag="{Binding Path=Properties[IsBold].IsValueUndefined}">
+                    <ToggleButton.Content>
+                        <Path Data="{StaticResource BoldTextIcon}" />
+                    </ToggleButton.Content>
+                </ToggleButton>
+                <ToggleButton
+                    Grid.Column="2"
+                    IsChecked="{Binding Path=Properties[IsItalic].Value}"
+                    Tag="{Binding Path=Properties[IsItalic].IsValueUndefined}">
+                    <ToggleButton.Content>
+                        <Path Data="{StaticResource ItalicTextIcon}" />
+                    </ToggleButton.Content>
+                </ToggleButton>
+                <ToggleButton
+                    Grid.Column="4"
+                    IsChecked="{Binding Path=Properties[IsUnderlined].Value}"
+                    Tag="{Binding Path=Properties[IsUnderlined].IsValueUndefined}">
+                    <ToggleButton.Content>
+                        <Path Data="{StaticResource UnderlinedTextIcon}" />
+                    </ToggleButton.Content>
+                </ToggleButton>
+                <ToggleButton
+                    Grid.Column="6"
+                    IsChecked="{Binding Path=Properties[IsCross].Value}"
+                    Tag="{Binding Path=Properties[IsCross].IsValueUndefined}">
+                    <ToggleButton.Content>
+                        <Path Data="{StaticResource CrossTextIcon}" />
+                    </ToggleButton.Content>
+                </ToggleButton>
+            </Grid>
+        </DataTemplate>
     </UserControl.Resources>
 
     <ScrollViewer
+        Margin="6"
         DataContext="{Binding Path=CurrentEditorViewModel}"
         HorizontalScrollBarVisibility="Disabled"
         VerticalScrollBarVisibility="Auto">
-
-        <Grid Margin="5" Background="#404040">
-            <Grid.RowDefinitions>
-                <RowDefinition Height="Auto" />
-                <RowDefinition Height="Auto" />
-            </Grid.RowDefinitions>
+        <Grid GridProps.RowDefinitionsEx="auto auto">
             <TextBlock
                 Grid.Row="0"
-                Margin="4,4"
+                Margin="0,0,0,6"
                 HorizontalAlignment="Left"
                 Text="{Binding Path=Layout.ObjectName}" />
             <ItemsControl
@@ -306,33 +478,25 @@
                 ItemsSource="{Binding Path=Layout.Groups}">
                 <ItemsControl.ItemTemplate>
                     <DataTemplate>
-                        <Expander Header="{Binding Path=Name}">
-                            <ItemsControl
-                                Margin="3"
-                                Focusable="False"
-                                ItemsSource="{Binding Path=EditorRows}">
+                        <Expander
+                            Margin="0,0,0,6"
+                            Padding="6,6,0,6"
+                            Header="{Binding Path=Name}"
+                            IsExpanded="True">
+                            <ItemsControl Focusable="False" ItemsSource="{Binding Path=EditorRows}">
+                                <ItemsControl.ItemsPanel>
+                                    <ItemsPanelTemplate>
+                                        <StackPanelEx Gap="6" />
+                                    </ItemsPanelTemplate>
+                                </ItemsControl.ItemsPanel>
                                 <ItemsControl.ItemTemplate>
                                     <DataTemplate>
-                                        <DataTemplate.Resources>
-                                            <Style BasedOn="{StaticResource {x:Type TextBlock}}" TargetType="{x:Type TextBlock}">
-                                                <Setter Property="Margin" Value="5" />
-                                                <Setter Property="VerticalAlignment" Value="Center" />
-                                                <Setter Property="HorizontalAlignment" Value="Right" />
-                                            </Style>
-                                        </DataTemplate.Resources>
-                                        <Grid>
-                                            <Grid.ColumnDefinitions>
-                                                <ColumnDefinition Width="Auto" SharedSizeGroup="A" />
-                                                <ColumnDefinition />
-                                            </Grid.ColumnDefinitions>
-                                            <TextBlock
-                                                Grid.Column="0"
-                                                HorizontalAlignment="Right"
-                                                VerticalAlignment="Center"
-                                                Text="{Binding Path=Name}" />
+                                        <PropertyValue
+                                            x:Name="PropertyValue"
+                                            Title="{Binding Path=Name}"
+                                            GroupName="PropertiesGroup">
                                             <ItemsControl
                                                 x:Name="Properties"
-                                                Grid.Column="1"
                                                 Focusable="False"
                                                 ItemsSource="{Binding Path=ObjectProperties}">
                                                 <ItemsControl.ItemsPanel>
@@ -341,11 +505,11 @@
                                                     </ItemsPanelTemplate>
                                                 </ItemsControl.ItemsPanel>
                                             </ItemsControl>
-                                        </Grid>
+                                        </PropertyValue>
                                         <DataTemplate.Triggers>
                                             <DataTrigger Binding="{Binding Path=Name}" Value="">
-                                                <Setter TargetName="Properties" Property="Grid.ColumnSpan" Value="2" />
-                                                <Setter TargetName="Properties" Property="Grid.Column" Value="0" />
+                                                <Setter TargetName="PropertyValue" Property="Padding" Value="0" />
+                                                <Setter TargetName="PropertyValue" Property="GroupName" Value="NoNameGroup" />
                                             </DataTrigger>
                                         </DataTemplate.Triggers>
                                     </DataTemplate>

@@ -28,7 +28,7 @@ public class GridEx : Grid
 
     #endregion
 
-    protected override void OnVisualChildrenChanged(DependencyObject visualAdded, DependencyObject visualRemoved)
+    protected override void OnVisualChildrenChanged(DependencyObject? visualAdded, DependencyObject? visualRemoved)
     {
         base.OnVisualChildrenChanged(visualAdded, visualRemoved);
         if (visualAdded is null) return;

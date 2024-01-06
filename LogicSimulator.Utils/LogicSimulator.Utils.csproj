@@ -1,16 +1,18 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
 	<PropertyGroup>
-		<TargetFramework>net7.0-windows</TargetFramework>
+		<TargetFramework>net8.0-windows</TargetFramework>
 		<ImplicitUsings>enable</ImplicitUsings>
 		<UseWpf>true</UseWpf>
-		<Nullable>disable</Nullable>
+		<Nullable>enable</Nullable>
 		<Platforms>x64;x86</Platforms>
 	</PropertyGroup>
 
 	<ItemGroup>
+		<PackageReference Include="MathExpressionParser" Version="1.0.0" />
 		<PackageReference Include="SharpDX" Version="4.2.0" />
 		<PackageReference Include="SharpDX.Mathematics" Version="4.2.0" />
+		<PackageReference Include="YamlDotNet" Version="13.7.1" />
 	</ItemGroup>
 
 </Project>

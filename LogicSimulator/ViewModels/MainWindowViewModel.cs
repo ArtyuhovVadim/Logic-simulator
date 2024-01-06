@@ -1,9 +1,9 @@
-﻿using LogicSimulator.Infrastructure.Commands;
-using LogicSimulator.Infrastructure.Services;
-using LogicSimulator.Infrastructure.Services.Interfaces;
+﻿using LogicSimulator.Infrastructure.Services.Interfaces;
 using LogicSimulator.ViewModels.AnchorableViewModels;
 using LogicSimulator.ViewModels.AnchorableViewModels.Base;
-using LogicSimulator.ViewModels.Base;
+using LogicSimulator.ViewModels.StatusViewModels.Base;
+using WpfExtensions.Mvvm;
+using WpfExtensions.Mvvm.Commands;
 
 namespace LogicSimulator.ViewModels;
 
@@ -11,56 +11,47 @@ public class MainWindowViewModel : BindableBase
 {
     private readonly IUserDialogService _userDialogService;
     private readonly IProjectFileService _projectFileService;
+    private readonly IProjectViewModelFactory _projectFactory;
+
+    private readonly DockingViewModel _dockingViewModel;
+
+    private readonly PropertiesViewModel _propertiesViewModel;
     private readonly ProjectExplorerViewModel _projectExplorerViewModel;
 
     public MainWindowViewModel(
         IUserDialogService userDialogService,
         IProjectFileService projectFileService,
+        IProjectViewModelFactory projectFactory,
+        DockingViewModel dockingViewModel,
         PropertiesViewModel propertiesViewModel,
         ProjectExplorerViewModel projectExplorerViewModel)
     {
         _userDialogService = userDialogService;
         _projectFileService = projectFileService;
-        _projectExplorerViewModel = projectExplorerViewModel;
+        _projectFactory = projectFactory;
 
-        propertiesViewModel.IsVisible = true;
-        projectExplorerViewModel.IsVisible = true;
+        _dockingViewModel = dockingViewModel;
+        _propertiesViewModel = propertiesViewModel;
+        _projectExplorerViewModel = projectExplorerViewModel;
 
         projectExplorerViewModel.SchemeOpened += OnSchemeOpened;
 
-        AnchorableViewModels.Add(propertiesViewModel);
-        AnchorableViewModels.Add(projectExplorerViewModel);
+        _dockingViewModel
+            .AddToolViewModel(_propertiesViewModel, true)
+            .AddToolViewModel(_projectExplorerViewModel, true);
+
+        _dockingViewModel.ActiveDocumentViewModelChanged += OnActiveDocumentViewModelChanged;
+
+        // TODO: Временно для быстрой загрузки тестового проекта
+        LoadExampleCommand.Execute(null);
+        _dockingViewModel.AddOrSelectDocumentViewModel(ActiveProjectViewModel!.Schemes.First());
     }
-
-    #region ActiveContent
-
-    private AnchorableViewModel _activeAnchorable;
-
-    public AnchorableViewModel ActiveContent
-    {
-        get => _activeAnchorable;
-        set => Set(ref _activeAnchorable, value);
-    }
-
-    #endregion
-
-    #region AnchorableViewModels
-
-    private ObservableCollection<AnchorableViewModel> _anchorableViewModels = new();
-
-    public ObservableCollection<AnchorableViewModel> AnchorableViewModels
-    {
-        get => _anchorableViewModels;
-        private set => Set(ref _anchorableViewModels, value);
-    }
-
-    #endregion
 
     #region ActiveProjectViewModel
 
-    private ProjectViewModel _activeProjectViewModel;
+    private ProjectViewModel? _activeProjectViewModel;
 
-    public ProjectViewModel ActiveProjectViewModel
+    public ProjectViewModel? ActiveProjectViewModel
     {
         get => _activeProjectViewModel;
         set
@@ -74,25 +65,25 @@ public class MainWindowViewModel : BindableBase
 
     #endregion
 
-    #region OpenedSchemes
+    #region CurrentStatusViewModel
 
-    private ObservableCollection<SchemeViewModel> _openedSchemes = new();
+    public BaseStatusViewModel? CurrentStatusViewModel => _dockingViewModel.ActiveDocumentViewModel?.StatusViewModel;
 
-    public ObservableCollection<SchemeViewModel> OpenedSchemes
-    {
-        get => _openedSchemes;
-        set => Set(ref _openedSchemes, value);
-    }
+    #endregion
+
+    #region DockingViewModel
+
+    public DockingViewModel DockingViewModel => _dockingViewModel;
 
     #endregion
 
     #region LoadExampleCommand
 
-    private ICommand _loadExampleCommand;
+    private ICommand? _loadExampleCommand;
 
     public ICommand LoadExampleCommand => _loadExampleCommand ??= new LambdaCommand(_ =>
     {
-        var projectPath = @"C:\Users\Vadim\Desktop\ExampleProject\ExampleProject.lsproj";
+        const string projectPath = @"Data\ExampleProject\ExampleProject.lsproj";
 
         if (!_projectFileService.ReadFromFile(projectPath, out var project))
         {
@@ -100,36 +91,28 @@ public class MainWindowViewModel : BindableBase
             return;
         }
 
-        ActiveProjectViewModel = new ProjectViewModel(project);
-    }, _ => true);
+        ActiveProjectViewModel = _projectFactory.Create(project!);
+    });
 
     #endregion
 
     #region SaveExampleCommand
 
-    private ICommand _saveExampleCommand;
+    private ICommand? _saveExampleCommand;
 
-    public ICommand SaveExampleCommand => _saveExampleCommand ??= new LambdaCommand(_ => { }, _ => true);
+    public ICommand SaveExampleCommand => _saveExampleCommand ??= new LambdaCommand(_ => { });
 
     #endregion
 
     #region TestCommand
 
-    private ICommand _testCommand;
+    private ICommand? _testCommand;
 
-    public ICommand TestCommand => _testCommand ??= new LambdaCommand(_ =>
-    {
-    }, _ => true);
+    public ICommand TestCommand => _testCommand ??= new LambdaCommand(_ => { });
 
     #endregion
 
-    private void OnSchemeOpened(SchemeViewModel scheme)
-    {
-        if (!OpenedSchemes.Contains(scheme))
-        {
-            OpenedSchemes.Add(scheme);
-        }
+    private void OnSchemeOpened(SchemeViewModel scheme) => _dockingViewModel.AddOrSelectDocumentViewModel(scheme);
 
-        scheme.IsActive = true;
-    }
+    private void OnActiveDocumentViewModelChanged(DocumentViewModel? oldDocument, DocumentViewModel? newDocument) => OnPropertyChanged(nameof(CurrentStatusViewModel));
 }

@@ -1,22 +1,24 @@
-﻿using LogicSimulator.Models;
+﻿using LogicSimulator.Infrastructure.Services.Interfaces;
+using LogicSimulator.Models;
 using LogicSimulator.ViewModels.AnchorableViewModels;
-using LogicSimulator.ViewModels.Base;
+using WpfExtensions.Mvvm;
 
 namespace LogicSimulator.ViewModels;
 
 public class ProjectViewModel : BindableBase
 {
+    private readonly ISchemeViewModelFactory _schemeFactory;
+
     public Project Project { get; }
 
-    public ProjectViewModel(Project project)
+    public ProjectViewModel(Project project, ISchemeViewModelFactory schemeFactory)
     {
+        _schemeFactory = schemeFactory;
         Project = project;
-
-        _schemes = new ObservableCollection<SchemeViewModel>();
 
         foreach (var scheme in project.Schemes)
         {
-            _schemes.Add(new SchemeViewModel(scheme));
+            _schemes.Add(_schemeFactory.Create(scheme));
         }
     }
 
@@ -51,7 +53,7 @@ public class ProjectViewModel : BindableBase
 
     #region Schemes
 
-    private ObservableCollection<SchemeViewModel> _schemes;
+    private ObservableCollection<SchemeViewModel> _schemes = [];
 
     public ObservableCollection<SchemeViewModel> Schemes
     {

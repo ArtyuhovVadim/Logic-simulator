@@ -1,14 +1,8 @@
-﻿using System.Reflection;
-
-namespace LogicSimulator.ViewModels.EditorViewModels.Base;
+﻿namespace LogicSimulator.ViewModels.EditorViewModels.Base;
 
 public abstract class SinglePropertyViewModel : PropertyViewModel
 {
-    private PropertyInfo _propertyInfo;
-
-    public string PropertyName { get; set; }
-
-    protected PropertyInfo PropertyInfo => _propertyInfo ??= EditorViewModel.Objects.First().GetType().GetProperty(PropertyName);
+    public string PropertyName { get; init; } = string.Empty;
 
     #region Value
 
@@ -35,4 +29,12 @@ public abstract class SinglePropertyViewModel : PropertyViewModel
     protected abstract object GetPropertyValue(IEnumerable<object> objects);
 
     protected abstract void SetPropertyValue(IEnumerable<object> objects, object value);
+
+    protected TProperty GetValue<TProperty>(object obj) => (TProperty)GettersAndSettersCache.GetGetter(PropertyName, obj)(obj);
+
+    protected void SetValue<TProperty>(object obj, TProperty value) => GettersAndSettersCache.GetSetter<TProperty>(PropertyName, obj)(obj, value!);
+    
+    protected void SetValue(object obj, object value, Type valueType) => GettersAndSettersCache.GetSetter(PropertyName, obj, valueType)(obj, value);
+
+    public override void RaisePropertyChanged() => OnPropertyChanged(nameof(Value));
 }

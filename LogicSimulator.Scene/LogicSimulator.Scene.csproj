@@ -1,11 +1,11 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
-        <TargetFramework>net7.0-windows</TargetFramework>
-        <Nullable>disable</Nullable>
+        <TargetFramework>net8.0-windows</TargetFramework>
+        <Nullable>enable</Nullable>
         <UseWPF>true</UseWPF>
         <Platforms>x64;x86</Platforms>
-        <LangVersion>preview</LangVersion>
+        <LangVersion>latest</LangVersion>
         <ImplicitUsings>enable</ImplicitUsings>
     </PropertyGroup>
 
@@ -16,18 +16,17 @@
         <PackageReference Include="SharpDX.Direct3D9" Version="4.2.0" />
         <PackageReference Include="SharpDX.DXGI" Version="4.2.0" />
         <PackageReference Include="SharpDX.Mathematics" Version="4.2.0" />
-        <PackageReference Include="YamlDotNet" Version="12.3.1" />
-    </ItemGroup>
-
-    <ItemGroup>
-        <Folder Include="SceneObjects\Gates\Base\" />
-        <Folder Include="Tools\Base\" />
+        <PackageReference Include="TqkLibrary.Wpf.Interop.DirectX" Version="1.0.1" />
+        <PackageReference Include="YamlDotNet" Version="13.7.1" />
     </ItemGroup>
 
     <ItemGroup>
       <ProjectReference Include="..\LogicSimulator.Core\LogicSimulator.Core.csproj" />
       <ProjectReference Include="..\LogicSimulator.Utils\LogicSimulator.Utils.csproj" />
-      <ProjectReference Include="..\Microsoft.Wpf.Interop.DirectX\Microsoft.Wpf.Interop.DirectX.vcxproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Folder Include="Nodes\" />
     </ItemGroup>
 
 </Project>

@@ -18,7 +18,7 @@ public static class Vector2ExtensionMethods
          Matrix3x2.TransformPoint(Matrix3x2.Invert(matrix), vector);
 
     public static Vector2 ApplyGrid(this in Vector2 vector, float snap) =>
-        new((int)(vector.X / snap + 0.5f) * snap, (int)(vector.Y / snap + 0.5f) * snap);
+        new((int)(vector.X / snap + 0.5f * Math.Sign(vector.X)) * snap, (int)(vector.Y / snap + 0.5f * Math.Sign(vector.Y)) * snap);
 
     public static Vector2 DpiCorrect(this in Vector2 vector, float dpi) =>
         vector / (96f / dpi);

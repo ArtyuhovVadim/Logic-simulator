@@ -1,4 +1,4 @@
-﻿using LogicSimulator.Scene.SceneObjects.Base;
+﻿using LogicSimulator.ViewModels.ObjectViewModels.Base;
 
 namespace LogicSimulator.Models;
 
@@ -6,7 +6,7 @@ public class Scheme
 {
     public const string Extension = ".lss";
 
-    public string Name { get; set; }
+    public string Name { get; set; } = string.Empty;
 
-    public IEnumerable<BaseSceneObject> Objects { get; set; }
+    public IEnumerable<BaseObjectViewModel> Objects { get; set; } = Enumerable.Empty<BaseObjectViewModel>();
 }

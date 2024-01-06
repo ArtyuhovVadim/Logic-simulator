@@ -6,7 +6,7 @@ public abstract class LogicComponent
 
     protected bool IsFirstUpdated { get; private set; }
 
-    public event Action<LogicComponent> Updated;
+    public event Action<LogicComponent>? Updated;
 
     public bool IsDirty { get; set; } = true;
 

@@ -1,23 +1,6 @@
 <ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation">
     <ResourceDictionary.MergedDictionaries>
-        <ResourceDictionary Source="/LogicSimulator.Controls;component/Styles/ControlStyle.xaml" />
-        <ResourceDictionary Source="/LogicSimulator.Controls;component/Styles/TextBlockStyle.xaml" />
-        <ResourceDictionary Source="/LogicSimulator.Controls;component/Styles/WindowStyle.xaml" />
-        <ResourceDictionary Source="/LogicSimulator.Controls;component/Styles/ButtonStyle.xaml" />
-        <ResourceDictionary Source="/LogicSimulator.Controls;component/Styles/TextBoxStyle.xaml" />
-        <ResourceDictionary Source="/LogicSimulator.Controls;component/Styles/TextBoxExStyle.xaml" />
-        <ResourceDictionary Source="/LogicSimulator.Controls;component/Styles/NumberBoxStyle.xaml" />
-        <ResourceDictionary Source="/LogicSimulator.Controls;component/Styles/Vector2BoxStyle.xaml" />
-        <ResourceDictionary Source="/LogicSimulator.Controls;component/Styles/ColorPickerStyle.xaml" />
-        <ResourceDictionary Source="/LogicSimulator.Controls;component/Styles/MenuStyle.xaml" />
-        <ResourceDictionary Source="/LogicSimulator.Controls;component/Styles/MenuItemStyle.xaml" />
-        <ResourceDictionary Source="/LogicSimulator.Controls;component/Styles/CheckBoxStyle.xaml" />
-        <ResourceDictionary Source="/LogicSimulator.Controls;component/Styles/CheckBoxExStyle.xaml" />
-        <ResourceDictionary Source="/LogicSimulator.Controls;component/Styles/ExpanderStyle.xaml" />
-        <ResourceDictionary Source="/LogicSimulator.Controls;component/Styles/ScrollBarStyle.xaml" />
-        <ResourceDictionary Source="/LogicSimulator.Controls;component/Styles/StringBoxStyle.xaml" />
-        <ResourceDictionary Source="/LogicSimulator.Controls;component/Styles/AvaloneDockStyle.xaml" />
-        <ResourceDictionary Source="/LogicSimulator.Controls;component/Styles/ComboBoxStyle.xaml" />
-        <ResourceDictionary Source="/LogicSimulator.Controls;component/Styles/ComboBoxExStyle.xaml" />
+        <ResourceDictionary Source="/WpfExtensions.Controls;component/Themes/Generic.xaml" />
+        <ResourceDictionary Source="/LogicSimulator.Controls;component/AvalonDock/Themes/Generic.xaml" />
     </ResourceDictionary.MergedDictionaries>
 </ResourceDictionary>

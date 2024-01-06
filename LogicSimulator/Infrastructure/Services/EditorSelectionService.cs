@@ -1,14 +1,15 @@
 ﻿using System.Reflection;
 using LogicSimulator.Infrastructure.Services.Interfaces;
-using LogicSimulator.Scene.SceneObjects.Base;
 using LogicSimulator.ViewModels.AnchorableViewModels;
+using LogicSimulator.ViewModels.EditorViewModels;
 using LogicSimulator.ViewModels.EditorViewModels.Base;
+using LogicSimulator.ViewModels.ObjectViewModels.Base;
 
 namespace LogicSimulator.Infrastructure.Services;
 
 public class EditorSelectionService : IEditorSelectionService
 {
-    private static readonly Dictionary<Type, EditorViewModel> EditorsMap = new();
+    private static readonly Dictionary<Type, EditorViewModel> EditorsMap = [];
 
     private readonly PropertiesViewModel _propertiesViewModel;
 
@@ -19,21 +20,26 @@ public class EditorSelectionService : IEditorSelectionService
         _propertiesViewModel = propertiesViewModel;
     }
 
-    public void Select(SchemeViewModel schemeViewModel)
+    public void SetObjectsEditor(ICollection<BaseObjectViewModel> objects)
     {
-        var selectedSceneObjects = schemeViewModel.Objects.Where(x => x.IsSelected);
-
-        if (!selectedSceneObjects.Any())
+        if (objects.Count == 0)
         {
             SetEmptyEditor();
             return;
         }
 
-        var firstObjectType = selectedSceneObjects.First().GetType();
+        var firstObjectType = objects.First().GetType();
 
-        if (selectedSceneObjects.Any(x => x.GetType() != firstObjectType))
+        if (objects.Any(x => x.GetType() != firstObjectType))
         {
-            SetEmptyEditor();
+            var layouts = objects.Select(x => x.GetType()).Distinct().Select(x => EditorsMap[x]).Select(x => x.Layout);
+
+            var multiEditor = new MultiObjectsEditorViewModel(layouts);
+
+            _propertiesViewModel.CurrentEditorViewModel?.StopObjectsEdit();
+            multiEditor.SetObjectsToEdit(objects);
+            _propertiesViewModel.CurrentEditorViewModel = multiEditor;
+
             return;
         }
 
@@ -43,13 +49,27 @@ public class EditorSelectionService : IEditorSelectionService
             return;
         }
 
-        editor.SetObjectsToEdit(selectedSceneObjects);
+        _propertiesViewModel.CurrentEditorViewModel?.StopObjectsEdit();
+        editor.SetObjectsToEdit(objects);
         _propertiesViewModel.CurrentEditorViewModel = editor;
     }
 
-    private void SetEmptyEditor()
+    public void SetSchemeEditor(SchemeViewModel schemeViewModel)
     {
-        _propertiesViewModel.CurrentEditorViewModel?.SetObjectsToEdit(Enumerable.Empty<BaseSceneObject>());
+        if (!EditorsMap.TryGetValue(typeof(SchemeViewModel), out var editor))
+        {
+            SetEmptyEditor();
+            return;
+        }
+
+        _propertiesViewModel.CurrentEditorViewModel?.StopObjectsEdit();
+        editor.SetObjectsToEdit([schemeViewModel]);
+        _propertiesViewModel.CurrentEditorViewModel = editor;
+    }
+
+    public void SetEmptyEditor()
+    {
+        _propertiesViewModel.CurrentEditorViewModel?.SetObjectsToEdit(Enumerable.Empty<BaseObjectViewModel>().ToList());
         _propertiesViewModel.CurrentEditorViewModel = null;
     }
 
@@ -57,13 +77,13 @@ public class EditorSelectionService : IEditorSelectionService
     {
         var assembly = Assembly.GetEntryAssembly();
 
-        foreach (var type in assembly.DefinedTypes)
+        foreach (var type in assembly!.DefinedTypes)
         {
             var attribute = Attribute.GetCustomAttribute(type, typeof(EditorAttribute));
 
             if (attribute is EditorAttribute editorAttribute)
             {
-                EditorsMap.Add(editorAttribute.ObjectType, (EditorViewModel)Activator.CreateInstance(type));
+                EditorsMap.Add(editorAttribute.ObjectType, (EditorViewModel)Activator.CreateInstance(type)!);
             }
         }
     }

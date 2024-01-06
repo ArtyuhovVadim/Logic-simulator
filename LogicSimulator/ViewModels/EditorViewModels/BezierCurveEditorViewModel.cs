@@ -1,12 +1,13 @@
 ﻿using LogicSimulator.Infrastructure;
-using LogicSimulator.Scene.SceneObjects;
 using LogicSimulator.ViewModels.EditorViewModels.Base;
+using LogicSimulator.ViewModels.EditorViewModels.Base.Properties;
 using LogicSimulator.ViewModels.EditorViewModels.Layout;
 using LogicSimulator.ViewModels.EditorViewModels.Layout.Builders;
+using LogicSimulator.ViewModels.ObjectViewModels;
 
 namespace LogicSimulator.ViewModels.EditorViewModels;
 
-[Editor(typeof(BezierCurve))]
+[Editor(typeof(BezierCurveViewModel))]
 public class BezierCurveEditorViewModel : EditorViewModel
 {
     protected override EditorLayout CreateLayout() => LayoutBuilder
@@ -16,29 +17,28 @@ public class BezierCurveEditorViewModel : EditorViewModel
             .WithGroupName("Расположение")
             .WithRow(rowBuilder => rowBuilder
                 .WithRowName("(X/Y)")
-                .WithSingleProperty<Vector2PropertyViewModel>(nameof(BezierCurve.Location)))
+                .WithSingleProperty<Vector2PropertyViewModel>(nameof(BezierCurveViewModel.Location), ConfigureAsPositionVector))
             .WithRow(rowBuilder => rowBuilder
                 .WithRowName("Поворот")
-                .WithSingleProperty<RotationEnumPropertyViewModel>(nameof(BezierCurve.Rotation))))
+                .WithSingleProperty<EnumPropertyViewModel>(nameof(BezierCurveViewModel.Rotation))))
         .WithGroup(groupBuilder => groupBuilder
             .WithGroupName("Вершины")
             .WithRow(rowBuilder => rowBuilder
                 .WithRowName("(X/Y)")
-                .WithSingleProperty<Vector2PropertyViewModel>(nameof(BezierCurve.Point1)))
+                .WithSingleProperty<Vector2PropertyViewModel>(nameof(BezierCurveViewModel.Point1), ConfigureAsPositionVector))
             .WithRow(rowBuilder => rowBuilder
                 .WithRowName("(X/Y)")
-                .WithSingleProperty<Vector2PropertyViewModel>(nameof(BezierCurve.Point2)))
+                .WithSingleProperty<Vector2PropertyViewModel>(nameof(BezierCurveViewModel.Point2), ConfigureAsPositionVector))
             .WithRow(rowBuilder => rowBuilder
                 .WithRowName("(X/Y)")
-                .WithSingleProperty<Vector2PropertyViewModel>(nameof(BezierCurve.Point3))))
+                .WithSingleProperty<Vector2PropertyViewModel>(nameof(BezierCurveViewModel.Point3), ConfigureAsPositionVector)))
         .WithGroup(groupBuilder => groupBuilder
             .WithGroupName("Свойства")
             .WithRow(rowBuilder => rowBuilder
                 .WithRowName("Граница")
-                .WithSingleProperty<FloatPropertyViewModel>(nameof(BezierCurve.StrokeThickness))
-                .WithSingleProperty<Color4PropertyViewModel>(nameof(BezierCurve.StrokeColor))
-                .WithLayout(layoutBuilder => layoutBuilder
-                    .WithRelativeSize(1)
-                    .WithAutoSize())))
+                .WithMultiProperty<StrokePropertiesViewModel>(multiPropertyBuilder => multiPropertyBuilder
+                    .WithProperty<EnumPropertyViewModel>(nameof(BezierCurveViewModel.StrokeThicknessType))
+                    .WithProperty<FloatPropertyViewModel>(nameof(BezierCurveViewModel.StrokeThickness), ConfigureAsSizeNumber)
+                    .WithProperty<ColorPropertyViewModel>(nameof(BezierCurveViewModel.StrokeColor)))))
         .Build();
 }

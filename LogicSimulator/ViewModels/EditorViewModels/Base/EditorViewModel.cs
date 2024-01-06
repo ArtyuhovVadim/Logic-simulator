@@ -1,35 +1,36 @@
 ﻿using System.ComponentModel;
-using LogicSimulator.Scene;
-using LogicSimulator.ViewModels.Base;
+using LogicSimulator.Infrastructure;
+using LogicSimulator.ViewModels.EditorViewModels.Base.Properties;
 using LogicSimulator.ViewModels.EditorViewModels.Layout;
+using WpfExtensions.Mvvm;
 
 namespace LogicSimulator.ViewModels.EditorViewModels.Base;
 
 public abstract class EditorViewModel : BindableBase
 {
-    private EditorLayout _layout;
+    private EditorLayout? _layout;
 
-    private IEnumerable<INotifyPropertyChanged> _objectsToEdit;
-
-    private object FirstObject => _objectsToEdit.FirstOrDefault();
-
-    private Type ObjectsType => FirstObject.GetType();
+    private IEnumerable<INotifyPropertyChanged>? _objectsToEdit;
 
     public EditorLayout Layout => _layout ??= CreateLayout();
 
-    public IEnumerable<object> Objects => _objectsToEdit;
+    public IEnumerable<object> Objects => _objectsToEdit!;
 
-    public void SetObjectsToEdit<T>(IEnumerable<T> objects) where T : class, INotifyPropertyChanged
+    public void SetObjectsToEdit<T>(ICollection<T> objects) where T : class, INotifyPropertyChanged
     {
         if (_objectsToEdit is not null)
         {
+            Layout.EndEdit();
+
             foreach (var obj in _objectsToEdit)
             {
                 obj.PropertyChanged -= OnPropertyChanged;
             }
+
+            _objectsToEdit = null;
         }
 
-        if (!objects.Any()) return;
+        if (objects.Count == 0) return;
 
         _objectsToEdit = new List<INotifyPropertyChanged>(objects);
 
@@ -38,16 +39,51 @@ public abstract class EditorViewModel : BindableBase
             obj.PropertyChanged += OnPropertyChanged;
         }
 
-        foreach (var prop in ObjectsType.GetProperties().Where(x => Attribute.IsDefined(x, typeof(EditableAttribute))))
-        {
-            OnPropertyChanged(prop.Name);
-            Layout.PropertyChange(prop.Name);
-        }
+        Layout.StartEdit();
+        Layout.RaisePropertyChangeForAllProperties();
 
         OnPropertyChanged(nameof(Layout));
     }
 
-    protected void OnPropertyChanged(object sender, PropertyChangedEventArgs e) => Layout.PropertyChange(e.PropertyName);
+    public void StopObjectsEdit()
+    {
+        if (_objectsToEdit is null) return;
+
+        Layout.EndEdit();
+
+        foreach (var obj in _objectsToEdit)
+        {
+            obj.PropertyChanged -= OnPropertyChanged;
+        }
+
+        _objectsToEdit = null;
+    }
+
+    protected void OnPropertyChanged(object? sender, PropertyChangedEventArgs e) => Layout.PropertyChange(e.PropertyName!);
 
     protected abstract EditorLayout CreateLayout();
+
+    protected static void ConfigureAsPositionVector(Vector2PropertyViewModel prop)
+    {
+        prop.NumberSuffix = Constants.MillimetreSuffix;
+        prop.DisplayCoefficient = Constants.MillimetreToPixelFactor;
+    }
+
+    protected static void ConfigureAsSizeNumber(FloatPropertyViewModel prop)
+    {
+        prop.MinNumber = 1;
+        prop.NumberSuffix = Constants.MillimetreSuffix;
+        prop.DisplayCoefficient = Constants.MillimetreToPixelFactor;
+    }
+
+    protected static void ConfigureAsFontSizeNumber(FloatPropertyViewModel prop)
+    {
+        prop.MinNumber = 6;
+        prop.NumberSuffix = Constants.PixelSuffix;
+    }
+
+    protected static void ConfigureAsAngleNumber(FloatPropertyViewModel prop)
+    {
+        prop.NumberSuffix = Constants.AngleSuffix;
+    }
 }

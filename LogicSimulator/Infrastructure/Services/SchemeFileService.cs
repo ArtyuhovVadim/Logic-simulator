@@ -3,7 +3,7 @@ using System.Text;
 using LogicSimulator.Infrastructure.Services.Interfaces;
 using LogicSimulator.Infrastructure.YamlConverters;
 using LogicSimulator.Models;
-using LogicSimulator.Scene.SceneObjects;
+using LogicSimulator.ViewModels.ObjectViewModels;
 using YamlDotNet.Core;
 using YamlDotNet.Serialization;
 
@@ -20,40 +20,33 @@ public class SchemeFileService : ISchemeFileService
     public SchemeFileService()
     {
         var vector2Converter = new Vector2YamlConverter();
-        var color4Converter = new Color4YamlConverter();
-        var lineConverter = new LineYamlConverter();
+        var color4Converter = new ColorYamlConverter();
 
         var serializerBuilder = new SerializerBuilder()
             .WithTypeConverter(vector2Converter)
             .WithTypeConverter(color4Converter)
-            .WithTypeConverter(lineConverter)
-            .WithTagMapping(new TagName("!Rectangle"), typeof(Rectangle))
-            .WithTagMapping(new TagName("!RoundedRectangle"), typeof(RoundedRectangle))
-            .WithTagMapping(new TagName("!Ellipse"), typeof(Ellipse))
-            .WithTagMapping(new TagName("!Line"), typeof(Line))
-            .WithTagMapping(new TagName("!BezierCurve"), typeof(BezierCurve))
-            .WithTagMapping(new TagName("!TextBlock"), typeof(TextBlock))
-            .WithTagMapping(new TagName("!Arc"), typeof(Arc))
-            .WithTagMapping(new TagName("!Image"), typeof(Image))
+            .WithTagMapping(new TagName("!Rectangle"), typeof(RectangleViewModel))
+            .WithTagMapping(new TagName("!RoundedRectangle"), typeof(RoundedRectangleViewModel))
+            .WithTagMapping(new TagName("!Ellipse"), typeof(EllipseViewModel))
+            .WithTagMapping(new TagName("!Line"), typeof(LineViewModel))
+            .WithTagMapping(new TagName("!BezierCurve"), typeof(BezierCurveViewModel))
+            .WithTagMapping(new TagName("!TextBlock"), typeof(TextBlockViewModel))
+            .WithTagMapping(new TagName("!Arc"), typeof(ArcViewModel))
+            .WithTagMapping(new TagName("!Image"), typeof(ImageViewModel))
             ;
 
         var deserializerBuilder = new DeserializerBuilder()
             .WithTypeConverter(vector2Converter)
             .WithTypeConverter(color4Converter)
-            .WithTypeConverter(lineConverter)
-            .WithTagMapping(new TagName("!Rectangle"), typeof(Rectangle))
-            .WithTagMapping(new TagName("!RoundedRectangle"), typeof(RoundedRectangle))
-            .WithTagMapping(new TagName("!Ellipse"), typeof(Ellipse))
-            .WithTagMapping(new TagName("!Line"), typeof(Line))
-            .WithTagMapping(new TagName("!BezierCurve"), typeof(BezierCurve))
-            .WithTagMapping(new TagName("!TextBlock"), typeof(TextBlock))
-            .WithTagMapping(new TagName("!Arc"), typeof(Arc))
-            .WithTagMapping(new TagName("!Image"), typeof(Image))
+            .WithTagMapping(new TagName("!Rectangle"), typeof(RectangleViewModel))
+            .WithTagMapping(new TagName("!RoundedRectangle"), typeof(RoundedRectangleViewModel))
+            .WithTagMapping(new TagName("!Ellipse"), typeof(EllipseViewModel))
+            .WithTagMapping(new TagName("!Line"), typeof(LineViewModel))
+            .WithTagMapping(new TagName("!BezierCurve"), typeof(BezierCurveViewModel))
+            .WithTagMapping(new TagName("!TextBlock"), typeof(TextBlockViewModel))
+            .WithTagMapping(new TagName("!Arc"), typeof(ArcViewModel))
+            .WithTagMapping(new TagName("!Image"), typeof(ImageViewModel))
             ;
-
-
-        lineConverter.ValueSerializer = serializerBuilder.BuildValueSerializer();
-        lineConverter.ValueDeserializer = deserializerBuilder.BuildValueDeserializer();
 
         _serializer = serializerBuilder.Build();
         _deserializer = deserializerBuilder.Build();
@@ -80,7 +73,7 @@ public class SchemeFileService : ISchemeFileService
         }
     }
 
-    public bool ReadFromFile(string path, out Scheme scheme)
+    public bool ReadFromFile(string path, out Scheme? scheme)
     {
         scheme = null;
 
@@ -92,11 +85,7 @@ public class SchemeFileService : ISchemeFileService
         try
         {
             using var streamReader = new StreamReader(path, Encoding.Default, false, _fileReadStreamOptions);
-
-            var serializedScheme = streamReader.ReadToEnd();
-            //TODO: scheme = _deserializer.Deserialize<Scheme>(streamReader);
-            scheme = _deserializer.Deserialize<Scheme>(serializedScheme);
-
+            scheme = _deserializer.Deserialize<Scheme>(streamReader);
             return true;
         }
         catch

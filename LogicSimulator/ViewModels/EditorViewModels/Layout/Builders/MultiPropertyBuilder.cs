@@ -8,10 +8,15 @@ public class MultiPropertyBuilder<T> where T : MultiPropertyViewModel, new()
 
     public MultiPropertyBuilder(EditorViewModel editorViewModel) => _multiProperty = new T { EditorViewModel = editorViewModel };
 
-    public MultiPropertyBuilder<T> WithProperty<TProp>(string name) where TProp : SinglePropertyViewModel, new()
+    public MultiPropertyBuilder<T> WithProperty<TPropertyViewModel>(string name) where TPropertyViewModel : SinglePropertyViewModel, new()
     {
-        _multiProperty.AddProperty<TProp>(name);
+        _multiProperty.AddProperty<TPropertyViewModel>(name);
+        return this;
+    }
 
+    public MultiPropertyBuilder<T> WithProperty<TPropertyViewModel>(string name, Action<TPropertyViewModel> configureAction) where TPropertyViewModel : SinglePropertyViewModel, new()
+    {
+        _multiProperty.AddProperty(name, configureAction);
         return this;
     }
 

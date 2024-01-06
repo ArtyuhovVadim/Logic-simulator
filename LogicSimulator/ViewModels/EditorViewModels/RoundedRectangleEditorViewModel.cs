@@ -1,12 +1,13 @@
 ﻿using LogicSimulator.Infrastructure;
-using LogicSimulator.Scene.SceneObjects;
 using LogicSimulator.ViewModels.EditorViewModels.Base;
+using LogicSimulator.ViewModels.EditorViewModels.Base.Properties;
 using LogicSimulator.ViewModels.EditorViewModels.Layout;
 using LogicSimulator.ViewModels.EditorViewModels.Layout.Builders;
+using LogicSimulator.ViewModels.ObjectViewModels;
 
 namespace LogicSimulator.ViewModels.EditorViewModels;
 
-[Editor(typeof(RoundedRectangle))]
+[Editor(typeof(RoundedRectangleViewModel))]
 public class RoundedRectangleEditorViewModel : EditorViewModel
 {
     protected override EditorLayout CreateLayout() => LayoutBuilder
@@ -16,35 +17,34 @@ public class RoundedRectangleEditorViewModel : EditorViewModel
             .WithGroupName("Расположение")
             .WithRow(rowBuilder => rowBuilder
                 .WithRowName("(X/Y)")
-                .WithSingleProperty<Vector2PropertyViewModel>(nameof(RoundedRectangle.Location)))
+                .WithSingleProperty<Vector2PropertyViewModel>(nameof(RoundedRectangleViewModel.Location), ConfigureAsPositionVector))
             .WithRow(rowBuilder => rowBuilder
                 .WithRowName("Поворот")
-                .WithSingleProperty<RotationEnumPropertyViewModel>(nameof(RoundedRectangle.Rotation))))
+                .WithSingleProperty<EnumPropertyViewModel>(nameof(RoundedRectangleViewModel.Rotation))))
         .WithGroup(groupBuilder => groupBuilder
             .WithGroupName("Свойства")
             .WithRow(rowBuilder => rowBuilder
                 .WithRowName("Ширина")
-                .WithSingleProperty<FloatPropertyViewModel>(nameof(RoundedRectangle.Width)))
+                .WithSingleProperty<FloatPropertyViewModel>(nameof(RoundedRectangleViewModel.Width), ConfigureAsSizeNumber))
             .WithRow(rowBuilder => rowBuilder
                 .WithRowName("Высота")
-                .WithSingleProperty<FloatPropertyViewModel>(nameof(RoundedRectangle.Height)))
+                .WithSingleProperty<FloatPropertyViewModel>(nameof(RoundedRectangleViewModel.Height), ConfigureAsSizeNumber))
             .WithRow(rowBuilder => rowBuilder
                 .WithRowName("Радиус X")
-                .WithSingleProperty<FloatPropertyViewModel>(nameof(RoundedRectangle.RadiusX)))
+                .WithSingleProperty<FloatPropertyViewModel>(nameof(RoundedRectangleViewModel.RadiusX), ConfigureAsSizeNumber))
             .WithRow(rowBuilder => rowBuilder
                 .WithRowName("Радиус Y")
-                .WithSingleProperty<FloatPropertyViewModel>(nameof(RoundedRectangle.RadiusY)))
+                .WithSingleProperty<FloatPropertyViewModel>(nameof(RoundedRectangleViewModel.RadiusY), ConfigureAsSizeNumber))
             .WithRow(rowBuilder => rowBuilder
                 .WithRowName("Граница")
-                .WithSingleProperty<FloatPropertyViewModel>(nameof(RoundedRectangle.StrokeThickness))
-                .WithSingleProperty<Color4PropertyViewModel>(nameof(RoundedRectangle.StrokeColor))
-                .WithLayout(layoutBuilder => layoutBuilder
-                    .WithRelativeSize(1)
-                    .WithAutoSize()))
+                .WithMultiProperty<StrokePropertiesViewModel>(multiPropertyBuilder => multiPropertyBuilder
+                    .WithProperty<EnumPropertyViewModel>(nameof(RoundedRectangleViewModel.StrokeThicknessType))
+                    .WithProperty<FloatPropertyViewModel>(nameof(RoundedRectangleViewModel.StrokeThickness), ConfigureAsSizeNumber)
+                    .WithProperty<ColorPropertyViewModel>(nameof(RoundedRectangleViewModel.StrokeColor))))
         .WithRow(rowBuilder => rowBuilder
                 .WithRowName("Цвет заливки")
-                .WithSingleProperty<Color4PropertyViewModel>(nameof(RoundedRectangle.FillColor))
-                .WithSingleProperty<BoolPropertyViewModel>(nameof(RoundedRectangle.IsFilled))
+                    .WithSingleProperty<ColorPropertyViewModel>(nameof(RoundedRectangleViewModel.FillColor))
+                    .WithSingleProperty<BoolPropertyViewModel>(nameof(RoundedRectangleViewModel.IsFilled))
                 .WithLayout(layoutBuilder => layoutBuilder
                     .WithAutoSize()
                     .WithAutoSize())))

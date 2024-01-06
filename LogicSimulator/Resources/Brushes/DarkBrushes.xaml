@@ -1,0 +1,114 @@
+﻿<ResourceDictionary
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:b="clr-namespace:LogicSimulator.Resources.Brushes"
+    xmlns:o="http://schemas.microsoft.com/winfx/2006/xaml/presentation/options">
+
+    <!--#region MainWindow-->
+
+    <SolidColorBrush
+        x:Key="{x:Static b:BrushesKeys+MainWindow.StatusBarBackground}"
+        o:Freeze="True"
+        Color="#424242" />
+
+    <SolidColorBrush
+        x:Key="{x:Static b:BrushesKeys+MainWindow.SettingIconBrush}"
+        o:Freeze="True"
+        Color="White" />
+
+    <!--#endregion-->
+
+    <!--#region PropertiesView-->
+
+    <SolidColorBrush
+        x:Key="{x:Static b:BrushesKeys+PropertiesView.UndefinedValueBrush}"
+        o:Freeze="True"
+        Color="#F4E48C" />
+
+    <SolidColorBrush
+        x:Key="{x:Static b:BrushesKeys+PropertiesView.ColorPickerSecondUndefinedValueBrush}"
+        o:Freeze="True"
+        Color="#999999" />
+
+    <SolidColorBrush
+        x:Key="{x:Static b:BrushesKeys+PropertiesView.AddVertexIconBrush}"
+        o:Freeze="True"
+        Color="#FDFDFD" />
+
+    <SolidColorBrush
+        x:Key="{x:Static b:BrushesKeys+PropertiesView.RemoveVertexIconBrush}"
+        o:Freeze="True"
+        Color="#FDFDFD" />
+
+    <!--#endregion-->
+
+    <!--#region SchemeToolView-->
+
+    <SolidColorBrush
+        x:Key="{x:Static b:BrushesKeys+SchemeToolView.Background}"
+        o:Freeze="True"
+        Color="Transparent" />
+
+    <SolidColorBrush
+        x:Key="{x:Static b:BrushesKeys+SchemeToolView.MouseOverBackground}"
+        o:Freeze="True"
+        Color="#6283A2" />
+
+    <SolidColorBrush
+        x:Key="{x:Static b:BrushesKeys+SchemeToolView.ActiveBackground}"
+        o:Freeze="True"
+        Color="#6283A2" />
+
+    <!--#endregion-->
+
+    <!--#region SchemeView-->
+
+    <Color x:Key="{x:Static b:BrushesKeys+SchemeView.StartBackgroundColor}">
+        #C1C1C1
+    </Color>
+
+    <Color x:Key="{x:Static b:BrushesKeys+SchemeView.EndBackgroundColor}">
+        #E2E2E2
+    </Color>
+
+    <Color x:Key="{x:Static b:BrushesKeys+SchemeView.GridBackgroundColor}">
+        #FFFCF8
+    </Color>
+
+    <Color x:Key="{x:Static b:BrushesKeys+SchemeView.GridBoldLineColor}">
+        #DCDCD7
+    </Color>
+
+    <Color x:Key="{x:Static b:BrushesKeys+SchemeView.GridLineColor}">
+        #F0F0EB
+    </Color>
+
+    <Color x:Key="{x:Static b:BrushesKeys+SchemeView.NodeFillColor}">
+        #00FF00
+    </Color>
+
+    <Color x:Key="{x:Static b:BrushesKeys+SchemeView.NodeStrokeColor}">
+        #000000
+    </Color>
+
+    <Color x:Key="{x:Static b:BrushesKeys+SchemeView.RectangleSelectionNormalColor}">
+        #7DADFF
+    </Color>
+
+    <Color x:Key="{x:Static b:BrushesKeys+SchemeView.RectangleSelectionSecantColor}">
+        #63C763
+    </Color>
+
+    <SolidColorBrush
+        x:Key="{x:Static b:BrushesKeys+SchemeView.ToolIconBrush}"
+        o:Freeze="True"
+        Color="#FFFFFF" />
+
+    <SolidColorBrush
+        x:Key="{x:Static b:BrushesKeys+SchemeView.ToolsPanelBackground}"
+        o:Freeze="True"
+        Color="#404040" />
+
+    <!--#endregion-->
+
+</ResourceDictionary>

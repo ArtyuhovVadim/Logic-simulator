@@ -1,29 +1,26 @@
-﻿<c:Window
+﻿<WindowEx
     x:Class="LogicSimulator.Views.Windows.MainWindow"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:avm="clr-namespace:LogicSimulator.ViewModels.AnchorableViewModels"
-    xmlns:c="clr-namespace:LogicSimulator.Controls;assembly=LogicSimulator.Controls"
+    xmlns:b="clr-namespace:LogicSimulator.Resources.Brushes"
     xmlns:commands="clr-namespace:LogicSimulator.Infrastructure.Commands"
-    xmlns:con="clr-namespace:LogicSimulator.Infrastructure.Converters"
+    xmlns:conv="clr-namespace:WpfExtensions.Converters;assembly=WpfExtensions"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-    xmlns:fa="http://schemas.fontawesome.io/icons/"
-    xmlns:infrastructure="clr-namespace:LogicSimulator.Infrastructure"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:svm="clr-namespace:LogicSimulator.ViewModels.StatusViewModels"
     xmlns:viewModels="clr-namespace:LogicSimulator.ViewModels"
     xmlns:views="clr-namespace:LogicSimulator.Views"
     Title="Logic-simulator"
     Width="1280"
     Height="720"
-    DataContext="{Binding Path=MainWindowViewModel,
-                          Source={StaticResource Locator}}"
-    Icon="/Icons/icon512x512.png"
+    d:DataContext="{d:DesignInstance Type=viewModels:MainWindowViewModel}"
+    Icon="/Resources/Icons/icon512x512.png"
+    Style="{StaticResource {x:Type WindowEx}}"
     mc:Ignorable="d">
 
-    <c:Window.Resources>
-        <con:Vector2Converter x:Key="Vector2Converter" />
+    <WindowEx.Resources>
         <commands:AppExitCommand x:Key="AppExitCommand" />
-    </c:Window.Resources>
+    </WindowEx.Resources>
 
     <DockPanel>
         <Grid DockPanel.Dock="Top">
@@ -40,51 +37,47 @@
             </Menu>
 
             <Button
-                Height="21"
-                Margin="2,0,2,0"
-                Padding="5"
+                Height="18"
+                Margin="2"
+                Padding="3"
                 HorizontalAlignment="Right"
                 VerticalAlignment="Center"
                 Background="Transparent"
                 BorderThickness="0">
-                <fa:ImageAwesome
-                    Foreground="White"
-                    Icon="Cog"
+                <Path
+                    Data="{StaticResource CogIcon}"
+                    Fill="{DynamicResource {x:Static b:BrushesKeys+MainWindow.SettingIconBrush}}"
                     SnapsToDevicePixels="True"
+                    Stretch="Uniform"
                     UseLayoutRounding="True" />
             </Button>
         </Grid>
 
-        <Grid DockPanel.Dock="Bottom">
-            <StatusBar Background="#424242">
-                <TextBlock
-                    Margin="0,0,5,0"
-                    Foreground="White"
-                    Text="Статус..." />
-
-                <!--<TextBlock
-                    Margin="0,0,5,0"
-                    Foreground="White"
-                    Text="{Binding Path=ActiveContent.Scale,
-                                   StringFormat='Масштаб: {0:0.00}',
-                                   FallbackValue=''}" />
-                <TextBlock
-                    Margin="0,0,5,0"
-                    Foreground="White"
-                    Text="{Binding Path=ActiveContent.MousePosition,
-                                   StringFormat='Позиция курсора: {0}',
-                                   Converter={StaticResource Vector2Converter},
-                                   FallbackValue=''}" />
-                <TextBlock
-                    Margin="0,0,5,0"
-                    Foreground="White"
-                    Text="{Binding Path=ActiveContent.Objects.Count,
-                                   StringFormat='Кол-во объектов: {0}',
-                                   FallbackValue=''}" />-->
-            </StatusBar>
+        <Grid Background="{DynamicResource {x:Static b:BrushesKeys+MainWindow.StatusBarBackground}}" DockPanel.Dock="Bottom">
+            <StackPanelEx
+                Margin="5,0,0,0"
+                VerticalAlignment="Center"
+                Gap="5"
+                Orientation="Horizontal">
+                <StackPanelEx.Resources>
+                    <Style BasedOn="{StaticResource VerticalSeparator}" TargetType="{x:Type Separator}" />
+                </StackPanelEx.Resources>
+                <TextBlock Text="{Binding Path=DockingViewModel.ActiveDocumentViewModel.Title, StringFormat='Активный документ: {0}', FallbackValue='Нет активных файлов'}" />
+                <Separator Visibility="{Binding Path=CurrentStatusViewModel, Converter={conv:NullToVisibilityConverter}}" />
+                <ContentControl Content="{Binding Path=CurrentStatusViewModel, TargetNullValue=''}" Focusable="False">
+                    <ContentControl.Resources>
+                        <DataTemplate DataType="{x:Type svm:SchemeStatusViewModel}">
+                            <views:SchemeStatusBarView />
+                        </DataTemplate>
+                        <DataTemplate DataType="{x:Type svm:EmptyStatusViewModel}">
+                            <TextBlock Text="Нет активных файлов" />
+                        </DataTemplate>
+                    </ContentControl.Resources>
+                </ContentControl>
+            </StackPanelEx>
 
             <Menu HorizontalAlignment="Right">
-                <MenuItem Header="Панели" ItemsSource="{Binding Path=AnchorableViewModels}">
+                <MenuItem Header="Панели" ItemsSource="{Binding Path=DockingViewModel.ToolViewModels}">
                     <MenuItem.ItemContainerStyle>
                         <Style BasedOn="{StaticResource {x:Type MenuItem}}" TargetType="{x:Type MenuItem}">
                             <Setter Property="IsCheckable" Value="True" />
@@ -96,58 +89,6 @@
             </Menu>
         </Grid>
 
-        <DockingManager
-            ActiveContent="{Binding Path=ActiveContent,
-                                    Mode=TwoWay}"
-            AnchorablesSource="{Binding Path=AnchorableViewModels}"
-            DocumentsSource="{Binding Path=OpenedSchemes}">
-            <DockingManager.LayoutItemTemplateSelector>
-                <infrastructure:PanesTemplateSelector>
-                    <infrastructure:PanesTemplateSelector.SchemeViewTemplate>
-                        <DataTemplate DataType="{x:Type avm:SchemeViewModel}">
-                            <views:SchemeView />
-                        </DataTemplate>
-                    </infrastructure:PanesTemplateSelector.SchemeViewTemplate>
-                    <infrastructure:PanesTemplateSelector.PropertiesViewTemplate>
-                        <DataTemplate DataType="{x:Type avm:PropertiesViewModel}">
-                            <views:PropertiesView />
-                        </DataTemplate>
-                    </infrastructure:PanesTemplateSelector.PropertiesViewTemplate>
-                    <infrastructure:PanesTemplateSelector.ProjectExplorerViewTemplate>
-                        <DataTemplate DataType="{x:Type avm:ProjectExplorerViewModel}">
-                            <views:ProjectExplorerView />
-                        </DataTemplate>
-                    </infrastructure:PanesTemplateSelector.ProjectExplorerViewTemplate>
-                </infrastructure:PanesTemplateSelector>
-            </DockingManager.LayoutItemTemplateSelector>
-            <DockingManager.LayoutItemContainerStyleSelector>
-                <infrastructure:PanesStyleSelector>
-                    <infrastructure:PanesStyleSelector.DocumentViewStyle>
-                        <Style TargetType="{x:Type LayoutDocumentItem}">
-                            <Setter Property="Title" Value="{Binding Path=Model.Title}" />
-                            <Setter Property="IsActive" Value="{Binding Path=Model.IsActive, Mode=TwoWay}" />
-                            <Setter Property="IsSelected" Value="{Binding Path=Model.IsSelected, Mode=TwoWay}" />
-                            <Setter Property="ContentId" Value="{Binding Path=Model.ContentId}" />
-                            <Setter Property="CloseCommand" Value="{Binding Path=Model.CloseCommand}" />
-                        </Style>
-                    </infrastructure:PanesStyleSelector.DocumentViewStyle>
-                    <infrastructure:PanesStyleSelector.ToolViewStyle>
-                        <Style TargetType="{x:Type LayoutAnchorableItem}">
-                            <Setter Property="Title" Value="{Binding Path=Model.Title}" />
-                            <Setter Property="IsActive" Value="{Binding Path=Model.IsActive, Mode=TwoWay}" />
-                            <Setter Property="IsSelected" Value="{Binding Path=Model.IsSelected, Mode=TwoWay}" />
-                            <Setter Property="ContentId" Value="{Binding Path=Model.ContentId}" />
-                            <Setter Property="Visibility" Value="{Binding Path=Model.IsVisible, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, ConverterParameter={x:Static Visibility.Hidden}, Converter={BoolToVisibilityConverter}}" />
-                        </Style>
-                    </infrastructure:PanesStyleSelector.ToolViewStyle>
-                </infrastructure:PanesStyleSelector>
-            </DockingManager.LayoutItemContainerStyleSelector>
-
-            <LayoutRoot>
-                <LayoutPanel>
-                    <LayoutDocumentPane />
-                </LayoutPanel>
-            </LayoutRoot>
-        </DockingManager>
+        <views:DockingView DataContext="{Binding Path=DockingViewModel}" />
     </DockPanel>
-</c:Window>
+</WindowEx>

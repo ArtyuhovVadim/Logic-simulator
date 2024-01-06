@@ -4,9 +4,7 @@ namespace LogicSimulator.ViewModels.EditorViewModels.Layout.Builders;
 
 public class RowLayoutBuilder
 {
-    private readonly List<GridLength> _layout;
-
-    public RowLayoutBuilder() => _layout = new List<GridLength>();
+    private readonly List<GridLength> _layout = [];
 
     public RowLayoutBuilder WithAutoSize()
     {

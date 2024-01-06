@@ -1,87 +1,33 @@
-﻿using System.Collections.Specialized;
+﻿using System.Collections;
+using System.Collections.ObjectModel;
+using System.Collections.Specialized;
+using System.ComponentModel;
 using System.Windows;
 using System.Windows.Input;
+using System.Windows.Interop;
+using System.Windows.Markup;
 using System.Windows.Media;
-using LogicSimulator.Scene.Components.Base;
-using LogicSimulator.Scene.SceneObjects.Base;
-using LogicSimulator.Scene.Tools.PlacingTools;
+using LogicSimulator.Scene.DirectX;
+using LogicSimulator.Scene.Layers.Base;
 using LogicSimulator.Utils;
 using SharpDX;
+using Point = System.Windows.Point;
 
 namespace LogicSimulator.Scene;
 
-public class Scene2D : FrameworkElement
+[ContentProperty(nameof(Layers))]
+public class Scene2D : FrameworkElement, IDisposable
 {
-    private readonly SceneRenderer _renderer;
+    private bool _isRenderRequested;
 
-    private bool _isLeftMouseButtonPressedOnScene;
+    private Matrix3x2 _scaleMatrix = Matrix3x2.Identity;
+    private Matrix3x2 _translationMatrix = Matrix3x2.Identity;
+    private Matrix3x2 _rotationMatrix = Matrix3x2.Identity;
 
-    #region Objects
+    private SceneRenderer? _renderer;
 
-    public IEnumerable<BaseSceneObject> Objects
-    {
-        get => (IEnumerable<BaseSceneObject>)GetValue(ObjectsProperty);
-        set => SetValue(ObjectsProperty, value);
-    }
+    private D2DContext Context => _renderer?.D2DContext ?? throw new ApplicationException("Context is not initialized.");
 
-    public static readonly DependencyProperty ObjectsProperty =
-        DependencyProperty.Register(nameof(Objects), typeof(IEnumerable<BaseSceneObject>), typeof(Scene2D),
-            new PropertyMetadata(Enumerable.Empty<BaseSceneObject>(), OnObjectsChanged));
-
-    private static void OnObjectsChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
-    {
-        if (d is not Scene2D scene2D) return;
-
-        if (e.NewValue is not INotifyCollectionChanged collectionChanged) return;
-
-        collectionChanged.CollectionChanged += (_, _) =>
-        {
-            RenderNotifier.RequestRender(scene2D);
-        };
-    }
-
-    #endregion
-
-    #region Components
-
-    public IEnumerable<BaseRenderingComponent> Components
-    {
-        get => (IEnumerable<BaseRenderingComponent>)GetValue(ComponentsProperty);
-        set => SetValue(ComponentsProperty, value);
-    }
-
-    public static readonly DependencyProperty ComponentsProperty =
-        DependencyProperty.Register(nameof(Components), typeof(IEnumerable<BaseRenderingComponent>), typeof(Scene2D),
-            new PropertyMetadata(Enumerable.Empty<BaseRenderingComponent>(), OnComponentsChanged));
-
-    private static void OnComponentsChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
-    {
-        if (d is not Scene2D scene2D) return;
-
-        if (e.NewValue is not INotifyCollectionChanged collectionChanged) return;
-
-        collectionChanged.CollectionChanged += (_, _) =>
-        {
-            RenderNotifier.RequestRender(scene2D);
-        };
-    }
-
-    #endregion
-
-    #region ToolsController
-
-    public ToolsController ToolsController
-    {
-        get => (ToolsController)GetValue(ToolsControllerProperty);
-        set => SetValue(ToolsControllerProperty, value);
-    }
-
-    public static readonly DependencyProperty ToolsControllerProperty =
-        DependencyProperty.Register(nameof(ToolsController), typeof(ToolsController), typeof(Scene2D), new PropertyMetadata(default(ToolsController)));
-
-    #endregion
-
-    //TODO: Сильно влияет на производительноть
     #region Scale
 
     public float Scale
@@ -97,16 +43,57 @@ public class Scene2D : FrameworkElement
     {
         if (d is not Scene2D scene) return;
 
-        var newValue = (float)e.NewValue;
-        var renderer = scene._renderer;
+        scene._scaleMatrix = Matrix3x2.Scaling((float)e.NewValue);
 
-        renderer.Transform = renderer.Transform with { M11 = newValue, M22 = newValue };
-        renderer.RequestRender();
+        scene._isRenderRequested = true;
     }
 
     #endregion
 
-    //TODO: Сильно влияет на производительноть
+    #region Translation
+
+    public Vector2 Translation
+    {
+        get => (Vector2)GetValue(TranslationProperty);
+        set => SetValue(TranslationProperty, value);
+    }
+
+    public static readonly DependencyProperty TranslationProperty =
+        DependencyProperty.Register(nameof(Translation), typeof(Vector2), typeof(Scene2D), new PropertyMetadata(Vector2.Zero, OnTranslationChanged));
+
+    private static void OnTranslationChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+    {
+        if (d is not Scene2D scene) return;
+
+        scene._translationMatrix = Matrix3x2.Translation((Vector2)e.NewValue);
+
+        scene._isRenderRequested = true;
+    }
+
+    #endregion
+
+    #region Rotation
+
+    public float Rotation
+    {
+        get => (float)GetValue(RotationProperty);
+        set => SetValue(RotationProperty, value);
+    }
+
+    public static readonly DependencyProperty RotationProperty =
+        DependencyProperty.Register(nameof(Rotation), typeof(float), typeof(Scene2D), new PropertyMetadata(0f, OnRotationChanged));
+
+    private static void OnRotationChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+    {
+        if (d is not Scene2D scene) return;
+
+        scene._rotationMatrix = Matrix3x2.Rotation(MathUtil.DegreesToRadians((float)e.NewValue));
+
+        scene._isRenderRequested = true;
+    }
+
+    #endregion
+
     #region MousePosition
 
     private static readonly DependencyPropertyKey MousePositionPropertyKey
@@ -136,169 +123,213 @@ public class Scene2D : FrameworkElement
 
     #endregion
 
-    public float Dpi => (float)VisualTreeHelper.GetDpi(this).PixelsPerInchX;
+    public ObservableCollection<BaseSceneLayer> Layers { get; } = new();
 
-    internal ResourceFactory ResourceFactory { get; private set; }
+    public Matrix3x2 Transform => _scaleMatrix * _rotationMatrix * _translationMatrix;
 
-    public Vector2 Size => _renderer.RenderSize;
+    public Size2F PixelSize => Context.DrawingContext.DrawingSize;
 
-    public Matrix3x2 Transform => _renderer.Transform;
-
-    public Vector2 Translation
-    {
-        get => new(_renderer.Transform.M31, _renderer.Transform.M32);
-        set
-        {
-            _renderer.Transform = _renderer.Transform with { M31 = value.X, M32 = value.Y };
-            _renderer.RequestRender();
-        }
-    }
+    public float Dpi { private set; get; }
 
     public Scene2D()
     {
         ClipToBounds = true;
         Focusable = true;
+        UseLayoutRounding = true;
+        SnapsToDevicePixels = true;
         VisualEdgeMode = EdgeMode.Aliased;
 
-        RenderNotifier.RegisterScene(this);
-
-        _renderer = new SceneRenderer(this);
-
-        ResourceFactory = new ResourceFactory(_renderer);
-
+        Layers.CollectionChanged += OnLayersCollectionChanged;
         Loaded += OnLoaded;
     }
 
-    public T GetComponent<T>() where T : BaseRenderingComponent
+    public Vector2 PointFromControlToSceneSpace(Point pos) => pos.ToVector2().DpiCorrect(Dpi).InvertAndTransform(Transform);
+
+    public Vector2 PointFromControlToSceneSpace(Vector2 pos) => pos.DpiCorrect(Dpi).InvertAndTransform(Transform);
+
+    protected override IEnumerator LogicalChildren => Layers.GetEnumerator();
+
+    protected override void OnRender(DrawingContext drawingContext) => _renderer?.WpfRender(drawingContext, RenderSize);
+
+    protected override void OnRenderSizeChanged(SizeChangedInfo sizeInfo)
     {
-        return (T)Components.FirstOrDefault(x => x.GetType() == typeof(T));
+        if (_renderer is null)
+            return;
+
+        _renderer.Resize(sizeInfo.NewSize, Dpi, renderAfterResize: false);
+
+        foreach (var layer in Layers)
+        {
+            layer.InitializeCache(Context.Cache);
+        }
+
+        _renderer.RequestRender();
     }
-
-    protected override void OnRender(DrawingContext drawingContext) => _renderer.WpfRender(drawingContext);
-
-    protected override void OnRenderSizeChanged(SizeChangedInfo sizeInfo) => _renderer.Resize(sizeInfo.NewSize);
 
     protected override void OnMouseMove(MouseEventArgs e)
     {
-        base.OnMouseMove(e);
-
-        var pos = GetMousePosition();
-
-        MousePosition = pos.InvertAndTransform(Transform);
-
-        if (e.LeftButton == MouseButtonState.Pressed && _isLeftMouseButtonPressedOnScene)
-            ToolsController?.MouseLeftButtonDragged(this, pos);
-        if (e.RightButton == MouseButtonState.Pressed)
-            ToolsController?.MouseRightButtonDragged(this, pos);
-        if (e.MiddleButton == MouseButtonState.Pressed)
-            ToolsController?.MouseMiddleButtonDragged(this, pos);
-
-        ToolsController?.MouseMove(this, pos);
+        MousePosition = e.GetPosition(this).ToVector2().DpiCorrect(Dpi).InvertAndTransform(Transform);
     }
 
-    protected override void OnMouseLeftButtonDown(MouseButtonEventArgs e)
+    private void OnLayersCollectionChanged(object? sender, NotifyCollectionChangedEventArgs args)
     {
-        base.OnMouseLeftButtonDown(e);
-
-        _isLeftMouseButtonPressedOnScene = true;
-
-        ToolsController?.MouseLeftButtonDown(this, GetMousePosition());
-    }
-
-    protected override void OnMouseLeftButtonUp(MouseButtonEventArgs e)
-    {
-        base.OnMouseLeftButtonUp(e);
-
-        if (_isLeftMouseButtonPressedOnScene)
-            ToolsController?.MouseLeftButtonUp(this, GetMousePosition());
-
-        _isLeftMouseButtonPressedOnScene = false;
-
-        Mouse.Capture(null);
-    }
-
-    protected override void OnMouseRightButtonDown(MouseButtonEventArgs e)
-    {
-        base.OnMouseRightButtonDown(e);
-
-        ToolsController?.MouseRightButtonDown(this, GetMousePosition());
-    }
-
-    protected override void OnMouseRightButtonUp(MouseButtonEventArgs e)
-    {
-        base.OnMouseRightButtonUp(e);
-
-        ToolsController?.MouseRightButtonUp(this, GetMousePosition());
-
-        Mouse.Capture(null);
-    }
-
-    protected override void OnMouseDown(MouseButtonEventArgs e)
-    {
-        base.OnMouseDown(e);
-
-        if (e.MiddleButton == MouseButtonState.Pressed)
+        switch (args.Action)
         {
-            ToolsController?.MouseMiddleButtonDown(this, GetMousePosition());
-        }
-
-        Mouse.Capture(this);
-        Keyboard.Focus(this);
-    }
-
-    protected override void OnMouseUp(MouseButtonEventArgs e)
-    {
-        base.OnMouseUp(e);
-
-        if (e.ChangedButton == MouseButton.Middle)
-        {
-            ToolsController?.MouseMiddleButtonUp(this, GetMousePosition());
-            Mouse.Capture(null);
+            case NotifyCollectionChangedAction.Add:
+                AddLogicalChild(args.NewItems![0]);
+                break;
+            case NotifyCollectionChangedAction.Remove:
+                RemoveLogicalChild(args.NewItems![0]);
+                break;
+            case NotifyCollectionChangedAction.Replace:
+                throw new NotImplementedException();
+            case NotifyCollectionChangedAction.Move:
+                throw new NotImplementedException();
+            case NotifyCollectionChangedAction.Reset:
+                break;
+            default:
+                throw new ArgumentOutOfRangeException();
         }
     }
 
-    protected override void OnKeyDown(KeyEventArgs e)
+    private void OnLoaded(object sender, RoutedEventArgs e)
     {
-        base.OnKeyDown(e);
+        if (DesignerProperties.GetIsInDesignMode(this))
+            return;
 
-        ToolsController?.KeyDown(this, e, GetMousePosition());
+        if (_renderer is not null)
+            return;
 
-        if (e.Key == Key.D1)
+        Dpi = (float)VisualTreeHelper.GetDpi(this).PixelsPerInchX;
+
+        var rootWindow = Window.GetWindow(this);
+
+        if (rootWindow is null)
+            throw new ApplicationException("Can't find scene root window.");
+
+        var handle = new WindowInteropHelper(rootWindow).Handle;
+
+        _renderer = new SceneRenderer(OnRender, handle);
+        _renderer.Resize(RenderSize, Dpi, renderAfterResize: false);
+        _renderer.IsFrontBufferAvailableChanged += OnIsFrontBufferAvailableChanged;
+
+        foreach (var layer in Layers)
         {
-            ToolsController.SwitchTool<RectanglePlacingTool>();
+            layer.InitializeCache(Context.Cache);
         }
 
-        if (e.Key == Key.D2)
-        {
-            ToolsController.SwitchTool<EllipsePlacingTool>();
-        }
+        InvalidateVisual();
 
-        if (e.Key == Key.D3)
-        {
-            ToolsController.SwitchTool<TextBlockPlacingTool>();
-        }
+        CompositionTarget.Rendering += OnCompositionTargetRendering;
 
-        if (e.Key == Key.D4)
+        _renderer.RequestRender();
+    }
+
+    private void OnCompositionTargetRendering(object? sender, EventArgs e)
+    {
+        if (!IsVisible)
+            return;
+
+        if (IsRequiredRenderingEnabled)
         {
-            ToolsController.SwitchTool<WirePlacingTool>();
+            if (_isRenderRequested || Layers.Any(x => x.IsDirty))
+            {
+
+                _renderer!.RequestRender();
+                _isRenderRequested = false;
+            }
+        }
+        else
+        {
+            _renderer!.RequestRender();
         }
     }
 
-    protected override void OnKeyUp(KeyEventArgs e)
+    private void OnRender(DirectXContext context)
     {
-        base.OnKeyUp(e);
+        try
+        {
+            RenderDebugger.BeginRender(this, Context);
 
-        ToolsController?.KeyUp(this, e, GetMousePosition());
+            Context.DrawingContext.BeginDraw();
+            Context.DrawingContext.PushTransform(Transform);
+
+            foreach (var layer in Layers)
+            {
+                layer.Render(this, Context);
+            }
+
+            Context.DrawingContext.PopTransform();
+
+            RenderDebugger.EndRender();
+            RenderDebugger.DrawStatistics(this, Context, new Vector2(5));
+
+            Context.DrawingContext.EndDraw();
+        }
+        catch (Exception ex)
+        {
+            Reinitialize();
+            Console.WriteLine(ex);
+        }
     }
 
-    protected override void OnMouseWheel(MouseWheelEventArgs e)
+    private void OnIsFrontBufferAvailableChanged(bool newValue)
     {
-        base.OnMouseWheel(e);
-
-        ToolsController?.MouseWheel(this, GetMousePosition(), e);
+        if (newValue)
+        {
+            Reinitialize();
+        }
     }
 
-    private void OnLoaded(object sender, RoutedEventArgs e) => _renderer.SetOwnerWindow();
+    private void Reinitialize()
+    {
+        CompositionTarget.Rendering -= OnCompositionTargetRendering;
 
-    private Vector2 GetMousePosition() => Mouse.GetPosition(this).ToVector2().DpiCorrect(Dpi);
+        Utilities.Dispose(ref _renderer);
+        GC.Collect();
+
+        var rootWindow = Window.GetWindow(this);
+
+        if (rootWindow is null)
+            throw new ApplicationException("Can't find scene root window.");
+
+        var handle = new WindowInteropHelper(rootWindow).Handle;
+
+        _renderer = new SceneRenderer(OnRender, handle);
+        _renderer.Resize(RenderSize, Dpi, renderAfterResize: false);
+        _renderer.IsFrontBufferAvailableChanged += OnIsFrontBufferAvailableChanged;
+
+        foreach (var layer in Layers)
+        {
+            layer.InitializeCache(Context.Cache);
+        }
+
+        InvalidateVisual();
+
+        CompositionTarget.Rendering += OnCompositionTargetRendering;
+
+        _renderer.RequestRender();
+    }
+
+    public void Dispose()
+    {
+        CompositionTarget.Rendering -= OnCompositionTargetRendering;
+        Layers.CollectionChanged -= OnLayersCollectionChanged;
+        Loaded -= OnLoaded;
+
+        if (_renderer is not null)
+            _renderer.IsFrontBufferAvailableChanged -= OnIsFrontBufferAvailableChanged;
+
+        Utilities.Dispose(ref _renderer);
+
+        foreach (var layer in Layers)
+        {
+            layer.Dispose();
+        }
+
+        Layers.Clear();
+
+        GC.Collect();
+        GC.SuppressFinalize(this);
+    }
 }

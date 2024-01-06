@@ -1,11 +1,12 @@
 ﻿using System.IO;
 using System.Runtime.CompilerServices;
 using System.Windows;
-using LogicSimulator.Controls.Themes;
-using LogicSimulator.Controls.Themes.Dark;
-using LogicSimulator.Controls.Themes.Light;
 using LogicSimulator.Infrastructure.Services;
-using LogicSimulator.ViewModels.Infrastructure;
+using LogicSimulator.Infrastructure.Services.Interfaces;
+using LogicSimulator.ViewModels.AnchorableViewModels;
+using LogicSimulator.ViewModels;
+using LogicSimulator.Views.Windows;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 
@@ -13,57 +14,33 @@ namespace LogicSimulator;
 
 public partial class App
 {
-    private static IHost host;
+    private static readonly IHost Host = CreateHostBuilder(Environment.GetCommandLineArgs()).Build();
 
-    private static ThemeType currentTheme = ThemeType.Dark;
+    public static Window? ActiveWindow => Current.Windows.OfType<Window>().FirstOrDefault(w => w.IsActive);
 
-    private static readonly Dictionary<ThemeType, Theme> Themes = new()
-    {
-        { ThemeType.Dark, new DarkTheme() },
-        { ThemeType.Light, new LightTheme() }
-    };
+    public static Window? FocusedWindow => Current.Windows.OfType<Window>().FirstOrDefault(w => w.IsFocused);
 
-    public static IHost Host => host ??= Program.CreateHostBuilder(Environment.GetCommandLineArgs()).Build();
-
-    public static Window ActiveWindow => Current.Windows.OfType<Window>().FirstOrDefault(w => w.IsActive);
-
-    public static Window FocusedWindow => Current.Windows.OfType<Window>().FirstOrDefault(w => w.IsFocused);
-
-    public static Window CurrentWindow => FocusedWindow ?? ActiveWindow;
+    public static Window? CurrentWindow => FocusedWindow ?? ActiveWindow;
 
     public static bool IsDesignMode { get; private set; } = true;
 
-    public static string CurrentDirectory =>
-        IsDesignMode ? Path.GetDirectoryName(GetSourceCodePath()) : Environment.CurrentDirectory;
+    public static string CurrentDirectory => IsDesignMode ? Path.GetDirectoryName(GetSourceCodePath())! : Environment.CurrentDirectory;
 
-    public static ThemeType CurrentTheme
+    protected override async void OnStartup(StartupEventArgs args)
     {
-        get => currentTheme;
-        set
-        {
-            if (currentTheme == value) return;
-
-            var resources = Current.Resources.MergedDictionaries;
-
-            var oldTheme = GetCurrentResourceDictionary();
-            var oldThemeIndex = resources.IndexOf(oldTheme);
-
-            resources.RemoveAt(oldThemeIndex);
-            resources.Insert(oldThemeIndex, new ResourceDictionary { Source = Themes[value].GetResourceUri() });
-
-            currentTheme = value;
-        }
-    }
-
-    protected override async void OnStartup(StartupEventArgs e)
-    {
-        base.OnStartup(e);
+        base.OnStartup(args);
 
         IsDesignMode = false;
 
-        Environment.CurrentDirectory = Path.GetDirectoryName(System.Reflection.Assembly.GetEntryAssembly().Location);
+        Environment.CurrentDirectory = Path.GetDirectoryName(System.Reflection.Assembly.GetEntryAssembly()!.Location)!;
+
+#if !DEBUG
+        SetupGlobalExceptionHandling();
+#endif
 
         await Host.StartAsync().ConfigureAwait(false);
+
+        Host.Services.GetRequiredService<MainWindow>().Show();
     }
 
     protected override async void OnExit(ExitEventArgs e)
@@ -71,28 +48,71 @@ public partial class App
         base.OnExit(e);
 
         await Host.StopAsync().ConfigureAwait(false);
-        host.Dispose();
+        Host.Dispose();
     }
 
-    public static void ConfigureServices(HostBuilderContext host, IServiceCollection services)
+    private static void ConfigureServices(HostBuilderContext host, IServiceCollection services)
     {
         services
-            .RegisterViewModels()
-            .RegisterServices();
+            .AddSingleton<MainWindowViewModel>()
+            .AddSingleton<DockingViewModel>()
+            .AddSingleton<PropertiesViewModel>()
+            .AddSingleton<ProjectExplorerViewModel>()
+
+            .AddSingleton<MainWindow>(serviceProvider => new MainWindow { DataContext = serviceProvider.GetRequiredService<MainWindowViewModel>() })
+
+            .AddSingleton<IUserDialogService, DefaultUserDialogService>()
+            .AddSingleton<ISchemeFileService, SchemeFileService>()
+            .AddSingleton<IProjectFileService, ProjectFileService>()
+            .AddSingleton<IEditorSelectionService, EditorSelectionService>()
+
+            .AddSingleton<ISchemeViewModelFactory, SchemeViewModelFactory>()
+            .AddSingleton<IProjectViewModelFactory, ProjectViewModelFactory>()
+            ;
     }
 
-    private static string GetSourceCodePath([CallerFilePath] string path = null)
+    private static void SetupGlobalExceptionHandling()
     {
-        return path;
+        try
+        {
+            // handles non-UI thread exceptions thrown; the app terminates after unhandled exceptions are caught here
+            AppDomain.CurrentDomain.UnhandledException += (_, e) => HandleException((Exception)e.ExceptionObject, e.IsTerminating);
+
+            // handles UI dispatcher thread exceptions thrown
+            Current.DispatcherUnhandledException += (_, e) => e.Handled = HandleException(e.Exception);
+
+            // handles domain-wide exceptions where a task scheduler is used for asynchronous operations
+            TaskScheduler.UnobservedTaskException += (_, e) => { if (HandleException(e.Exception)) e.SetObserved(); };
+        }
+        catch (Exception e)
+        {
+            throw new ApplicationException($"Unable to use global exception handling.\n{e.Message}");
+        }
     }
 
-    private static ResourceDictionary GetCurrentResourceDictionary()
+    private static bool HandleException(Exception exception, bool isTerminating = false)
     {
-        var resourceDictionary = Current.Resources.MergedDictionaries.FirstOrDefault(x => x.Source.OriginalString.EndsWith("Theme.xaml"));
+        if (isTerminating)
+        {
+            MessageBox.Show(exception.ToString(), "Critical error", MessageBoxButton.OK, MessageBoxImage.Error);
 
-        if (resourceDictionary is null)
-            throw new ApplicationException("Theme resource not found");
+            Current.Shutdown();
 
-        return resourceDictionary;
+            return false;
+        }
+
+        MessageBox.Show(exception.ToString(), "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+
+        return true;
     }
+
+    private static string GetSourceCodePath([CallerFilePath] string? path = null) => path!;
+
+    private static IHostBuilder CreateHostBuilder(string[] args) => Microsoft.Extensions.Hosting.Host
+        .CreateDefaultBuilder(args)
+        .UseContentRoot(CurrentDirectory)
+        .ConfigureAppConfiguration((_, cfg) => cfg
+            .SetBasePath(CurrentDirectory)
+            .AddJsonFile("app-settings.json", true, true))
+        .ConfigureServices(ConfigureServices);
 }

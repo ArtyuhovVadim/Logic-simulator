@@ -1,4 +1,5 @@
 ﻿using LogicSimulator.ViewModels.EditorViewModels.Base;
+using System.Windows;
 
 namespace LogicSimulator.ViewModels.EditorViewModels.Layout.Builders;
 
@@ -22,13 +23,33 @@ public class RowBuilder
         return this;
     }
 
-    public RowBuilder WithSingleProperty<T>(string name) where T : SinglePropertyViewModel, new()
+    public RowBuilder WithSingleProperty<TPropertyViewModel>(string name) where TPropertyViewModel : SinglePropertyViewModel, new()
     {
-        _row.ObjectProperties.Add(new T
+        _row.ObjectProperties.Add(new TPropertyViewModel
         {
             EditorViewModel = _row.EditorViewModel,
             PropertyName = name
         });
+        return this;
+    }
+
+    public RowBuilder WithSingleProperty<TPropertyViewModel>(string name, Action<TPropertyViewModel> configureAction) where TPropertyViewModel : SinglePropertyViewModel, new()
+    {
+        var property = new TPropertyViewModel
+        {
+            EditorViewModel = _row.EditorViewModel,
+            PropertyName = name
+        };
+
+        configureAction(property);
+
+        _row.ObjectProperties.Add(property);
+        return this;
+    }
+
+    public RowBuilder WithProperty(PropertyViewModel prop)
+    {
+        _row.ObjectProperties.Add(prop);
         return this;
     }
 
@@ -37,6 +58,12 @@ public class RowBuilder
         var builder = new RowLayoutBuilder();
         configureAction(builder);
         _row.Layout = builder.Build();
+        return this;
+    }
+
+    public RowBuilder WithLayout(List<GridLength> layout)
+    {
+        _row.Layout = layout;
         return this;
     }
 

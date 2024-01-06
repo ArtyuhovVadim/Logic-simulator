@@ -1,18 +1,45 @@
-﻿using LogicSimulator.Infrastructure.Commands;
+﻿using LogicSimulator.ViewModels.StatusViewModels;
+using LogicSimulator.ViewModels.StatusViewModels.Base;
+using WpfExtensions.Mvvm.Commands;
 
 namespace LogicSimulator.ViewModels.AnchorableViewModels.Base;
 
 public abstract class DocumentViewModel : AnchorableViewModel
 {
-    #region CloseCommand
+    public virtual BaseStatusViewModel StatusViewModel { get; } = new EmptyStatusViewModel();
 
-    private ICommand _closeCommand;
+    #region IsActiveDocument
 
-    public ICommand CloseCommand => _closeCommand ??= new LambdaCommand(Close, CanClose);
+    private bool _isActiveDocument;
+
+    public bool IsActiveDocument
+    {
+        get => _isActiveDocument;
+        set
+        {
+            if (Set(ref _isActiveDocument, value))
+            {
+                if (value) OnDocumentActivated();
+                else OnDocumentDeactivated();
+            }
+        }
+    }
 
     #endregion
 
-    protected virtual bool CanClose(object p) => true;
+    #region CloseCommand
 
-    protected abstract void Close(object p);
+    private ICommand? _closeCommand;
+
+    public ICommand CloseCommand => _closeCommand ??= new LambdaCommand(OnClose, OnCanClose);
+
+    #endregion
+
+    protected virtual bool OnCanClose(object? p) => true;
+
+    protected abstract void OnClose(object? p);
+
+    protected virtual void OnDocumentActivated() { }
+
+    protected virtual void OnDocumentDeactivated() { }
 }

@@ -1,4 +1,4 @@
-﻿using LogicSimulator.ViewModels.Base;
+﻿using WpfExtensions.Mvvm;
 
 namespace LogicSimulator.ViewModels.AnchorableViewModels.Base;
 
@@ -16,6 +16,18 @@ public abstract class AnchorableViewModel : BindableBase
 
     #endregion
 
+    #region IconSource
+
+    private Uri? _iconSource;
+
+    public Uri? IconSource
+    {
+        get => _iconSource;
+        set => Set(ref _iconSource, value);
+    }
+
+    #endregion
+
     #region IsSelected
 
     private bool _isSelected;
@@ -23,7 +35,13 @@ public abstract class AnchorableViewModel : BindableBase
     public bool IsSelected
     {
         get => _isSelected;
-        set => Set(ref _isSelected, value);
+        set
+        {
+            if (!Set(ref _isSelected, value)) return;
+
+            if (value) OnSelected();
+            else OnUnselected();
+        }
     }
 
     #endregion
@@ -35,14 +53,20 @@ public abstract class AnchorableViewModel : BindableBase
     public bool IsActive
     {
         get => _isActive;
-        set => Set(ref _isActive, value);
+        set
+        {
+            if (!Set(ref _isActive, value)) return;
+
+            if (value) OnActivated();
+            else OnDeactivated();
+        }
     }
 
     #endregion
 
     #region ContentId
 
-    private string _contentId;
+    private string _contentId = string.Empty;
 
     public string ContentId
     {
@@ -51,4 +75,12 @@ public abstract class AnchorableViewModel : BindableBase
     }
 
     #endregion
+
+    protected virtual void OnActivated() { }
+
+    protected virtual void OnDeactivated() { }
+
+    protected virtual void OnSelected() { }
+
+    protected virtual void OnUnselected() { }
 }

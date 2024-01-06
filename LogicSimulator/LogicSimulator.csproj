@@ -2,27 +2,26 @@
 
     <PropertyGroup>
         <OutputType>WinExe</OutputType>
-        <TargetFramework>net7.0-windows</TargetFramework>
-        <Nullable>disable</Nullable>
+        <TargetFramework>net8.0-windows</TargetFramework>
+        <Nullable>enable</Nullable>
         <UseWPF>true</UseWPF>
         <Platforms>x64;x86</Platforms>
         <StartupObject>LogicSimulator.Program</StartupObject>
-        <LangVersion>latest</LangVersion>
-        <ApplicationIcon>Icons\icon512x512.ico</ApplicationIcon>
-	    <VersionPrefix>0.3.1</VersionPrefix>
+        <ApplicationIcon>Resources\Icons\icon512x512.ico</ApplicationIcon>
+	    <VersionPrefix>0.4.0</VersionPrefix>
 	    <ImplicitUsings>enable</ImplicitUsings>
     </PropertyGroup>
 
     <ItemGroup>
-      <None Remove="Icons\icon512x512.png" />
+      <None Remove="Resources\Icons\icon512x512.png" />
+      <None Remove="Resources\Icons\scheme-icon16x16.png" />
     </ItemGroup>
 
     <ItemGroup>
-      <Content Include="Icons\icon512x512.ico" />
+      <Content Include="Resources\Icons\icon512x512.ico" />
     </ItemGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\LogicSimulator.AvalonDock\LogicSimulator.AvalonDock.csproj" />
         <ProjectReference Include="..\LogicSimulator.Controls\LogicSimulator.Controls.csproj" />
         <ProjectReference Include="..\LogicSimulator.Scene\LogicSimulator.Scene.csproj" />
     </ItemGroup>
@@ -34,27 +33,38 @@
         <None Update="Data\Example.lss">
           <CopyToOutputDirectory>Always</CopyToOutputDirectory>
         </None>
+        <None Update="Data\ExampleProject\ExampleScheme1.lss">
+          <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        </None>
+        <None Update="Data\ExampleProject\ExampleScheme2.lss">
+          <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        </None>
+        <None Update="Data\ExampleProject\ExampleScheme3.lss">
+          <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        </None>
         <None Update="Data\image.png">
           <CopyToOutputDirectory>Always</CopyToOutputDirectory>
         </None>
     </ItemGroup>
 
     <ItemGroup>
-        <Folder Include="Infrastructure\Converters\" />
-        <Folder Include="Models\" />
-        <Folder Include="Models\" />
+      <None Include="Data\ExampleProject\ExampleProject.lsproj">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </None>
     </ItemGroup>
 
     <ItemGroup>
-        <PackageReference Include="FontAwesome.WPF" Version="4.7.0.9" />
-        <PackageReference Include="Microsoft.Extensions.Hosting" Version="7.0.0" />
-        <PackageReference Include="Microsoft.Extensions.Hosting.Abstractions" Version="7.0.0" />
-        <PackageReference Include="Microsoft.Xaml.Behaviors.Wpf" Version="1.1.39" />
-        <PackageReference Include="YamlDotNet" Version="12.3.1" />
+        <PackageReference Include="Dirkster.AvalonDock" Version="4.72.1" />
+        <PackageReference Include="Microsoft.Extensions.Hosting" Version="8.0.0" />
+        <PackageReference Include="Microsoft.Extensions.Hosting.Abstractions" Version="8.0.0" />
+        <PackageReference Include="Microsoft.Xaml.Behaviors.Wpf" Version="1.1.77" />
+        <PackageReference Include="WpfExtensions.Controls.DotNet" Version="1.0.0" />
+        <PackageReference Include="YamlDotNet" Version="13.7.1" />
     </ItemGroup>
 
     <ItemGroup>
-      <Resource Include="Icons\icon512x512.png" />
+      <Resource Include="Resources\Icons\icon512x512.png" />
+      <Resource Include="Resources\Icons\scheme-icon16x16.png" />
     </ItemGroup>
 
     <ItemGroup>

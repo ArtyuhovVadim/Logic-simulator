@@ -6,11 +6,6 @@ using YamlDotNet.Serialization;
 
 namespace LogicSimulator.Infrastructure.Services;
 
-public interface IProjectFileService
-{
-    public bool ReadFromFile(string path, out Project project);
-}
-
 public class ProjectFileService : IProjectFileService
 {
     private readonly ISchemeFileService _schemeFileService;
@@ -38,7 +33,7 @@ public class ProjectFileService : IProjectFileService
         _fileReadStreamOptions = new FileStreamOptions { Access = FileAccess.Read, Mode = FileMode.Open };
     }
 
-    public bool ReadFromFile(string path, out Project project)
+    public bool ReadFromFile(string path, out Project? project)
     {
         project = null;
 
@@ -61,8 +56,10 @@ public class ProjectFileService : IProjectFileService
 
             foreach (var schemeFilePath in schemeFilePaths)
             {
-                _schemeFileService.ReadFromFile(schemeFilePath, out var scheme);
-                schemes.Add(scheme);
+                if (!_schemeFileService.ReadFromFile(schemeFilePath, out var scheme))
+                    throw new ApplicationException($"Can not load scheme file with '{schemeFilePath}' path");
+
+                schemes.Add(scheme!);
             }
 
             project.Schemes = schemes;
