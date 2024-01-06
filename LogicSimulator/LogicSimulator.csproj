@@ -8,7 +8,7 @@
         <Platforms>x64;x86</Platforms>
         <StartupObject>LogicSimulator.Program</StartupObject>
         <ApplicationIcon>Resources\Icons\icon512x512.ico</ApplicationIcon>
-	    <VersionPrefix>0.3.1</VersionPrefix>
+	    <VersionPrefix>0.4.0</VersionPrefix>
 	    <ImplicitUsings>enable</ImplicitUsings>
     </PropertyGroup>
 

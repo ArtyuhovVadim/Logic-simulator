@@ -11,9 +11,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LogicSimulator.Scene", "Log
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LogicSimulator.Utils", "LogicSimulator.Utils\LogicSimulator.Utils.csproj", "{64E81F91-1585-4484-92E7-D4086B8F862A}"
 EndProject
-Project("{930C7802-8A8C-48F9-8165-68863BCCD9DD}") = "LogicSimulator.Installer", "LogicSimulator.Installer\LogicSimulator.Installer.wixproj", "{9DE10794-D31C-4684-A072-C2E6D6301C09}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LogicSimulator.Core", "LogicSimulator.Core\LogicSimulator.Core.csproj", "{63BA932F-E55F-4844-9C55-579F46648035}"
+EndProject
+Project("{B7DD6F7E-DEF8-4E67-B5B7-07EF123DB6F0}") = "LogicSimulator.Installer", "LogicSimulator.Installer\LogicSimulator.Installer.wixproj", "{22D504BD-0C01-41A8-82E7-766E37096371}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -55,10 +55,6 @@ Global
 		{64E81F91-1585-4484-92E7-D4086B8F862A}.Release|x64.Build.0 = Release|x64
 		{64E81F91-1585-4484-92E7-D4086B8F862A}.Release|x86.ActiveCfg = Release|x86
 		{64E81F91-1585-4484-92E7-D4086B8F862A}.Release|x86.Build.0 = Release|x86
-		{9DE10794-D31C-4684-A072-C2E6D6301C09}.Debug|x64.ActiveCfg = Debug|x64
-		{9DE10794-D31C-4684-A072-C2E6D6301C09}.Debug|x86.ActiveCfg = Debug|x64
-		{9DE10794-D31C-4684-A072-C2E6D6301C09}.Release|x64.ActiveCfg = Release|x64
-		{9DE10794-D31C-4684-A072-C2E6D6301C09}.Release|x86.ActiveCfg = Release|x64
 		{63BA932F-E55F-4844-9C55-579F46648035}.Debug|x64.ActiveCfg = Debug|x64
 		{63BA932F-E55F-4844-9C55-579F46648035}.Debug|x64.Build.0 = Debug|x64
 		{63BA932F-E55F-4844-9C55-579F46648035}.Debug|x86.ActiveCfg = Debug|x86
@@ -67,6 +63,10 @@ Global
 		{63BA932F-E55F-4844-9C55-579F46648035}.Release|x64.Build.0 = Release|x64
 		{63BA932F-E55F-4844-9C55-579F46648035}.Release|x86.ActiveCfg = Release|x86
 		{63BA932F-E55F-4844-9C55-579F46648035}.Release|x86.Build.0 = Release|x86
+		{22D504BD-0C01-41A8-82E7-766E37096371}.Debug|x64.ActiveCfg = Debug|x64
+		{22D504BD-0C01-41A8-82E7-766E37096371}.Debug|x86.ActiveCfg = Debug|x86
+		{22D504BD-0C01-41A8-82E7-766E37096371}.Release|x64.ActiveCfg = Release|x64
+		{22D504BD-0C01-41A8-82E7-766E37096371}.Release|x86.ActiveCfg = Release|x86
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
