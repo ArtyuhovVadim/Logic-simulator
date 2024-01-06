@@ -115,6 +115,10 @@
         o:Freeze="true"
         Color="#5C5C5C" />
     <SolidColorBrush
+        x:Key="{x:Static r:ResourceKeys.DocumentTabActiveBackground}"
+        o:Freeze="true"
+        Color="#6283A2" />
+    <SolidColorBrush
         x:Key="{x:Static r:ResourceKeys.DocumentTabUnselectedBackground}"
         o:Freeze="true"
         Color="Transparent" />

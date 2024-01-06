@@ -328,6 +328,10 @@
                                         <Setter Property="Panel.ZIndex" Value="1" />
                                     </DataTrigger>
 
+                                    <DataTrigger Binding="{Binding IsActive}" Value="True">
+                                        <Setter TargetName="Bd" Property="Background" Value="{DynamicResource {x:Static r:ResourceKeys.DocumentTabActiveBackground}}" />
+                                    </DataTrigger>
+
                                     <MultiTrigger>
                                         <MultiTrigger.Conditions>
                                             <Condition Property="IsMouseOver" Value="true" />

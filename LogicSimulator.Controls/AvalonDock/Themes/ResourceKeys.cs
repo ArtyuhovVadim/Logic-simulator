@@ -31,6 +31,7 @@ public static class ResourceKeys
     public static readonly ComponentResourceKey AutoHideTabHoveredBackground = CreateInstance();
 
     public static readonly ComponentResourceKey DocumentTabSelectedBackground = CreateInstance();
+    public static readonly ComponentResourceKey DocumentTabActiveBackground = CreateInstance();
     public static readonly ComponentResourceKey DocumentTabUnselectedBackground = CreateInstance();
     public static readonly ComponentResourceKey DocumentTabUnselectedHoveredBackground = CreateInstance();
 
