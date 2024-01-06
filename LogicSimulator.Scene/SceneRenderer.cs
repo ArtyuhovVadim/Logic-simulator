@@ -16,7 +16,7 @@ public class SceneRenderer : DisposableObject
     private  D3D11Image _image;
     private readonly Action<DirectXContext> _onRender;
 
-    public event Action<bool> IsFrontBufferAvailableChanged;
+    public event Action<bool>? IsFrontBufferAvailableChanged;
 
     public DirectXContext DirectXContext => _context;
     public D2DContext D2DContext => _d2dContext ?? throw new ApplicationException("D2DContext is not initialized.");

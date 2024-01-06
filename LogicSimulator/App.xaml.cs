@@ -48,7 +48,7 @@ public partial class App
         base.OnExit(e);
 
         await Host.StopAsync().ConfigureAwait(false);
-        Host!.Dispose();
+        Host.Dispose();
     }
 
     private static void ConfigureServices(HostBuilderContext host, IServiceCollection services)

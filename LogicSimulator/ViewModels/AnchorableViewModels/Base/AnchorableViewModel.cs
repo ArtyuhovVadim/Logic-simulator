@@ -18,7 +18,7 @@ public abstract class AnchorableViewModel : BindableBase
 
     #region IconSource
 
-    private Uri? _iconSource = null;
+    private Uri? _iconSource;
 
     public Uri? IconSource
     {

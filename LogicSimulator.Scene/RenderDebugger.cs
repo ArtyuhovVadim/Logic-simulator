@@ -8,7 +8,7 @@ namespace LogicSimulator.Scene;
 
 public static class RenderDebugger
 {
-    private static Scene2D? _currentScene = null!;
+    private static Scene2D? _currentScene;
     private static readonly Stopwatch FrameTimeStopwatch = new();
     private static readonly Stopwatch BetweenFramesTimeStopwatch = new();
 

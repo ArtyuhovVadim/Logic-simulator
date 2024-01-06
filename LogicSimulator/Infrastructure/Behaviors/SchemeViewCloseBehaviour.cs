@@ -13,9 +13,9 @@ public class SchemeViewCloseBehaviour : Behavior<SchemeView>
 {
     #region CloseCommand
 
-    public ICommand CloseCommand
+    public ICommand? CloseCommand
     {
-        get => (ICommand)GetValue(CloseCommandProperty);
+        get => (ICommand?)GetValue(CloseCommandProperty);
         set => SetValue(CloseCommandProperty, value);
     }
 

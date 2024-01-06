@@ -34,7 +34,7 @@ public abstract class SinglePropertyViewModel : PropertyViewModel
 
     protected void SetValue<TProperty>(object obj, TProperty value) => GettersAndSettersCache.GetSetter<TProperty>(PropertyName, obj)(obj, value!);
     
-    protected void SetValue(object obj, object value, Type valueType) => GettersAndSettersCache.GetSetter(PropertyName, obj, valueType)(obj, value!);
+    protected void SetValue(object obj, object value, Type valueType) => GettersAndSettersCache.GetSetter(PropertyName, obj, valueType)(obj, value);
 
     public override void RaisePropertyChanged() => OnPropertyChanged(nameof(Value));
 }
