@@ -131,14 +131,14 @@ public class GridLayer : BaseSceneLayer
 
     #region CellSize
 
-    public int CellSize
+    public float CellSize
     {
-        get => (int)GetValue(CellSizeProperty);
+        get => (float)GetValue(CellSizeProperty);
         set => SetValue(CellSizeProperty, value);
     }
 
     public static readonly DependencyProperty CellSizeProperty =
-        DependencyProperty.Register(nameof(CellSize), typeof(int), typeof(GridLayer), new PropertyMetadata(25, DefaultPropertyChangedHandler));
+        DependencyProperty.Register(nameof(CellSize), typeof(float), typeof(GridLayer), new PropertyMetadata(25f, DefaultPropertyChangedHandler));
 
     #endregion
 
