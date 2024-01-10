@@ -85,11 +85,9 @@ public class NodeDragTool : BaseTool
         {
             ToolsController.SwitchToDefaultTool();
         }
-        else
-        {
-            _owner = null;
-            _node = null;
-        }
+
+        _owner = null;
+        _node = null;
     }
 
     protected override Freezable CreateInstanceCore() => new NodeDragTool();
