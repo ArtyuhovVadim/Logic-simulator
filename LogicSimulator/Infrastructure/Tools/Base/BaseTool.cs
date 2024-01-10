@@ -41,7 +41,18 @@ public abstract class BaseTool : Freezable
 
     #endregion
 
-    public bool CanSwitch { get; protected set; } = true;
+    #region CanSwitch
+
+    public bool CanSwitch
+    {
+        get => (bool)GetValue(CanSwitchProperty);
+        set => SetValue(CanSwitchProperty, value);
+    }
+
+    public static readonly DependencyProperty CanSwitchProperty =
+        DependencyProperty.Register(nameof(CanSwitch), typeof(bool), typeof(BaseTool), new PropertyMetadata(true));
+
+    #endregion
 
     public bool ActivatedFromOtherTool { get; private set; }
 

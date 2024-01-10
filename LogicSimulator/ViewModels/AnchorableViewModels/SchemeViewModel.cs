@@ -25,7 +25,7 @@ public class SchemeViewModel : DocumentViewModel
         _scheme = scheme;
         _dockingViewModel = dockingViewModel;
         _editorSelectionService = editorSelectionService;
-        Objects = _scheme.Objects;
+        Objects = new ObservableCollection<BaseObjectViewModel>(_scheme.Objects);
 
         CurrentTool = SelectionTool;
 
@@ -33,6 +33,10 @@ public class SchemeViewModel : DocumentViewModel
         DragTool.ToolSelected += OnToolSelected;
         RectangleSelectionTool.ToolSelected += OnToolSelected;
         NodeDragTool.ToolSelected += OnToolSelected;
+
+        RectanglePlacingTool = new RectanglePlacingToolViewModel("Rectangle placing tool", this);
+
+        RectanglePlacingTool.ToolSelected += OnToolSelected;
 
         _statusViewModel = new SchemeStatusViewModel(this);
 
@@ -59,10 +63,10 @@ public class SchemeViewModel : DocumentViewModel
 
     private ObservableCollection<BaseObjectViewModel> _objects = [];
 
-    public IEnumerable<BaseObjectViewModel> Objects
+    public ObservableCollection<BaseObjectViewModel> Objects
     {
         get => _objects;
-        private set => Set(ref _objects, new ObservableCollection<BaseObjectViewModel>(value));
+        private set => Set(ref _objects, value);
     }
 
     #endregion
@@ -111,6 +115,12 @@ public class SchemeViewModel : DocumentViewModel
     #region NodeDragTool
 
     public SchemeNodeDragToolViewModel NodeDragTool { get; } = new("Node drag tool");
+
+    #endregion
+
+    #region RectanglePlacingTool
+
+    public RectanglePlacingToolViewModel RectanglePlacingTool { get; }
 
     #endregion
 
@@ -241,5 +251,11 @@ public class SchemeViewModel : DocumentViewModel
 
     protected override void OnClose(object? p) => _dockingViewModel.RemoveDocumentViewModel(this);
 
-    private void OnToolSelected(BaseSchemeToolViewModel tool) => CurrentTool = tool;
+    private void OnToolSelected(BaseSchemeToolViewModel tool)
+    {
+        if (CurrentTool?.CanSwitch == false)
+            return;
+
+        CurrentTool = tool;
+    }
 }

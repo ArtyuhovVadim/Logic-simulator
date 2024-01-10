@@ -28,10 +28,8 @@
         <scene:Scene2D
             x:Name="Scene2D"
             FocusVisualStyle="{x:Null}"
-            Scale="{Binding Path=Scale,
-                            Mode=TwoWay}"
-            Translation="{Binding Path=Translation,
-                                  Mode=TwoWay}">
+            Scale="{Binding Path=Scale, Mode=TwoWay}"
+            Translation="{Binding Path=Translation, Mode=TwoWay}">
             <tools:ToolsController.Controller>
                 <tools:ToolsController CurrentToolContext="{Binding Path=CurrentTool, Mode=TwoWay}" DefaultToolContext="{Binding Path=SelectionTool, Mode=OneTime}">
                     <tools:SelectionTool
@@ -45,15 +43,22 @@
                     <tools:RectangleSelectionTool
                         x:Name="RectangleSelectionTool"
                         Context="{Binding Path=RectangleSelectionTool}"
-                        Geometry="{Binding ElementName=RectangleSelectionLayer,
-                                           Path=Geometry,
-                                           Mode=OneWay}"
+                        Geometry="{Binding ElementName=RectangleSelectionLayer, Path=Geometry, Mode=OneWay}"
                         ObjectSelectedCommand="{Binding Path=ObjectSelectedCommand}"
                         ObjectsLayer="{Binding ElementName=ObjectsLayer}" />
                     <tools:NodeDragTool
                         Context="{Binding Path=NodeDragTool}"
                         GridSnap="{Binding Path=GridStep}"
                         ObjectsLayer="{Binding ElementName=ObjectsLayer}" />
+                    <tools:PlacingTool
+                        CanSwitch="{Binding Path=RectanglePlacingTool.CanSwitch}"
+                        CancelPlacingCommand="{Binding Path=RectanglePlacingTool.CancelPlacingCommand}"
+                        Context="{Binding Path=RectanglePlacingTool}"
+                        EndPlacingCommand="{Binding Path=RectanglePlacingTool.EndPlacingCommand}"
+                        NextPlacingStepCommand="{Binding Path=RectanglePlacingTool.NextPlacingCommand}"
+                        StartPlacingCommand="{Binding Path=RectanglePlacingTool.StartPlacingCommand}"
+                        StepsCount="{Binding Path=RectanglePlacingTool.StepsCount}"
+                        UpdatePlacingCommand="{Binding Path=RectanglePlacingTool.UpdatePlacingCommand}" />
                 </tools:ToolsController>
             </tools:ToolsController.Controller>
 
@@ -99,8 +104,7 @@
                                     IsFilled="{Binding Path=IsFilled}"
                                     IsSelected="{Binding Path=IsSelected}"
                                     Location="{Binding Path=Location}"
-                                    Rotation="{Binding Path=Rotation,
-                                                       Converter={StaticResource RotationToFloatConverter}}"
+                                    Rotation="{Binding Path=Rotation, Converter={StaticResource RotationToFloatConverter}}"
                                     StrokeColor="{Binding Path=StrokeColor}"
                                     StrokeThickness="{Binding Path=StrokeThickness}"
                                     StrokeThicknessType="{Binding Path=StrokeThicknessType}" />
@@ -117,8 +121,7 @@
                                     Location="{Binding Path=Location}"
                                     RadiusX="{Binding Path=RadiusX}"
                                     RadiusY="{Binding Path=RadiusY}"
-                                    Rotation="{Binding Path=Rotation,
-                                                       Converter={StaticResource RotationToFloatConverter}}"
+                                    Rotation="{Binding Path=Rotation, Converter={StaticResource RotationToFloatConverter}}"
                                     StrokeColor="{Binding Path=StrokeColor}"
                                     StrokeThickness="{Binding Path=StrokeThickness}"
                                     StrokeThicknessType="{Binding Path=StrokeThicknessType}" />
@@ -133,8 +136,7 @@
                                     Location="{Binding Path=Location}"
                                     RadiusX="{Binding Path=RadiusX}"
                                     RadiusY="{Binding Path=RadiusY}"
-                                    Rotation="{Binding Path=Rotation,
-                                                       Converter={StaticResource RotationToFloatConverter}}"
+                                    Rotation="{Binding Path=Rotation, Converter={StaticResource RotationToFloatConverter}}"
                                     StrokeColor="{Binding Path=StrokeColor}"
                                     StrokeThickness="{Binding Path=StrokeThickness}"
                                     StrokeThicknessType="{Binding Path=StrokeThicknessType}" />
@@ -148,8 +150,7 @@
                                     Point1="{Binding Path=Point1}"
                                     Point2="{Binding Path=Point2}"
                                     Point3="{Binding Path=Point3}"
-                                    Rotation="{Binding Path=Rotation,
-                                                       Converter={StaticResource RotationToFloatConverter}}"
+                                    Rotation="{Binding Path=Rotation, Converter={StaticResource RotationToFloatConverter}}"
                                     StrokeColor="{Binding Path=StrokeColor}"
                                     StrokeThickness="{Binding Path=StrokeThickness}"
                                     StrokeThicknessType="{Binding Path=StrokeThicknessType}" />
@@ -163,8 +164,7 @@
                                     Location="{Binding Path=Location}"
                                     RadiusX="{Binding Path=RadiusX}"
                                     RadiusY="{Binding Path=RadiusY}"
-                                    Rotation="{Binding Path=Rotation,
-                                                       Converter={StaticResource RotationToFloatConverter}}"
+                                    Rotation="{Binding Path=Rotation, Converter={StaticResource RotationToFloatConverter}}"
                                     StartAngle="{Binding Path=StartAngle}"
                                     StrokeColor="{Binding Path=StrokeColor}"
                                     StrokeThickness="{Binding Path=StrokeThickness}"
@@ -182,8 +182,7 @@
                                     IsSelected="{Binding Path=IsSelected}"
                                     IsUnderlined="{Binding Path=IsUnderlined}"
                                     Location="{Binding Path=Location}"
-                                    Rotation="{Binding Path=Rotation,
-                                                       Converter={StaticResource RotationToFloatConverter}}"
+                                    Rotation="{Binding Path=Rotation, Converter={StaticResource RotationToFloatConverter}}"
                                     Text="{Binding Path=Text}"
                                     TextColor="{Binding Path=TextColor}" />
                             </DataTemplate>
@@ -193,8 +192,7 @@
                                 <sceneViews:LineView
                                     IsSelected="{Binding Path=IsSelected}"
                                     Location="{Binding Path=Location}"
-                                    Rotation="{Binding Path=Rotation,
-                                                       Converter={StaticResource RotationToFloatConverter}}"
+                                    Rotation="{Binding Path=Rotation, Converter={StaticResource RotationToFloatConverter}}"
                                     StrokeColor="{Binding Path=StrokeColor}"
                                     StrokeThickness="{Binding Path=StrokeThickness}"
                                     StrokeThicknessType="{Binding Path=StrokeThicknessType}"
@@ -215,22 +213,18 @@
             <layers:NodesLayer
                 FillColor="{DynamicResource {x:Static brushes:BrushesKeys+SchemeView.NodeFillColor}}"
                 StrokeColor="{DynamicResource {x:Static brushes:BrushesKeys+SchemeView.NodeStrokeColor}}"
-                Views="{Binding ElementName=ObjectsLayer,
-                                Path=Views}">
+                Views="{Binding ElementName=ObjectsLayer, Path=Views}">
                 <layers:NodesLayer.Renderer>
                     <renderers:NodesLayerRenderer />
                 </layers:NodesLayer.Renderer>
             </layers:NodesLayer>
             <layers:RectangleSelectionLayer
                 x:Name="RectangleSelectionLayer"
-                EndPosition="{Binding ElementName=RectangleSelectionTool,
-                                      Path=EndPosition}"
-                IsVisible="{Binding ElementName=RectangleSelectionTool,
-                                    Path=IsSelectionStarted}"
+                EndPosition="{Binding ElementName=RectangleSelectionTool, Path=EndPosition}"
+                IsVisible="{Binding ElementName=RectangleSelectionTool, Path=IsSelectionStarted}"
                 NormalColor="{DynamicResource {x:Static brushes:BrushesKeys+SchemeView.RectangleSelectionNormalColor}}"
                 SecantColor="{DynamicResource {x:Static brushes:BrushesKeys+SchemeView.RectangleSelectionSecantColor}}"
-                StartPosition="{Binding ElementName=RectangleSelectionTool,
-                                        Path=StartPosition}">
+                StartPosition="{Binding ElementName=RectangleSelectionTool, Path=StartPosition}">
                 <layers:RectangleSelectionLayer.Renderer>
                     <renderers:RectangleSelectionLayerRenderer />
                 </layers:RectangleSelectionLayer.Renderer>
@@ -248,6 +242,10 @@
             SnapsToDevicePixels="True"
             UseLayoutRounding="True">
             <StackPanel Orientation="Horizontal">
+                <StackPanel.Resources>
+                    <Style BasedOn="{StaticResource VerticalSeparator}" TargetType="{x:Type Separator}" />
+                </StackPanel.Resources>
+
                 <views:SchemeToolView DataContext="{Binding Path=SelectionTool}">
                     <Path
                         Data="{StaticResource SelectionToolIcon}"
@@ -271,6 +269,14 @@
                     <Path
                         Margin="-1"
                         Data="{StaticResource NodeDragToolIcon}"
+                        Fill="{DynamicResource {x:Static brushes:BrushesKeys+SchemeView.ToolIconBrush}}"
+                        Stretch="Uniform" />
+                </views:SchemeToolView>
+                <Separator />
+                <views:SchemeToolView DataContext="{Binding Path=RectanglePlacingTool}">
+                    <Path
+                        Margin="-1"
+                        Data="{StaticResource RectangleSelectionToolIcon}"
                         Fill="{DynamicResource {x:Static brushes:BrushesKeys+SchemeView.ToolIconBrush}}"
                         Stretch="Uniform" />
                 </views:SchemeToolView>
