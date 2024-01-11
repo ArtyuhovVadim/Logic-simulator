@@ -1,17 +1,83 @@
 ﻿using LogicSimulator.Utils;
 using LogicSimulator.ViewModels.AnchorableViewModels;
+using LogicSimulator.ViewModels.ObjectViewModels;
 using LogicSimulator.ViewModels.ObjectViewModels.Base;
 using SharpDX;
 using WpfExtensions.Mvvm.Commands;
 
 namespace LogicSimulator.ViewModels.Tools.Base;
 
+public class StepBuilder<T> where T : BaseObjectViewModel
+{
+    private readonly PlacingStepsBuilder<T> _parent;
+    private readonly Action<T, Vector2> _stepAction;
+    private bool _useGrid;
+
+    public StepBuilder<T>? NextBuilder { get; set; }
+
+    public StepBuilder(PlacingStepsBuilder<T> parent, Action<T, Vector2> stepAction)
+    {
+        _parent = parent;
+        _stepAction = stepAction;
+    }
+
+    public StepBuilder<T> UseGrid()
+    {
+        _useGrid = true;
+        return this;
+    }
+
+    public PlacingStepsBuilder<T> Then()
+    {
+        return _parent;
+    }
+
+    public PlacingStep<T> Build() => new(_stepAction) { UseGrid = _useGrid, NextStep = NextBuilder?.Build() };
+}
+
+public class PlacingStepsBuilder<T> where T : BaseObjectViewModel
+{
+    private StepBuilder<T>? _root;
+    private StepBuilder<T>? _current;
+
+    public StepBuilder<T> AddStep(Action<T, Vector2> stepAction)
+    {
+        if (_root is null)
+        {
+            _current = new StepBuilder<T>(this, stepAction);
+            _root = _current;
+            return _current;
+        }
+
+        var newStepBuilder = new StepBuilder<T>(this, stepAction);
+        _current!.NextBuilder = newStepBuilder;
+        _current = newStepBuilder;
+
+        return _current;
+    }
+
+    public PlacingStep<T> Build() => _root!.Build();
+}
+
 public abstract class BasePlacingToolViewModel<T> : BaseSchemeToolViewModel where T : BaseObjectViewModel, new()
 {
-    private int _currentStep = -1;
-    private readonly List<PlacingStep<T>> _steps = [];
+    private PlacingStep<T> _current = null!;
 
-    protected BasePlacingToolViewModel(string name, SchemeViewModel scheme) : base(name) => Scheme = scheme;
+    private int _currentStep = -1;
+    private List<PlacingStep<T>> _steps = [];
+
+    protected BasePlacingToolViewModel(string name, SchemeViewModel scheme) : base(name)
+    {
+        Scheme = scheme;
+        InitSteps();
+
+        //TODO: Для теста
+        while (_current is not null)
+        {
+            _steps.Add(_current);
+            _current = _current.NextStep;
+        }
+    }
 
     private int StepsCount => _steps.Count;
 
@@ -38,7 +104,6 @@ public abstract class BasePlacingToolViewModel<T> : BaseSchemeToolViewModel wher
         }
         else if (InProgress)
         {
-            OnNextPlacingStep(pos);
             _currentStep++;
         }
         else if (IsLastStep)
@@ -84,6 +149,8 @@ public abstract class BasePlacingToolViewModel<T> : BaseSchemeToolViewModel wher
 
     #endregion
 
+    protected abstract PlacingStep<T> ConfigurePlacingSteps(PlacingStepsBuilder<T> builder);
+
     protected void OnStartPlacing(Vector2 pos)
     {
         Scheme.ToolsViewModel.IsCurrentToolLocked = true;
@@ -92,10 +159,6 @@ public abstract class BasePlacingToolViewModel<T> : BaseSchemeToolViewModel wher
         Object = new T { IsSelected = true };
         Scheme.Objects.Add(Object);
         Scheme.SelectedObjectsChanged();
-    }
-
-    protected void OnNextPlacingStep(Vector2 pos)
-    {
     }
 
     protected void OnUpdatePlacing(Vector2 pos)
@@ -118,43 +181,5 @@ public abstract class BasePlacingToolViewModel<T> : BaseSchemeToolViewModel wher
         Scheme.SelectedObjectsChanged();
     }
 
-    protected void AddStep(PlacingStep<T> step) => _steps.Add(step);
-
-    protected void AddStep(Action<T, Vector2> stepAction, bool useGrid = true) => _steps.Add(new PlacingStep<T>(stepAction, useGrid));
-
-    /*protected virtual void OnStartPlacing(Vector2 pos)
-    {
-        //CanSwitch = false;
-        foreach (var obj in Scheme.Objects)
-            obj.IsSelected = false;
-        Object = new T { IsSelected = true, Location = pos };
-        Scheme.Objects.Add(Object);
-        _stepIndex = 0;
-    }
-
-    protected virtual void OnNextPlacingStep(Vector2 pos)
-    {
-        _stepIndex++;
-    }
-
-    protected virtual void OnUpdatePlacing(Vector2 pos)
-    {
-        _steps[_stepIndex].Update(Object!, pos);
-    }
-
-    protected virtual void OnEndPlacing()
-    {
-        _stepIndex = -1;
-        Object = null;
-        //CanSwitch = true;
-    }
-
-    protected virtual void OnCancelPlacing()
-    {
-        _stepIndex = -1;
-        //CanSwitch = true;
-        //Object!.IsSelected = false;
-        Scheme.Objects.Remove(Object!);
-        Object = null;
-    }*/
+    private void InitSteps() => _current = ConfigurePlacingSteps(new PlacingStepsBuilder<T>());
 }
