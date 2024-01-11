@@ -7,90 +7,44 @@ namespace LogicSimulator.Infrastructure.Tools;
 
 public class PlacingTool : BaseTool
 {
-    private int _currentStep = -1;
     private bool _mouseRightButtonDragged;
 
-    private bool IsStarted => _currentStep != -1;
+    #region ActionCommand
 
-    private bool InProgress => _currentStep >= 0 && _currentStep < StepsCount - 1;
-
-    private bool IsLastStep => _currentStep == StepsCount - 1;
-
-    #region StepsCount
-
-    public int StepsCount
+    public ICommand? ActionCommand
     {
-        get => (int)GetValue(StepsCountProperty);
-        set => SetValue(StepsCountProperty, value);
+        get => (ICommand?)GetValue(ActionCommandProperty);
+        set => SetValue(ActionCommandProperty, value);
     }
 
-    public static readonly DependencyProperty StepsCountProperty =
-        DependencyProperty.Register(nameof(StepsCount), typeof(int), typeof(PlacingTool), new PropertyMetadata(default(int)));
+    public static readonly DependencyProperty ActionCommandProperty =
+        DependencyProperty.Register(nameof(ActionCommand), typeof(ICommand), typeof(PlacingTool), new PropertyMetadata(default(ICommand?)));
 
     #endregion
 
-    #region StartPlacingCommand
+    #region RejectCommand
 
-    public ICommand? StartPlacingCommand
+    public ICommand? RejectCommand
     {
-        get => (ICommand?)GetValue(StartPlacingCommandProperty);
-        set => SetValue(StartPlacingCommandProperty, value);
+        get => (ICommand?)GetValue(RejectCommandProperty);
+        set => SetValue(RejectCommandProperty, value);
     }
 
-    public static readonly DependencyProperty StartPlacingCommandProperty =
-        DependencyProperty.Register(nameof(StartPlacingCommand), typeof(ICommand), typeof(PlacingTool), new PropertyMetadata(default(ICommand)));
+    public static readonly DependencyProperty RejectCommandProperty =
+        DependencyProperty.Register(nameof(RejectCommand), typeof(ICommand), typeof(PlacingTool), new PropertyMetadata(default(ICommand?)));
 
     #endregion
 
-    #region NextPlacingStepCommand
+    #region UpdateCommand
 
-    public ICommand? NextPlacingStepCommand
+    public ICommand? UpdateCommand
     {
-        get => (ICommand?)GetValue(NextPlacingStepCommandProperty);
-        set => SetValue(NextPlacingStepCommandProperty, value);
+        get => (ICommand?)GetValue(UpdateCommandProperty);
+        set => SetValue(UpdateCommandProperty, value);
     }
 
-    public static readonly DependencyProperty NextPlacingStepCommandProperty =
-        DependencyProperty.Register(nameof(NextPlacingStepCommand), typeof(ICommand), typeof(PlacingTool), new PropertyMetadata(default(ICommand)));
-
-    #endregion
-
-    #region UpdatePlacingCommand
-
-    public ICommand? UpdatePlacingCommand
-    {
-        get => (ICommand?)GetValue(UpdatePlacingCommandProperty);
-        set => SetValue(UpdatePlacingCommandProperty, value);
-    }
-
-    public static readonly DependencyProperty UpdatePlacingCommandProperty =
-        DependencyProperty.Register(nameof(UpdatePlacingCommand), typeof(ICommand), typeof(PlacingTool), new PropertyMetadata(default(ICommand)));
-
-    #endregion
-
-    #region EndPlacingCommand
-
-    public ICommand? EndPlacingCommand
-    {
-        get => (ICommand?)GetValue(EndPlacingCommandProperty);
-        set => SetValue(EndPlacingCommandProperty, value);
-    }
-
-    public static readonly DependencyProperty EndPlacingCommandProperty =
-        DependencyProperty.Register(nameof(EndPlacingCommand), typeof(ICommand), typeof(PlacingTool), new PropertyMetadata(default(ICommand)));
-
-    #endregion
-
-    #region CancelPlacingCommand
-
-    public ICommand? CancelPlacingCommand
-    {
-        get => (ICommand?)GetValue(CancelPlacingCommandProperty);
-        set => SetValue(CancelPlacingCommandProperty, value);
-    }
-
-    public static readonly DependencyProperty CancelPlacingCommandProperty =
-        DependencyProperty.Register(nameof(CancelPlacingCommand), typeof(ICommand), typeof(PlacingTool), new PropertyMetadata(default(ICommand)));
+    public static readonly DependencyProperty UpdateCommandProperty =
+        DependencyProperty.Register(nameof(UpdateCommand), typeof(ICommand), typeof(PlacingTool), new PropertyMetadata(default(ICommand?)));
 
     #endregion
 
@@ -102,28 +56,17 @@ public class PlacingTool : BaseTool
 
     protected override void OnMouseLeftButtonDown(Scene2D scene, Vector2 pos)
     {
-        if (!IsStarted && StartPlacingCommand?.CanExecute(pos) is not null)
+        if (ActionCommand?.CanExecute(pos) is not null)
         {
-            StartPlacingCommand.Execute(pos);
-            _currentStep++;
-        }
-        else if (InProgress && NextPlacingStepCommand?.CanExecute(pos) is not null)
-        {
-            NextPlacingStepCommand.Execute(pos);
-            _currentStep++;
-        }
-        else if (IsLastStep && EndPlacingCommand?.CanExecute(null) is not null)
-        {
-            EndPlacingCommand.Execute(null);
-            _currentStep = -1;
+            ActionCommand.Execute(pos);
         }
     }
 
     protected override void OnMouseMove(Scene2D scene, Vector2 pos)
     {
-        if (IsStarted && UpdatePlacingCommand?.CanExecute(pos) is not null)
+        if (UpdateCommand?.CanExecute(pos) is not null)
         {
-            UpdatePlacingCommand.Execute(pos);
+            UpdateCommand.Execute(pos);
         }
     }
 
@@ -142,19 +85,9 @@ public class PlacingTool : BaseTool
 
     private void OnCancel()
     {
-        if (!IsStarted)
+        if (RejectCommand?.CanExecute(null) is not null)
         {
-            if (EndPlacingCommand?.CanExecute(null) is not null)
-            {
-                EndPlacingCommand.Execute(null);
-            }
-
-            ToolsController.SwitchToDefaultTool();
-        }
-        else if (CancelPlacingCommand?.CanExecute(null) is not null)
-        {
-            CancelPlacingCommand.Execute(null);
-            _currentStep = -1;
+            RejectCommand.Execute(null);
         }
     }
 

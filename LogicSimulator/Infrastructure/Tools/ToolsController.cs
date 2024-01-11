@@ -75,6 +75,19 @@ public class ToolsController : Freezable
 
     #endregion
 
+    #region IsCurrentToolLocked
+
+    public bool IsCurrentToolLocked
+    {
+        get => (bool)GetValue(IsCurrentToolLockedProperty);
+        set => SetValue(IsCurrentToolLockedProperty, value);
+    }
+
+    public static readonly DependencyProperty IsCurrentToolLockedProperty =
+        DependencyProperty.Register(nameof(IsCurrentToolLocked), typeof(bool), typeof(ToolsController), new PropertyMetadata(default(bool)));
+
+    #endregion
+
     public ToolsController()
     {
         Tools = [];
@@ -148,7 +161,7 @@ public class ToolsController : Freezable
 
     private void OnToolChanged(BaseTool? newTool, BaseTool? oldTool, bool activatedFromOtherTool)
     {
-        if (oldTool is { CanSwitch: false })
+        if (IsCurrentToolLocked)
             return;
 
         oldTool?.Deactivate();

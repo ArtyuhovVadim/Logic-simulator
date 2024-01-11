@@ -31,34 +31,33 @@
             Scale="{Binding Path=Scale, Mode=TwoWay}"
             Translation="{Binding Path=Translation, Mode=TwoWay}">
             <tools:ToolsController.Controller>
-                <tools:ToolsController CurrentToolContext="{Binding Path=CurrentTool, Mode=TwoWay}" DefaultToolContext="{Binding Path=SelectionTool, Mode=OneTime}">
+                <tools:ToolsController
+                    CurrentToolContext="{Binding Path=ToolsViewModel.CurrentTool, Mode=TwoWay}"
+                    DefaultToolContext="{Binding Path=ToolsViewModel.DefaultTool, Mode=OneTime}"
+                    IsCurrentToolLocked="{Binding Path=ToolsViewModel.IsCurrentToolLocked}">
                     <tools:SelectionTool
-                        Context="{Binding Path=SelectionTool}"
+                        Context="{Binding Path=ToolsViewModel.SelectionTool}"
                         ObjectSelectedCommand="{Binding Path=ObjectSelectedCommand}"
                         ObjectsLayer="{Binding ElementName=ObjectsLayer}" />
                     <tools:DragTool
-                        Context="{Binding Path=DragTool}"
+                        Context="{Binding Path=ToolsViewModel.DragTool}"
                         GridSnap="{Binding Path=GridStep}"
                         ObjectsLayer="{Binding ElementName=ObjectsLayer}" />
                     <tools:RectangleSelectionTool
                         x:Name="RectangleSelectionTool"
-                        Context="{Binding Path=RectangleSelectionTool}"
+                        Context="{Binding Path=ToolsViewModel.RectangleSelectionTool}"
                         Geometry="{Binding ElementName=RectangleSelectionLayer, Path=Geometry, Mode=OneWay}"
                         ObjectSelectedCommand="{Binding Path=ObjectSelectedCommand}"
                         ObjectsLayer="{Binding ElementName=ObjectsLayer}" />
                     <tools:NodeDragTool
-                        Context="{Binding Path=NodeDragTool}"
+                        Context="{Binding Path=ToolsViewModel.NodeDragTool}"
                         GridSnap="{Binding Path=GridStep}"
                         ObjectsLayer="{Binding ElementName=ObjectsLayer}" />
                     <tools:PlacingTool
-                        CanSwitch="{Binding Path=RectanglePlacingTool.CanSwitch}"
-                        CancelPlacingCommand="{Binding Path=RectanglePlacingTool.CancelPlacingCommand}"
-                        Context="{Binding Path=RectanglePlacingTool}"
-                        EndPlacingCommand="{Binding Path=RectanglePlacingTool.EndPlacingCommand}"
-                        NextPlacingStepCommand="{Binding Path=RectanglePlacingTool.NextPlacingCommand}"
-                        StartPlacingCommand="{Binding Path=RectanglePlacingTool.StartPlacingCommand}"
-                        StepsCount="{Binding Path=RectanglePlacingTool.StepsCount}"
-                        UpdatePlacingCommand="{Binding Path=RectanglePlacingTool.UpdatePlacingCommand}" />
+                        ActionCommand="{Binding Path=ToolsViewModel.RectanglePlacingTool.ActionCommand}"
+                        Context="{Binding Path=ToolsViewModel.RectanglePlacingTool}"
+                        RejectCommand="{Binding Path=ToolsViewModel.RectanglePlacingTool.RejectCommand}"
+                        UpdateCommand="{Binding Path=ToolsViewModel.RectanglePlacingTool.UpdateCommand}" />
                 </tools:ToolsController>
             </tools:ToolsController.Controller>
 
@@ -241,7 +240,7 @@
             RenderOptions.EdgeMode="Unspecified"
             SnapsToDevicePixels="True"
             UseLayoutRounding="True">
-            <StackPanel Orientation="Horizontal">
+            <StackPanel DataContext="{Binding Path=ToolsViewModel}" Orientation="Horizontal">
                 <StackPanel.Resources>
                     <Style BasedOn="{StaticResource VerticalSeparator}" TargetType="{x:Type Separator}" />
                 </StackPanel.Resources>
