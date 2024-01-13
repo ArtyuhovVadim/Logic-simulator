@@ -1,117 +1,27 @@
-﻿using LogicSimulator.Utils;
-using LogicSimulator.ViewModels.AnchorableViewModels;
-using LogicSimulator.ViewModels.ObjectViewModels;
+﻿using LogicSimulator.ViewModels.AnchorableViewModels;
 using LogicSimulator.ViewModels.ObjectViewModels.Base;
 using SharpDX;
 using WpfExtensions.Mvvm.Commands;
 
 namespace LogicSimulator.ViewModels.Tools.Base;
 
-public class StepBuilder<T> where T : BaseObjectViewModel
-{
-    private readonly PlacingStepsBuilder<T> _parent;
-    private readonly Action<T, Vector2> _stepAction;
-    private bool _useGrid;
-
-    public StepBuilder<T>? NextBuilder { get; set; }
-
-    public StepBuilder(PlacingStepsBuilder<T> parent, Action<T, Vector2> stepAction)
-    {
-        _parent = parent;
-        _stepAction = stepAction;
-    }
-
-    public StepBuilder<T> UseGrid()
-    {
-        _useGrid = true;
-        return this;
-    }
-
-    public PlacingStepsBuilder<T> Then()
-    {
-        return _parent;
-    }
-
-    public PlacingStep<T> Build() => new(_stepAction) { UseGrid = _useGrid, NextStep = NextBuilder?.Build() };
-}
-
-public class PlacingStepsBuilder<T> where T : BaseObjectViewModel
-{
-    private StepBuilder<T>? _root;
-    private StepBuilder<T>? _current;
-
-    public StepBuilder<T> AddStep(Action<T, Vector2> stepAction)
-    {
-        if (_root is null)
-        {
-            _current = new StepBuilder<T>(this, stepAction);
-            _root = _current;
-            return _current;
-        }
-
-        var newStepBuilder = new StepBuilder<T>(this, stepAction);
-        _current!.NextBuilder = newStepBuilder;
-        _current = newStepBuilder;
-
-        return _current;
-    }
-
-    public PlacingStep<T> Build() => _root!.Build();
-}
-
 public abstract class BasePlacingToolViewModel<T> : BaseSchemeToolViewModel where T : BaseObjectViewModel, new()
 {
-    private PlacingStep<T> _current = null!;
+    private PlacingStep<T>? _currentStep;
 
-    private int _currentStep = -1;
-    private List<PlacingStep<T>> _steps = [];
-
-    protected BasePlacingToolViewModel(string name, SchemeViewModel scheme) : base(name)
-    {
-        Scheme = scheme;
-        InitSteps();
-
-        //TODO: Для теста
-        while (_current is not null)
-        {
-            _steps.Add(_current);
-            _current = _current.NextStep;
-        }
-    }
-
-    private int StepsCount => _steps.Count;
-
-    private bool IsStarted => _currentStep != -1;
-
-    private bool InProgress => _currentStep >= 0 && _currentStep < StepsCount - 1;
-
-    private bool IsLastStep => _currentStep == StepsCount - 1;
+    protected BasePlacingToolViewModel(string name, SchemeViewModel scheme) : base(name) => Scheme = scheme;
 
     protected T? Object { get; private set; }
 
     protected SchemeViewModel Scheme { get; }
 
+    protected abstract PlacingStep<T> FirstStep { get; }
+
     #region ActionCommand
 
     private ICommand? _actionCommand;
 
-    public ICommand ActionCommand => _actionCommand ??= new LambdaCommand<Vector2>(pos =>
-    {
-        if (!IsStarted)
-        {
-            OnStartPlacing(pos);
-            _currentStep++;
-        }
-        else if (InProgress)
-        {
-            _currentStep++;
-        }
-        else if (IsLastStep)
-        {
-            OnEndPlacing();
-            _currentStep = -1;
-        }
-    });
+    public ICommand ActionCommand => _actionCommand ??= new LambdaCommand<Vector2>(OnAction);
 
     #endregion
 
@@ -119,13 +29,7 @@ public abstract class BasePlacingToolViewModel<T> : BaseSchemeToolViewModel wher
 
     private ICommand? _updateCommand;
 
-    public ICommand UpdateCommand => _updateCommand ??= new LambdaCommand<Vector2>(pos =>
-    {
-        if (IsStarted)
-        {
-            OnUpdatePlacing(pos);
-        }
-    });
+    public ICommand UpdateCommand => _updateCommand ??= new LambdaCommand<Vector2>(OnUpdate);
 
     #endregion
 
@@ -133,53 +37,79 @@ public abstract class BasePlacingToolViewModel<T> : BaseSchemeToolViewModel wher
 
     private ICommand? _rejectCommand;
 
-    public ICommand RejectCommand => _rejectCommand ??= new LambdaCommand(() =>
+    public ICommand RejectCommand => _rejectCommand ??= new LambdaCommand(OnReject);
+
+    #endregion
+
+    protected override void OnActivated()
     {
-        if (!IsStarted)
+        _currentStep = FirstStep;
+        Object = new T();
+        Scheme.Objects.Add(Object);
+        OnStartObjectPlacing(Object);
+        _currentStep.EnterStep(Object, Scheme.MousePosition);
+    }
+
+    protected override void OnDeactivated()
+    {
+        if (Object is null) return;
+
+        _currentStep!.ExitStep(Object, Scheme.MousePosition);
+        Scheme.Objects.Remove(Object);
+        Object = null;
+    }
+
+    protected virtual void OnStartObjectPlacing(T obj) { }
+
+    protected virtual bool OnObjectPlaced(T obj) => true;
+
+    protected void GoToStep(PlacingStep<T>? step) => GoToStepInternal(step, Scheme.MousePosition);
+
+    protected void Reject() => OnReject();
+
+    private void OnAction(Vector2 pos) => GoToStepInternal(_currentStep!.GetNextStep(Object!), pos);
+
+    private void OnUpdate(Vector2 pos) => _currentStep?.Update(Object!, pos);
+
+    private void OnReject()
+    {
+        Scheme.ToolsViewModel.IsCurrentToolLocked = false;
+
+        if (_currentStep == FirstStep)
         {
-            OnEndPlacing();
+            _currentStep!.ExitStep(Object!, Scheme.MousePosition);
+            Scheme.Objects.Remove(Object!);
+            Object = null;
             Scheme.ToolsViewModel.CurrentTool = Scheme.ToolsViewModel.DefaultTool;
         }
         else
         {
-            OnCancelPlacing();
-            _currentStep = -1;
+            Scheme.Objects.Remove(Object!);
+            Object = new T();
+            Scheme.Objects.Add(Object);
+            _currentStep!.ExitStep(Object, Scheme.MousePosition);
+            _currentStep = FirstStep;
+            OnStartObjectPlacing(Object!);
+            _currentStep.EnterStep(Object, Scheme.MousePosition);
         }
-    });
-
-    #endregion
-
-    protected abstract PlacingStep<T> ConfigurePlacingSteps(PlacingStepsBuilder<T> builder);
-
-    protected void OnStartPlacing(Vector2 pos)
-    {
-        Scheme.ToolsViewModel.IsCurrentToolLocked = true;
-        foreach (var obj in Scheme.Objects)
-            obj.IsSelected = false;
-        Object = new T { IsSelected = true };
-        Scheme.Objects.Add(Object);
-        Scheme.SelectedObjectsChanged();
     }
 
-    protected void OnUpdatePlacing(Vector2 pos)
+    private void GoToStepInternal(PlacingStep<T>? step, Vector2 pos)
     {
-        var step = _steps[_currentStep];
-        step.Update(Object!, step.UseGrid ? pos.ApplyGrid(Scheme.GridStep) : pos);
-    }
+        Scheme.ToolsViewModel.IsCurrentToolLocked = step != FirstStep;
+        _currentStep!.ExitStep(Object!, pos);
+        _currentStep = step;
 
-    protected void OnEndPlacing()
-    {
-        Object = null;
-        Scheme.ToolsViewModel.IsCurrentToolLocked = false;
-    }
+        if (_currentStep is null)
+        {
+            if (!OnObjectPlaced(Object!)) Scheme.Objects.Remove(Object!);
+            _currentStep = FirstStep;
+            Object = new T();
+            Scheme.Objects.Add(Object);
+            Scheme.ToolsViewModel.IsCurrentToolLocked = false;
+            OnStartObjectPlacing(Object!);
+        }
 
-    protected void OnCancelPlacing()
-    {
-        Scheme.ToolsViewModel.IsCurrentToolLocked = false;
-        Scheme.Objects.Remove(Object!);
-        Object = null;
-        Scheme.SelectedObjectsChanged();
+        _currentStep.EnterStep(Object!, pos);
     }
-
-    private void InitSteps() => _current = ConfigurePlacingSteps(new PlacingStepsBuilder<T>());
 }

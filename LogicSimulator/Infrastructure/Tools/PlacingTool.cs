@@ -9,64 +9,81 @@ public class PlacingTool : BaseTool
 {
     private bool _mouseRightButtonDragged;
 
-    #region ActionCommand
+    #region MouseLeftButtonDownCommand
 
-    public ICommand? ActionCommand
+    public ICommand? MouseLeftButtonDownCommand
     {
-        get => (ICommand?)GetValue(ActionCommandProperty);
-        set => SetValue(ActionCommandProperty, value);
+        get => (ICommand?)GetValue(MouseLeftButtonDownCommandProperty);
+        set => SetValue(MouseLeftButtonDownCommandProperty, value);
     }
 
-    public static readonly DependencyProperty ActionCommandProperty =
-        DependencyProperty.Register(nameof(ActionCommand), typeof(ICommand), typeof(PlacingTool), new PropertyMetadata(default(ICommand?)));
+    public static readonly DependencyProperty MouseLeftButtonDownCommandProperty =
+        DependencyProperty.Register(nameof(MouseLeftButtonDownCommand), typeof(ICommand), typeof(PlacingTool), new PropertyMetadata(default(ICommand?)));
 
     #endregion
 
-    #region RejectCommand
+    #region MouseRightButtonUpCommand
 
-    public ICommand? RejectCommand
+    public ICommand? MouseRightButtonUpCommand
     {
-        get => (ICommand?)GetValue(RejectCommandProperty);
-        set => SetValue(RejectCommandProperty, value);
+        get => (ICommand?)GetValue(MouseRightButtonUpCommandProperty);
+        set => SetValue(MouseRightButtonUpCommandProperty, value);
     }
 
-    public static readonly DependencyProperty RejectCommandProperty =
-        DependencyProperty.Register(nameof(RejectCommand), typeof(ICommand), typeof(PlacingTool), new PropertyMetadata(default(ICommand?)));
+    public static readonly DependencyProperty MouseRightButtonUpCommandProperty =
+        DependencyProperty.Register(nameof(MouseRightButtonUpCommand), typeof(ICommand), typeof(PlacingTool), new PropertyMetadata(default(ICommand?)));
 
     #endregion
 
-    #region UpdateCommand
+    #region MouseMoveCommand
 
-    public ICommand? UpdateCommand
+    public ICommand? MouseMoveCommand
     {
-        get => (ICommand?)GetValue(UpdateCommandProperty);
-        set => SetValue(UpdateCommandProperty, value);
+        get => (ICommand?)GetValue(MouseMoveCommandProperty);
+        set => SetValue(MouseMoveCommandProperty, value);
     }
 
-    public static readonly DependencyProperty UpdateCommandProperty =
-        DependencyProperty.Register(nameof(UpdateCommand), typeof(ICommand), typeof(PlacingTool), new PropertyMetadata(default(ICommand?)));
+    public static readonly DependencyProperty MouseMoveCommandProperty =
+        DependencyProperty.Register(nameof(MouseMoveCommand), typeof(ICommand), typeof(PlacingTool), new PropertyMetadata(default(ICommand?)));
+
+    #endregion
+
+    #region CancelCommand
+
+    public ICommand? CancelCommand
+    {
+        get => (ICommand?)GetValue(CancelCommandProperty);
+        set => SetValue(CancelCommandProperty, value);
+    }
+
+    public static readonly DependencyProperty CancelCommandProperty =
+        DependencyProperty.Register(nameof(CancelCommand), typeof(ICommand), typeof(PlacingTool), new PropertyMetadata(default(ICommand?)));
 
     #endregion
 
     protected override void OnKeyDown(Scene2D scene, KeyEventArgs args, Vector2 pos)
     {
         if (args.Key != CancelKey) return;
-        OnCancel();
+
+        if (CancelCommand?.CanExecute(pos) is not null)
+        {
+            CancelCommand.Execute(pos);
+        }
     }
 
     protected override void OnMouseLeftButtonDown(Scene2D scene, Vector2 pos)
     {
-        if (ActionCommand?.CanExecute(pos) is not null)
+        if (MouseLeftButtonDownCommand?.CanExecute(pos) is not null)
         {
-            ActionCommand.Execute(pos);
+            MouseLeftButtonDownCommand.Execute(pos);
         }
     }
 
     protected override void OnMouseMove(Scene2D scene, Vector2 pos)
     {
-        if (UpdateCommand?.CanExecute(pos) is not null)
+        if (MouseMoveCommand?.CanExecute(pos) is not null)
         {
-            UpdateCommand.Execute(pos);
+            MouseMoveCommand.Execute(pos);
         }
     }
 
@@ -80,14 +97,9 @@ public class PlacingTool : BaseTool
             return;
         }
 
-        OnCancel();
-    }
-
-    private void OnCancel()
-    {
-        if (RejectCommand?.CanExecute(null) is not null)
+        if (MouseRightButtonUpCommand?.CanExecute(pos) is not null)
         {
-            RejectCommand.Execute(null);
+            MouseRightButtonUpCommand.Execute(pos);
         }
     }
 

@@ -133,14 +133,6 @@ public class ToolsController : Freezable
         if (e.NewItems?.Count == 0)
             return;
 
-        foreach (var tool in e.NewItems!)
-        {
-            if (Tools.Count(x => x.GetType() == tool.GetType()) > 1)
-            {
-                throw new InvalidOperationException($"{tool.GetType().Name} has already been added.");
-            }
-        }
-
         foreach (BaseTool newTool in e.NewItems!)
         {
             if (newTool.Context is null)
@@ -151,6 +143,11 @@ public class ToolsController : Freezable
     private void OnContextChanged(BaseTool tool)
     {
         tool.ContextChanged -= OnContextChanged;
+
+        if (Tools.Count(x => x.GetType() == tool.GetType() && x.Context == tool.Context) > 1)
+        {
+            throw new InvalidOperationException($"{tool.GetType().Name} has already been added.");
+        }
 
         var newTool = Tools.FirstOrDefault(x => x.Context == CurrentToolContext);
 

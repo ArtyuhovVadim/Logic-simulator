@@ -19,12 +19,14 @@
                 <Setter.Value>
                     <ControlTemplate>
                         <Border
-                            Width="{Binding Path=ActualHeight, RelativeSource={RelativeSource Self}}"
+                            Width="{Binding Path=ActualHeight,
+                                            RelativeSource={RelativeSource Self}}"
                             Background="{TemplateBinding Background}"
                             ToolTip="{Binding Path=Name}">
                             <ContentControl
                                 Margin="{TemplateBinding Padding}"
-                                Content="{Binding Path=Content, RelativeSource={RelativeSource AncestorType={x:Type UserControl}}}"
+                                Content="{Binding Path=Content,
+                                                  RelativeSource={RelativeSource AncestorType={x:Type UserControl}}}"
                                 Focusable="False"
                                 SnapsToDevicePixels="True"
                                 UseLayoutRounding="True" />

@@ -22,6 +22,9 @@ public class SchemeToolsViewModel : BindableBase
 
         RectanglePlacingTool = new RectanglePlacingToolViewModel("Rectangle placing tool", _scheme);
         RectanglePlacingTool.ToolSelected += OnToolSelected;
+
+        LinePlacingTool = new LinePlacingToolViewModel("Line placing tool", _scheme);
+        LinePlacingTool.ToolSelected += OnToolSelected;
     }
 
     public SchemeSelectionToolViewModel DefaultTool => SelectionTool;
@@ -88,6 +91,12 @@ public class SchemeToolsViewModel : BindableBase
     #region RectanglePlacingTool
 
     public RectanglePlacingToolViewModel RectanglePlacingTool { get; }
+
+    #endregion
+
+    #region LinePlacingTool
+
+    public LinePlacingToolViewModel LinePlacingTool { get; }
 
     #endregion
 

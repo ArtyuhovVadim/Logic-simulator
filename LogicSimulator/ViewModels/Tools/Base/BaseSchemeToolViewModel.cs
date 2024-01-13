@@ -28,7 +28,13 @@ public abstract class BaseSchemeToolViewModel : BindableBase
     public bool IsActive
     {
         get => _isActive;
-        set => Set(ref _isActive, value);
+        set
+        {
+            if (!Set(ref _isActive, value)) return;
+
+            if (value) OnActivated();
+            else OnDeactivated();
+        }
     }
 
     #endregion
@@ -42,4 +48,8 @@ public abstract class BaseSchemeToolViewModel : BindableBase
     #endregion
 
     protected virtual void OnSelected() => ToolSelected?.Invoke(this);
+
+    protected virtual void OnActivated() { }
+
+    protected virtual void OnDeactivated() { }
 }
