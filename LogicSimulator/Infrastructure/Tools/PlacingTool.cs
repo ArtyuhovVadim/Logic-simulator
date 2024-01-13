@@ -9,6 +9,11 @@ public class PlacingTool : BaseTool
 {
     private bool _mouseRightButtonDragged;
 
+    public PlacingTool()
+    {
+        MouseRightButtonDragThreshold = 5;
+    }
+
     #region MouseLeftButtonDownCommand
 
     public ICommand? MouseLeftButtonDownCommand

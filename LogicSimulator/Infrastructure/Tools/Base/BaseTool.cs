@@ -1,11 +1,16 @@
-﻿using System.Windows;
+﻿using System.Diagnostics;
+using System.Windows;
 using LogicSimulator.Scene;
 using SharpDX;
+using Point = System.Windows.Point;
 
 namespace LogicSimulator.Infrastructure.Tools.Base;
 
 public abstract class BaseTool : Freezable
 {
+    private Point _lastMouseLeftButtonDownPos;
+    private Point _lastMouseRightButtonDownPos;
+
     public event Action<BaseTool>? ContextChanged;
 
     #region CancelKey
@@ -41,6 +46,32 @@ public abstract class BaseTool : Freezable
 
     #endregion
 
+    #region MouseLeftButtonDragThreshold
+
+    public float MouseLeftButtonDragThreshold
+    {
+        get => (float)GetValue(MouseLeftButtonDragThresholdProperty);
+        set => SetValue(MouseLeftButtonDragThresholdProperty, value);
+    }
+
+    public static readonly DependencyProperty MouseLeftButtonDragThresholdProperty =
+        DependencyProperty.Register(nameof(MouseLeftButtonDragThreshold), typeof(float), typeof(BaseTool), new PropertyMetadata(0f));
+
+    #endregion
+
+    #region MouseRightButtonDragThreshold
+
+    public float MouseRightButtonDragThreshold
+    {
+        get => (float)GetValue(MouseRightButtonDragThresholdProperty);
+        set => SetValue(MouseRightButtonDragThresholdProperty, value);
+    }
+
+    public static readonly DependencyProperty MouseRightButtonDragThresholdProperty =
+        DependencyProperty.Register(nameof(MouseRightButtonDragThreshold), typeof(float), typeof(BaseTool), new PropertyMetadata(0f));
+
+    #endregion
+
     public bool ActivatedFromOtherTool { get; private set; }
 
     protected ToolsController ToolsController { get; private set; } = null!;
@@ -64,15 +95,31 @@ public abstract class BaseTool : Freezable
 
     public void MouseMove(Scene2D scene, Vector2 pos) => OnMouseMove(scene, pos);
 
-    public void MouseLeftButtonDown(Scene2D scene, Vector2 pos) => OnMouseLeftButtonDown(scene, pos);
+    public void MouseLeftButtonDown(Scene2D scene, Vector2 pos)
+    {
+        _lastMouseLeftButtonDownPos = Mouse.GetPosition(scene);
+        OnMouseLeftButtonDown(scene, pos);
+    }
 
-    public void MouseLeftButtonDragged(Scene2D scene, Vector2 pos) => OnMouseLeftButtonDragged(scene, pos);
+    public void MouseLeftButtonDragged(Scene2D scene, Vector2 pos)
+    {
+        if ((Mouse.GetPosition(scene) - _lastMouseLeftButtonDownPos).Length > MouseLeftButtonDragThreshold)
+            OnMouseLeftButtonDragged(scene, pos);
+    }
 
     public void MouseLeftButtonUp(Scene2D scene, Vector2 pos) => OnMouseLeftButtonUp(scene, pos);
 
-    public void MouseRightButtonDown(Scene2D scene, Vector2 pos) => OnMouseRightButtonDown(scene, pos);
+    public void MouseRightButtonDown(Scene2D scene, Vector2 pos)
+    {
+        _lastMouseRightButtonDownPos = Mouse.GetPosition(scene);
+        OnMouseRightButtonDown(scene, pos);
+    }
 
-    public void MouseRightButtonDragged(Scene2D scene, Vector2 pos) => OnMouseRightButtonDragged(scene, pos);
+    public void MouseRightButtonDragged(Scene2D scene, Vector2 pos)
+    {
+        if ((Mouse.GetPosition(scene) - _lastMouseRightButtonDownPos).Length > MouseRightButtonDragThreshold)
+            OnMouseRightButtonDragged(scene, pos);
+    }
 
     public void MouseRightButtonUp(Scene2D scene, Vector2 pos) => OnMouseRightButtonUp(scene, pos);
 
