@@ -23,8 +23,23 @@ public class SchemeToolsViewModel : BindableBase
         RectanglePlacingTool = new RectanglePlacingToolViewModel("Rectangle placing tool", _scheme);
         RectanglePlacingTool.ToolSelected += OnToolSelected;
 
+        RoundedRectanglePlacingTool = new RoundedRectanglePlacingToolViewModel("Rounded rectangle placing tool", _scheme);
+        RoundedRectanglePlacingTool.ToolSelected += OnToolSelected;
+
+        EllipsePlacingTool = new EllipsePlacingToolViewModel("Ellipse placing tool", _scheme);
+        EllipsePlacingTool.ToolSelected += OnToolSelected;
+
+        ArcPlacingTool = new ArcPlacingToolViewModel("Arc placing tool", _scheme);
+        ArcPlacingTool.ToolSelected += OnToolSelected;
+
         LinePlacingTool = new LinePlacingToolViewModel("Line placing tool", _scheme);
         LinePlacingTool.ToolSelected += OnToolSelected;
+
+        BezierCurvePlacingTool = new BezierCurvePlacingToolViewModel("Bezier curve placing tool", _scheme);
+        BezierCurvePlacingTool.ToolSelected += OnToolSelected;
+
+        TextPlacingTool = new TextPlacingToolViewModel("Text placing tool", _scheme);
+        TextPlacingTool.ToolSelected += OnToolSelected;
     }
 
     public SchemeSelectionToolViewModel DefaultTool => SelectionTool;
@@ -93,10 +108,40 @@ public class SchemeToolsViewModel : BindableBase
     public RectanglePlacingToolViewModel RectanglePlacingTool { get; }
 
     #endregion
+    
+    #region RoundedRectanglePlacingTool
+
+    public RoundedRectanglePlacingToolViewModel RoundedRectanglePlacingTool { get; }
+
+    #endregion
+
+    #region EllipsePlacingTool
+
+    public EllipsePlacingToolViewModel EllipsePlacingTool { get; }
+
+    #endregion
+
+    #region ArcPlacingTool
+
+    public ArcPlacingToolViewModel ArcPlacingTool { get; }
+
+    #endregion
 
     #region LinePlacingTool
 
     public LinePlacingToolViewModel LinePlacingTool { get; }
+
+    #endregion
+
+    #region BezierCurvePlacingTool
+
+    public BezierCurvePlacingToolViewModel BezierCurvePlacingTool { get; }
+
+    #endregion
+
+    #region TextPlacingTool
+
+    public TextPlacingToolViewModel TextPlacingTool { get; }
 
     #endregion
 
