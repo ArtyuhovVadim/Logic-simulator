@@ -17,6 +17,9 @@ public class SceneTransformBehaviour : Behavior<Scene2D>
     private bool _isMouseRightButtonPressedOnScene;
     private bool _isMouseMiddleButtonPressedOnScene;
 
+    private bool _isTranslationDiffStored;
+    private Vector2 _translationDiff;
+
     #region MaxScale
 
     public double MaxScale
@@ -82,6 +85,19 @@ public class SceneTransformBehaviour : Behavior<Scene2D>
 
     #endregion
 
+    #region TranslationThreshold
+
+    public float TranslationThreshold
+    {
+        get => (float)GetValue(TranslationThresholdProperty);
+        set => SetValue(TranslationThresholdProperty, value);
+    }
+
+    public static readonly DependencyProperty TranslationThresholdProperty =
+        DependencyProperty.Register(nameof(TranslationThreshold), typeof(float), typeof(SceneTransformBehaviour), new PropertyMetadata(3f));
+
+    #endregion
+
     protected override void OnAttached()
     {
         AssociatedObject.MouseDown += OnSceneMouseDown;
@@ -126,6 +142,7 @@ public class SceneTransformBehaviour : Behavior<Scene2D>
         {
             case MouseButton.Right:
                 _isMouseRightButtonPressedOnScene = false;
+                _isTranslationDiffStored = false;
                 break;
             case MouseButton.Middle:
                 _isMouseMiddleButtonPressedOnScene = false;
@@ -157,7 +174,18 @@ public class SceneTransformBehaviour : Behavior<Scene2D>
         }
         else if (e.RightButton == MouseButtonState.Pressed && _isMouseRightButtonPressedOnScene)
         {
-            AssociatedObject.Translation = _lastRightButtonDownSceneTranslate + pos - _lastRightButtonDownPos;
+            var diff = pos - _lastRightButtonDownPos;
+
+            if (_isTranslationDiffStored || diff.Length() >= TranslationThreshold)
+            {
+                if (!_isTranslationDiffStored)
+                {
+                    _translationDiff = diff; 
+                    _isTranslationDiffStored = true;
+                }
+
+                AssociatedObject.Translation = _lastRightButtonDownSceneTranslate + pos - _lastRightButtonDownPos - _translationDiff;
+            }
         }
     }
 
