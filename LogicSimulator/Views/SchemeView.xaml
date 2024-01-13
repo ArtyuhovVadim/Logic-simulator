@@ -296,16 +296,51 @@
                 </views:SchemeToolView>
                 <Separator />
                 <views:SchemeToolView DataContext="{Binding Path=RectanglePlacingTool}">
-                    <Path
-                        Margin="-1"
-                        Data="{StaticResource RectangleSelectionToolIcon}"
+                    <Rectangle Fill="{DynamicResource {x:Static brushes:BrushesKeys+SchemeView.ToolIconBrush}}" Stretch="Uniform" />
+                </views:SchemeToolView>
+                <views:SchemeToolView>
+                    <Rectangle
                         Fill="{DynamicResource {x:Static brushes:BrushesKeys+SchemeView.ToolIconBrush}}"
+                        RadiusX="4"
+                        RadiusY="4"
                         Stretch="Uniform" />
+                </views:SchemeToolView>
+                <views:SchemeToolView>
+                    <Ellipse
+                        Margin="0,2"
+                        Fill="{DynamicResource {x:Static brushes:BrushesKeys+SchemeView.ToolIconBrush}}"
+                        Stretch="Fill" />
+                </views:SchemeToolView>
+                <views:SchemeToolView>
+                    <Path
+                        Data="{StaticResource ArcPlacingToolIcon}"
+                        Stretch="Uniform"
+                        Stroke="{DynamicResource {x:Static brushes:BrushesKeys+SchemeView.ToolIconBrush}}"
+                        StrokeEndLineCap="Round"
+                        StrokeStartLineCap="Round"
+                        StrokeThickness="2" />
                 </views:SchemeToolView>
                 <views:SchemeToolView DataContext="{Binding Path=LinePlacingTool}">
                     <Path
-                        Margin="-1"
-                        Data="{StaticResource RectangleSelectionToolIcon}"
+                        Data="{StaticResource LinePlacingToolIcon}"
+                        Stretch="Uniform"
+                        Stroke="{DynamicResource {x:Static brushes:BrushesKeys+SchemeView.ToolIconBrush}}"
+                        StrokeEndLineCap="Round"
+                        StrokeStartLineCap="Round"
+                        StrokeThickness="2" />
+                </views:SchemeToolView>
+                <views:SchemeToolView>
+                    <Path
+                        Data="{StaticResource BezierCurvePlacingToolIcon}"
+                        Stretch="Uniform"
+                        Stroke="{DynamicResource {x:Static brushes:BrushesKeys+SchemeView.ToolIconBrush}}"
+                        StrokeEndLineCap="Round"
+                        StrokeStartLineCap="Round"
+                        StrokeThickness="2" />
+                </views:SchemeToolView>
+                <views:SchemeToolView>
+                    <Path
+                        Data="{StaticResource TextPlacingToolIcon}"
                         Fill="{DynamicResource {x:Static brushes:BrushesKeys+SchemeView.ToolIconBrush}}"
                         Stretch="Uniform" />
                 </views:SchemeToolView>
