@@ -43,4 +43,22 @@ public abstract class BaseObjectViewModel : BindableBase
     }
 
     #endregion
+
+    public void RotateClockwise() => Rotation = Rotation switch
+    {
+        Rotation.Degrees0 => Rotation.Degrees90,
+        Rotation.Degrees90 => Rotation.Degrees180,
+        Rotation.Degrees180 => Rotation.Degrees270,
+        Rotation.Degrees270 => Rotation.Degrees0,
+        _ => throw new ArgumentOutOfRangeException()
+    };
+
+    public void RotateCounterclockwise() => Rotation = Rotation switch
+    {
+        Rotation.Degrees0 => Rotation.Degrees270,
+        Rotation.Degrees90 => Rotation.Degrees0,
+        Rotation.Degrees180 => Rotation.Degrees90,
+        Rotation.Degrees270 => Rotation.Degrees180,
+        _ => throw new ArgumentOutOfRangeException()
+    };
 }
