@@ -20,6 +20,9 @@ public class SceneTransformBehaviour : Behavior<Scene2D>
     private bool _isTranslationDiffStored;
     private Vector2 _translationDiff;
 
+    private bool _isTranslationStarted;
+    private bool _isScalingStarted;
+
     #region MaxScale
 
     public double MaxScale
@@ -143,9 +146,19 @@ public class SceneTransformBehaviour : Behavior<Scene2D>
             case MouseButton.Right:
                 _isMouseRightButtonPressedOnScene = false;
                 _isTranslationDiffStored = false;
+                if (_isTranslationStarted)
+                {
+                    e.Handled = true;
+                    _isTranslationStarted = false;
+                }
                 break;
             case MouseButton.Middle:
                 _isMouseMiddleButtonPressedOnScene = false;
+                if (_isScalingStarted)
+                {
+                    e.Handled = true;
+                    _isScalingStarted = false;
+                }
                 break;
         }
 
@@ -161,6 +174,8 @@ public class SceneTransformBehaviour : Behavior<Scene2D>
         if (!Keyboard.IsKeyDown(WheelScaleButton)) return;
 
         RelativeScale(AssociatedObject, pos, WheelScaleStep * e.Delta, MaxScale, MinScale);
+
+        e.Handled = true;
     }
 
     private void OnSceneMouseMove(object sender, MouseEventArgs e)
@@ -171,6 +186,7 @@ public class SceneTransformBehaviour : Behavior<Scene2D>
         {
             User32.SetCursorPos((int)_lastMiddleButtonDownPos.X, (int)_lastMiddleButtonDownPos.Y);
             RelativeScale(AssociatedObject, _lastMiddleButtonDownPosWithDpi, -MouseScaleStep * (pos.Y - _lastMiddleButtonDownPosWithDpi.Y), MaxScale, MinScale);
+            _isScalingStarted = true;
         }
         else if (e.RightButton == MouseButtonState.Pressed && _isMouseRightButtonPressedOnScene)
         {
@@ -180,11 +196,12 @@ public class SceneTransformBehaviour : Behavior<Scene2D>
             {
                 if (!_isTranslationDiffStored)
                 {
-                    _translationDiff = diff; 
+                    _translationDiff = diff;
                     _isTranslationDiffStored = true;
                 }
 
                 AssociatedObject.Translation = _lastRightButtonDownSceneTranslate + pos - _lastRightButtonDownPos - _translationDiff;
+                _isTranslationStarted = true;
             }
         }
     }

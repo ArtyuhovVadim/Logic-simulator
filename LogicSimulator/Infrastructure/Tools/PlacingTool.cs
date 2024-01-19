@@ -7,8 +7,6 @@ namespace LogicSimulator.Infrastructure.Tools;
 
 public class PlacingTool : BaseTool
 {
-    private bool _mouseRightButtonDragged;
-
     public PlacingTool()
     {
         MouseRightButtonDragThreshold = 5;
@@ -92,16 +90,8 @@ public class PlacingTool : BaseTool
         }
     }
 
-    protected override void OnMouseRightButtonDragged(Scene2D scene, Vector2 pos) => _mouseRightButtonDragged = true;
-
     protected override void OnMouseRightButtonUp(Scene2D scene, Vector2 pos)
     {
-        if (_mouseRightButtonDragged)
-        {
-            _mouseRightButtonDragged = false;
-            return;
-        }
-
         if (MouseRightButtonUpCommand?.CanExecute(pos) is not null)
         {
             MouseRightButtonUpCommand.Execute(pos);
