@@ -4,8 +4,6 @@ using LogicSimulator.ViewModels.AnchorableViewModels.Base;
 using LogicSimulator.ViewModels.ObjectViewModels.Base;
 using LogicSimulator.ViewModels.StatusViewModels;
 using LogicSimulator.ViewModels.StatusViewModels.Base;
-using LogicSimulator.ViewModels.Tools;
-using LogicSimulator.ViewModels.Tools.Base;
 using SharpDX;
 using WpfExtensions.Mvvm.Commands;
 
@@ -25,14 +23,7 @@ public class SchemeViewModel : DocumentViewModel
         _scheme = scheme;
         _dockingViewModel = dockingViewModel;
         _editorSelectionService = editorSelectionService;
-        Objects = _scheme.Objects;
-
-        CurrentTool = SelectionTool;
-
-        SelectionTool.ToolSelected += OnToolSelected;
-        DragTool.ToolSelected += OnToolSelected;
-        RectangleSelectionTool.ToolSelected += OnToolSelected;
-        NodeDragTool.ToolSelected += OnToolSelected;
+        Objects = new ObservableCollection<BaseObjectViewModel>(_scheme.Objects);
 
         _statusViewModel = new SchemeStatusViewModel(this);
 
@@ -40,6 +31,14 @@ public class SchemeViewModel : DocumentViewModel
 
         IconSource = new Uri("pack://application:,,,/Resources/Icons/scheme-icon16x16.png");
     }
+
+    #region ToolsViewModel
+
+    private SchemeToolsViewModel? _toolsViewModel;
+
+    public SchemeToolsViewModel ToolsViewModel => _toolsViewModel ??= new SchemeToolsViewModel(this);
+
+    #endregion
 
     #region Title
 
@@ -59,58 +58,11 @@ public class SchemeViewModel : DocumentViewModel
 
     private ObservableCollection<BaseObjectViewModel> _objects = [];
 
-    public IEnumerable<BaseObjectViewModel> Objects
+    public ObservableCollection<BaseObjectViewModel> Objects
     {
         get => _objects;
-        private set => Set(ref _objects, new ObservableCollection<BaseObjectViewModel>(value));
+        private set => Set(ref _objects, value);
     }
-
-    #endregion
-
-    #region CurrentTool
-
-    private BaseSchemeToolViewModel? _currentTool;
-
-    public BaseSchemeToolViewModel? CurrentTool
-    {
-        get => _currentTool;
-        set
-        {
-            var tmp = _currentTool;
-
-            if (!Set(ref _currentTool, value)) return;
-
-            if (tmp is not null)
-                tmp.IsActive = false;
-
-            if (_currentTool is not null)
-                _currentTool.IsActive = true;
-        }
-    }
-
-    #endregion
-
-    #region SelectionTool
-
-    public SchemeSelectionToolViewModel SelectionTool { get; } = new("Selection tool");
-
-    #endregion
-
-    #region DragTool
-
-    public SchemeDragToolViewModel DragTool { get; } = new("Drag tool");
-
-    #endregion
-
-    #region RectangleSelectionTool
-
-    public SchemeRectangleSelectionToolViewModel RectangleSelectionTool { get; } = new("Rectangle selection tool");
-
-    #endregion
-
-    #region NodeDragTool
-
-    public SchemeNodeDragToolViewModel NodeDragTool { get; } = new("Node drag tool");
 
     #endregion
 
@@ -198,11 +150,25 @@ public class SchemeViewModel : DocumentViewModel
 
     #endregion
 
+    public override BaseStatusViewModel StatusViewModel => _statusViewModel;
+
     #region ObjectSelectedCommand
 
     private ICommand? _objectSelectedCommand;
 
-    public ICommand ObjectSelectedCommand => _objectSelectedCommand ??= new LambdaCommand(_ =>
+    public ICommand ObjectSelectedCommand => _objectSelectedCommand ??= new LambdaCommand(OnSelectedObjectsChanged);
+
+    #endregion
+
+    public void SelectedObjectsChanged() => OnSelectedObjectsChanged();
+
+    protected override void OnDocumentActivated() => OnSelectedObjectsChanged();
+
+    protected override void OnDocumentDeactivated() => _editorSelectionService.SetEmptyEditor();
+
+    protected override void OnClose(object? p) => _dockingViewModel.RemoveDocumentViewModel(this);
+
+    private void OnSelectedObjectsChanged()
     {
         var selectedObjects = Objects.Where(x => x.IsSelected).ToArray();
 
@@ -215,31 +181,5 @@ public class SchemeViewModel : DocumentViewModel
         }
 
         _editorSelectionService.SetObjectsEditor(selectedObjects);
-    });
-
-    #endregion
-
-    public override BaseStatusViewModel StatusViewModel => _statusViewModel;
-
-    protected override void OnDocumentActivated()
-    {
-        var selectedObjects = Objects.Where(x => x.IsSelected).ToArray();
-
-        if (selectedObjects.Length == 0)
-        {
-            _editorSelectionService.SetSchemeEditor(this);
-            return;
-        }
-
-        _editorSelectionService.SetObjectsEditor(selectedObjects);
     }
-
-    protected override void OnDocumentDeactivated()
-    {
-        _editorSelectionService.SetEmptyEditor();
-    }
-
-    protected override void OnClose(object? p) => _dockingViewModel.RemoveDocumentViewModel(this);
-
-    private void OnToolSelected(BaseSchemeToolViewModel tool) => CurrentTool = tool;
 }

@@ -75,6 +75,19 @@ public class ToolsController : Freezable
 
     #endregion
 
+    #region IsCurrentToolLocked
+
+    public bool IsCurrentToolLocked
+    {
+        get => (bool)GetValue(IsCurrentToolLockedProperty);
+        set => SetValue(IsCurrentToolLockedProperty, value);
+    }
+
+    public static readonly DependencyProperty IsCurrentToolLockedProperty =
+        DependencyProperty.Register(nameof(IsCurrentToolLocked), typeof(bool), typeof(ToolsController), new PropertyMetadata(default(bool)));
+
+    #endregion
+
     public ToolsController()
     {
         Tools = [];
@@ -120,14 +133,6 @@ public class ToolsController : Freezable
         if (e.NewItems?.Count == 0)
             return;
 
-        foreach (var tool in e.NewItems!)
-        {
-            if (Tools.Count(x => x.GetType() == tool.GetType()) > 1)
-            {
-                throw new InvalidOperationException($"{tool.GetType().Name} has already been added.");
-            }
-        }
-
         foreach (BaseTool newTool in e.NewItems!)
         {
             if (newTool.Context is null)
@@ -139,6 +144,11 @@ public class ToolsController : Freezable
     {
         tool.ContextChanged -= OnContextChanged;
 
+        if (Tools.Count(x => x.GetType() == tool.GetType() && x.Context == tool.Context) > 1)
+        {
+            throw new InvalidOperationException($"{tool.GetType().Name} has already been added.");
+        }
+
         var newTool = Tools.FirstOrDefault(x => x.Context == CurrentToolContext);
 
         if (newTool is null) return;
@@ -148,7 +158,7 @@ public class ToolsController : Freezable
 
     private void OnToolChanged(BaseTool? newTool, BaseTool? oldTool, bool activatedFromOtherTool)
     {
-        if (oldTool is { CanSwitch: false })
+        if (IsCurrentToolLocked)
             return;
 
         oldTool?.Deactivate();

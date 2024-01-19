@@ -19,7 +19,6 @@
     xmlns:views="clr-namespace:LogicSimulator.Views"
     d:DataContext="{d:DesignInstance Type=anchorableViewModels:SchemeViewModel}"
     mc:Ignorable="d">
-
     <UserControl.Resources>
         <converters:RotationToFloatConverter x:Key="RotationToFloatConverter" />
     </UserControl.Resources>
@@ -33,27 +32,74 @@
             Translation="{Binding Path=Translation,
                                   Mode=TwoWay}">
             <tools:ToolsController.Controller>
-                <tools:ToolsController CurrentToolContext="{Binding Path=CurrentTool, Mode=TwoWay}" DefaultToolContext="{Binding Path=SelectionTool, Mode=OneTime}">
+                <tools:ToolsController
+                    CurrentToolContext="{Binding Path=ToolsViewModel.CurrentTool,
+                                                 Mode=TwoWay}"
+                    DefaultToolContext="{Binding Path=ToolsViewModel.DefaultTool,
+                                                 Mode=OneTime}"
+                    IsCurrentToolLocked="{Binding Path=ToolsViewModel.IsCurrentToolLocked}">
                     <tools:SelectionTool
-                        Context="{Binding Path=SelectionTool}"
+                        Context="{Binding Path=ToolsViewModel.SelectionTool}"
                         ObjectSelectedCommand="{Binding Path=ObjectSelectedCommand}"
                         ObjectsLayer="{Binding ElementName=ObjectsLayer}" />
                     <tools:DragTool
-                        Context="{Binding Path=DragTool}"
+                        Context="{Binding Path=ToolsViewModel.DragTool}"
                         GridSnap="{Binding Path=GridStep}"
                         ObjectsLayer="{Binding ElementName=ObjectsLayer}" />
                     <tools:RectangleSelectionTool
                         x:Name="RectangleSelectionTool"
-                        Context="{Binding Path=RectangleSelectionTool}"
+                        Context="{Binding Path=ToolsViewModel.RectangleSelectionTool}"
                         Geometry="{Binding ElementName=RectangleSelectionLayer,
                                            Path=Geometry,
                                            Mode=OneWay}"
                         ObjectSelectedCommand="{Binding Path=ObjectSelectedCommand}"
                         ObjectsLayer="{Binding ElementName=ObjectsLayer}" />
                     <tools:NodeDragTool
-                        Context="{Binding Path=NodeDragTool}"
+                        Context="{Binding Path=ToolsViewModel.NodeDragTool}"
                         GridSnap="{Binding Path=GridStep}"
                         ObjectsLayer="{Binding ElementName=ObjectsLayer}" />
+                    <tools:PlacingTool
+                        CancelCommand="{Binding Path=ToolsViewModel.RectanglePlacingTool.RejectCommand}"
+                        Context="{Binding Path=ToolsViewModel.RectanglePlacingTool}"
+                        MouseLeftButtonDownCommand="{Binding Path=ToolsViewModel.RectanglePlacingTool.ActionCommand}"
+                        MouseMoveCommand="{Binding Path=ToolsViewModel.RectanglePlacingTool.UpdateCommand}"
+                        MouseRightButtonUpCommand="{Binding Path=ToolsViewModel.RectanglePlacingTool.RejectCommand}" />
+                    <tools:PlacingTool
+                        CancelCommand="{Binding Path=ToolsViewModel.RoundedRectanglePlacingTool.RejectCommand}"
+                        Context="{Binding Path=ToolsViewModel.RoundedRectanglePlacingTool}"
+                        MouseLeftButtonDownCommand="{Binding Path=ToolsViewModel.RoundedRectanglePlacingTool.ActionCommand}"
+                        MouseMoveCommand="{Binding Path=ToolsViewModel.RoundedRectanglePlacingTool.UpdateCommand}"
+                        MouseRightButtonUpCommand="{Binding Path=ToolsViewModel.RoundedRectanglePlacingTool.RejectCommand}" />
+                    <tools:PlacingTool
+                        CancelCommand="{Binding Path=ToolsViewModel.EllipsePlacingTool.RejectCommand}"
+                        Context="{Binding Path=ToolsViewModel.EllipsePlacingTool}"
+                        MouseLeftButtonDownCommand="{Binding Path=ToolsViewModel.EllipsePlacingTool.ActionCommand}"
+                        MouseMoveCommand="{Binding Path=ToolsViewModel.EllipsePlacingTool.UpdateCommand}"
+                        MouseRightButtonUpCommand="{Binding Path=ToolsViewModel.EllipsePlacingTool.RejectCommand}" />
+                    <tools:PlacingTool
+                        CancelCommand="{Binding Path=ToolsViewModel.ArcPlacingTool.RejectCommand}"
+                        Context="{Binding Path=ToolsViewModel.ArcPlacingTool}"
+                        MouseLeftButtonDownCommand="{Binding Path=ToolsViewModel.ArcPlacingTool.ActionCommand}"
+                        MouseMoveCommand="{Binding Path=ToolsViewModel.ArcPlacingTool.UpdateCommand}"
+                        MouseRightButtonUpCommand="{Binding Path=ToolsViewModel.ArcPlacingTool.RejectCommand}" />
+                    <tools:PlacingTool
+                        CancelCommand="{Binding Path=ToolsViewModel.LinePlacingTool.RejectCommand}"
+                        Context="{Binding Path=ToolsViewModel.LinePlacingTool}"
+                        MouseLeftButtonDownCommand="{Binding Path=ToolsViewModel.LinePlacingTool.ActionCommand}"
+                        MouseMoveCommand="{Binding Path=ToolsViewModel.LinePlacingTool.UpdateCommand}"
+                        MouseRightButtonUpCommand="{Binding Path=ToolsViewModel.LinePlacingTool.ApplyCommand}" />
+                    <tools:PlacingTool
+                        CancelCommand="{Binding Path=ToolsViewModel.BezierCurvePlacingTool.RejectCommand}"
+                        Context="{Binding Path=ToolsViewModel.BezierCurvePlacingTool}"
+                        MouseLeftButtonDownCommand="{Binding Path=ToolsViewModel.BezierCurvePlacingTool.ActionCommand}"
+                        MouseMoveCommand="{Binding Path=ToolsViewModel.BezierCurvePlacingTool.UpdateCommand}"
+                        MouseRightButtonUpCommand="{Binding Path=ToolsViewModel.BezierCurvePlacingTool.RejectCommand}" />
+                    <tools:PlacingTool
+                        CancelCommand="{Binding Path=ToolsViewModel.TextPlacingTool.RejectCommand}"
+                        Context="{Binding Path=ToolsViewModel.TextPlacingTool}"
+                        MouseLeftButtonDownCommand="{Binding Path=ToolsViewModel.TextPlacingTool.ActionCommand}"
+                        MouseMoveCommand="{Binding Path=ToolsViewModel.TextPlacingTool.UpdateCommand}"
+                        MouseRightButtonUpCommand="{Binding Path=ToolsViewModel.TextPlacingTool.RejectCommand}" />
                 </tools:ToolsController>
             </tools:ToolsController.Controller>
 
@@ -247,7 +293,11 @@
             RenderOptions.EdgeMode="Unspecified"
             SnapsToDevicePixels="True"
             UseLayoutRounding="True">
-            <StackPanel Orientation="Horizontal">
+            <StackPanel DataContext="{Binding Path=ToolsViewModel}" Orientation="Horizontal">
+                <StackPanel.Resources>
+                    <Style BasedOn="{StaticResource VerticalSeparator}" TargetType="{x:Type Separator}" />
+                </StackPanel.Resources>
+
                 <views:SchemeToolView DataContext="{Binding Path=SelectionTool}">
                     <Path
                         Data="{StaticResource SelectionToolIcon}"
@@ -271,6 +321,56 @@
                     <Path
                         Margin="-1"
                         Data="{StaticResource NodeDragToolIcon}"
+                        Fill="{DynamicResource {x:Static brushes:BrushesKeys+SchemeView.ToolIconBrush}}"
+                        Stretch="Uniform" />
+                </views:SchemeToolView>
+                <Separator />
+                <views:SchemeToolView DataContext="{Binding Path=RectanglePlacingTool}">
+                    <Rectangle Fill="{DynamicResource {x:Static brushes:BrushesKeys+SchemeView.ToolIconBrush}}" Stretch="Uniform" />
+                </views:SchemeToolView>
+                <views:SchemeToolView DataContext="{Binding Path=RoundedRectanglePlacingTool}">
+                    <Rectangle
+                        Fill="{DynamicResource {x:Static brushes:BrushesKeys+SchemeView.ToolIconBrush}}"
+                        RadiusX="4"
+                        RadiusY="4"
+                        Stretch="Uniform" />
+                </views:SchemeToolView>
+                <views:SchemeToolView DataContext="{Binding Path=EllipsePlacingTool}">
+                    <Ellipse
+                        Margin="0,2"
+                        Fill="{DynamicResource {x:Static brushes:BrushesKeys+SchemeView.ToolIconBrush}}"
+                        Stretch="Fill" />
+                </views:SchemeToolView>
+                <views:SchemeToolView DataContext="{Binding Path=ArcPlacingTool}">
+                    <Path
+                        Data="{StaticResource ArcPlacingToolIcon}"
+                        Stretch="Uniform"
+                        Stroke="{DynamicResource {x:Static brushes:BrushesKeys+SchemeView.ToolIconBrush}}"
+                        StrokeEndLineCap="Round"
+                        StrokeStartLineCap="Round"
+                        StrokeThickness="2" />
+                </views:SchemeToolView>
+                <views:SchemeToolView DataContext="{Binding Path=LinePlacingTool}">
+                    <Path
+                        Data="{StaticResource LinePlacingToolIcon}"
+                        Stretch="Uniform"
+                        Stroke="{DynamicResource {x:Static brushes:BrushesKeys+SchemeView.ToolIconBrush}}"
+                        StrokeEndLineCap="Round"
+                        StrokeStartLineCap="Round"
+                        StrokeThickness="2" />
+                </views:SchemeToolView>
+                <views:SchemeToolView DataContext="{Binding Path=BezierCurvePlacingTool}">
+                    <Path
+                        Data="{StaticResource BezierCurvePlacingToolIcon}"
+                        Stretch="Uniform"
+                        Stroke="{DynamicResource {x:Static brushes:BrushesKeys+SchemeView.ToolIconBrush}}"
+                        StrokeEndLineCap="Round"
+                        StrokeStartLineCap="Round"
+                        StrokeThickness="2" />
+                </views:SchemeToolView>
+                <views:SchemeToolView DataContext="{Binding Path=TextPlacingTool}">
+                    <Path
+                        Data="{StaticResource TextPlacingToolIcon}"
                         Fill="{DynamicResource {x:Static brushes:BrushesKeys+SchemeView.ToolIconBrush}}"
                         Stretch="Uniform" />
                 </views:SchemeToolView>
