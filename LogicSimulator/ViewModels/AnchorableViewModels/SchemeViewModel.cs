@@ -13,8 +13,8 @@ public class SchemeViewModel : DocumentViewModel
 {
     private readonly DockingViewModel _dockingViewModel;
     private readonly Scheme _scheme;
-
     private readonly SchemeStatusViewModel _statusViewModel;
+    private List<BaseObjectViewModel> _selectedObjects = [];
 
     private readonly IEditorSelectionService _editorSelectionService;
 
@@ -150,13 +150,83 @@ public class SchemeViewModel : DocumentViewModel
 
     #endregion
 
+    #region SelectedObjects
+
+    public IReadOnlyList<BaseObjectViewModel> SelectedObjects => _selectedObjects;
+
+    #endregion
+
+    #region StatusViewModel
+
     public override BaseStatusViewModel StatusViewModel => _statusViewModel;
+
+    #endregion
 
     #region ObjectSelectedCommand
 
     private ICommand? _objectSelectedCommand;
 
     public ICommand ObjectSelectedCommand => _objectSelectedCommand ??= new LambdaCommand(OnSelectedObjectsChanged);
+
+    #endregion
+
+    #region DeleteSelectedObjectsCommand
+
+    private ICommand? _deleteSelectedObjectsCommand;
+
+    public ICommand DeleteSelectedObjectsCommand => _deleteSelectedObjectsCommand ??= new LambdaCommand(() =>
+    {
+        foreach (var selectedObject in _selectedObjects)
+        {
+            Objects.Remove(selectedObject);
+        }
+
+        SelectedObjectsChanged();
+    }, () => ToolsViewModel.IsDefaultToolSelected);
+
+    #endregion
+
+    #region SelectAllObjectsCommand
+
+    private ICommand? _selectAllObjectsCommand;
+
+    public ICommand SelectAllObjectsCommand => _selectAllObjectsCommand ??= new LambdaCommand(() =>
+    {
+        foreach (var obj in Objects)
+        {
+            obj.IsSelected = true;
+        }
+
+        SelectedObjectsChanged();
+    }, () => ToolsViewModel.IsDefaultToolSelected);
+
+    #endregion
+
+    #region RotateSelectedObjectsClockwiseCommand
+
+    private ICommand? _rotateSelectedObjectsClockwiseCommand;
+
+    public ICommand RotateSelectedObjectsClockwiseCommand => _rotateSelectedObjectsClockwiseCommand ??= new LambdaCommand(() =>
+    {
+        foreach (var obj in _selectedObjects)
+        {
+            obj.RotateClockwise();
+        }
+    }, () => ToolsViewModel.IsDefaultToolSelected);
+
+    #endregion
+
+    #region RotateSelectedObjectsCounterclockwiseCommand
+
+    private ICommand? _rotateSelectedObjectsCounterclockwiseCommand;
+
+    public ICommand RotateSelectedObjectsCounterclockwiseCommand => _rotateSelectedObjectsCounterclockwiseCommand ??= new LambdaCommand(() =>
+    {
+        foreach (var obj in _selectedObjects)
+        {
+            obj.RotateCounterclockwise();
+        }
+    }, () => ToolsViewModel.IsDefaultToolSelected);
 
     #endregion
 
@@ -170,16 +240,18 @@ public class SchemeViewModel : DocumentViewModel
 
     private void OnSelectedObjectsChanged()
     {
-        var selectedObjects = Objects.Where(x => x.IsSelected).ToArray();
+        _selectedObjects = Objects.Where(x => x.IsSelected).ToList();
 
         _statusViewModel.RaisedPropertyChanged(nameof(SchemeStatusViewModel.SelectedObjectsCount));
 
-        if (selectedObjects.Length == 0)
+        if (_selectedObjects.Count == 0)
         {
             _editorSelectionService.SetSchemeEditor(this);
             return;
         }
 
-        _editorSelectionService.SetObjectsEditor(selectedObjects);
+        _editorSelectionService.SetObjectsEditor(_selectedObjects);
+
+        OnPropertyChanged(nameof(SelectedObjects));
     }
 }

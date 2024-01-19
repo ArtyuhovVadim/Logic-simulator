@@ -19,6 +19,20 @@
     xmlns:views="clr-namespace:LogicSimulator.Views"
     d:DataContext="{d:DesignInstance Type=anchorableViewModels:SchemeViewModel}"
     mc:Ignorable="d">
+
+    <UserControl.InputBindings>
+        <KeyBinding Key="Space" Command="{Binding Path=RotateSelectedObjectsClockwiseCommand}" />
+        <KeyBinding
+            Key="Space"
+            Command="{Binding Path=RotateSelectedObjectsCounterclockwiseCommand}"
+            Modifiers="Shift" />
+        <KeyBinding Key="Delete" Command="{Binding Path=DeleteSelectedObjectsCommand}" />
+        <KeyBinding
+            Key="A"
+            Command="{Binding Path=SelectAllObjectsCommand}"
+            Modifiers="Control" />
+    </UserControl.InputBindings>
+
     <UserControl.Resources>
         <converters:RotationToFloatConverter x:Key="RotationToFloatConverter" />
     </UserControl.Resources>

@@ -44,6 +44,12 @@ public class SchemeToolsViewModel : BindableBase
 
     public SchemeSelectionToolViewModel DefaultTool => SelectionTool;
 
+    #region IsDefaultToolSelected
+
+    public bool IsDefaultToolSelected => CurrentTool == DefaultTool;
+
+    #endregion
+
     #region CurrentTool
 
     private BaseSchemeToolViewModel? _currentTool;
@@ -62,6 +68,8 @@ public class SchemeToolsViewModel : BindableBase
 
             if (_currentTool is not null)
                 _currentTool.IsActive = true;
+
+            OnPropertyChanged(nameof(IsDefaultToolSelected));
         }
     }
 
