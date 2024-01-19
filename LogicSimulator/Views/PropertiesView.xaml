@@ -211,16 +211,13 @@
                 <TextBoxEx
                     x:Name="TextBoxEx"
                     VerticalContentAlignment="Top"
+                    AcceptsReturn="True"
                     HorizontalScrollBarVisibility="Auto"
                     MaxLines="8"
                     MinLines="8"
                     SelectAllTextOnFocus="False"
                     Text="{Binding Path=Value}"
-                    VerticalScrollBarVisibility="Auto">
-                    <i:Interaction.Behaviors>
-                        <b:MultilineTextBoxReturnBehaviour />
-                    </i:Interaction.Behaviors>
-                </TextBoxEx>
+                    VerticalScrollBarVisibility="Auto" />
             </AdornedControl>
             <DataTemplate.Triggers>
                 <Trigger SourceName="TextBoxEx" Property="IsFocused" Value="True">
