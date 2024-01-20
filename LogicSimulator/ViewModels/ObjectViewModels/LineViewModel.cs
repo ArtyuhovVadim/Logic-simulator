@@ -55,4 +55,11 @@ public class LineViewModel : BaseObjectViewModel
     }
 
     #endregion
+
+    public override LineViewModel MakeClone()
+    {
+        var line = (LineViewModel)MemberwiseClone();
+        line.Vertexes = new ObservableCollection<Vector2>(_vertexes);
+        return line;
+    }
 }

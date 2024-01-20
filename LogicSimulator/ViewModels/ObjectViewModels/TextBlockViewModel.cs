@@ -100,4 +100,6 @@ public class TextBlockViewModel : BaseObjectViewModel
     }
 
     #endregion
+
+    public override TextBlockViewModel MakeClone() => (TextBlockViewModel)MemberwiseClone();
 }

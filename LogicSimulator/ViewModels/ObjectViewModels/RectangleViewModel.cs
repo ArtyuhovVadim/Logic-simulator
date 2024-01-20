@@ -89,4 +89,6 @@ public class RectangleViewModel : BaseObjectViewModel
     }
 
     #endregion
+
+    public override RectangleViewModel MakeClone() => (RectangleViewModel)MemberwiseClone();
 }

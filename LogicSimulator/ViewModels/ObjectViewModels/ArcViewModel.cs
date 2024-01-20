@@ -90,4 +90,6 @@ public class ArcViewModel : BaseObjectViewModel
     }
 
     #endregion
+
+    public override ArcViewModel MakeClone() => (ArcViewModel)MemberwiseClone();
 }

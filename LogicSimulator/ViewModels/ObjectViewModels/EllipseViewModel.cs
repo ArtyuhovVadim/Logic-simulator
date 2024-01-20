@@ -89,4 +89,6 @@ public class EllipseViewModel : BaseObjectViewModel
     }
 
     #endregion
+
+    public override EllipseViewModel MakeClone() => (EllipseViewModel)MemberwiseClone();
 }

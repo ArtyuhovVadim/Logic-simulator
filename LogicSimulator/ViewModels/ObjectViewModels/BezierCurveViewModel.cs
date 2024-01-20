@@ -11,7 +11,7 @@ public class BezierCurveViewModel : BaseObjectViewModel
     #region Point1
 
     private Vector2 _point1;
-    
+
     public Vector2 Point1
     {
         get => _point1;
@@ -23,7 +23,7 @@ public class BezierCurveViewModel : BaseObjectViewModel
     #region Point2
 
     private Vector2 _point2;
-    
+
     public Vector2 Point2
     {
         get => _point2;
@@ -35,7 +35,7 @@ public class BezierCurveViewModel : BaseObjectViewModel
     #region Point3
 
     private Vector2 _point3;
-    
+
     public Vector2 Point3
     {
         get => _point3;
@@ -47,7 +47,7 @@ public class BezierCurveViewModel : BaseObjectViewModel
     #region StrokeColor
 
     private Color _strokeColor = Colors.Black;
-    
+
     public Color StrokeColor
     {
         get => _strokeColor;
@@ -59,7 +59,7 @@ public class BezierCurveViewModel : BaseObjectViewModel
     #region StrokeThickness
 
     private float _strokeThickness = 1f;
-    
+
     public float StrokeThickness
     {
         get => _strokeThickness;
@@ -79,4 +79,6 @@ public class BezierCurveViewModel : BaseObjectViewModel
     }
 
     #endregion
+
+    public override BezierCurveViewModel MakeClone() => (BezierCurveViewModel)MemberwiseClone();
 }

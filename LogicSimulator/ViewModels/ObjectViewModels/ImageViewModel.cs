@@ -89,4 +89,6 @@ public class ImageViewModel : BaseObjectViewModel
     }
 
     #endregion
+
+    public override ImageViewModel MakeClone() => (ImageViewModel)MemberwiseClone();
 }

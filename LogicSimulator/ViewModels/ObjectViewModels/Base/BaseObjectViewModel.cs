@@ -5,7 +5,7 @@ using YamlDotNet.Serialization;
 
 namespace LogicSimulator.ViewModels.ObjectViewModels.Base;
 
-public abstract class BaseObjectViewModel : BindableBase
+public abstract class BaseObjectViewModel : BindableBase, ICloneable<BaseObjectViewModel>
 {
     #region Location
 
@@ -61,4 +61,6 @@ public abstract class BaseObjectViewModel : BindableBase
         Rotation.Degrees270 => Rotation.Degrees180,
         _ => throw new ArgumentOutOfRangeException()
     };
+
+    public abstract BaseObjectViewModel MakeClone();
 }
