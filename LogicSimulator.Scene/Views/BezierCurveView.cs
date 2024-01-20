@@ -19,6 +19,9 @@ public class BezierCurveView : EditableSceneObjectView, IStroked
     public static readonly IResource StrokeBrushResource =
         ResourceCache.Register<BezierCurveView>((factory, user) => factory.CreateSolidColorBrush(user.StrokeColor.ToColor4()));
 
+    public static readonly IResource StrokeStyleResource =
+        ResourceCache.Register<BezierCurveView>((factory, _) => factory.CreateStrokeStyle(new StrokeStyleProperties { StartCap = CapStyle.Round, EndCap = CapStyle.Round, LineJoin = LineJoin.Round }));
+
     private static readonly AbstractNode[] AbstractNodes =
     [
         new Node<BezierCurveView>(o => o.LocalToWorldSpace(Vector2.Zero), (o, p) =>
@@ -144,8 +147,9 @@ public class BezierCurveView : EditableSceneObjectView, IStroked
     {
         var geometry = Cache.Get<PathGeometry>(this, GeometryResource);
         var strokeBrush = Cache.Get<SolidColorBrush>(this, StrokeBrushResource);
+        var style = Cache.Get<StrokeStyle>(this, StrokeStyleResource);
 
-        context.DrawingContext.DrawGeometry(geometry, strokeBrush, this.GetStrokeThickness(scene));
+        context.DrawingContext.DrawGeometry(geometry, strokeBrush, this.GetStrokeThickness(scene), style);
     }
 
     protected override void OnRenderSelection(Scene2D scene, D2DContext context)

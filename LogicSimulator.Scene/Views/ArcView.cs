@@ -19,6 +19,9 @@ public class ArcView : EditableSceneObjectView, IStroked
     public static readonly IResource StrokeBrushResource =
         ResourceCache.Register<ArcView>((factory, user) => factory.CreateSolidColorBrush(user.StrokeColor.ToColor4()));
 
+    public static readonly IResource StrokeStyleResource =
+        ResourceCache.Register<ArcView>((factory, _) => factory.CreateStrokeStyle(new StrokeStyleProperties { StartCap = CapStyle.Round, EndCap = CapStyle.Round, LineJoin = LineJoin.Round }));
+
     public static readonly IResource GeometryResource = ResourceCache.Register<ArcView>((factory, user) =>
     {
         user._startAnglePos = MathHelper.GetPositionFromAngle(Vector2.Zero, user.RadiusX, user.RadiusY, -user.StartAngle);
@@ -164,8 +167,9 @@ public class ArcView : EditableSceneObjectView, IStroked
     {
         var geometry = Cache.Get<Geometry>(this, GeometryResource);
         var strokeBrush = Cache.Get<SolidColorBrush>(this, StrokeBrushResource);
+        var style = Cache.Get<StrokeStyle>(this, StrokeStyleResource);
 
-        context.DrawingContext.DrawGeometry(geometry, strokeBrush, this.GetStrokeThickness(scene));
+        context.DrawingContext.DrawGeometry(geometry, strokeBrush, this.GetStrokeThickness(scene), style);
     }
 
     protected override void OnRenderSelection(Scene2D scene, D2DContext context)
