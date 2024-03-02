@@ -13,7 +13,7 @@ public class LayoutInitializer : MarkupExtension, ILayoutUpdateStrategy
     public bool BeforeInsertAnchorable(LayoutRoot layout, LayoutAnchorable anchorableToShow, ILayoutContainer destinationContainer)
     {
         anchorableToShow.AutoHideWidth = 256;
-        anchorableToShow.AutoHideHeight = 128;
+        anchorableToShow.AutoHideHeight = 256;
 
         return anchorableToShow.Content switch
         {
