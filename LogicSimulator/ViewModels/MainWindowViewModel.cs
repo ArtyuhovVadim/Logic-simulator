@@ -17,6 +17,7 @@ public class MainWindowViewModel : BindableBase
 
     private readonly PropertiesViewModel _propertiesViewModel;
     private readonly ProjectExplorerViewModel _projectExplorerViewModel;
+    private readonly MessagesOutputViewModel _messagesOutputViewModel;
 
     public MainWindowViewModel(
         IUserDialogService userDialogService,
@@ -24,7 +25,8 @@ public class MainWindowViewModel : BindableBase
         IProjectViewModelFactory projectFactory,
         DockingViewModel dockingViewModel,
         PropertiesViewModel propertiesViewModel,
-        ProjectExplorerViewModel projectExplorerViewModel)
+        ProjectExplorerViewModel projectExplorerViewModel,
+        MessagesOutputViewModel messagesOutputViewModel)
     {
         _userDialogService = userDialogService;
         _projectFileService = projectFileService;
@@ -33,12 +35,14 @@ public class MainWindowViewModel : BindableBase
         _dockingViewModel = dockingViewModel;
         _propertiesViewModel = propertiesViewModel;
         _projectExplorerViewModel = projectExplorerViewModel;
+        _messagesOutputViewModel = messagesOutputViewModel;
 
         projectExplorerViewModel.SchemeOpened += OnSchemeOpened;
 
         _dockingViewModel
             .AddToolViewModel(_propertiesViewModel, true)
-            .AddToolViewModel(_projectExplorerViewModel, true);
+            .AddToolViewModel(_projectExplorerViewModel, true)
+            .AddToolViewModel(_messagesOutputViewModel, true);
 
         _dockingViewModel.ActiveDocumentViewModelChanged += OnActiveDocumentViewModelChanged;
 

@@ -58,6 +58,7 @@ public partial class App
             .AddSingleton<DockingViewModel>()
             .AddSingleton<PropertiesViewModel>()
             .AddSingleton<ProjectExplorerViewModel>()
+            .AddSingleton<MessagesOutputViewModel>()
 
             .AddSingleton<MainWindow>(serviceProvider => new MainWindow { DataContext = serviceProvider.GetRequiredService<MainWindowViewModel>() })
 

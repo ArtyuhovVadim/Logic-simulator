@@ -6,6 +6,7 @@ namespace LogicSimulator.Infrastructure;
 
 public class LayoutInitializer : MarkupExtension, ILayoutUpdateStrategy
 {
+    private const string BottomPaneName = "BottomPane";
     private const string LeftPaneName = "LeftPane";
     private const string RightPaneName = "RigthPane";
 
@@ -18,6 +19,7 @@ public class LayoutInitializer : MarkupExtension, ILayoutUpdateStrategy
         {
             ProjectExplorerViewModel => Insert(layout, anchorableToShow, LeftPaneName),
             PropertiesViewModel => Insert(layout, anchorableToShow, RightPaneName),
+            MessagesOutputViewModel => Insert(layout, anchorableToShow, BottomPaneName),
             _ => false
         };
     }

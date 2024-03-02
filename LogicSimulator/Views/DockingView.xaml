@@ -46,6 +46,11 @@
                         <local:ProjectExplorerView />
                     </DataTemplate>
                 </selectors:PanesTemplateSelector.ProjectExplorerViewTemplate>
+                <selectors:PanesTemplateSelector.MessagesOutputViewTemplate>
+                    <DataTemplate DataType="{x:Type avm:MessagesOutputViewModel}">
+                        <local:MessagesOutputView />
+                    </DataTemplate>
+                </selectors:PanesTemplateSelector.MessagesOutputViewTemplate>
             </selectors:PanesTemplateSelector>
         </DockingManager.LayoutItemTemplateSelector>
         <DockingManager.LayoutItemContainerStyleSelector>
@@ -77,9 +82,12 @@
         <LayoutRoot>
             <LayoutPanel Orientation="Horizontal">
                 <LayoutAnchorablePane Name="LeftPane" DockWidth="200" />
-                <LayoutDocumentPaneGroup>
-                    <LayoutDocumentPane />
-                </LayoutDocumentPaneGroup>
+                <LayoutPanel Orientation="Vertical">
+                    <LayoutDocumentPaneGroup>
+                        <LayoutDocumentPane />
+                    </LayoutDocumentPaneGroup>
+                    <LayoutAnchorablePane Name="BottomPane" DockHeight="200" />
+                </LayoutPanel>
                 <LayoutAnchorablePane Name="RightPane" DockWidth="250" />
             </LayoutPanel>
         </LayoutRoot>
