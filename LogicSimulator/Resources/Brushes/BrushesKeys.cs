@@ -20,7 +20,23 @@ public static class BrushesKeys
         public static readonly ComponentResourceKey AddVertexIconBrush = CreateInstance();
 
         public static readonly ComponentResourceKey RemoveVertexIconBrush = CreateInstance();
+    }
 
+    public static class MessagesOutputView
+    {
+        public static readonly ComponentResourceKey ToggleButtonCheckedColor = CreateInstance();
+
+        public static readonly ComponentResourceKey ErrorIconBrush = CreateInstance();
+        
+        public static readonly ComponentResourceKey WarningIconBrush = CreateInstance();
+
+        public static readonly ComponentResourceKey InformationIconBrush = CreateInstance();
+
+        public static readonly ComponentResourceKey BackgroundIconBrush = CreateInstance();
+
+        public static readonly ComponentResourceKey ClearFilterIconBrush = CreateInstance();
+
+        public static readonly ComponentResourceKey SearchIconBrush = CreateInstance();
     }
 
     public static class SchemeToolView

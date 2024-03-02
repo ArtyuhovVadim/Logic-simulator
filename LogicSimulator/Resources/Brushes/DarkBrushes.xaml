@@ -42,6 +42,44 @@
 
     <!--#endregion-->
 
+    <!--#region MessagesOutputView-->
+
+    <Color x:Key="{x:Static b:BrushesKeys+MessagesOutputView.ToggleButtonCheckedColor}">
+        #545454
+    </Color>
+
+    <SolidColorBrush
+        x:Key="{x:Static b:BrushesKeys+MessagesOutputView.ErrorIconBrush}"
+        o:Freeze="True"
+        Color="#F44B56" />
+
+    <SolidColorBrush
+        x:Key="{x:Static b:BrushesKeys+MessagesOutputView.WarningIconBrush}"
+        o:Freeze="True"
+        Color="#FFBD44" />
+
+    <SolidColorBrush
+        x:Key="{x:Static b:BrushesKeys+MessagesOutputView.InformationIconBrush}"
+        o:Freeze="True"
+        Color="#6CB5FF" />
+
+    <SolidColorBrush
+        x:Key="{x:Static b:BrushesKeys+MessagesOutputView.BackgroundIconBrush}"
+        o:Freeze="True"
+        Color="#FFFFFF" />
+
+    <SolidColorBrush
+        x:Key="{x:Static b:BrushesKeys+MessagesOutputView.ClearFilterIconBrush}"
+        o:Freeze="True"
+        Color="#E2E2E2" />
+
+    <SolidColorBrush
+        x:Key="{x:Static b:BrushesKeys+MessagesOutputView.SearchIconBrush}"
+        o:Freeze="True"
+        Color="#989898" />
+
+    <!--#endregion-->
+
     <!--#region SchemeToolView-->
 
     <SolidColorBrush

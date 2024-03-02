@@ -3,11 +3,173 @@
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:avm="clr-namespace:LogicSimulator.ViewModels.AnchorableViewModels"
+    xmlns:brushes="clr-namespace:WpfExtensions.Controls.Resources.Brushes;assembly=WpfExtensions.Controls"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:lsbk="clr-namespace:LogicSimulator.Resources.Brushes"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:viewModels="clr-namespace:LogicSimulator.ViewModels"
     d:DataContext="{d:DesignInstance Type=avm:MessagesOutputViewModel}"
     d:DesignHeight="450"
     d:DesignWidth="800"
     mc:Ignorable="d">
-    <Grid Background="Red" />
+    <DockPanel Margin="6">
+        <Grid DockPanel.Dock="Top" GridProps.ColumnDefinitionsEx="auto * auto">
+            <Grid.Resources>
+                <!--  Override default ToggleButton brush  -->
+                <SolidColorBrush x:Key="{x:Static brushes:BrushesKeys+ToggleButton.CheckedBackground}" Color="{DynamicResource {x:Static lsbk:BrushesKeys+MessagesOutputView.ToggleButtonCheckedColor}}" />
+                <Style BasedOn="{StaticResource {x:Type ToggleButton}}" TargetType="{x:Type ToggleButton}">
+                    <Setter Property="Padding" Value="4,2" />
+                    <Setter Property="Background" Value="Transparent" />
+                    <Setter Property="BorderBrush" Value="Transparent" />
+                    <Setter Property="BorderThickness" Value="1" />
+                    <Style.Triggers>
+                        <Trigger Property="IsChecked" Value="True">
+                            <Setter Property="BorderBrush" Value="{DynamicResource {x:Static brushes:BrushesKeys+ToggleButton.BorderBrush}}" />
+                        </Trigger>
+                    </Style.Triggers>
+                </Style>
+                <Style TargetType="{x:Type Path}">
+                    <Setter Property="Width" Value="13" />
+                    <Setter Property="Height" Value="13" />
+                    <Setter Property="Stretch" Value="Uniform" />
+                    <Setter Property="UseLayoutRounding" Value="True" />
+                    <Setter Property="SnapsToDevicePixels" Value="True" />
+                </Style>
+            </Grid.Resources>
+            <StackPanelEx
+                Grid.Column="0"
+                Gap="3"
+                Orientation="Horizontal">
+                <ToggleButton IsChecked="{Binding Path=IsErrorMessagesVisible}">
+                    <ToggleButton.Content>
+                        <StackPanelEx Gap="5" Orientation="Horizontal">
+                            <Grid>
+                                <Rectangle Margin="3" Fill="{DynamicResource {x:Static lsbk:BrushesKeys+MessagesOutputView.BackgroundIconBrush}}" />
+                                <Path Data="{StaticResource ErrorIcon}" Fill="{DynamicResource {x:Static lsbk:BrushesKeys+MessagesOutputView.ErrorIconBrush}}" />
+                            </Grid>
+                            <TextBlock Text="Ошибки" />
+                        </StackPanelEx>
+                    </ToggleButton.Content>
+                </ToggleButton>
+                <Separator Style="{StaticResource VerticalSeparator}" />
+                <ToggleButton IsChecked="{Binding Path=IsWarningMessagesVisible}">
+                    <ToggleButton.Content>
+                        <StackPanelEx Gap="5" Orientation="Horizontal">
+                            <Grid>
+                                <Rectangle Margin="5,2,5,2" Fill="{DynamicResource {x:Static lsbk:BrushesKeys+MessagesOutputView.BackgroundIconBrush}}" />
+                                <Path Data="{StaticResource ExclamationTriangleIcon}" Fill="{DynamicResource {x:Static lsbk:BrushesKeys+MessagesOutputView.WarningIconBrush}}" />
+                            </Grid>
+                            <TextBlock Text="Предупреждения" />
+                        </StackPanelEx>
+                    </ToggleButton.Content>
+                </ToggleButton>
+                <Separator Style="{StaticResource VerticalSeparator}" />
+                <ToggleButton IsChecked="{Binding Path=IsInformationMessagesVisible}">
+                    <ToggleButton.Content>
+                        <StackPanelEx Gap="5" Orientation="Horizontal">
+                            <Grid>
+                                <Rectangle Margin="5,2,5,2" Fill="{DynamicResource {x:Static lsbk:BrushesKeys+MessagesOutputView.BackgroundIconBrush}}" />
+                                <Path Data="{StaticResource InfoCircleIcon}" Fill="{DynamicResource {x:Static lsbk:BrushesKeys+MessagesOutputView.InformationIconBrush}}" />
+                            </Grid>
+                            <TextBlock Text="Сообщения" />
+                        </StackPanelEx>
+                    </ToggleButton.Content>
+                </ToggleButton>
+                <Separator Style="{StaticResource VerticalSeparator}" />
+                <Button
+                    Width="{Binding RelativeSource={RelativeSource Self},
+                                    Path=ActualHeight}"
+                    Padding="2"
+                    Command="{Binding Path=ClearFiltersCommand}">
+                    <Button.Content>
+                        <Path
+                            Width="15"
+                            Height="15"
+                            Data="{StaticResource ClearFilterIcon}"
+                            Stroke="{DynamicResource {x:Static lsbk:BrushesKeys+MessagesOutputView.ClearFilterIconBrush}}" />
+                    </Button.Content>
+                </Button>
+            </StackPanelEx>
+            <TextBoxEx
+                Grid.Column="2"
+                MinWidth="200"
+                IconMargin="3 0 0 0"
+                SelectAllTextOnFocus="True"
+                Text="{Binding Path=SearchText}"
+                Watermark="Поиск">
+                <TextBoxEx.Icon>
+                    <Path Data="{StaticResource SearchIcon}" Stroke="{DynamicResource {x:Static lsbk:BrushesKeys+MessagesOutputView.SearchIconBrush}}" />
+                </TextBoxEx.Icon>
+            </TextBoxEx>
+        </Grid>
+        <DataGrid
+            Margin="0,6,0,0"
+            AutoGenerateColumns="False"
+            BorderThickness="1"
+            CanUserAddRows="False"
+            CanUserDeleteRows="False"
+            CanUserReorderColumns="False"
+            HeadersVisibility="Column"
+            ItemsSource="{Binding Path=MessagesCollectionView}"
+            SelectionMode="Single"
+            SelectionUnit="FullRow">
+            <DataGrid.Columns>
+                <DataGridTemplateColumn
+                    Width="Auto"
+                    CanUserResize="False"
+                    CanUserSort="True"
+                    IsReadOnly="True"
+                    SortMemberPath="Type">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate DataType="{x:Type viewModels:OutputMessageViewModel}">
+                            <Grid Margin="3">
+                                <Ellipse
+                                    x:Name="Ellipse"
+                                    Margin="2"
+                                    Fill="{DynamicResource {x:Static lsbk:BrushesKeys+MessagesOutputView.BackgroundIconBrush}}" />
+                                <Path
+                                    x:Name="Path"
+                                    Width="13"
+                                    Height="13"
+                                    SnapsToDevicePixels="True"
+                                    Stretch="Uniform"
+                                    UseLayoutRounding="True" />
+                            </Grid>
+                            <DataTemplate.Triggers>
+                                <DataTrigger Binding="{Binding Path=Type}" Value="Information">
+                                    <Setter TargetName="Path" Property="Data" Value="{StaticResource InfoCircleIcon}" />
+                                    <Setter TargetName="Path" Property="Fill" Value="{DynamicResource {x:Static lsbk:BrushesKeys+MessagesOutputView.InformationIconBrush}}" />
+                                </DataTrigger>
+                                <DataTrigger Binding="{Binding Path=Type}" Value="Warning">
+                                    <Setter TargetName="Path" Property="Data" Value="{StaticResource ExclamationTriangleIcon}" />
+                                    <Setter TargetName="Path" Property="Fill" Value="{DynamicResource {x:Static lsbk:BrushesKeys+MessagesOutputView.WarningIconBrush}}" />
+                                    <Setter TargetName="Ellipse" Property="Margin" Value="4,3,4,2" />
+                                </DataTrigger>
+                                <DataTrigger Binding="{Binding Path=Type}" Value="Error">
+                                    <Setter TargetName="Path" Property="Data" Value="{StaticResource ErrorIcon}" />
+                                    <Setter TargetName="Path" Property="Fill" Value="{DynamicResource {x:Static lsbk:BrushesKeys+MessagesOutputView.ErrorIconBrush}}" />
+                                </DataTrigger>
+                            </DataTemplate.Triggers>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+
+                <DataGridTemplateColumn
+                    Width="*"
+                    CanUserSort="True"
+                    Header="Сообщение"
+                    IsReadOnly="True"
+                    SortMemberPath="Text">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate DataType="{x:Type viewModels:OutputMessageViewModel}">
+                            <TextBlock
+                                Margin="3,0,0,0"
+                                VerticalAlignment="Center"
+                                Text="{Binding Path=Text}" />
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+            </DataGrid.Columns>
+        </DataGrid>
+    </DockPanel>
 </UserControl>
