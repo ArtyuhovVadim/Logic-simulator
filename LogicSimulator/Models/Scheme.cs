@@ -8,5 +8,5 @@ public class Scheme
 
     public string Name { get; set; } = string.Empty;
 
-    public IEnumerable<BaseObjectViewModel> Objects { get; set; } = Enumerable.Empty<BaseObjectViewModel>();
+    public List<BaseObjectViewModel> Objects { get; set; } = [];
 }

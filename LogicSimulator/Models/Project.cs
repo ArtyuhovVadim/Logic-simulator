@@ -11,5 +11,5 @@ public class Project
     public string Name { get; set; } = string.Empty;
 
     [YamlIgnore] 
-    public IEnumerable<Scheme> Schemes { get; set; } = Enumerable.Empty<Scheme>();
+    public List<Scheme> Schemes { get; set; } = [];
 }

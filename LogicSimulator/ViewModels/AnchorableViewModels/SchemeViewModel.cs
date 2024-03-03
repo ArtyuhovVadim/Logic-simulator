@@ -1,4 +1,5 @@
-﻿using LogicSimulator.Infrastructure.Services.Interfaces;
+﻿using LogicSimulator.Infrastructure;
+using LogicSimulator.Infrastructure.Services.Interfaces;
 using LogicSimulator.Models;
 using LogicSimulator.ViewModels.AnchorableViewModels.Base;
 using LogicSimulator.ViewModels.ObjectViewModels.Base;
@@ -9,10 +10,9 @@ using WpfExtensions.Mvvm.Commands;
 
 namespace LogicSimulator.ViewModels.AnchorableViewModels;
 
-public class SchemeViewModel : DocumentViewModel
+public class SchemeViewModel : DocumentViewModel, IModelBased<Scheme>
 {
     private readonly DockingViewModel _dockingViewModel;
-    private readonly Scheme _scheme;
     private readonly SchemeStatusViewModel _statusViewModel;
     private List<BaseObjectViewModel> _selectedObjects = [];
 
@@ -20,10 +20,11 @@ public class SchemeViewModel : DocumentViewModel
 
     public SchemeViewModel(Scheme scheme, DockingViewModel dockingViewModel, IEditorSelectionService editorSelectionService)
     {
-        _scheme = scheme;
+        Model = scheme;
         _dockingViewModel = dockingViewModel;
         _editorSelectionService = editorSelectionService;
-        Objects = new ObservableCollection<BaseObjectViewModel>(_scheme.Objects);
+        //TODO: Сделать модели для объектов сцены.
+        _objects = new ObservableCollectionEx<BaseObjectViewModel, BaseObjectViewModel>(Model.Objects, model => model);
 
         _statusViewModel = new SchemeStatusViewModel(this);
 
@@ -31,6 +32,12 @@ public class SchemeViewModel : DocumentViewModel
 
         IconSource = new Uri("pack://application:,,,/Resources/Icons/scheme-icon16x16.png");
     }
+
+    #region Model
+
+    public Scheme Model { get; }
+
+    #endregion
 
     #region ToolsViewModel
 
@@ -44,10 +51,10 @@ public class SchemeViewModel : DocumentViewModel
 
     public override string Title
     {
-        get => _scheme.Name;
+        get => Model.Name;
         set
         {
-            _scheme.Name = value;
+            Model.Name = value;
             OnPropertyChanged();
         }
     }
@@ -56,13 +63,9 @@ public class SchemeViewModel : DocumentViewModel
 
     #region Objects
 
-    private ObservableCollection<BaseObjectViewModel> _objects = [];
+    private readonly ObservableCollectionEx<BaseObjectViewModel, BaseObjectViewModel> _objects;
 
-    public ObservableCollection<BaseObjectViewModel> Objects
-    {
-        get => _objects;
-        private set => Set(ref _objects, value);
-    }
+    public ObservableCollection<BaseObjectViewModel> Objects => _objects;
 
     #endregion
 

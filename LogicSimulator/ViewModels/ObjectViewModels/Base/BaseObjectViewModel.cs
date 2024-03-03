@@ -5,8 +5,11 @@ using YamlDotNet.Serialization;
 
 namespace LogicSimulator.ViewModels.ObjectViewModels.Base;
 
-public abstract class BaseObjectViewModel : BindableBase, ICloneable<BaseObjectViewModel>
+//TODO: Сделать модели для объектов сцены.
+public abstract class BaseObjectViewModel : BindableBase, ICloneable<BaseObjectViewModel>, IModelBased<BaseObjectViewModel>
 {
+    public BaseObjectViewModel Model => this;
+
     #region Location
 
     private Vector2 _location;
