@@ -1,4 +1,5 @@
 ﻿using System.IO;
+using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Windows;
 using LogicSimulator.Infrastructure.Services;
@@ -16,6 +17,8 @@ public partial class App
 {
     private static readonly IHost Host = CreateHostBuilder(Environment.GetCommandLineArgs()).Build();
 
+    public static Version Version { get; private set; } = null!;
+
     public static Window? ActiveWindow => Current.Windows.OfType<Window>().FirstOrDefault(w => w.IsActive);
 
     public static Window? FocusedWindow => Current.Windows.OfType<Window>().FirstOrDefault(w => w.IsFocused);
@@ -32,7 +35,8 @@ public partial class App
 
         IsDesignMode = false;
 
-        Environment.CurrentDirectory = Path.GetDirectoryName(System.Reflection.Assembly.GetEntryAssembly()!.Location)!;
+        Environment.CurrentDirectory = Path.GetDirectoryName(Assembly.GetEntryAssembly()!.Location)!;
+        Version = Assembly.GetEntryAssembly()?.GetName().Version!;
 
 #if !DEBUG
         SetupGlobalExceptionHandling();

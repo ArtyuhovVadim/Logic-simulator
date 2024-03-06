@@ -1,4 +1,7 @@
-﻿using LogicSimulator.Infrastructure.Services.Interfaces;
+﻿using System.IO;
+using LogicSimulator.Infrastructure;
+using LogicSimulator.Infrastructure.Services.Interfaces;
+using LogicSimulator.Models;
 using LogicSimulator.ViewModels.AnchorableViewModels;
 using LogicSimulator.ViewModels.AnchorableViewModels.Base;
 using LogicSimulator.ViewModels.StatusViewModels.Base;
@@ -11,6 +14,7 @@ public class MainWindowViewModel : BindableBase
 {
     private readonly IUserDialogService _userDialogService;
     private readonly IProjectFileService _projectFileService;
+    private readonly ISchemeFileService _schemeFileService;
     private readonly IProjectViewModelFactory _projectFactory;
 
     private readonly DockingViewModel _dockingViewModel;
@@ -22,6 +26,7 @@ public class MainWindowViewModel : BindableBase
     public MainWindowViewModel(
         IUserDialogService userDialogService,
         IProjectFileService projectFileService,
+        ISchemeFileService schemeFileService,
         IProjectViewModelFactory projectFactory,
         DockingViewModel dockingViewModel,
         PropertiesViewModel propertiesViewModel,
@@ -30,6 +35,7 @@ public class MainWindowViewModel : BindableBase
     {
         _userDialogService = userDialogService;
         _projectFileService = projectFileService;
+        _schemeFileService = schemeFileService;
         _projectFactory = projectFactory;
 
         _dockingViewModel = dockingViewModel;
@@ -45,10 +51,6 @@ public class MainWindowViewModel : BindableBase
             .AddToolViewModel(_messagesOutputViewModel, true);
 
         _dockingViewModel.ActiveDocumentViewModelChanged += OnActiveDocumentViewModelChanged;
-
-        // TODO: Временно для быстрой загрузки тестового проекта
-        LoadExampleCommand.Execute(null);
-        _dockingViewModel.AddOrSelectDocumentViewModel(ActiveProjectViewModel!.Schemes.First());
     }
 
     #region ActiveProjectViewModel
@@ -83,36 +85,82 @@ public class MainWindowViewModel : BindableBase
 
     #region LoadExampleCommand
 
-    private ICommand? _loadExampleCommand;
+    private ICommand? _openFileCommand;
 
-    public ICommand LoadExampleCommand => _loadExampleCommand ??= new LambdaCommand(_ =>
+    public ICommand OpenFileCommand => _openFileCommand ??= new LambdaCommand(_ =>
     {
-        const string projectPath = @"Data\ExampleProject\ExampleProject.lsproj";
-
-        if (!_projectFileService.ReadFromFile(projectPath, out var project))
+        try
         {
-            _userDialogService.ShowErrorMessage("Ошибка загрузки файла", $"Не удалось загрузить файл: {projectPath}");
-            return;
-        }
+            if (_userDialogService.OpenFileDialog("Выберите файл", [("Проект", $"*{Project.Extension}")], out var projectPath) == UserDialogResult.Cancel)
+                return;
 
-        ActiveProjectViewModel = _projectFactory.Create(project!);
+            if (!_projectFileService.ReadFromFile(projectPath, out var project))
+            {
+                _userDialogService.ShowErrorMessage("Ошибка загрузки проекта", $"Не удалось загрузить файл по пути: {projectPath}");
+                return;
+            }
+
+            var schemeFiles = project!.FileInfo!.Directory!.GetFiles($"*{Scheme.Extension}");
+            var schemes = new List<Scheme>();
+
+            foreach (var schemeFile in schemeFiles)
+            {
+                if (!_schemeFileService.ReadFromFile(schemeFile.FullName, out var scheme))
+                {
+                    _userDialogService.ShowErrorMessage("Ошибка загрузки схемы", $"Не удалось загрузить файл по пути: {schemeFile.FullName}");
+                    continue;
+                }
+
+                schemes.Add(scheme!);
+            }
+
+            project.Schemes = schemes;
+            ActiveProjectViewModel = _projectFactory.Create(project);
+        }
+        catch (Exception e)
+        {
+            _userDialogService.ShowErrorMessage("Непредвиденная ошибка", e.Message);
+        }
     });
 
     #endregion
 
-    #region SaveExampleCommand
+    #region SaveFileCommand
 
-    private ICommand? _saveExampleCommand;
+    private ICommand? _saveFileCommand;
 
-    public ICommand SaveExampleCommand => _saveExampleCommand ??= new LambdaCommand(_ => { });
+    public ICommand SaveFileCommand => _saveFileCommand ??= new LambdaCommand(() =>
+    {
+        try
+        {
+            if (_userDialogService.OpenFolderDialog("Выберите файл", out var projectDirPath) == UserDialogResult.Cancel)
+                return;
 
-    #endregion
+            var project = ActiveProjectViewModel!.Model;
+            var projectPath = Path.Combine(projectDirPath, project.FileInfo!.Name);
 
-    #region TestCommand
+            if (!_projectFileService.SaveToFile(projectPath, project))
+            {
+                _userDialogService.ShowErrorMessage("Ошибка сохранения проекта", $"Не удалось сохранить файл по пути: {projectPath}");
+                return;
+            }
 
-    private ICommand? _testCommand;
+            foreach (var scheme in project.Schemes)
+            {
+                var schemePath = Path.Combine(projectDirPath, scheme.FileInfo!.Name);
 
-    public ICommand TestCommand => _testCommand ??= new LambdaCommand(_ => { });
+                if (!_schemeFileService.SaveToFile(schemePath, scheme))
+                {
+                    _userDialogService.ShowErrorMessage("Ошибка сохранения схемы", $"Не удалось сохранить файл по пути: {scheme.FileInfo.FullName}");
+                    return;
+                }
+            }
+        }
+        catch (Exception e)
+        {
+            _userDialogService.ShowErrorMessage("Непредвиденная ошибка", e.Message);
+        }
+    }, () => ActiveProjectViewModel is not null);
 
     #endregion
 

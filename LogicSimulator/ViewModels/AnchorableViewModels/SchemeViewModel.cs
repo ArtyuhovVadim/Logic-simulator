@@ -31,6 +31,7 @@ public class SchemeViewModel : DocumentViewModel, IModelBased<Scheme>
         _objects.CollectionChanged += (_, _) => _statusViewModel.RaisedPropertyChanged(nameof(SchemeStatusViewModel.ObjectsCount));
 
         IconSource = new Uri("pack://application:,,,/Resources/Icons/scheme-icon16x16.png");
+        base.Title = Model.FileInfo?.Name ?? throw new InvalidOperationException();
     }
 
     #region Model
@@ -44,20 +45,6 @@ public class SchemeViewModel : DocumentViewModel, IModelBased<Scheme>
     private SchemeToolsViewModel? _toolsViewModel;
 
     public SchemeToolsViewModel ToolsViewModel => _toolsViewModel ??= new SchemeToolsViewModel(this);
-
-    #endregion
-
-    #region Title
-
-    public override string Title
-    {
-        get => Model.Name;
-        set
-        {
-            Model.Name = value;
-            OnPropertyChanged();
-        }
-    }
 
     #endregion
 

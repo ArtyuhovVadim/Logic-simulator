@@ -21,10 +21,12 @@ public class SchemeFileService : ISchemeFileService
     {
         var vector2Converter = new Vector2YamlConverter();
         var color4Converter = new ColorYamlConverter();
+        var versionConverter = new VersionYamlConverter();
 
         var serializerBuilder = new SerializerBuilder()
             .WithTypeConverter(vector2Converter)
             .WithTypeConverter(color4Converter)
+            .WithTypeConverter(versionConverter)
             .WithTagMapping(new TagName("!Rectangle"), typeof(RectangleViewModel))
             .WithTagMapping(new TagName("!RoundedRectangle"), typeof(RoundedRectangleViewModel))
             .WithTagMapping(new TagName("!Ellipse"), typeof(EllipseViewModel))
@@ -38,6 +40,7 @@ public class SchemeFileService : ISchemeFileService
         var deserializerBuilder = new DeserializerBuilder()
             .WithTypeConverter(vector2Converter)
             .WithTypeConverter(color4Converter)
+            .WithTypeConverter(versionConverter)
             .WithTagMapping(new TagName("!Rectangle"), typeof(RectangleViewModel))
             .WithTagMapping(new TagName("!RoundedRectangle"), typeof(RoundedRectangleViewModel))
             .WithTagMapping(new TagName("!Ellipse"), typeof(EllipseViewModel))
@@ -61,8 +64,8 @@ public class SchemeFileService : ISchemeFileService
         {
             using var streamWriter = new StreamWriter(path, Encoding.Default, _fileWriteStreamOptions);
 
+            scheme.Version = App.Version;
             var serializedScheme = _serializer.Serialize(scheme);
-
             streamWriter.Write(serializedScheme);
 
             return true;
@@ -78,14 +81,17 @@ public class SchemeFileService : ISchemeFileService
         scheme = null;
 
         if (!File.Exists(path))
-        {
             return false;
-        }
 
         try
         {
             using var streamReader = new StreamReader(path, Encoding.Default, false, _fileReadStreamOptions);
             scheme = _deserializer.Deserialize<Scheme>(streamReader);
+            scheme.FileInfo = new FileInfo(path);
+
+            if (scheme.Version > App.Version)
+                throw new InvalidOperationException($"Can not load scheme of {scheme.Version} version.");
+
             return true;
         }
         catch

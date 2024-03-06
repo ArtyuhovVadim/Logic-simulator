@@ -18,9 +18,9 @@ public class ColorYamlConverter : IYamlTypeConverter
 
         parser.BeginSequenceOrThrow();
 
-        var r = Convert.ToByte(parser.ConsumeScalarOrThrow() * 255);
-        var g = Convert.ToByte(parser.ConsumeScalarOrThrow() * 255);
-        var b = Convert.ToByte(parser.ConsumeScalarOrThrow() * 255);
+        var r = Convert.ToByte(parser.ConsumeScalarAsDoubleOrThrow() * 255);
+        var g = Convert.ToByte(parser.ConsumeScalarAsDoubleOrThrow() * 255);
+        var b = Convert.ToByte(parser.ConsumeScalarAsDoubleOrThrow() * 255);
 
         parser.EndSequenceOrThrow();
 

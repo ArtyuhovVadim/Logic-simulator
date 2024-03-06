@@ -19,33 +19,10 @@ public class ProjectViewModel : BindableBase, IModelBased<Project>
     public Project Model { get; }
 
     #endregion
-
-    #region Version
-
-    public string Version
-    {
-        get => Model.Version;
-        set
-        {
-            Model.Version = value;
-            OnPropertyChanged();
-        }
-    }
-
-    #endregion
-
+    
     #region Name
 
-    public string Name
-    {
-        get => Model.Name;
-        set
-        {
-            //TODO: Реализовать переименование файла проекта
-            Model.Name = value;
-            OnPropertyChanged();
-        }
-    }
+    public string Name => Model.FileInfo?.Name ?? throw new InvalidOperationException();
 
     #endregion
 

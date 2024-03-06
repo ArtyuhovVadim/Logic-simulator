@@ -8,6 +8,7 @@ namespace LogicSimulator.ViewModels.ObjectViewModels.Base;
 //TODO: Сделать модели для объектов сцены.
 public abstract class BaseObjectViewModel : BindableBase, ICloneable<BaseObjectViewModel>, IModelBased<BaseObjectViewModel>
 {
+    [YamlIgnore]
     public BaseObjectViewModel Model => this;
 
     #region Location

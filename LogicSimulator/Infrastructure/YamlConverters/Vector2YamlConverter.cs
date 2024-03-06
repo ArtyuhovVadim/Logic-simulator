@@ -18,8 +18,8 @@ public class Vector2YamlConverter : IYamlTypeConverter
 
         parser.BeginSequenceOrThrow();
 
-        var x = parser.ConsumeScalarOrThrow();
-        var y = parser.ConsumeScalarOrThrow();
+        var x = parser.ConsumeScalarAsDoubleOrThrow();
+        var y = parser.ConsumeScalarAsDoubleOrThrow();
 
         parser.EndSequenceOrThrow();
 

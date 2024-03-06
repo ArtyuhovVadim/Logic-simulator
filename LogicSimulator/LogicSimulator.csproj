@@ -8,7 +8,7 @@
         <Platforms>x64;x86</Platforms>
         <StartupObject>LogicSimulator.Program</StartupObject>
         <ApplicationIcon>Resources\Icons\icon512x512.ico</ApplicationIcon>
-	    <VersionPrefix>0.4.0</VersionPrefix>
+	    <VersionPrefix>0.4.0.0</VersionPrefix>
 	    <ImplicitUsings>enable</ImplicitUsings>
     </PropertyGroup>
 
@@ -30,9 +30,6 @@
         <None Update="app-settings.json">
             <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
         </None>
-        <None Update="Data\Example.lss">
-          <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-        </None>
         <None Update="Data\ExampleProject\ExampleScheme1.lss">
           <CopyToOutputDirectory>Always</CopyToOutputDirectory>
         </None>
@@ -40,9 +37,6 @@
           <CopyToOutputDirectory>Always</CopyToOutputDirectory>
         </None>
         <None Update="Data\ExampleProject\ExampleScheme3.lss">
-          <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-        </None>
-        <None Update="Data\image.png">
           <CopyToOutputDirectory>Always</CopyToOutputDirectory>
         </None>
     </ItemGroup>

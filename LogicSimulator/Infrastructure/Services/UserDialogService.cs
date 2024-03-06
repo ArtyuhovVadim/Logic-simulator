@@ -1,5 +1,6 @@
 ﻿using System.Windows;
 using LogicSimulator.Infrastructure.Services.Interfaces;
+using Microsoft.Win32;
 
 namespace LogicSimulator.Infrastructure.Services;
 
@@ -33,5 +34,36 @@ public class DefaultUserDialogService : IUserDialogService
             MessageBoxResult.No => UserDialogResult.No,
             _ => UserDialogResult.None
         };
+    }
+
+    public UserDialogResult OpenFileDialog(string title, IEnumerable<(string name, string pattern)> filters, out string path)
+    {
+        path = string.Empty;
+
+        var filter = string.Join('|', filters.Select(x => $"{x.name} ({x.pattern})|{x.pattern}"));
+        var openFileDialog = new OpenFileDialog { Title = title, Filter = filter };
+
+        if (openFileDialog.ShowDialog() == true)
+        {
+            path = openFileDialog.FileName;
+            return UserDialogResult.Ok;
+        }
+
+        return UserDialogResult.Cancel;
+    }
+
+    public UserDialogResult OpenFolderDialog(string title, out string path)
+    {
+        path = string.Empty;
+
+        var openFileDialog = new OpenFolderDialog { Title = title };
+
+        if (openFileDialog.ShowDialog() == true)
+        {
+            path = openFileDialog.FolderName;
+            return UserDialogResult.Ok;
+        }
+
+        return UserDialogResult.Cancel;
     }
 }
