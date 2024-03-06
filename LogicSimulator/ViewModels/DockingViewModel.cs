@@ -8,8 +8,6 @@ public class DockingViewModel : BindableBase
 {
     public event Action<DocumentViewModel?, DocumentViewModel?>? ActiveDocumentViewModelChanged;
 
-    public DockingViewModel() => _documentViewModels.CollectionChanged += OnDocumentCollectionChanged;
-
     #region ActiveDocumentViewModel
 
     private DocumentViewModel? _activeDocumentViewModel;
@@ -64,7 +62,26 @@ public class DockingViewModel : BindableBase
 
     #endregion
 
-    public DockingViewModel AddDocumentViewModel(DocumentViewModel documentViewModel, bool isSelected = false)
+    public void CloseAllDocumentsViewModel()
+    {
+        _documentViewModels.Clear();
+        OnPropertyChanged(nameof(DocumentViewModels));
+        ActiveDocumentViewModel = null;
+    }
+
+    public void CloseDocumentViewModel(DocumentViewModel documentViewModel)
+    {
+        _documentViewModels.Remove(documentViewModel);
+
+        OnPropertyChanged(nameof(DocumentViewModels));
+
+        if (ActiveDocumentViewModel == documentViewModel)
+        {
+            ActiveDocumentViewModel = _documentViewModels.Any() ? _documentViewModels.Last() : null;
+        }
+    }
+
+    public void AddDocumentViewModel(DocumentViewModel documentViewModel, bool isSelected = false)
     {
         if (_documentViewModels.Contains(documentViewModel))
             throw new ApplicationException($"{documentViewModel.GetType()} already added.");
@@ -75,19 +92,13 @@ public class DockingViewModel : BindableBase
 
         OnPropertyChanged(nameof(DocumentViewModels));
 
-        return this;
+        if (isSelected)
+        {
+            ActiveDocumentViewModel = documentViewModel;
+        }
     }
 
-    public DockingViewModel RemoveDocumentViewModel(DocumentViewModel documentViewModel)
-    {
-        _documentViewModels.Remove(documentViewModel);
-
-        OnPropertyChanged(nameof(DocumentViewModels));
-
-        return this;
-    }
-
-    public DockingViewModel AddOrSelectDocumentViewModel(DocumentViewModel documentViewModel)
+    public void AddOrSelectDocumentViewModel(DocumentViewModel documentViewModel)
     {
         if (!_documentViewModels.Contains(documentViewModel))
             _documentViewModels.Add(documentViewModel);
@@ -96,10 +107,10 @@ public class DockingViewModel : BindableBase
 
         OnPropertyChanged(nameof(DocumentViewModels));
 
-        return this;
+        ActiveDocumentViewModel = documentViewModel;
     }
 
-    public DockingViewModel AddToolViewModel(ToolViewModel toolViewModel, bool isVisible = false)
+    public void AddToolViewModel(ToolViewModel toolViewModel, bool isVisible = false)
     {
         if (_toolViewModels.Contains(toolViewModel))
             throw new ApplicationException($"{toolViewModel.GetType()} already added.");
@@ -109,57 +120,32 @@ public class DockingViewModel : BindableBase
         _toolViewModels.Add(toolViewModel);
 
         OnPropertyChanged(nameof(ToolViewModels));
-
-        return this;
     }
 
-    public DockingViewModel OpenAndSelectToolViewModel(ToolViewModel toolViewModel)
+    public void OpenAndSelectToolViewModel(ToolViewModel toolViewModel)
     {
         toolViewModel.IsVisible = true;
         toolViewModel.IsSelected = true;
-
-        return this;
     }
 
-    public DockingViewModel OpenToolViewModel(ToolViewModel toolViewModel)
+    public void OpenToolViewModel(ToolViewModel toolViewModel)
     {
         toolViewModel.IsVisible = true;
-
-        return this;
     }
 
-    public DockingViewModel CloseToolViewModel(ToolViewModel toolViewModel)
+    public void CloseToolViewModel(ToolViewModel toolViewModel)
     {
         toolViewModel.IsVisible = false;
         toolViewModel.IsSelected = false;
-
-        return this;
     }
 
-    public DockingViewModel SelectAnchorableViewModel(AnchorableViewModel anchorableViewModel)
+    public void SelectAnchorableViewModel(AnchorableViewModel anchorableViewModel)
     {
         anchorableViewModel.IsSelected = true;
-
-        return this;
     }
 
-    public DockingViewModel UnselectAnchorableViewModel(AnchorableViewModel anchorableViewModel)
+    public void UnselectAnchorableViewModel(AnchorableViewModel anchorableViewModel)
     {
         anchorableViewModel.IsSelected = false;
-
-        return this;
-    }
-
-    private void OnDocumentCollectionChanged(object? sender, NotifyCollectionChangedEventArgs e)
-    {
-        if (e.Action != NotifyCollectionChangedAction.Remove) return;
-
-        if (!_documentViewModels.Any())
-        {
-            ActiveDocumentViewModel = null;
-            return;
-        }
-
-        ActiveDocumentViewModel = _documentViewModels.Last();
     }
 }

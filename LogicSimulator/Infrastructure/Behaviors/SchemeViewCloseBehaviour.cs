@@ -1,47 +1,24 @@
-﻿using System.Reflection;
-using System.Windows;
-using AvalonDock.Controls;
-using Microsoft.Xaml.Behaviors;
+﻿using Microsoft.Xaml.Behaviors;
 using LogicSimulator.Views;
 using WpfExtensions.Utils;
-using AvalonDock.Layout;
 using LogicSimulator.Scene;
+using LogicSimulator.ViewModels.AnchorableViewModels;
 
 namespace LogicSimulator.Infrastructure.Behaviors;
 
 public class SchemeViewCloseBehaviour : Behavior<SchemeView>
 {
-    #region CloseCommand
-
-    public ICommand? CloseCommand
-    {
-        get => (ICommand?)GetValue(CloseCommandProperty);
-        set => SetValue(CloseCommandProperty, value);
-    }
-
-    public static readonly DependencyProperty CloseCommandProperty =
-        DependencyProperty.Register(nameof(CloseCommand), typeof(ICommand), typeof(SchemeViewCloseBehaviour), new PropertyMetadata(default(ICommand)));
-
-    #endregion
-
     protected override void OnAttached()
     {
-        var control = AssociatedObject.FindVisualParent<LayoutDocumentControl>();
-        var layoutContent = control!.Model!;
-        var layoutItem = control.LayoutItem;
-
-        layoutContent.Closed += OnClosed;
-
-        if (typeof(LayoutItem).GetField("_defaultCloseCommand", BindingFlags.NonPublic | BindingFlags.Instance)?.GetValue(layoutItem) is not ICommand defaultCommand)
-            throw new ApplicationException("Can not find default close command.");
-
-        layoutItem.CloseCommand = defaultCommand;
+        if (AssociatedObject.DataContext is ICloseable closable)
+        {
+            closable.Closed += OnClosed;
+        }
     }
 
-    private void OnClosed(object? sender, EventArgs eventArgs)
+    private void OnClosed()
     {
-        ((LayoutContent)sender!).Closing -= OnClosed;
-        CloseCommand?.Execute(null);
+        ((ICloseable)AssociatedObject.DataContext).Closed -= OnClosed;
         var scene = AssociatedObject.FindVisualChild<Scene2D>()!;
         scene.Dispose();
     }

@@ -45,10 +45,9 @@ public class MainWindowViewModel : BindableBase
 
         projectExplorerViewModel.SchemeOpened += OnSchemeOpened;
 
-        _dockingViewModel
-            .AddToolViewModel(_propertiesViewModel, true)
-            .AddToolViewModel(_projectExplorerViewModel, true)
-            .AddToolViewModel(_messagesOutputViewModel, true);
+        _dockingViewModel.AddToolViewModel(_propertiesViewModel, true);
+        _dockingViewModel.AddToolViewModel(_projectExplorerViewModel, true);
+        _dockingViewModel.AddToolViewModel(_messagesOutputViewModel, true);
 
         _dockingViewModel.ActiveDocumentViewModelChanged += OnActiveDocumentViewModelChanged;
     }
@@ -115,7 +114,12 @@ public class MainWindowViewModel : BindableBase
             }
 
             project.Schemes = schemes;
-            ActiveProjectViewModel = _projectFactory.Create(project);
+
+            var projectViewModel = _projectFactory.Create(project);
+
+            _dockingViewModel.CloseAllDocumentsViewModel();
+
+            ActiveProjectViewModel = projectViewModel;
         }
         catch (Exception e)
         {

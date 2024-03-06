@@ -10,7 +10,12 @@ using WpfExtensions.Mvvm.Commands;
 
 namespace LogicSimulator.ViewModels.AnchorableViewModels;
 
-public class SchemeViewModel : DocumentViewModel, IModelBased<Scheme>
+public interface ICloseable
+{
+    event Action? Closed;
+}
+
+public class SchemeViewModel : DocumentViewModel, IModelBased<Scheme>, ICloseable
 {
     private readonly DockingViewModel _dockingViewModel;
     private readonly SchemeStatusViewModel _statusViewModel;
@@ -33,6 +38,8 @@ public class SchemeViewModel : DocumentViewModel, IModelBased<Scheme>
         IconSource = new Uri("pack://application:,,,/Resources/Icons/scheme-icon16x16.png");
         base.Title = Model.FileInfo?.Name ?? throw new InvalidOperationException();
     }
+
+    public event Action? Closed;
 
     #region Model
 
@@ -226,7 +233,11 @@ public class SchemeViewModel : DocumentViewModel, IModelBased<Scheme>
 
     protected override void OnDocumentDeactivated() => _editorSelectionService.SetEmptyEditor();
 
-    protected override void OnClose(object? p) => _dockingViewModel.RemoveDocumentViewModel(this);
+    protected override void OnClose(object? p)
+    {
+        _dockingViewModel.CloseDocumentViewModel(this);
+        Closed?.Invoke();
+    }
 
     private void OnSelectedObjectsChanged()
     {

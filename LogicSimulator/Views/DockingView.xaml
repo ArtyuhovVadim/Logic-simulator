@@ -30,7 +30,7 @@
                     <DataTemplate DataType="{x:Type avm:SchemeViewModel}">
                         <local:SchemeView>
                             <i:Interaction.Behaviors>
-                                <b:SchemeViewCloseBehaviour CloseCommand="{Binding Path=CloseCommand}" />
+                                <b:SchemeViewCloseBehaviour />
                                 <b:SchemeViewActivationBehaviour IsDocumentActive="{Binding Path=IsActiveDocument, Mode=OneWay}" />
                             </i:Interaction.Behaviors>
                         </local:SchemeView>
