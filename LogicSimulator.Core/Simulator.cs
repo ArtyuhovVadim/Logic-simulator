@@ -8,12 +8,12 @@ public class Simulator
 
     public long CurrentTime { get; private set; }
 
-    public void Simulate(IEnumerable<InputGate> inputs)
+    public void Simulate(IEnumerable<InputGate> inputs, long maxTime = long.MaxValue)
     {
         foreach (var input in inputs)
             input.Invalidate();
 
-        while (_eventsMap.Count > 0)
+        while (_eventsMap.Count > 0 && CurrentTime < maxTime)
             SimulateStep();
     }
 

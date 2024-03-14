@@ -16,7 +16,7 @@ public class InputGate : BaseGate
 
     public Port Output { get; set; }
 
-    public long Delay { get; set; } = 0;
+    public long Delay { get; set; }
 
     protected override void OnInvalidate()
     {

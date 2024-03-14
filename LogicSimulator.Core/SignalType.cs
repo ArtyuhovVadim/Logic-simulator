@@ -1,6 +1,6 @@
 ﻿namespace LogicSimulator.Core;
 
-public enum SignalType
+public enum SignalType : byte
 {
     /// <summary>
     /// Низкий сигнал

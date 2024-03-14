@@ -8,11 +8,21 @@ public class GateFactory
 
     public GateFactory(Simulator simulator) => _simulator = simulator;
 
-    public AndGate CreateAndGate() => new(_simulator);
-
-    public NandGate CreateNandGate() => new(_simulator);
-    
     public InputGate CreateInputGate() => new(_simulator);
-    
+
     public OutputGate CreateOutputGate() => new();
+
+    public AndGate CreateAndGate(int inputsCount = 2) => new(_simulator, inputsCount);
+
+    public NandGate CreateNandGate(int inputsCount = 2) => new(_simulator, inputsCount);
+
+    public OrGate CreateOrGate(int inputsCount = 2) => new(_simulator, inputsCount);
+
+    public NorGate CreateNorGate(int inputsCount = 2) => new(_simulator, inputsCount);
+
+    public XorGate CreateXorGate(int inputsCount = 2) => new(_simulator, inputsCount);
+
+    public XnorGate CreateXnorGate(int inputsCount = 2) => new(_simulator, inputsCount);
+
+    public NotGate CreateNotGate() => new(_simulator);
 }

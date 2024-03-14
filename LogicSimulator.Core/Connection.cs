@@ -3,7 +3,7 @@
 public class Connection
 {
     private readonly Port _sourcePort;
-    private readonly IEnumerable<Port> _receiverPorts;
+    private readonly List<Port> _receiverPorts;
 
     public Connection(Port sourcePort, Port receiverPort) : this(sourcePort, [receiverPort]) { }
 
@@ -14,11 +14,13 @@ public class Connection
         if (sourcePort.Type != PortType.Output)
             throw new InvalidOperationException("Source port must be output type.");
 
-        if (receiverPorts.Any(port => port.Type != PortType.Input))
+        var receiverPortsList = receiverPorts.ToList();
+
+        if (receiverPortsList.Any(port => port.Type != PortType.Input))
             throw new InvalidOperationException("Receiver ports must be input type.");
 
         _sourcePort = sourcePort;
-        _receiverPorts = receiverPorts;
+        _receiverPorts = receiverPortsList;
 
         sourcePort.AddConnection(this);
     }
