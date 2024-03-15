@@ -74,8 +74,7 @@ public partial class App
             .AddSingleton<IEditorSelectionService, EditorSelectionService>()
 
             .AddSingleton<ISchemeViewModelFactory, SchemeViewModelFactory>()
-            .AddSingleton<IProjectViewModelFactory, ProjectViewModelFactory>()
-            ;
+            .AddSingleton<IProjectViewModelFactory, ProjectViewModelFactory>();
     }
 
     private static void SetupGlobalExceptionHandling()

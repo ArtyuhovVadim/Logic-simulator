@@ -1,4 +1,5 @@
-﻿using LogicSimulator.ViewModels.AnchorableViewModels;
+﻿using LogicSimulator.Infrastructure.Factories.Interfaces;
+using LogicSimulator.ViewModels.AnchorableViewModels;
 using LogicSimulator.ViewModels.ObjectViewModels;
 using LogicSimulator.ViewModels.ObjectViewModels.Gates;
 using LogicSimulator.ViewModels.Tools;
@@ -9,41 +10,44 @@ namespace LogicSimulator.ViewModels;
 
 public class SchemeToolsViewModel : BindableBase
 {
-    private readonly SchemeViewModel _scheme;
-
-    public SchemeToolsViewModel(SchemeViewModel scheme)
+    public SchemeToolsViewModel(SchemeViewModel scheme, IGateViewModelFactory gateViewModelFactory)
     {
-        _scheme = scheme;
-
         CurrentTool = SelectionTool;
 
+        SelectionTool.Name = "Selection tool";
         SelectionTool.ToolSelected += OnToolSelected;
+
+        DragTool.Name = "Drag tool";
         DragTool.ToolSelected += OnToolSelected;
+
+        RectangleSelectionTool.Name = "Rectangle selection tool";
         RectangleSelectionTool.ToolSelected += OnToolSelected;
+
+        NodeDragTool.Name = "Node drag tool";
         NodeDragTool.ToolSelected += OnToolSelected;
 
-        RectanglePlacingTool = new RectanglePlacingToolViewModel("Rectangle placing tool", _scheme);
+        RectanglePlacingTool = new RectanglePlacingToolViewModel(scheme) { Name = "Rectangle placing tool" };
         RectanglePlacingTool.ToolSelected += OnToolSelected;
 
-        RoundedRectanglePlacingTool = new RoundedRectanglePlacingToolViewModel("Rounded rectangle placing tool", _scheme);
+        RoundedRectanglePlacingTool = new RoundedRectanglePlacingToolViewModel(scheme) { Name = "Rounded rectangle placing tool" };
         RoundedRectanglePlacingTool.ToolSelected += OnToolSelected;
 
-        EllipsePlacingTool = new EllipsePlacingToolViewModel("Ellipse placing tool", _scheme);
+        EllipsePlacingTool = new EllipsePlacingToolViewModel(scheme) { Name = "Ellipse placing tool" };
         EllipsePlacingTool.ToolSelected += OnToolSelected;
 
-        ArcPlacingTool = new ArcPlacingToolViewModel("Arc placing tool", _scheme);
+        ArcPlacingTool = new ArcPlacingToolViewModel(scheme) { Name = "Arc placing tool" };
         ArcPlacingTool.ToolSelected += OnToolSelected;
 
-        LinePlacingTool = new LinePlacingToolViewModel("Line placing tool", _scheme);
+        LinePlacingTool = new LinePlacingToolViewModel(scheme) { Name = "Line placing tool" };
         LinePlacingTool.ToolSelected += OnToolSelected;
 
-        BezierCurvePlacingTool = new BezierCurvePlacingToolViewModel("Bezier curve placing tool", _scheme);
+        BezierCurvePlacingTool = new BezierCurvePlacingToolViewModel(scheme) { Name = "Bezier curve placing tool" };
         BezierCurvePlacingTool.ToolSelected += OnToolSelected;
 
-        TextPlacingTool = new ObjectPlacingToolViewModel<TextBlockViewModel>("Text placing tool", _scheme);
+        TextPlacingTool = new ObjectPlacingToolViewModel<TextBlockViewModel>(scheme, () => new TextBlockViewModel()) { Name = "Text placing tool" };
         TextPlacingTool.ToolSelected += OnToolSelected;
 
-        AndGatePlacingTool = new ObjectPlacingToolViewModel<AndGateViewModel>("And gate placing tool", _scheme);
+        AndGatePlacingTool = new ObjectPlacingToolViewModel<AndGateViewModel>(scheme, () => gateViewModelFactory.CreateAndGateViewModel()) { Name = "And gate placing tool" };
         AndGatePlacingTool.ToolSelected += OnToolSelected;
     }
 
@@ -94,25 +98,25 @@ public class SchemeToolsViewModel : BindableBase
 
     #region SelectionTool
 
-    public SchemeSelectionToolViewModel SelectionTool { get; } = new("Selection tool");
+    public SchemeSelectionToolViewModel SelectionTool { get; } = new();
 
     #endregion
 
     #region DragTool
 
-    public SchemeDragToolViewModel DragTool { get; } = new("Drag tool");
+    public SchemeDragToolViewModel DragTool { get; } = new();
 
     #endregion
 
     #region RectangleSelectionTool
 
-    public SchemeRectangleSelectionToolViewModel RectangleSelectionTool { get; } = new("Rectangle selection tool");
+    public SchemeRectangleSelectionToolViewModel RectangleSelectionTool { get; } = new();
 
     #endregion
 
     #region NodeDragTool
 
-    public SchemeNodeDragToolViewModel NodeDragTool { get; } = new("Node drag tool");
+    public SchemeNodeDragToolViewModel NodeDragTool { get; } = new();
 
     #endregion
 
@@ -121,7 +125,7 @@ public class SchemeToolsViewModel : BindableBase
     public RectanglePlacingToolViewModel RectanglePlacingTool { get; }
 
     #endregion
-    
+
     #region RoundedRectanglePlacingTool
 
     public RoundedRectanglePlacingToolViewModel RoundedRectanglePlacingTool { get; }

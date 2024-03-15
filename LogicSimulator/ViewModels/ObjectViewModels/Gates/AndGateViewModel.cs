@@ -1,11 +1,14 @@
 ﻿using LogicSimulator.Scene;
 using LogicSimulator.ViewModels.ObjectViewModels.Gates.Base;
 using System.Windows.Media;
+using LogicSimulator.Core.Gates;
 
 namespace LogicSimulator.ViewModels.ObjectViewModels.Gates;
 
-public class AndGateViewModel : BaseGateViewModel
+public class AndGateViewModel : BaseGateViewModel<AndGate>
 {
+    public AndGateViewModel(AndGate logicModel) : base(logicModel) { }
+
     #region FillColor
 
     private Color _fillColor = Colors.White;
@@ -54,5 +57,6 @@ public class AndGateViewModel : BaseGateViewModel
 
     #endregion
 
+    //TODO: Не будет нормально копировать логическую модель
     public override AndGateViewModel MakeClone() => (AndGateViewModel)MemberwiseClone();
 }

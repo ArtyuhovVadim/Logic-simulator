@@ -12,7 +12,7 @@ public class BezierCurvePlacingToolViewModel : BasePlacingToolViewModel<BezierCu
     private readonly PlacingStep<BezierCurveViewModel> _setSecondPointStep;
     private readonly PlacingStep<BezierCurveViewModel> _setThirdPointStep;
 
-    public BezierCurvePlacingToolViewModel(string name, SchemeViewModel scheme) : base(name, scheme)
+    public BezierCurvePlacingToolViewModel(SchemeViewModel scheme) : base(scheme, () => new BezierCurveViewModel())
     {
         FirstStep = new PlacingStep<BezierCurveViewModel>(UpdateLocation, null, UpdateLocation, LocationStepTransition);
         _setFirstPointStep = new PlacingStep<BezierCurveViewModel>(UpdateFirstPoint, null, UpdateFirstPoint, SetFirstPointStepTransition);

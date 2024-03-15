@@ -1,4 +1,7 @@
-﻿using LogicSimulator.Infrastructure;
+﻿using LogicSimulator.Core;
+using LogicSimulator.Infrastructure;
+using LogicSimulator.Infrastructure.Factories;
+using LogicSimulator.Infrastructure.Factories.Interfaces;
 using LogicSimulator.Infrastructure.Services.Interfaces;
 using LogicSimulator.Models;
 using LogicSimulator.ViewModels.AnchorableViewModels.Base;
@@ -10,18 +13,15 @@ using WpfExtensions.Mvvm.Commands;
 
 namespace LogicSimulator.ViewModels.AnchorableViewModels;
 
-public interface ICloseable
-{
-    event Action? Closed;
-}
-
 public class SchemeViewModel : DocumentViewModel, IModelBased<Scheme>, ICloseable
 {
     private readonly DockingViewModel _dockingViewModel;
     private readonly SchemeStatusViewModel _statusViewModel;
     private List<BaseObjectViewModel> _selectedObjects = [];
-
     private readonly IEditorSelectionService _editorSelectionService;
+
+    private readonly Simulator _simulator;
+    private readonly IGateViewModelFactory _gateViewModelFactory;
 
     public SchemeViewModel(Scheme scheme, DockingViewModel dockingViewModel, IEditorSelectionService editorSelectionService)
     {
@@ -37,6 +37,10 @@ public class SchemeViewModel : DocumentViewModel, IModelBased<Scheme>, ICloseabl
 
         IconSource = new Uri("pack://application:,,,/Resources/Icons/scheme-icon16x16.png");
         base.Title = Model.FileInfo?.Name ?? throw new InvalidOperationException();
+
+        //TODO: Переместить в DI
+        _simulator = new Simulator();
+        _gateViewModelFactory = new GateViewModelFactory(_simulator);
     }
 
     public event Action? Closed;
@@ -51,7 +55,7 @@ public class SchemeViewModel : DocumentViewModel, IModelBased<Scheme>, ICloseabl
 
     private SchemeToolsViewModel? _toolsViewModel;
 
-    public SchemeToolsViewModel ToolsViewModel => _toolsViewModel ??= new SchemeToolsViewModel(this);
+    public SchemeToolsViewModel ToolsViewModel => _toolsViewModel ??= new SchemeToolsViewModel(this, _gateViewModelFactory);
 
     #endregion
 

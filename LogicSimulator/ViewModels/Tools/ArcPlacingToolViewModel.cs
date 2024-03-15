@@ -12,7 +12,7 @@ public class ArcPlacingToolViewModel : BasePlacingToolViewModel<ArcViewModel>
     private readonly PlacingStep<ArcViewModel> _setFirstAngleStep;
     private readonly PlacingStep<ArcViewModel> _setSecondAngleStep;
 
-    public ArcPlacingToolViewModel(string name, SchemeViewModel scheme) : base(name, scheme)
+    public ArcPlacingToolViewModel(SchemeViewModel scheme) : base(scheme, () => new ArcViewModel())
     {
         FirstStep = new PlacingStep<ArcViewModel>(UpdateLocation, null, UpdateLocation, LocationStepTransition);
         _setSizeStep = new PlacingStep<ArcViewModel>(UpdateSize, SizeStepTransition);

@@ -2,4 +2,4 @@
 
 namespace LogicSimulator.ViewModels.Tools;
 
-public class SchemeSelectionToolViewModel(string name) : BaseSchemeToolViewModel(name);
+public class SchemeSelectionToolViewModel : BaseSchemeToolViewModel;

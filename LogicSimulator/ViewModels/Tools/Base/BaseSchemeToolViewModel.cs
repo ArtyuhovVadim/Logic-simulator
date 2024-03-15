@@ -7,11 +7,9 @@ public abstract class BaseSchemeToolViewModel : BindableBase
 {
     public event Action<BaseSchemeToolViewModel>? ToolSelected;
 
-    protected BaseSchemeToolViewModel(string name) => _name = name;
-
     #region Name
 
-    private string _name;
+    private string _name = string.Empty;
 
     public string Name
     {

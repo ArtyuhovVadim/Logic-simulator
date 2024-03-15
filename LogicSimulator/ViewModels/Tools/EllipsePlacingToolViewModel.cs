@@ -10,7 +10,7 @@ public class EllipsePlacingToolViewModel : BasePlacingToolViewModel<EllipseViewM
 {
     private readonly PlacingStep<EllipseViewModel> _setSizeStep;
 
-    public EllipsePlacingToolViewModel(string name, SchemeViewModel scheme) : base(name, scheme)
+    public EllipsePlacingToolViewModel(SchemeViewModel scheme) : base(scheme, () => new EllipseViewModel())
     {
         FirstStep = new PlacingStep<EllipseViewModel>(UpdateLocation, null, UpdateLocation, LocationStepTransition);
         _setSizeStep = new PlacingStep<EllipseViewModel>(UpdateSize, SizeStepTransition);

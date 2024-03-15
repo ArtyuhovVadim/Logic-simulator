@@ -13,7 +13,7 @@ public class LinePlacingToolViewModel : BasePlacingToolViewModel<LineViewModel>
 
     private readonly PlacingStep<LineViewModel> _addVertexStep;
 
-    public LinePlacingToolViewModel(string name, SchemeViewModel scheme) : base(name, scheme)
+    public LinePlacingToolViewModel(SchemeViewModel scheme) : base(scheme, () => new LineViewModel())
     {
         FirstStep = new PlacingStep<LineViewModel>(UpdateLocation, null, UpdateLocation, LocationStepTransition);
         _addVertexStep = new PlacingStep<LineViewModel>(EnterAddVertexStep, ExitAddVertexStep, UpdateVertexPosition, AddVertexStepTransition);

@@ -6,9 +6,9 @@ using SharpDX;
 
 namespace LogicSimulator.ViewModels.Tools;
 
-public class ObjectPlacingToolViewModel<T> : BasePlacingToolViewModel<T> where T : BaseObjectViewModel, new()
+public class ObjectPlacingToolViewModel<T> : BasePlacingToolViewModel<T> where T : BaseObjectViewModel
 {
-    public ObjectPlacingToolViewModel(string name, SchemeViewModel scheme) : base(name, scheme) => 
+    public ObjectPlacingToolViewModel(SchemeViewModel scheme, Func<T> objectFactory) : base(scheme, objectFactory) => 
         FirstStep = new PlacingStep<T>(UpdateLocation, null, UpdateLocation, _ => null);
 
     protected override PlacingStep<T> FirstStep { get; }

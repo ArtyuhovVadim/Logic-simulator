@@ -2,4 +2,4 @@
 
 namespace LogicSimulator.ViewModels.Tools;
 
-public class SchemeNodeDragToolViewModel(string name) : BaseSchemeToolViewModel(name);
+public class SchemeNodeDragToolViewModel : BaseSchemeToolViewModel;
