@@ -1,11 +1,14 @@
 ﻿using System.Windows.Controls;
 using System.Windows;
 using LogicSimulator.ViewModels.ObjectViewModels;
+using LogicSimulator.ViewModels.ObjectViewModels.Gates;
 
 namespace LogicSimulator.Infrastructure.Selectors;
 
 public class SceneObjectTemplateSelector : DataTemplateSelector
 {
+    public DataTemplate AndGateDataTemplate { get; set; } = null!;
+
     public DataTemplate RectangleDataTemplate { get; set; } = null!;
 
     public DataTemplate RoundedRectangleDataTemplate { get; set; } = null!;
@@ -24,6 +27,7 @@ public class SceneObjectTemplateSelector : DataTemplateSelector
 
     public override DataTemplate SelectTemplate(object? item, DependencyObject container) => item switch
     {
+        AndGateViewModel => AndGateDataTemplate,
         RoundedRectangleViewModel => RoundedRectangleDataTemplate,
         RectangleViewModel => RectangleDataTemplate,
         EllipseViewModel => EllipseDataTemplate,

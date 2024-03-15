@@ -8,6 +8,7 @@
     xmlns:brushes="clr-namespace:LogicSimulator.Resources.Brushes"
     xmlns:converters="clr-namespace:LogicSimulator.Infrastructure.Converters"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:gates="clr-namespace:LogicSimulator.ViewModels.ObjectViewModels.Gates"
     xmlns:layers="clr-namespace:LogicSimulator.Scene.Layers;assembly=LogicSimulator.Scene"
     xmlns:local="clr-namespace:LogicSimulator.ViewModels.ObjectViewModels"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
@@ -114,6 +115,12 @@
                         MouseLeftButtonDownCommand="{Binding Path=ToolsViewModel.TextPlacingTool.ActionCommand}"
                         MouseMoveCommand="{Binding Path=ToolsViewModel.TextPlacingTool.UpdateCommand}"
                         MouseRightButtonUpCommand="{Binding Path=ToolsViewModel.TextPlacingTool.RejectCommand}" />
+                    <tools:PlacingTool
+                        CancelCommand="{Binding Path=ToolsViewModel.AndGatePlacingTool.RejectCommand}"
+                        Context="{Binding Path=ToolsViewModel.AndGatePlacingTool}"
+                        MouseLeftButtonDownCommand="{Binding Path=ToolsViewModel.AndGatePlacingTool.ActionCommand}"
+                        MouseMoveCommand="{Binding Path=ToolsViewModel.AndGatePlacingTool.UpdateCommand}"
+                        MouseRightButtonUpCommand="{Binding Path=ToolsViewModel.AndGatePlacingTool.RejectCommand}" />
                 </tools:ToolsController>
             </tools:ToolsController.Controller>
 
@@ -261,6 +268,19 @@
                                     Vertexes="{Binding Path=Vertexes}" />
                             </DataTemplate>
                         </selectors:SceneObjectTemplateSelector.LineDataTemplate>
+                        <selectors:SceneObjectTemplateSelector.AndGateDataTemplate>
+                            <DataTemplate DataType="{x:Type gates:AndGateViewModel}">
+                                <sceneViews:AndGateView
+                                    FillColor="{Binding Path=FillColor}"
+                                    IsSelected="{Binding Path=IsSelected}"
+                                    Location="{Binding Path=Location}"
+                                    Rotation="{Binding Path=Rotation,
+                                                       Converter={StaticResource RotationToFloatConverter}}"
+                                    StrokeColor="{Binding Path=StrokeColor}"
+                                    StrokeThickness="{Binding Path=StrokeThickness}"
+                                    StrokeThicknessType="{Binding Path=StrokeThicknessType}" />
+                            </DataTemplate>
+                        </selectors:SceneObjectTemplateSelector.AndGateDataTemplate>
                     </selectors:SceneObjectTemplateSelector>
                 </layers:ObjectsLayer.ObjectTemplateSelector>
                 <layers:ObjectsLayer.Renderer>
@@ -387,6 +407,13 @@
                         Data="{StaticResource TextPlacingToolIcon}"
                         Fill="{DynamicResource {x:Static brushes:BrushesKeys+SchemeView.ToolIconBrush}}"
                         Stretch="Uniform" />
+                </views:SchemeToolView>
+                <Separator />
+                <views:SchemeToolView DataContext="{Binding Path=AndGatePlacingTool}">
+                    <TextBlock
+                        HorizontalAlignment="Center"
+                        VerticalAlignment="Center"
+                        Text="&amp;" />
                 </views:SchemeToolView>
             </StackPanel>
         </ClippingBorder>

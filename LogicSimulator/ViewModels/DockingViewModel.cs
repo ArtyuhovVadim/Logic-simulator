@@ -1,5 +1,4 @@
 ﻿using LogicSimulator.ViewModels.AnchorableViewModels.Base;
-using System.Collections.Specialized;
 using WpfExtensions.Mvvm;
 
 namespace LogicSimulator.ViewModels;

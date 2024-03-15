@@ -113,7 +113,7 @@ public class SchemeViewModel : DocumentViewModel, IModelBased<Scheme>, ICloseabl
 
     #region GridStep
 
-    private float _gridStep = 25;
+    private float _gridStep = 10;
 
     public float GridStep
     {

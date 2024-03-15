@@ -1,4 +1,6 @@
 ﻿using LogicSimulator.ViewModels.AnchorableViewModels;
+using LogicSimulator.ViewModels.ObjectViewModels;
+using LogicSimulator.ViewModels.ObjectViewModels.Gates;
 using LogicSimulator.ViewModels.Tools;
 using LogicSimulator.ViewModels.Tools.Base;
 using WpfExtensions.Mvvm;
@@ -38,8 +40,11 @@ public class SchemeToolsViewModel : BindableBase
         BezierCurvePlacingTool = new BezierCurvePlacingToolViewModel("Bezier curve placing tool", _scheme);
         BezierCurvePlacingTool.ToolSelected += OnToolSelected;
 
-        TextPlacingTool = new TextPlacingToolViewModel("Text placing tool", _scheme);
+        TextPlacingTool = new ObjectPlacingToolViewModel<TextBlockViewModel>("Text placing tool", _scheme);
         TextPlacingTool.ToolSelected += OnToolSelected;
+
+        AndGatePlacingTool = new ObjectPlacingToolViewModel<AndGateViewModel>("And gate placing tool", _scheme);
+        AndGatePlacingTool.ToolSelected += OnToolSelected;
     }
 
     public SchemeSelectionToolViewModel DefaultTool => SelectionTool;
@@ -149,7 +154,13 @@ public class SchemeToolsViewModel : BindableBase
 
     #region TextPlacingTool
 
-    public TextPlacingToolViewModel TextPlacingTool { get; }
+    public ObjectPlacingToolViewModel<TextBlockViewModel> TextPlacingTool { get; }
+
+    #endregion
+
+    #region AndGatePlacingTool
+
+    public ObjectPlacingToolViewModel<AndGateViewModel> AndGatePlacingTool { get; }
 
     #endregion
 
