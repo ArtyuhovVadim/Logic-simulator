@@ -1,8 +1,8 @@
-﻿using LogicSimulator.Infrastructure.Services.Interfaces;
+﻿using LogicSimulator.Infrastructure.Factories.Interfaces;
 using LogicSimulator.Models;
 using LogicSimulator.ViewModels;
 
-namespace LogicSimulator.Infrastructure.Services;
+namespace LogicSimulator.Infrastructure.Factories;
 
 public class ProjectViewModelFactory : IProjectViewModelFactory
 {

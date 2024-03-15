@@ -1,5 +1,6 @@
 ﻿using System.IO;
 using LogicSimulator.Infrastructure;
+using LogicSimulator.Infrastructure.Factories.Interfaces;
 using LogicSimulator.Infrastructure.Services.Interfaces;
 using LogicSimulator.Models;
 using LogicSimulator.ViewModels.AnchorableViewModels;

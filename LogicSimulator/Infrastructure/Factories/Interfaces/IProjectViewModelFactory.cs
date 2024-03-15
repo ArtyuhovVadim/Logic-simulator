@@ -1,7 +1,7 @@
 ﻿using LogicSimulator.Models;
 using LogicSimulator.ViewModels;
 
-namespace LogicSimulator.Infrastructure.Services.Interfaces;
+namespace LogicSimulator.Infrastructure.Factories.Interfaces;
 
 public interface IProjectViewModelFactory
 {

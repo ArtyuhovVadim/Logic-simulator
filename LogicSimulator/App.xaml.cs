@@ -10,6 +10,8 @@ using LogicSimulator.Views.Windows;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using LogicSimulator.Infrastructure.Factories;
+using LogicSimulator.Infrastructure.Factories.Interfaces;
 
 namespace LogicSimulator;
 

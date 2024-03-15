@@ -1,9 +1,10 @@
-﻿using LogicSimulator.Infrastructure.Services.Interfaces;
+﻿using LogicSimulator.Infrastructure.Factories.Interfaces;
+using LogicSimulator.Infrastructure.Services.Interfaces;
 using LogicSimulator.Models;
 using LogicSimulator.ViewModels;
 using LogicSimulator.ViewModels.AnchorableViewModels;
 
-namespace LogicSimulator.Infrastructure.Services;
+namespace LogicSimulator.Infrastructure.Factories;
 
 public class SchemeViewModelFactory : ISchemeViewModelFactory
 {

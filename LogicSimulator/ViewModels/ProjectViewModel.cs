@@ -1,5 +1,5 @@
 ﻿using LogicSimulator.Infrastructure;
-using LogicSimulator.Infrastructure.Services.Interfaces;
+using LogicSimulator.Infrastructure.Factories.Interfaces;
 using LogicSimulator.Models;
 using LogicSimulator.ViewModels.AnchorableViewModels;
 using WpfExtensions.Mvvm;
