@@ -1,62 +1,55 @@
 ﻿using LogicSimulator.Scene;
 using LogicSimulator.ViewModels.ObjectViewModels.Gates.Base;
 using System.Windows.Media;
-using LogicSimulator.Core.Gates;
+using LogicSimulator.Models;
 
 namespace LogicSimulator.ViewModels.ObjectViewModels.Gates;
 
-public class AndGateViewModel : BaseGateViewModel<AndGate>
+public class AndGateViewModel : BaseGateViewModel
 {
-    public AndGateViewModel(AndGate logicModel) : base(logicModel) { }
+    public AndGateViewModel(AndGateModel model) => Model = model;
+
+    public override AndGateModel Model { get; }
 
     #region FillColor
 
-    private Color _fillColor = Colors.White;
-
     public Color FillColor
     {
-        get => _fillColor;
-        set => Set(ref _fillColor, value);
+        get => Model.FillColor;
+        set => Set(Model.FillColor, value, Model, (model, value) => model.FillColor = value);
     }
 
     #endregion
 
     #region StrokeColor
 
-    private Color _strokeColor = Colors.Black;
-
     public Color StrokeColor
     {
-        get => _strokeColor;
-        set => Set(ref _strokeColor, value);
+        get => Model.StrokeColor;
+        set => Set(Model.StrokeColor, value, Model, (model, value) => model.StrokeColor = value);
     }
 
     #endregion
 
     #region StrokeThickness
 
-    private float _strokeThickness = 1f;
-
     public float StrokeThickness
     {
-        get => _strokeThickness;
-        set => Set(ref _strokeThickness, value);
+        get => Model.StrokeThickness;
+        set => Set(Model.StrokeThickness, value, Model, (model, value) => model.StrokeThickness = value);
     }
 
     #endregion
 
     #region StrokeThicknessType
 
-    private StrokeThicknessType _strokeThicknessType = StrokeThicknessType.Smallest;
-
     public StrokeThicknessType StrokeThicknessType
     {
-        get => _strokeThicknessType;
-        set => Set(ref _strokeThicknessType, value);
+        get => Model.StrokeThicknessType;
+        set => Set(Model.StrokeThicknessType, value, Model, (model, value) => model.StrokeThicknessType = value);
     }
 
     #endregion
 
-    //TODO: Не будет нормально копировать логическую модель
-    public override AndGateViewModel MakeClone() => (AndGateViewModel)MemberwiseClone();
+    public override AndGateViewModel MakeClone() => new(Model.MakeClone());
 }

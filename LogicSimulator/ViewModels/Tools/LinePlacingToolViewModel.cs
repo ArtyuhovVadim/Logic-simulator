@@ -1,4 +1,5 @@
-﻿using LogicSimulator.Utils;
+﻿using LogicSimulator.Models;
+using LogicSimulator.Utils;
 using LogicSimulator.ViewModels.AnchorableViewModels;
 using LogicSimulator.ViewModels.ObjectViewModels;
 using LogicSimulator.ViewModels.Tools.Base;
@@ -13,7 +14,7 @@ public class LinePlacingToolViewModel : BasePlacingToolViewModel<LineViewModel>
 
     private readonly PlacingStep<LineViewModel> _addVertexStep;
 
-    public LinePlacingToolViewModel(SchemeViewModel scheme) : base(scheme, () => new LineViewModel())
+    public LinePlacingToolViewModel(SchemeViewModel scheme) : base(scheme, () => new LineViewModel(new LineModel()))
     {
         FirstStep = new PlacingStep<LineViewModel>(UpdateLocation, null, UpdateLocation, LocationStepTransition);
         _addVertexStep = new PlacingStep<LineViewModel>(EnterAddVertexStep, ExitAddVertexStep, UpdateVertexPosition, AddVertexStepTransition);

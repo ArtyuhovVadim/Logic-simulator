@@ -3,8 +3,10 @@ using LogicSimulator.Infrastructure;
 using LogicSimulator.Infrastructure.Factories.Interfaces;
 using LogicSimulator.Infrastructure.Services.Interfaces;
 using LogicSimulator.Models;
+using LogicSimulator.Models.Base;
 using LogicSimulator.ViewModels.AnchorableViewModels;
 using LogicSimulator.ViewModels.AnchorableViewModels.Base;
+using LogicSimulator.ViewModels.ObjectViewModels.Base;
 using LogicSimulator.ViewModels.StatusViewModels.Base;
 using WpfExtensions.Mvvm;
 using WpfExtensions.Mvvm.Commands;
@@ -25,6 +27,7 @@ public class MainWindowViewModel : BindableBase
     private readonly MessagesOutputViewModel _messagesOutputViewModel;
 
     public MainWindowViewModel(
+        IMappedViewModelFactory<BaseObjectModel, BaseObjectViewModel> a,
         IUserDialogService userDialogService,
         IProjectFileService projectFileService,
         ISchemeFileService schemeFileService,

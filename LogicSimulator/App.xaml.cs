@@ -12,6 +12,11 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using LogicSimulator.Infrastructure.Factories;
 using LogicSimulator.Infrastructure.Factories.Interfaces;
+using LogicSimulator.Models;
+using LogicSimulator.Models.Base;
+using LogicSimulator.ViewModels.ObjectViewModels;
+using LogicSimulator.ViewModels.ObjectViewModels.Base;
+using LogicSimulator.ViewModels.ObjectViewModels.Gates;
 
 namespace LogicSimulator;
 
@@ -74,7 +79,21 @@ public partial class App
             .AddSingleton<IEditorSelectionService, EditorSelectionService>()
 
             .AddSingleton<ISchemeViewModelFactory, SchemeViewModelFactory>()
-            .AddSingleton<IProjectViewModelFactory, ProjectViewModelFactory>();
+            .AddSingleton<IProjectViewModelFactory, ProjectViewModelFactory>()
+            .AddSingleton<IMappedViewModelFactory<BaseObjectModel, BaseObjectViewModel>>(_ =>
+            {
+                var factory = new SchemeObjectViewModelFactory();
+                factory.Register<ArcModel>(model => new ArcViewModel(model));
+                factory.Register<BezierCurveModel>(model => new BezierCurveViewModel(model));
+                factory.Register<EllipseModel>(model => new EllipseViewModel(model));
+                factory.Register<LineModel>(model => new LineViewModel(model));
+                factory.Register<RectangleModel>(model => new RectangleViewModel(model));
+                factory.Register<RoundedRectangleModel>(model => new RoundedRectangleViewModel(model));
+                factory.Register<TextBlockModel>(model => new TextBlockViewModel(model));
+
+                factory.Register<AndGateModel>(model => new AndGateViewModel(model));
+                return factory;
+            });
     }
 
     private static void SetupGlobalExceptionHandling()

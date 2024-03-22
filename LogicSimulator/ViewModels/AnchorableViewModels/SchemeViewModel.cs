@@ -1,9 +1,8 @@
-﻿using LogicSimulator.Core;
-using LogicSimulator.Infrastructure;
-using LogicSimulator.Infrastructure.Factories;
+﻿using LogicSimulator.Infrastructure;
 using LogicSimulator.Infrastructure.Factories.Interfaces;
 using LogicSimulator.Infrastructure.Services.Interfaces;
 using LogicSimulator.Models;
+using LogicSimulator.Models.Base;
 using LogicSimulator.ViewModels.AnchorableViewModels.Base;
 using LogicSimulator.ViewModels.ObjectViewModels.Base;
 using LogicSimulator.ViewModels.StatusViewModels;
@@ -20,16 +19,16 @@ public class SchemeViewModel : DocumentViewModel, IModelBased<Scheme>, ICloseabl
     private List<BaseObjectViewModel> _selectedObjects = [];
     private readonly IEditorSelectionService _editorSelectionService;
 
-    private readonly Simulator _simulator;
-    private readonly IGateViewModelFactory _gateViewModelFactory;
-
-    public SchemeViewModel(Scheme scheme, DockingViewModel dockingViewModel, IEditorSelectionService editorSelectionService)
+    public SchemeViewModel(Scheme scheme,
+                           DockingViewModel dockingViewModel,
+                           IEditorSelectionService editorSelectionService,
+                           IMappedViewModelFactory<BaseObjectModel, BaseObjectViewModel> viewModelsFactory)
     {
         Model = scheme;
         _dockingViewModel = dockingViewModel;
         _editorSelectionService = editorSelectionService;
-        //TODO: Сделать модели для объектов сцены.
-        _objects = new ObservableCollectionEx<BaseObjectViewModel, BaseObjectViewModel>(Model.Objects, model => model);
+
+        _objects = new ObservableCollectionEx<BaseObjectViewModel, BaseObjectModel>(Model.Objects, viewModelsFactory.Create);
 
         _statusViewModel = new SchemeStatusViewModel(this);
 
@@ -37,10 +36,6 @@ public class SchemeViewModel : DocumentViewModel, IModelBased<Scheme>, ICloseabl
 
         IconSource = new Uri("pack://application:,,,/Resources/Icons/scheme-icon16x16.png");
         base.Title = Model.FileInfo?.Name ?? throw new InvalidOperationException();
-
-        //TODO: Переместить в DI
-        _simulator = new Simulator();
-        _gateViewModelFactory = new GateViewModelFactory(_simulator);
     }
 
     public event Action? Closed;
@@ -55,13 +50,13 @@ public class SchemeViewModel : DocumentViewModel, IModelBased<Scheme>, ICloseabl
 
     private SchemeToolsViewModel? _toolsViewModel;
 
-    public SchemeToolsViewModel ToolsViewModel => _toolsViewModel ??= new SchemeToolsViewModel(this, _gateViewModelFactory);
+    public SchemeToolsViewModel ToolsViewModel => _toolsViewModel ??= new SchemeToolsViewModel(this);
 
     #endregion
 
     #region Objects
 
-    private readonly ObservableCollectionEx<BaseObjectViewModel, BaseObjectViewModel> _objects;
+    private readonly ObservableCollectionEx<BaseObjectViewModel, BaseObjectModel> _objects;
 
     public ObservableCollection<BaseObjectViewModel> Objects => _objects;
 

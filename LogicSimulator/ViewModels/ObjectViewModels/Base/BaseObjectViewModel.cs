@@ -1,36 +1,31 @@
 ﻿using LogicSimulator.Infrastructure;
 using SharpDX;
+using System.Runtime.CompilerServices;
+using LogicSimulator.Models.Base;
 using WpfExtensions.Mvvm;
-using YamlDotNet.Serialization;
 
 namespace LogicSimulator.ViewModels.ObjectViewModels.Base;
 
-//TODO: Сделать модели для объектов сцены.
-public abstract class BaseObjectViewModel : BindableBase, ICloneable<BaseObjectViewModel>, IModelBased<BaseObjectViewModel>
+public abstract class BaseObjectViewModel : BindableBase, ICloneable<BaseObjectViewModel>, IModelBased<BaseObjectModel>
 {
-    [YamlIgnore]
-    public BaseObjectViewModel Model => this;
+    public abstract BaseObjectModel Model { get; }
 
     #region Location
 
-    private Vector2 _location;
-
     public Vector2 Location
     {
-        get => _location;
-        set => Set(ref _location, value);
+        get => Model.Location;
+        set => Set(Model.Location, value, Model, (model, value) => model.Location = value);
     }
 
     #endregion
 
     #region Rotation
 
-    private Rotation _rotation = Rotation.Degrees0;
-
     public Rotation Rotation
     {
-        get => _rotation;
-        set => Set(ref _rotation, value);
+        get => Model.Rotation;
+        set => Set(Model.Rotation, value, Model, (model, value) => model.Rotation = value);
     }
 
     #endregion
@@ -39,7 +34,6 @@ public abstract class BaseObjectViewModel : BindableBase, ICloneable<BaseObjectV
 
     private bool _isSelected;
 
-    [YamlIgnore]
     public bool IsSelected
     {
         get => _isSelected;
@@ -67,4 +61,35 @@ public abstract class BaseObjectViewModel : BindableBase, ICloneable<BaseObjectV
     };
 
     public abstract BaseObjectViewModel MakeClone();
+
+    //TODO: Переместить в WpfExtensions
+    protected bool Set<TModel, T>(T oldValue, T newValue, TModel model, Action<TModel, T> callback, [CallerMemberName] string? propertyName = null) where TModel : class
+    {
+        ArgumentNullException.ThrowIfNull(model);
+        ArgumentNullException.ThrowIfNull(callback);
+
+        if (EqualityComparer<T>.Default.Equals(oldValue, newValue))
+            return false;
+
+        callback(model, newValue);
+        OnPropertyChanged(propertyName);
+
+        return true;
+    }
+
+    //TODO: Переместить в WpfExtensions
+    protected bool Set<TModel, T>(T oldValue, T newValue, IEqualityComparer<T> comparer, TModel model, Action<TModel, T> callback, [CallerMemberName] string? propertyName = null) where TModel : class
+    {
+        ArgumentNullException.ThrowIfNull(comparer);
+        ArgumentNullException.ThrowIfNull(model);
+        ArgumentNullException.ThrowIfNull(callback);
+
+        if (comparer.Equals(oldValue, newValue))
+            return false;
+
+        callback(model, newValue);
+        OnPropertyChanged(propertyName);
+
+        return true;
+    }
 }

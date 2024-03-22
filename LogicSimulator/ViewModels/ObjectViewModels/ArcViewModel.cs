@@ -1,4 +1,4 @@
-﻿using System.Windows.Media;
+﻿using LogicSimulator.Models;
 using LogicSimulator.Scene;
 using LogicSimulator.ViewModels.ObjectViewModels.Base;
 using Color = System.Windows.Media.Color;
@@ -7,89 +7,79 @@ namespace LogicSimulator.ViewModels.ObjectViewModels;
 
 public class ArcViewModel : BaseObjectViewModel
 {
+    public ArcViewModel(ArcModel model) => Model = model;
+
+    public override ArcModel Model { get; }
+
     #region RadiusX
 
-    private float _radiusX;
-    
     public float RadiusX
     {
-        get => _radiusX;
-        set => Set(ref _radiusX, value);
+        get => Model.RadiusX;
+        set => Set(Model.RadiusX, value, Model, (model, value) => model.RadiusX = value);
     }
 
     #endregion
 
     #region RadiusY
 
-    private float _radiusY;
-    
     public float RadiusY
     {
-        get => _radiusY;
-        set => Set(ref _radiusY, value);
+        get => Model.RadiusY;
+        set => Set(Model.RadiusY, value, Model, (model, value) => model.RadiusY = value);
     }
 
     #endregion
 
     #region StartAngle
 
-    private float _startAngle;
-    
     public float StartAngle
     {
-        get => _startAngle;
-        set => Set(ref _startAngle, value);
+        get => Model.StartAngle;
+        set => Set(Model.StartAngle, value, Model, (model, value) => model.StartAngle = value);
     }
 
     #endregion
 
     #region EndAngle
 
-    private float _endAngle = 180f;
-    
     public float EndAngle
     {
-        get => _endAngle;
-        set => Set(ref _endAngle, value);
+        get => Model.EndAngle;
+        set => Set(Model.EndAngle, value, Model, (model, value) => model.EndAngle = value);
     }
 
     #endregion
 
     #region StrokeColor
 
-    private Color _strokeColor = Colors.Black;
-    
     public Color StrokeColor
     {
-        get => _strokeColor;
-        set => Set(ref _strokeColor, value);
+        get => Model.StrokeColor;
+        set => Set(Model.StrokeColor, value, Model, (model, value) => model.StrokeColor = value);
     }
 
     #endregion
 
     #region StrokeThickness
 
-    private float _strokeThickness = 1f;
-    
     public float StrokeThickness
     {
-        get => _strokeThickness;
-        set => Set(ref _strokeThickness, value);
+        get => Model.StrokeThickness;
+        set => Set(Model.StrokeThickness, value, Model, (model, value) => model.StrokeThickness = value);
     }
 
     #endregion
 
     #region StrokeThicknessType
 
-    private StrokeThicknessType _strokeThicknessType = StrokeThicknessType.Smallest;
-
     public StrokeThicknessType StrokeThicknessType
     {
-        get => _strokeThicknessType;
-        set => Set(ref _strokeThicknessType, value);
+        get => Model.StrokeThicknessType;
+        set => Set(Model.StrokeThicknessType, value, Model, (model, value) => model.StrokeThicknessType = value);
     }
 
     #endregion
 
-    public override ArcViewModel MakeClone() => (ArcViewModel)MemberwiseClone();
+    public override ArcViewModel MakeClone() => new(Model.MakeClone());
 }

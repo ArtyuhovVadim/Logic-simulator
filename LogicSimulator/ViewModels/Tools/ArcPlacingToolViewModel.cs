@@ -1,4 +1,5 @@
-﻿using LogicSimulator.Utils;
+﻿using LogicSimulator.Models;
+using LogicSimulator.Utils;
 using LogicSimulator.ViewModels.AnchorableViewModels;
 using LogicSimulator.ViewModels.ObjectViewModels;
 using LogicSimulator.ViewModels.Tools.Base;
@@ -12,7 +13,7 @@ public class ArcPlacingToolViewModel : BasePlacingToolViewModel<ArcViewModel>
     private readonly PlacingStep<ArcViewModel> _setFirstAngleStep;
     private readonly PlacingStep<ArcViewModel> _setSecondAngleStep;
 
-    public ArcPlacingToolViewModel(SchemeViewModel scheme) : base(scheme, () => new ArcViewModel())
+    public ArcPlacingToolViewModel(SchemeViewModel scheme) : base(scheme, () => new ArcViewModel(new ArcModel()))
     {
         FirstStep = new PlacingStep<ArcViewModel>(UpdateLocation, null, UpdateLocation, LocationStepTransition);
         _setSizeStep = new PlacingStep<ArcViewModel>(UpdateSize, SizeStepTransition);
