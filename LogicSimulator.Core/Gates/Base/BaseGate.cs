@@ -1,8 +1,6 @@
 ﻿namespace LogicSimulator.Core.Gates.Base;
 
-public abstract class BaseGate
+public abstract class BaseGate : LogicComponent
 {
-    public void Invalidate() => OnInvalidate();
-
-    protected abstract void OnInvalidate();
+    public abstract IEnumerable<BasePort> Ports { get; } 
 }

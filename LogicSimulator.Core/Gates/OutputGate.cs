@@ -4,9 +4,11 @@ namespace LogicSimulator.Core.Gates;
 
 public class OutputGate : BaseGate
 {
-    public OutputGate() => Input = new Port(this, PortType.Input);
+    public OutputGate() => Input = new InputPort(this);
 
-    public Port Input { get; set; }
+    public override IEnumerable<BasePort> Ports => [Input];
 
-    protected override void OnInvalidate() { }
+    public InputPort Input { get; set; }
+
+    protected override void OnInvalidate(Simulator simulator) { }
 }

@@ -4,22 +4,21 @@ namespace LogicSimulator.Core.Gates;
 
 public class InputGate : BaseGate
 {
-    private readonly Simulator _simulator;
-
-    public InputGate(Simulator simulator)
+    public InputGate()
     {
-        _simulator = simulator;
-        Output = new Port(this, PortType.Output);
+        Output = new OutputPort(this);
     }
+
+    public override IEnumerable<BasePort> Ports => [Output];
 
     public SignalType State { get; set; } = SignalType.Undefined;
 
-    public Port Output { get; set; }
+    public OutputPort Output { get; set; }
 
-    public long Delay { get; set; }
+    public ulong Delay { get; set; }
 
-    protected override void OnInvalidate()
+    protected override void OnInvalidate(Simulator simulator)
     {
-        _simulator.PushEvent(Output, State, Delay);
+        simulator.PushEvent(Output, State, Delay);
     }
 }

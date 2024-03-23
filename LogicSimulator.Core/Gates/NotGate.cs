@@ -4,28 +4,27 @@ namespace LogicSimulator.Core.Gates;
 
 public class NotGate : BaseGate
 {
-    public NotGate(Simulator simulator)
+    public NotGate()
     {
-        Simulator = simulator;
-        Output = new Port(this, PortType.Output);
-        Input = new Port(this, PortType.Input);
+        Output = new OutputPort(this);
+        Input = new InputPort(this);
     }
 
-    public Port Input { get; }
+    public override IEnumerable<BasePort> Ports => [Input, Output];
 
-    public Port Output { get; }
+    public InputPort Input { get; }
 
-    public long Delay { get; set; }
+    public OutputPort Output { get; }
 
-    protected Simulator Simulator { get; }
+    public ulong Delay { get; set; }
 
-    protected sealed override void OnInvalidate()
+    protected sealed override void OnInvalidate(Simulator simulator)
     {
         var newState = SignalsCalculator.CalculateAsNot(Input.State);
 
         if (Output.State == newState)
             return;
 
-        Simulator.PushEvent(Output, newState, Delay);
+        simulator.PushEvent(Output, newState, Delay);
     }
 }

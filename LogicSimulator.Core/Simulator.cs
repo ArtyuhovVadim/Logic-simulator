@@ -4,20 +4,20 @@ namespace LogicSimulator.Core;
 
 public class Simulator
 {
-    private readonly Dictionary<long, Queue<SimulationEvent>> _eventsMap = [];
+    private readonly Dictionary<ulong, Queue<SimulationEvent>> _eventsMap = [];
 
-    public long CurrentTime { get; private set; }
+    public ulong CurrentTime { get; private set; }
 
-    public void Simulate(IEnumerable<InputGate> inputs, long maxTime = long.MaxValue)
+    public void Simulate(IEnumerable<InputGate> inputs, ulong maxTime = ulong.MaxValue)
     {
         foreach (var input in inputs)
-            input.Invalidate();
+            input.Invalidate(this);
 
         while (_eventsMap.Count > 0 && CurrentTime < maxTime)
             SimulateStep();
     }
 
-    public void PushEvent(Port port, SignalType newState, long duration)
+    public void PushEvent(BasePort port, SignalType newState, ulong duration)
     {
         if (!_eventsMap.ContainsKey(CurrentTime + duration))
             _eventsMap[CurrentTime + duration] = new Queue<SimulationEvent>();
@@ -40,16 +40,16 @@ public class Simulator
         }
 
         while (queue.Count > 0)
-            queue.Dequeue().Execute();
+            queue.Dequeue().Execute(this);
 
         _eventsMap.Remove(CurrentTime);
         CurrentTime++;
     }
 
-    private record SimulationEvent(Port Port, SignalType NewState, long RaiseTime, long Delay)
+    private record SimulationEvent(BasePort Port, SignalType NewState, ulong RaiseTime, ulong Delay)
     {
-        public long ExecutionTime => RaiseTime + Delay;
+        public ulong ExecutionTime => RaiseTime + Delay;
 
-        public void Execute() => Port.State = NewState;
+        public void Execute(Simulator simulator) => Port.Invalidate(simulator, NewState);
     }
 }

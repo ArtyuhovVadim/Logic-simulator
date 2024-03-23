@@ -2,30 +2,37 @@
 
 public abstract class SimpleGate : BaseGate
 {
-    protected SimpleGate(Simulator simulator, int inputPortsCount)
+    private List<InputPort> _inputPorts = [];
+    private int _inputPortsCount = 2;
+
+    protected SimpleGate()
     {
-        ArgumentOutOfRangeException.ThrowIfLessThan(inputPortsCount, 2);
-
-        Simulator = simulator;
-        Output = new Port(this, PortType.Output);
-
-        var inputPorts = new List<Port>(inputPortsCount);
-
-        for (var i = 0; i < inputPortsCount; i++)
-            inputPorts.Add(new Port(this, PortType.Input));
-
-        Inputs = inputPorts;
+        Output = new OutputPort(this);
+        CreateInputPorts();
     }
 
-    public IReadOnlyList<Port> Inputs { get; }
+    public int InputPortsCount
+    {
+        get => _inputPortsCount;
+        set
+        {
+            ArgumentOutOfRangeException.ThrowIfLessThan(value, 2);
+            _inputPortsCount = value;
+            foreach (var inputPort in _inputPorts)
+                inputPort.RemoveAllConnections();
+            CreateInputPorts();
+        }
+    }
 
-    public Port Output { get; }
+    public override IEnumerable<BasePort> Ports => [.. Inputs, Output];
 
-    public long Delay { get; set; }
+    public IReadOnlyList<InputPort> Inputs => _inputPorts;
 
-    protected Simulator Simulator { get; }
+    public OutputPort Output { get; }
 
-    protected sealed override void OnInvalidate()
+    public ulong Delay { get; set; }
+
+    protected sealed override void OnInvalidate(Simulator simulator)
     {
         var newState = Inputs[0].State;
 
@@ -35,8 +42,18 @@ public abstract class SimpleGate : BaseGate
         if (Output.State == newState)
             return;
 
-        Simulator.PushEvent(Output, newState, Delay);
+        simulator.PushEvent(Output, newState, Delay);
     }
 
     protected abstract SignalType GetOutputFromInput(SignalType a, SignalType b);
+
+    private void CreateInputPorts()
+    {
+        var inputPorts = new List<InputPort>(_inputPortsCount);
+
+        for (var i = 0; i < _inputPortsCount; i++)
+            inputPorts.Add(new InputPort(this));
+
+        _inputPorts = inputPorts;
+    }
 }
