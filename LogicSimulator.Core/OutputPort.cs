@@ -13,9 +13,6 @@ public class OutputPort : BasePort
 
     public override void Invalidate(Simulator simulator, SignalType newState)
     {
-        if (State == newState)
-            return;
-
         State = newState;
 
         foreach (var connection in ConnectionsInternal)
