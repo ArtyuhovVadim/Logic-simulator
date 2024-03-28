@@ -53,9 +53,11 @@ public class AndGateView : BaseGateView
             inputStates.Add(SignalType.Low);
         }
 
-        context.DrawingContext.DrawLine(new Vector2(Bounds.Width * 4f / 5f, Bounds.Height / 2f), new Vector2(Bounds.Width, Bounds.Height / 2f), GetSignalBrush(OutputState), strokeWidth);
-        context.DrawingContext.DrawLine(new Vector2(0, Bounds.Height / 4f), new Vector2(Bounds.Width / 5f, Bounds.Height / 4f), GetSignalBrush(inputStates[0]), strokeWidth);
-        context.DrawingContext.DrawLine(new Vector2(0, Bounds.Height * 3f / 4f), new Vector2(Bounds.Width / 5f, Bounds.Height * 3f / 4f), GetSignalBrush(inputStates[1]), strokeWidth);
+        var style = Cache.Get<StrokeStyle>(StrokeStyleResource);
+
+        context.DrawingContext.DrawLine(new Vector2(Bounds.Width * 4f / 5f, Bounds.Height / 2f), new Vector2(Bounds.Width, Bounds.Height / 2f), GetSignalBrush(OutputState), strokeWidth, style);
+        context.DrawingContext.DrawLine(new Vector2(0, Bounds.Height / 4f), new Vector2(Bounds.Width / 5f, Bounds.Height / 4f), GetSignalBrush(inputStates[0]), strokeWidth, style);
+        context.DrawingContext.DrawLine(new Vector2(0, Bounds.Height * 3f / 4f), new Vector2(Bounds.Width / 5f, Bounds.Height * 3f / 4f), GetSignalBrush(inputStates[1]), strokeWidth, style);
 
         var sink = context.ResourceFactory.BeginPathGeometry();
         sink.BeginFigure(new Vector2(1f, 0.5f), FigureBegin.Filled);
@@ -65,9 +67,11 @@ public class AndGateView : BaseGateView
         sink.EndFigure(FigureEnd.Closed);
         using var path = context.ResourceFactory.EndPathGeometry();
 
+        context.DrawingContext.PushAntialiasMode(AntialiasMode.PerPrimitive);
         context.DrawingContext.PushTransform(Matrix3x2.Scaling(Scale * 10, Scale * 10));
         context.DrawingContext.FillGeometry(path, fillBrush);
         context.DrawingContext.DrawGeometry(path, strokeBrush, strokeWidth / 10);
         context.DrawingContext.PopTransform();
+        context.DrawingContext.PopAntialiasMode();
     }
 }

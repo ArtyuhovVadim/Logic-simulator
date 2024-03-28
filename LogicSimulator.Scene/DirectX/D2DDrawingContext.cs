@@ -1,4 +1,5 @@
-﻿using SharpDX;
+﻿using LogicSimulator.Scene.Nodes;
+using SharpDX;
 using SharpDX.Direct2D1;
 using SharpDX.DirectWrite;
 using SharpDX.Mathematics.Interop;
@@ -9,7 +10,8 @@ namespace LogicSimulator.Scene.DirectX;
 public class D2DDrawingContext
 {
     private readonly DirectXContext _context;
-    private readonly Stack<Matrix3x2> _transforms = new();
+    private readonly Stack<Matrix3x2> _transforms = [];
+    private readonly Stack<AntialiasMode> _antialiasModes = [];
 
     public int RenderedFramesCount { get; private set; }
 
@@ -33,11 +35,7 @@ public class D2DDrawingContext
         set => _context.D2DDeviceContext.Transform = _context.D2DDeviceContext.Transform with { M11 = value, M22 = value };
     }
 
-    public AntialiasMode AntialiasMode
-    {
-        get => _context.D2DDeviceContext.AntialiasMode;
-        set => _context.D2DDeviceContext.AntialiasMode = value;
-    }
+    public AntialiasMode AntialiasMode => _context.D2DDeviceContext.AntialiasMode;
 
     public TextAntialiasMode TextAntialiasMode
     {
@@ -53,6 +51,22 @@ public class D2DDrawingContext
     {
         _context.D2DDeviceContext.EndDraw();
         RenderedFramesCount++;
+    }
+
+    public void PushAntialiasMode(AntialiasMode mode)
+    {
+        RenderDebugger.StartMethodCall();
+        _antialiasModes.Push(mode);
+        _context.D2DDeviceContext.AntialiasMode = mode;
+        RenderDebugger.EndMethodCall();
+    }
+
+    public void PopAntialiasMode()
+    {
+        RenderDebugger.StartMethodCall();
+        _antialiasModes.Pop();
+        _context.D2DDeviceContext.AntialiasMode = _antialiasModes.Count > 0 ? _antialiasModes.Peek() : AntialiasMode.Aliased;
+        RenderDebugger.EndMethodCall();
     }
 
     public void PushTransform(Matrix3x2 transform)

@@ -29,6 +29,8 @@ public abstract class BaseGateView : SceneObjectView, IStroked
 
     public static readonly IStaticResource HighImpSignalBrushResource = ResourceCache.RegisterStatic(factory => factory.CreateSolidColorBrush(new DxColor(128, 128, 128)));
 
+    public static readonly IStaticResource StrokeStyleResource = ResourceCache.RegisterStatic(factory => factory.CreateStrokeStyle(new StrokeStyleProperties { StartCap = CapStyle.Round, EndCap = CapStyle.Round, LineJoin = LineJoin.Round }));
+
     public static readonly IResource GeometryResource = ResourceCache.Register<BaseGateView>((factory, user) => factory.CreateRectangleGeometry(user.Bounds));
 
     public static readonly IResource FillBrushResource = ResourceCache.Register<BaseGateView>((factory, user) => factory.CreateSolidColorBrush(user.FillColor.ToColor4()));
