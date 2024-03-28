@@ -1,10 +1,14 @@
-﻿using LogicSimulator.Infrastructure;
+﻿using LogicSimulator.Core;
+using LogicSimulator.Core.Gates;
+using LogicSimulator.Infrastructure;
 using LogicSimulator.Infrastructure.Factories.Interfaces;
 using LogicSimulator.Infrastructure.Services.Interfaces;
 using LogicSimulator.Models;
 using LogicSimulator.Models.Base;
 using LogicSimulator.ViewModels.AnchorableViewModels.Base;
 using LogicSimulator.ViewModels.ObjectViewModels.Base;
+using LogicSimulator.ViewModels.ObjectViewModels.Gates;
+using LogicSimulator.ViewModels.ObjectViewModels.Gates.Base;
 using LogicSimulator.ViewModels.StatusViewModels;
 using LogicSimulator.ViewModels.StatusViewModels.Base;
 using SharpDX;
@@ -223,6 +227,50 @@ public class SchemeViewModel : DocumentViewModel, IModelBased<Scheme>, ICloseabl
             obj.RotateCounterclockwise();
         }
     }, () => ToolsViewModel.IsDefaultToolSelected);
+
+    #endregion
+
+    #region SimulateCommand
+
+    private ICommand? _simulateCommand;
+
+    public ICommand SimulateCommand => _simulateCommand ??= new LambdaCommand(() =>
+    {
+        var simulator = new Simulator();
+
+        var gateViewModels = Objects.OfType<SimpleGateViewModel>();
+
+        foreach (var gateViewModel in gateViewModels)
+        {
+            foreach (var port in gateViewModel.Model.LogicModel.Ports)
+            {
+                port.RemoveAllConnections();
+            }
+        }
+
+        var and = ((AndGateViewModel)Objects.First()).Model.LogicModel;
+
+        foreach (var port in and.Ports)
+        {
+            port.RemoveAllConnections();
+        }
+
+        var input1 = new InputGate();
+        var input2 = new InputGate();
+
+        input1.State = SignalType.Low;
+        input2.State = SignalType.High;
+
+        new Connection(input1.Output, and.Inputs[0]);
+        new Connection(input2.Output, and.Inputs[1]);
+
+        simulator.Simulate([input1, input2]);
+
+        foreach (var baseGateViewModel in gateViewModels)
+        {
+            baseGateViewModel.Invalidate();
+        }
+    });
 
     #endregion
 

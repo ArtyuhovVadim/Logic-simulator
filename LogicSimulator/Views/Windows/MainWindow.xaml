@@ -28,6 +28,7 @@
                 <MenuItem Header="Файл">
                     <MenuItem Command="{Binding Path=OpenFileCommand}" Header="Открыть" />
                     <MenuItem Command="{Binding Path=SaveFileCommand}" Header="Сохранить" />
+                    <MenuItem Command="{Binding Path=DockingViewModel.ActiveDocumentViewModel.SimulateCommand}" Header="Симулировать" />
                     <Separator />
                     <MenuItem Command="{StaticResource AppExitCommand}" Header="Выход" />
                 </MenuItem>

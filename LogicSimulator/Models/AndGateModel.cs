@@ -1,18 +1,15 @@
-﻿using System.Windows.Media;
+﻿using LogicSimulator.Core.Gates;
 using LogicSimulator.Models.Base;
-using LogicSimulator.Scene;
+using YamlDotNet.Serialization;
 
 namespace LogicSimulator.Models;
 
-public class AndGateModel : BaseGateModel
+public class AndGateModel : SimpleGateModel
 {
-    public Color FillColor { get; set; } = Colors.White;
+    public AndGateModel() : base(new AndGate()) { }
 
-    public Color StrokeColor { get; set; } = Colors.Black;
+    [YamlIgnore]
+    public override AndGate LogicModel => (AndGate)base.LogicModel;
 
-    public float StrokeThickness { get; set; } = 10f;
-
-    public StrokeThicknessType StrokeThicknessType { get; set; } = StrokeThicknessType.Smallest;
-
-    public override AndGateModel MakeClone() => (AndGateModel)MemberwiseClone();
+    public override AndGateModel MakeClone() => throw new NotImplementedException();
 }

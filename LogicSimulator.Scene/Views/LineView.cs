@@ -105,7 +105,6 @@ public class LineView : EditableSceneObjectView, IStroked
         lineView.MakeDirty();
     }
 
-
     #endregion
 
     public override IEnumerable<AbstractNode> Nodes
