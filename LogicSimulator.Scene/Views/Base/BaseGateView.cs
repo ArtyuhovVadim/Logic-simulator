@@ -17,6 +17,14 @@ namespace LogicSimulator.Scene.Views.Base;
 
 public abstract class BaseGateView : SceneObjectView, IStroked
 {
+    public static readonly IStaticResource AndGeometryResource = ResourceCache.RegisterStatic(factory => factory.ParsePathGeometry("M 10 5 L 25 5 A 5 5 90 0 1 25 35 L 10 35 Z"));
+
+    public static readonly IStaticResource OrGeometryResource = ResourceCache.RegisterStatic(factory => factory.ParsePathGeometry("M 10 5 Q 30 5 40 20 Q 30 35 10 35 Q 17 20 10 5"));
+
+    public static readonly IStaticResource XorGeometryResource = ResourceCache.RegisterStatic(factory => factory.ParsePathGeometry("M 13 5 Q 30 5 40 20 Q 30 35 13 35 Q 20 20 13 5 M 10 5 Q 17 20 10 35"));
+
+    public static readonly IStaticResource NotGeometryResource = ResourceCache.RegisterStatic(factory => factory.ParsePathGeometry("M 10 3 L 27 10 A 1 1 0 0 1 30 10 A 1 1 0 0 1 27 10 L 10 17 Z"));
+
     public static readonly IStaticResource HighSignalBrushResource = ResourceCache.RegisterStatic(factory => factory.CreateSolidColorBrush(new DxColor(0, 210, 0)));
 
     public static readonly IStaticResource LowSignalBrushResource = ResourceCache.RegisterStatic(factory => factory.CreateSolidColorBrush(new DxColor(0, 100, 0)));
@@ -31,13 +39,26 @@ public abstract class BaseGateView : SceneObjectView, IStroked
 
     public static readonly IStaticResource StrokeStyleResource = ResourceCache.RegisterStatic(factory => factory.CreateStrokeStyle(new StrokeStyleProperties { StartCap = CapStyle.Round, EndCap = CapStyle.Round, LineJoin = LineJoin.Round }));
 
-    public static readonly IResource GeometryResource = ResourceCache.Register<BaseGateView>((factory, user) => factory.CreateRectangleGeometry(user.Bounds));
+    public static readonly IResource HitTestGeometryResource = ResourceCache.Register<BaseGateView>((factory, user) => factory.CreateRectangleGeometry(user.SelectionRect));
 
     public static readonly IResource FillBrushResource = ResourceCache.Register<BaseGateView>((factory, user) => factory.CreateSolidColorBrush(user.FillColor.ToColor4()));
 
     public static readonly IResource StrokeBrushResource = ResourceCache.Register<BaseGateView>((factory, user) => factory.CreateSolidColorBrush(user.StrokeColor.ToColor4()));
 
     public const int SelectionPadding = 3;
+
+    #region Scale
+
+    public int Scale
+    {
+        get => (int)GetValue(ScaleProperty);
+        set => SetValue(ScaleProperty, value);
+    }
+
+    public static readonly DependencyProperty ScaleProperty =
+        DependencyProperty.Register(nameof(Scale), typeof(int), typeof(BaseGateView), new FrameworkPropertyMetadata(1, DefaultPropertyChangedHandler));
+
+    #endregion
 
     #region FillColor
 
@@ -113,20 +134,20 @@ public abstract class BaseGateView : SceneObjectView, IStroked
 
     #endregion
 
-    public abstract RectangleF Bounds { get; }
+    public abstract RectangleF SelectionRect { get; }
 
     public override bool HitTest(Vector2 pos, Matrix3x2 worldTransform, float tolerance = 0.25f) =>
-        Cache.Get<RectangleGeometry>(this, GeometryResource).FillContainsPoint(pos, TransformMatrix * worldTransform, tolerance);
+        Cache.Get<RectangleGeometry>(this, HitTestGeometryResource).FillContainsPoint(pos, TransformMatrix * worldTransform, tolerance);
 
     public override GeometryRelation HitTest(Geometry inputGeometry, Matrix3x2 worldTransform, float tolerance = 0.25f) =>
-        Cache.Get<RectangleGeometry>(this, GeometryResource).Compare(inputGeometry, Matrix3x2.Invert(TransformMatrix) * worldTransform, tolerance);
+        Cache.Get<RectangleGeometry>(this, HitTestGeometryResource).Compare(inputGeometry, Matrix3x2.Invert(TransformMatrix) * worldTransform, tolerance);
 
     protected override void OnRenderSelection(Scene2D scene, D2DContext context)
     {
         var brush = Cache.Get<SolidColorBrush>(SelectionBrushStaticResource);
         var style = Cache.Get<StrokeStyle>(SelectionStyleStaticResource);
 
-        var bounds = Bounds;
+        var bounds = SelectionRect;
         bounds.Inflate(SelectionPadding, SelectionPadding);
 
         context.DrawingContext.DrawRectangle(bounds, brush, 1f / scene.Scale, style);
