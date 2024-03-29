@@ -1,5 +1,4 @@
-﻿using LogicSimulator.Scene.Nodes;
-using SharpDX;
+﻿using SharpDX;
 using SharpDX.Direct2D1;
 using SharpDX.DirectWrite;
 using SharpDX.Mathematics.Interop;

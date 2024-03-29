@@ -59,13 +59,7 @@ public class AndGateView : BaseGateView
         context.DrawingContext.DrawLine(new Vector2(0, Bounds.Height / 4f), new Vector2(Bounds.Width / 5f, Bounds.Height / 4f), GetSignalBrush(inputStates[0]), strokeWidth, style);
         context.DrawingContext.DrawLine(new Vector2(0, Bounds.Height * 3f / 4f), new Vector2(Bounds.Width / 5f, Bounds.Height * 3f / 4f), GetSignalBrush(inputStates[1]), strokeWidth, style);
 
-        var sink = context.ResourceFactory.BeginPathGeometry();
-        sink.BeginFigure(new Vector2(1f, 0.5f), FigureBegin.Filled);
-        sink.AddLine(new Vector2(2.5f, 0.5f));
-        sink.AddArc(new ArcSegment { Point = new Vector2(2.5f, 3.5f), ArcSize = ArcSize.Large, Size = new Size2F(1.5f, 1.5f), RotationAngle = (float)Math.PI, SweepDirection = SweepDirection.Clockwise });
-        sink.AddLine(new Vector2(1f, 3.5f));
-        sink.EndFigure(FigureEnd.Closed);
-        using var path = context.ResourceFactory.EndPathGeometry();
+        using var path = context.ResourceFactory.ParsePathGeometry("M 1 0.5 L 2.5 0.5 A 0.5 0.5 90 0 1 2.5 3.5 L 1 3.5 Z");
 
         context.DrawingContext.PushAntialiasMode(AntialiasMode.PerPrimitive);
         context.DrawingContext.PushTransform(Matrix3x2.Scaling(Scale * 10, Scale * 10));

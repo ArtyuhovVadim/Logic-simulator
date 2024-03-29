@@ -2,6 +2,7 @@
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.Windows;
 using System.Windows.Input;
 using System.Windows.Interop;
@@ -269,7 +270,7 @@ public class Scene2D : FrameworkElement, IDisposable
         catch (Exception ex)
         {
             Reinitialize();
-            Console.WriteLine(ex);
+            Debug.WriteLine(ex);
         }
     }
 
