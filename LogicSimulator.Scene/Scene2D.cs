@@ -325,6 +325,7 @@ public class Scene2D : FrameworkElement, IDisposable
 
         foreach (var layer in Layers)
         {
+            RemoveLogicalChild(layer);
             layer.Dispose();
         }
 
