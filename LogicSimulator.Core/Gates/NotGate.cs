@@ -16,8 +16,6 @@ public class NotGate : BaseGate
 
     public OutputPort Output { get; }
 
-    public ulong Delay { get; set; }
-
     protected sealed override void OnInvalidate(Simulator simulator)
     {
         var newState = SignalsCalculator.CalculateAsNot(Input.State);
