@@ -12,7 +12,7 @@ public class SceneViewsGenerator<T> : IDisposable where T : DependencyObject, IS
     private readonly T _parent;
     private readonly DataTemplateSelector _selector;
     private readonly IEnumerable<object> _items;
-    private readonly ResourceCache _cache;
+    private ResourceCache _cache;
     private readonly List<SceneObjectView> _views = [];
 
     public event Action? ItemsCollectionChanged;
@@ -46,6 +46,8 @@ public class SceneViewsGenerator<T> : IDisposable where T : DependencyObject, IS
         {
             view.InitializeCache(cache);
         }
+
+        _cache = cache;
     }
 
     private void OnObjectsCollectionChanged(object? sender, NotifyCollectionChangedEventArgs e)
