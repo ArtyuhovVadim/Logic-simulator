@@ -95,7 +95,7 @@ public class SelectionTool : BaseTool
 
         _objectsUnderCursor = ObjectsLayer.Objects
             .Select(ObjectsLayer.GetViewFromItem)
-            .Where(objView => objView is not null && objView.HitTest(pos, Matrix3x2.Identity, (float)SelectionTolerance))
+            .Where(objView => objView is not null && objView.HitTest(pos, (float)SelectionTolerance))
             .Reverse()
             .ToList()!;
 

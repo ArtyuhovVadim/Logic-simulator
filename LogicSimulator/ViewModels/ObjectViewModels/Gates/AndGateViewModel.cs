@@ -5,7 +5,13 @@ namespace LogicSimulator.ViewModels.ObjectViewModels.Gates;
 
 public class AndGateViewModel : SimpleGateViewModel
 {
-    public AndGateViewModel(AndGateModel model) : base(model) => Model = model;
+    public AndGateViewModel(AndGateModel model) : base(model)
+    {
+        Model = model;
+
+        Width = 80;
+        Height = 80;
+    }
 
     public override AndGateModel Model { get; }
 

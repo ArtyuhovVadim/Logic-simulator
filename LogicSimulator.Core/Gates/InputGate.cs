@@ -15,8 +15,6 @@ public class InputGate : BaseGate
 
     public OutputPort Output { get; set; }
 
-    public ulong Delay { get; set; }
-
     protected override void OnInvalidate(Simulator simulator)
     {
         simulator.PushEvent(Output, State, Delay);

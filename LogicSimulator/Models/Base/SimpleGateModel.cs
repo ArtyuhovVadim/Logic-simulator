@@ -1,22 +1,13 @@
-﻿using LogicSimulator.Core.Gates.Base;
+﻿using YamlDotNet.Serialization;
 
 namespace LogicSimulator.Models.Base;
 
 public abstract class SimpleGateModel : BaseGateModel
 {
-    protected SimpleGateModel(SimpleGate logicModel) => LogicModel = logicModel;
+    public List<PortModel> InputPorts { get; set; } = [new PortModel(), new PortModel()];
 
-    public override SimpleGate LogicModel { get; }
+    [YamlIgnore]
+    public int InputPortsCount => InputPorts.Count;
 
-    public int InputPortsCount
-    {
-        get => LogicModel.InputPortsCount;
-        set => LogicModel.InputPortsCount = value;
-    }
-
-    public ulong Delay
-    {
-        get => LogicModel.Delay;
-        set => LogicModel.Delay = value;
-    }
+    public float InputPortsSpacing { get; set; } = 20f;
 }

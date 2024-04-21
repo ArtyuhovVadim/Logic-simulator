@@ -9,7 +9,69 @@ public abstract class BaseGateViewModel : BaseObjectViewModel
 {
     public override BaseGateModel Model { get; }
 
-    protected BaseGateViewModel(BaseGateModel model) => Model = model;
+    protected BaseGateViewModel(BaseGateModel model)
+    {
+        Model = model;
+        OutputPort = new PortViewModel(model.OutputPort, this);
+    }
+
+    #region OutputPort
+
+    public PortViewModel OutputPort { get; }
+
+    #endregion
+
+    #region Scale
+
+    public float Scale
+    {
+        get => Model.Scale;
+        set
+        {
+            if (Set(Model.Scale, value, Model, (model, value) => model.Scale = value))
+            {
+                OnPropertyChanged(nameof(Width));
+                OnPropertyChanged(nameof(Height));
+                OnSizeChanged();
+            }
+        }
+    }
+
+    #endregion
+
+    #region Width
+
+    private float _width;
+
+    public float Width
+    {
+        get => _width * Scale;
+        set
+        {
+            if (Set(ref _width, value))
+            {
+                OnSizeChanged();
+            }
+        }
+    }
+
+    #endregion
+
+    #region Height
+
+    private float _height;
+
+    public float Height
+    {
+        get => _height * Scale;
+        set
+        {
+            if (Set(ref _height, value))
+                OnSizeChanged();
+        }
+    }
+
+    #endregion
 
     #region FillColor
 
@@ -50,4 +112,16 @@ public abstract class BaseGateViewModel : BaseObjectViewModel
     }
 
     #endregion
+
+    #region Delay
+
+    public ulong Delay
+    {
+        get => Model.Delay;
+        set => Set(Model.Delay, value, Model, (model, value) => model.Delay = value);
+    }
+
+    #endregion
+
+    protected abstract void OnSizeChanged();
 }

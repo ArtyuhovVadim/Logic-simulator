@@ -235,7 +235,6 @@ public class Scene2D : FrameworkElement, IDisposable
         {
             if (_isRenderRequested || Layers.Any(x => x.IsDirty))
             {
-
                 _renderer!.RequestRender();
                 _isRenderRequested = false;
             }

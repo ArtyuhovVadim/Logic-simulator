@@ -9,6 +9,7 @@ namespace LogicSimulator.Scene.Views.Base;
 
 public abstract class SceneObjectView : DisposableFrameworkContentElement, ISelectionRenderable, IResourceUser, ICacheHost
 {
+    private bool _isDirty;
     private Matrix3x2 _translateMatrix = Matrix3x2.Identity;
     private Matrix3x2 _rotationMatrix = Matrix3x2.Identity;
 
@@ -104,7 +105,11 @@ public abstract class SceneObjectView : DisposableFrameworkContentElement, ISele
     //https://stackoverflow.com/a/45392997
     public Matrix3x2 TransformMatrix => _rotationMatrix * _translateMatrix;
 
-    public bool IsDirty { get; private set; }
+    public bool IsDirty
+    {
+        get => _isDirty || OnIsDirtyEvaluation();
+        private set => _isDirty = value;
+    }
 
     public void Select()
     {
@@ -143,12 +148,8 @@ public abstract class SceneObjectView : DisposableFrameworkContentElement, ISele
     public bool HitTest(Vector2 pos, float tolerance = 0.25f) =>
         HitTest(pos, Matrix3x2.Identity, tolerance);
 
-    public abstract bool HitTest(Vector2 pos, Matrix3x2 worldTransform, float tolerance = 0.25f);
-
     public GeometryRelation HitTest(Geometry inputGeometry, float tolerance = 0.25f) =>
         HitTest(inputGeometry, Matrix3x2.Identity, tolerance);
-
-    public abstract GeometryRelation HitTest(Geometry inputGeometry, Matrix3x2 worldTransform, float tolerance = 0.25f);
 
     public void Render(Scene2D scene, D2DContext context)
     {
@@ -168,14 +169,11 @@ public abstract class SceneObjectView : DisposableFrameworkContentElement, ISele
         context.DrawingContext.PopTransform();
     }
 
-    protected abstract void OnRender(Scene2D scene, D2DContext context);
-
-    protected abstract void OnRenderSelection(Scene2D scene, D2DContext context);
-
     public void InitializeCache(ResourceCache cache)
     {
         ThrowIfDisposed();
         Cache = cache;
+        OnCacheChanged(cache);
     }
 
     protected void MakeDirty()
@@ -183,6 +181,19 @@ public abstract class SceneObjectView : DisposableFrameworkContentElement, ISele
         ThrowIfDisposed();
         IsDirty = true;
     }
+
+    //TODO: Избавится от мирового трансформа
+    public abstract bool HitTest(Vector2 pos, Matrix3x2 worldTransform, float tolerance = 0.25f);
+
+    public abstract GeometryRelation HitTest(Geometry inputGeometry, Matrix3x2 worldTransform, float tolerance = 0.25f);
+
+    protected abstract void OnRender(Scene2D scene, D2DContext context);
+
+    protected abstract void OnRenderSelection(Scene2D scene, D2DContext context);
+
+    protected virtual void OnCacheChanged(ResourceCache cache) { }
+
+    protected virtual bool OnIsDirtyEvaluation() => false;
 
     protected override void Dispose(bool disposingManaged)
     {

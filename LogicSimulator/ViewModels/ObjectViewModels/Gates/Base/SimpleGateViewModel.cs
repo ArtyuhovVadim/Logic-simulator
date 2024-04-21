@@ -1,49 +1,70 @@
-﻿using LogicSimulator.Core;
+﻿using System.Collections.Specialized;
+using LogicSimulator.Infrastructure;
+using LogicSimulator.Models;
 using LogicSimulator.Models.Base;
+using SharpDX;
 
 namespace LogicSimulator.ViewModels.ObjectViewModels.Gates.Base;
 
 public abstract class SimpleGateViewModel : BaseGateViewModel
 {
-    protected SimpleGateViewModel(SimpleGateModel model) : base(model) => Model = model;
+    private readonly SimpleGateModel _model;
 
-    public override SimpleGateModel Model { get; }
-
-    #region Delay
-
-    public ulong Delay
+    protected SimpleGateViewModel(SimpleGateModel model) : base(model)
     {
-        get => Model.LogicModel.Delay;
-        set => Set(Model.LogicModel.Delay, value, Model.LogicModel, (model, value) => model.Delay = value);
+        _model = model;
+        _inputPorts = new ObservableCollectionEx<PortViewModel, PortModel>(model.InputPorts, portModel => new PortViewModel(portModel, this));
+        _inputPorts.CollectionChanged += OnInputPortsCollectionChanged;
+    }
+
+    #region InputPorts
+
+    private readonly ObservableCollectionEx<PortViewModel, PortModel> _inputPorts;
+
+    public IEnumerable<PortViewModel> InputPorts => _inputPorts;
+
+    #endregion
+
+    #region InputPortsSpacing
+
+    public float InputPortsSpacing
+    {
+        get => _model.InputPortsSpacing;
+        set
+        {
+            if (Set(_model.InputPortsSpacing, value, _model, (model, value) => model.InputPortsSpacing = value))
+            {
+                OnSizeChanged();
+            }
+        }
     }
 
     #endregion
 
-    #region InputPortsCount
-
-    public int InputPortsCount
+    protected override void OnSizeChanged()
     {
-        get => Model.LogicModel.InputPortsCount;
-        set => Set(Model.LogicModel.InputPortsCount, value, Model.LogicModel, (model, value) => model.InputPortsCount = value);
+        CalculateInputPortsPosition();
+        OutputPort.Location = new Vector2(Width / 2, 0);
     }
 
-    #endregion
-
-    #region OutputState
-
-    public SignalType OutputState => Model.LogicModel.Output.State;
-
-    #endregion
-
-    #region InputStates
-
-    public IEnumerable<SignalType> InputStates => Model.LogicModel.Inputs.Select(x => x.State);
-
-    #endregion
-
-    public virtual void Invalidate()
+    private void OnInputPortsCollectionChanged(object? sender, NotifyCollectionChangedEventArgs e)
     {
-        OnPropertyChanged(nameof(OutputState));
-        OnPropertyChanged(nameof(InputStates));
+        if (_inputPorts.Count < 2)
+            throw new InvalidOperationException("Input port count cannot be less than 2.");
+
+        CalculateInputPortsPosition();
+    }
+
+    private void CalculateInputPortsPosition()
+    {
+        var y = -((_inputPorts.Count - _inputPorts.Count % 2) * InputPortsSpacing) / 2;
+        for (var i = 0; i < _inputPorts.Count; i++)
+        {
+            if (_inputPorts.Count % 2 == 0 && _inputPorts.Count / 2 == i)
+                y += InputPortsSpacing;
+            _inputPorts[i].Rotation = Rotation.Degrees180;
+            _inputPorts[i].Location = new Vector2(-Width / 2, y);
+            y += InputPortsSpacing;
+        }
     }
 }

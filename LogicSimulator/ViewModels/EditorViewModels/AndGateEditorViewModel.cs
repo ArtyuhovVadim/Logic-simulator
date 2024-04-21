@@ -24,6 +24,12 @@ public class AndGateEditorViewModel : EditorViewModel
         .WithGroup(groupBuilder => groupBuilder
             .WithGroupName("Свойства")
             .WithRow(rowBuilder => rowBuilder
+                .WithRowName("Масштаб")
+                .WithSingleProperty<FloatPropertyViewModel>(nameof(AndGateViewModel.Scale)))
+            .WithRow(rowBuilder => rowBuilder
+                .WithRowName("Зазор портов")
+                .WithSingleProperty<FloatPropertyViewModel>(nameof(AndGateViewModel.InputPortsSpacing)))
+            .WithRow(rowBuilder => rowBuilder
                 .WithRowName("Граница")
                 .WithMultiProperty<StrokePropertiesViewModel>(multiPropertyBuilder => multiPropertyBuilder
                     .WithProperty<EnumPropertyViewModel>(nameof(AndGateViewModel.StrokeThicknessType))
