@@ -107,14 +107,11 @@ public class PortView : SceneObjectView, IStroked
 
     #endregion
 
-    public override bool HitTest(Vector2 pos, Matrix3x2 worldTransform, float tolerance = 0.25f) =>
-        Cache.Get<RectangleGeometry>(this, HitTestGeometryResource).StrokeContainsPoint(pos, this.GetStrokeThickness(), null, TransformMatrix * worldTransform, tolerance);
+    public override bool HitTest(Vector2 pos, Matrix3x2 transform, float tolerance = 0.25f) =>
+        Cache.Get<RectangleGeometry>(this, HitTestGeometryResource).StrokeContainsPoint(pos, this.GetStrokeThickness(), null, WorldTransformMatrix * transform, tolerance);
 
-    public override GeometryRelation HitTest(Geometry inputGeometry, Matrix3x2 worldTransform, float tolerance = 0.25f)
-    {
-        return Cache.Get<RectangleGeometry>(this, HitTestGeometryResource).Compare(inputGeometry,
-            Matrix3x2.Invert(TransformMatrix * worldTransform), tolerance);
-    }
+    public override GeometryRelation HitTest(Geometry inputGeometry, Matrix3x2 transform, float tolerance = 0.25f) =>
+        Cache.Get<RectangleGeometry>(this, HitTestGeometryResource).Compare(inputGeometry, Matrix3x2.Invert(WorldTransformMatrix * transform), tolerance);
 
     protected override void OnRender(Scene2D scene, D2DContext context)
     {

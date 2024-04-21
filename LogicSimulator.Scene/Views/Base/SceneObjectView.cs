@@ -103,7 +103,7 @@ public abstract class SceneObjectView : DisposableFrameworkContentElement, ISele
     #endregion
 
     //https://stackoverflow.com/a/45392997
-    public Matrix3x2 TransformMatrix => _rotationMatrix * _translateMatrix;
+    public Matrix3x2 WorldTransformMatrix => _rotationMatrix * _translateMatrix;
 
     public bool IsDirty
     {
@@ -141,9 +141,9 @@ public abstract class SceneObjectView : DisposableFrameworkContentElement, ISele
         SetValue(IsDraggingPropertyKey, false);
     }
 
-    public Vector2 WorldToLocalSpace(Vector2 worldPos) => worldPos.InvertAndTransform(TransformMatrix);
+    public Vector2 WorldToLocalSpace(Vector2 worldPos) => worldPos.InvertAndTransform(WorldTransformMatrix);
 
-    public Vector2 LocalToWorldSpace(Vector2 localPos) => localPos.Transform(TransformMatrix);
+    public Vector2 LocalToWorldSpace(Vector2 localPos) => localPos.Transform(WorldTransformMatrix);
 
     public bool HitTest(Vector2 pos, float tolerance = 0.25f) =>
         HitTest(pos, Matrix3x2.Identity, tolerance);
@@ -154,7 +154,7 @@ public abstract class SceneObjectView : DisposableFrameworkContentElement, ISele
     public void Render(Scene2D scene, D2DContext context)
     {
         ThrowIfDisposed();
-        context.DrawingContext.PushTransform(TransformMatrix);
+        context.DrawingContext.PushTransform(WorldTransformMatrix);
         OnRender(scene, context);
         IsDirty = false;
         context.DrawingContext.PopTransform();
@@ -163,7 +163,7 @@ public abstract class SceneObjectView : DisposableFrameworkContentElement, ISele
     public void RenderSelection(Scene2D scene, D2DContext context)
     {
         ThrowIfDisposed();
-        context.DrawingContext.PushTransform(TransformMatrix);
+        context.DrawingContext.PushTransform(WorldTransformMatrix);
         OnRenderSelection(scene, context);
         IsDirty = false;
         context.DrawingContext.PopTransform();
@@ -183,9 +183,9 @@ public abstract class SceneObjectView : DisposableFrameworkContentElement, ISele
     }
 
     //TODO: Избавится от мирового трансформа
-    public abstract bool HitTest(Vector2 pos, Matrix3x2 worldTransform, float tolerance = 0.25f);
+    public abstract bool HitTest(Vector2 pos, Matrix3x2 transform, float tolerance = 0.25f);
 
-    public abstract GeometryRelation HitTest(Geometry inputGeometry, Matrix3x2 worldTransform, float tolerance = 0.25f);
+    public abstract GeometryRelation HitTest(Geometry inputGeometry, Matrix3x2 transform, float tolerance = 0.25f);
 
     protected abstract void OnRender(Scene2D scene, D2DContext context);
 

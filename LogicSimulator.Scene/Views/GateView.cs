@@ -154,23 +154,23 @@ public class GateView : SceneObjectView, IStroked
 
     #endregion
 
-    public override bool HitTest(Vector2 pos, Matrix3x2 worldTransform, float tolerance = 0.25f)
+    public override bool HitTest(Vector2 pos, Matrix3x2 transform, float tolerance = 0.25f)
     {
         var geometry = Cache.Get<PathGeometry>(this, GeometryResource);
         var bounds = geometry.GetBounds().ToRect();
         var scaleX = Width / bounds.Width;
         var scaleY = Height / bounds.Height;
-        var matrix = Matrix3x2.Scaling(scaleX, scaleY) * Matrix3x2.Translation(-Width / 2, -Height / 2) * TransformMatrix * worldTransform;
+        var matrix = Matrix3x2.Scaling(scaleX, scaleY) * Matrix3x2.Translation(-Width / 2, -Height / 2) * WorldTransformMatrix * transform;
         return geometry.FillContainsPoint(pos, matrix, tolerance);
     }
 
-    public override GeometryRelation HitTest(Geometry inputGeometry, Matrix3x2 worldTransform, float tolerance = 0.25f)
+    public override GeometryRelation HitTest(Geometry inputGeometry, Matrix3x2 transform, float tolerance = 0.25f)
     {
         var geometry = Cache.Get<PathGeometry>(this, GeometryResource);
         var bounds = geometry.GetBounds().ToRect();
         var scaleX = Width / bounds.Width;
         var scaleY = Height / bounds.Height;
-        var matrix = Matrix3x2.Scaling(scaleX, scaleY) * Matrix3x2.Translation(-Width / 2, -Height / 2) * TransformMatrix * worldTransform;
+        var matrix = Matrix3x2.Scaling(scaleX, scaleY) * Matrix3x2.Translation(-Width / 2, -Height / 2) * WorldTransformMatrix * transform;
         return geometry.Compare(inputGeometry, Matrix3x2.Invert(matrix), tolerance);
     }
 

@@ -69,15 +69,15 @@ public class ObjectsGroupView : SceneObjectView, ISceneViewsGeneratorHost
 
     public List<SceneObjectView> Items { get; } = [];
 
-    public override bool HitTest(Vector2 pos, Matrix3x2 worldTransform, float tolerance = 0.25f)
+    public override bool HitTest(Vector2 pos, Matrix3x2 transform, float tolerance = 0.25f)
     {
-        var totalMatrix = TransformMatrix * worldTransform;
+        var totalMatrix = WorldTransformMatrix * transform;
         return ItemsInternal.Any(x => x.HitTest(pos, totalMatrix, tolerance));
     }
 
-    public override GeometryRelation HitTest(Geometry inputGeometry, Matrix3x2 worldTransform, float tolerance = 0.25f)
+    public override GeometryRelation HitTest(Geometry inputGeometry, Matrix3x2 transform, float tolerance = 0.25f)
     {
-        var totalMatrix = TransformMatrix * worldTransform;
+        var totalMatrix = WorldTransformMatrix * transform;
         var res = ItemsInternal.Select(x => x.HitTest(inputGeometry, totalMatrix, tolerance)).ToArray();
 
         if (res.All(x => x is GeometryRelation.IsContained))
