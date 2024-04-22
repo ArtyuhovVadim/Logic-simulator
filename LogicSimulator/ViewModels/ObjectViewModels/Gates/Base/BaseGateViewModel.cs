@@ -9,17 +9,7 @@ public abstract class BaseGateViewModel : BaseObjectViewModel
 {
     public override BaseGateModel Model { get; }
 
-    protected BaseGateViewModel(BaseGateModel model)
-    {
-        Model = model;
-        OutputPort = new PortViewModel(model.OutputPort, this);
-    }
-
-    #region OutputPort
-
-    public PortViewModel OutputPort { get; }
-
-    #endregion
+    protected BaseGateViewModel(BaseGateModel model) => Model = model;
 
     #region Scale
 

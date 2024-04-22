@@ -1,13 +1,10 @@
-﻿using YamlDotNet.Serialization;
-
-namespace LogicSimulator.Models.Base;
+﻿namespace LogicSimulator.Models.Base;
 
 public abstract class SimpleGateModel : BaseGateModel
 {
-    public List<PortModel> InputPorts { get; set; } = [new PortModel(), new PortModel()];
+    public PortModel OutputPort { get; set; } = new();
 
-    [YamlIgnore]
-    public int InputPortsCount => InputPorts.Count;
+    public List<PortModel> InputPorts { get; set; } = [new PortModel(), new PortModel()];
 
     public float InputPortsSpacing { get; set; } = 20f;
 }

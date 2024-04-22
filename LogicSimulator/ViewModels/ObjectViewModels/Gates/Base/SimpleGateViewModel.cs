@@ -13,9 +13,16 @@ public abstract class SimpleGateViewModel : BaseGateViewModel
     protected SimpleGateViewModel(SimpleGateModel model) : base(model)
     {
         _model = model;
+        OutputPort = new PortViewModel(model.OutputPort, this);
         _inputPorts = new ObservableCollectionEx<PortViewModel, PortModel>(model.InputPorts, portModel => new PortViewModel(portModel, this));
         _inputPorts.CollectionChanged += OnInputPortsCollectionChanged;
     }
+
+    #region OutputPort
+
+    public PortViewModel OutputPort { get; }
+
+    #endregion
 
     #region InputPorts
 
