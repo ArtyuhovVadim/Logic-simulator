@@ -33,6 +33,8 @@ public class SchemeFileService : ISchemeFileService
             .WithTagMapping(new TagName("!BezierCurve"), typeof(BezierCurveModel))
             .WithTagMapping(new TagName("!TextBlock"), typeof(TextBlockModel))
             .WithTagMapping(new TagName("!Arc"), typeof(ArcModel))
+            .WithTagMapping(new TagName("!InputGate"), typeof(InputGateModel))
+            .WithTagMapping(new TagName("!OutputGate"), typeof(OutputGateModel))
             .WithTagMapping(new TagName("!AndGate"), typeof(AndGateModel))
             ;
 
@@ -47,6 +49,8 @@ public class SchemeFileService : ISchemeFileService
             .WithTagMapping(new TagName("!BezierCurve"), typeof(BezierCurveModel))
             .WithTagMapping(new TagName("!TextBlock"), typeof(TextBlockModel))
             .WithTagMapping(new TagName("!Arc"), typeof(ArcModel))
+            .WithTagMapping(new TagName("!InputGate"), typeof(InputGateModel))
+            .WithTagMapping(new TagName("!OutputGate"), typeof(OutputGateModel))
             .WithTagMapping(new TagName("!AndGate"), typeof(AndGateModel))
             ;
 

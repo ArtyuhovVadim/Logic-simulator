@@ -91,6 +91,8 @@ public partial class App
                 factory.Register<RoundedRectangleModel>(model => new RoundedRectangleViewModel(model));
                 factory.Register<TextBlockModel>(model => new TextBlockViewModel(model));
 
+                factory.Register<InputGateModel>(model => new InputGateViewModel(model));
+                factory.Register<OutputGateModel>(model => new OutputGateViewModel(model));
                 factory.Register<AndGateModel>(model => new AndGateViewModel(model));
                 return factory;
             });
