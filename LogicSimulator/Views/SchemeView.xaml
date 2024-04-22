@@ -132,6 +132,18 @@
                         MouseMoveCommand="{Binding Path=ToolsViewModel.TextPlacingTool.UpdateCommand}"
                         MouseRightButtonUpCommand="{Binding Path=ToolsViewModel.TextPlacingTool.RejectCommand}" />
                     <tools:PlacingTool
+                        CancelCommand="{Binding Path=ToolsViewModel.InputGatePlacingTool.RejectCommand}"
+                        Context="{Binding Path=ToolsViewModel.InputGatePlacingTool}"
+                        MouseLeftButtonDownCommand="{Binding Path=ToolsViewModel.InputGatePlacingTool.ActionCommand}"
+                        MouseMoveCommand="{Binding Path=ToolsViewModel.InputGatePlacingTool.UpdateCommand}"
+                        MouseRightButtonUpCommand="{Binding Path=ToolsViewModel.InputGatePlacingTool.RejectCommand}" />
+                    <tools:PlacingTool
+                        CancelCommand="{Binding Path=ToolsViewModel.OutputGatePlacingTool.RejectCommand}"
+                        Context="{Binding Path=ToolsViewModel.OutputGatePlacingTool}"
+                        MouseLeftButtonDownCommand="{Binding Path=ToolsViewModel.OutputGatePlacingTool.ActionCommand}"
+                        MouseMoveCommand="{Binding Path=ToolsViewModel.OutputGatePlacingTool.UpdateCommand}"
+                        MouseRightButtonUpCommand="{Binding Path=ToolsViewModel.OutputGatePlacingTool.RejectCommand}" />
+                    <tools:PlacingTool
                         CancelCommand="{Binding Path=ToolsViewModel.AndGatePlacingTool.RejectCommand}"
                         Context="{Binding Path=ToolsViewModel.AndGatePlacingTool}"
                         MouseLeftButtonDownCommand="{Binding Path=ToolsViewModel.AndGatePlacingTool.ActionCommand}"
@@ -498,6 +510,19 @@
                         Data="{StaticResource TextPlacingToolIcon}"
                         Fill="{DynamicResource {x:Static brushes:BrushesKeys+SchemeView.ToolIconBrush}}"
                         Stretch="Uniform" />
+                </views:SchemeToolView>
+                <Separator />
+                <views:SchemeToolView DataContext="{Binding Path=InputGatePlacingTool}">
+                    <TextBlock
+                        HorizontalAlignment="Center"
+                        VerticalAlignment="Center"
+                        Text="I" />
+                </views:SchemeToolView>
+                <views:SchemeToolView DataContext="{Binding Path=OutputGatePlacingTool}">
+                    <TextBlock
+                        HorizontalAlignment="Center"
+                        VerticalAlignment="Center"
+                        Text="O" />
                 </views:SchemeToolView>
                 <Separator />
                 <views:SchemeToolView DataContext="{Binding Path=AndGatePlacingTool}">

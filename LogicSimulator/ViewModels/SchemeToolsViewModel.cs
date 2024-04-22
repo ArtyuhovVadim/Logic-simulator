@@ -47,6 +47,12 @@ public class SchemeToolsViewModel : BindableBase
         TextPlacingTool = new ObjectPlacingToolViewModel<TextBlockViewModel>(scheme, () => new TextBlockViewModel(new TextBlockModel())) { Name = "Text placing tool" };
         TextPlacingTool.ToolSelected += OnToolSelected;
 
+        InputGatePlacingTool = new ObjectPlacingToolViewModel<InputGateViewModel>(scheme, () => new InputGateViewModel(new InputGateModel())) { Name = "Input gate placing tool" };
+        InputGatePlacingTool.ToolSelected += OnToolSelected;
+
+        OutputGatePlacingTool = new ObjectPlacingToolViewModel<OutputGateViewModel>(scheme, () => new OutputGateViewModel(new OutputGateModel())) { Name = "Output gate placing tool" };
+        OutputGatePlacingTool.ToolSelected += OnToolSelected;
+
         AndGatePlacingTool = new ObjectPlacingToolViewModel<AndGateViewModel>(scheme, () => new AndGateViewModel(new AndGateModel())) { Name = "And gate placing tool" };
         AndGatePlacingTool.ToolSelected += OnToolSelected;
     }
@@ -159,6 +165,18 @@ public class SchemeToolsViewModel : BindableBase
     #region TextPlacingTool
 
     public ObjectPlacingToolViewModel<TextBlockViewModel> TextPlacingTool { get; }
+
+    #endregion
+
+    #region InputGatePlacingTool
+
+    public ObjectPlacingToolViewModel<InputGateViewModel> InputGatePlacingTool { get; }
+
+    #endregion
+
+    #region OutputGatePlacingTool
+
+    public ObjectPlacingToolViewModel<OutputGateViewModel> OutputGatePlacingTool { get; }
 
     #endregion
 
