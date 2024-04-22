@@ -313,6 +313,35 @@
                                 </sceneViews:ObjectsGroupView>
                             </DataTemplate>
                         </selectors:SceneObjectTemplateSelector.InputGateDataTemplate>
+                        <selectors:SceneObjectTemplateSelector.OutputGateDataTemplate>
+                            <DataTemplate DataType="{x:Type gates:OutputGateViewModel}">
+                                <sceneViews:ObjectsGroupView
+                                    IsSelected="{Binding Path=IsSelected}"
+                                    Location="{Binding Path=Location}"
+                                    Rotation="{Binding Path=Rotation,
+                                                       Converter={StaticResource RotationToFloatConverter}}">
+                                    <sceneViews:GateView
+                                        Width="{Binding Path=Width}"
+                                        Height="{Binding Path=Height}"
+                                        FillColor="{Binding Path=FillColor}"
+                                        Geometry="M 40 30 L 15 30 L 0 15 L 15 0 L 40 0 Z"
+                                        SelectionPadding="10"
+                                        StrokeColor="{Binding Path=StrokeColor}"
+                                        StrokeThickness="{Binding Path=StrokeThickness}"
+                                        StrokeThicknessType="{Binding Path=StrokeThicknessType}" />
+                                    <sceneViews:PortView
+                                        IsSelected="{Binding Path=InputPort.IsSelected}"
+                                        Label="{Binding Path=InputPort.Name}"
+                                        Length="{Binding Path=InputPort.Length}"
+                                        Location="{Binding Path=InputPort.Location}"
+                                        Rotation="{Binding Path=InputPort.Rotation,
+                                                           Converter={StaticResource RotationToFloatConverter}}"
+                                        StrokeColor="{Binding Path=StrokeColor}"
+                                        StrokeThickness="{Binding Path=StrokeThickness}"
+                                        StrokeThicknessType="{Binding Path=StrokeThicknessType}" />
+                                </sceneViews:ObjectsGroupView>
+                            </DataTemplate>
+                        </selectors:SceneObjectTemplateSelector.OutputGateDataTemplate>
                         <selectors:SceneObjectTemplateSelector.AndGateDataTemplate>
                             <DataTemplate DataType="{x:Type gates:AndGateViewModel}">
                                 <sceneViews:ObjectsGroupView
