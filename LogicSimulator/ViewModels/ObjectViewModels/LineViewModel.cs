@@ -7,7 +7,7 @@ using Color = System.Windows.Media.Color;
 
 namespace LogicSimulator.ViewModels.ObjectViewModels;
 
-public class LineViewModel : BaseObjectViewModel
+public class LineViewModel : BaseObjectViewModel, ISegmentedObject
 {
     public LineViewModel(LineModel model)
     {
@@ -40,7 +40,7 @@ public class LineViewModel : BaseObjectViewModel
     public float StrokeThickness
     {
         get => Model.StrokeThickness;
-        set => Set(Model.StrokeThickness, value, Model, (model, value) => model.StrokeThickness= value);
+        set => Set(Model.StrokeThickness, value, Model, (model, value) => model.StrokeThickness = value);
     }
 
     #endregion

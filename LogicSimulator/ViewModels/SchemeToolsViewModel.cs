@@ -38,7 +38,7 @@ public class SchemeToolsViewModel : BindableBase
         ArcPlacingTool = new ArcPlacingToolViewModel(scheme) { Name = "Arc placing tool" };
         ArcPlacingTool.ToolSelected += OnToolSelected;
 
-        LinePlacingTool = new LinePlacingToolViewModel(scheme) { Name = "Line placing tool" };
+        LinePlacingTool = new SegmentedObjectPlacingToolViewModel<LineViewModel>(scheme, () => new LineViewModel(new LineModel())) { Name = "Line placing tool" };
         LinePlacingTool.ToolSelected += OnToolSelected;
 
         BezierCurvePlacingTool = new BezierCurvePlacingToolViewModel(scheme) { Name = "Bezier curve placing tool" };
@@ -55,6 +55,9 @@ public class SchemeToolsViewModel : BindableBase
 
         AndGatePlacingTool = new ObjectPlacingToolViewModel<AndGateViewModel>(scheme, () => new AndGateViewModel(new AndGateModel())) { Name = "And gate placing tool" };
         AndGatePlacingTool.ToolSelected += OnToolSelected;
+
+        WirePlacingTool = new SegmentedObjectPlacingToolViewModel<WireViewModel>(scheme, () => new WireViewModel(new WireModel())) { Name = "Wire placing tool" };
+        WirePlacingTool.ToolSelected += OnToolSelected;
     }
 
     public SchemeSelectionToolViewModel DefaultTool => SelectionTool;
@@ -152,7 +155,7 @@ public class SchemeToolsViewModel : BindableBase
 
     #region LinePlacingTool
 
-    public LinePlacingToolViewModel LinePlacingTool { get; }
+    public SegmentedObjectPlacingToolViewModel<LineViewModel> LinePlacingTool { get; }
 
     #endregion
 
@@ -183,6 +186,12 @@ public class SchemeToolsViewModel : BindableBase
     #region AndGatePlacingTool
 
     public ObjectPlacingToolViewModel<AndGateViewModel> AndGatePlacingTool { get; }
+
+    #endregion
+
+    #region WirePlacingTool
+
+    public SegmentedObjectPlacingToolViewModel<WireViewModel> WirePlacingTool { get; }
 
     #endregion
 

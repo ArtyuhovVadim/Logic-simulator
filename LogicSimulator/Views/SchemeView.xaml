@@ -149,6 +149,12 @@
                         MouseLeftButtonDownCommand="{Binding Path=ToolsViewModel.AndGatePlacingTool.ActionCommand}"
                         MouseMoveCommand="{Binding Path=ToolsViewModel.AndGatePlacingTool.UpdateCommand}"
                         MouseRightButtonUpCommand="{Binding Path=ToolsViewModel.AndGatePlacingTool.RejectCommand}" />
+                    <tools:PlacingTool
+                        CancelCommand="{Binding Path=ToolsViewModel.WirePlacingTool.RejectCommand}"
+                        Context="{Binding Path=ToolsViewModel.WirePlacingTool}"
+                        MouseLeftButtonDownCommand="{Binding Path=ToolsViewModel.WirePlacingTool.ActionCommand}"
+                        MouseMoveCommand="{Binding Path=ToolsViewModel.WirePlacingTool.UpdateCommand}"
+                        MouseRightButtonUpCommand="{Binding Path=ToolsViewModel.WirePlacingTool.ApplyCommand}" />
                 </tools:ToolsController>
             </tools:ToolsController.Controller>
 
@@ -543,6 +549,13 @@
                         HorizontalAlignment="Center"
                         VerticalAlignment="Center"
                         Text="&amp;" />
+                </views:SchemeToolView>
+                <Separator />
+                <views:SchemeToolView DataContext="{Binding Path=WirePlacingTool}">
+                    <TextBlock
+                        HorizontalAlignment="Center"
+                        VerticalAlignment="Center"
+                        Text="W" />
                 </views:SchemeToolView>
             </StackPanel>
         </ClippingBorder>

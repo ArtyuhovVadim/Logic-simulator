@@ -7,7 +7,7 @@ using Color = System.Windows.Media.Color;
 
 namespace LogicSimulator.ViewModels.ObjectViewModels;
 
-public class WireViewModel : BaseObjectViewModel
+public class WireViewModel : BaseObjectViewModel, ISegmentedObject
 {
     public WireViewModel(WireModel model)
     {
