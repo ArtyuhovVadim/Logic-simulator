@@ -38,6 +38,7 @@ public class SchemeFileService : ISchemeFileService
             .WithTagMapping(new TagName("!InputGate"), typeof(InputGateModel))
             .WithTagMapping(new TagName("!OutputGate"), typeof(OutputGateModel))
             .WithTagMapping(new TagName("!AndGate"), typeof(AndGateModel))
+            .WithTagMapping(new TagName("!Wire"), typeof(WireModel))
             ;
 
         var deserializerBuilder = new DeserializerBuilder()
@@ -55,6 +56,7 @@ public class SchemeFileService : ISchemeFileService
             .WithTagMapping(new TagName("!InputGate"), typeof(InputGateModel))
             .WithTagMapping(new TagName("!OutputGate"), typeof(OutputGateModel))
             .WithTagMapping(new TagName("!AndGate"), typeof(AndGateModel))
+            .WithTagMapping(new TagName("!Wire"), typeof(WireModel))
             ;
 
         _serializer = serializerBuilder.Build();

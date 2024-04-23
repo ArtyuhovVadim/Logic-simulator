@@ -7,6 +7,8 @@ namespace LogicSimulator.Infrastructure.Selectors;
 
 public class SceneObjectTemplateSelector : DataTemplateSelector
 {
+    public DataTemplate WireDataTemplate { get; set; } = null!;
+
     public DataTemplate InputGateDataTemplate { get; set; } = null!;
     
     public DataTemplate OutputGateDataTemplate { get; set; } = null!;
@@ -31,6 +33,7 @@ public class SceneObjectTemplateSelector : DataTemplateSelector
 
     public override DataTemplate SelectTemplate(object? item, DependencyObject container) => item switch
     {
+        WireViewModel => WireDataTemplate,
         InputGateViewModel => InputGateDataTemplate,
         OutputGateViewModel => OutputGateDataTemplate,
         AndGateViewModel => AndGateDataTemplate,

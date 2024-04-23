@@ -94,6 +94,7 @@ public partial class App
                 factory.Register<InputGateModel>(model => new InputGateViewModel(model));
                 factory.Register<OutputGateModel>(model => new OutputGateViewModel(model));
                 factory.Register<AndGateModel>(model => new AndGateViewModel(model));
+                factory.Register<WireModel>(model => new WireViewModel(model));
                 return factory;
             });
     }
