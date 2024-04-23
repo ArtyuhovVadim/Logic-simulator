@@ -21,11 +21,13 @@ public class SchemeFileService : ISchemeFileService
         var vector2Converter = new Vector2YamlConverter();
         var color4Converter = new ColorYamlConverter();
         var versionConverter = new VersionYamlConverter();
+        var portModelConverter = new PortModelYamlConverter();
 
         var serializerBuilder = new SerializerBuilder()
             .WithTypeConverter(vector2Converter)
             .WithTypeConverter(color4Converter)
             .WithTypeConverter(versionConverter)
+            .WithTypeConverter(portModelConverter)
             .WithTagMapping(new TagName("!Rectangle"), typeof(RectangleModel))
             .WithTagMapping(new TagName("!RoundedRectangle"), typeof(RoundedRectangleModel))
             .WithTagMapping(new TagName("!Ellipse"), typeof(EllipseModel))
@@ -42,6 +44,7 @@ public class SchemeFileService : ISchemeFileService
             .WithTypeConverter(vector2Converter)
             .WithTypeConverter(color4Converter)
             .WithTypeConverter(versionConverter)
+            .WithTypeConverter(portModelConverter)
             .WithTagMapping(new TagName("!Rectangle"), typeof(RectangleModel))
             .WithTagMapping(new TagName("!RoundedRectangle"), typeof(RoundedRectangleModel))
             .WithTagMapping(new TagName("!Ellipse"), typeof(EllipseModel))
