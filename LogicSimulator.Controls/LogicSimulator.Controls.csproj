@@ -13,7 +13,7 @@
       <PackageReference Include="MathExpressionParser" Version="1.0.0" />
       <PackageReference Include="SharpDX" Version="4.2.0" />
       <PackageReference Include="SharpDX.Mathematics" Version="4.2.0" />
-      <PackageReference Include="WpfExtensions.Controls.DotNet" Version="1.0.0" />
+      <PackageReference Include="WpfExtensions.Controls.DotNet" Version="1.1.0" />
     </ItemGroup>
 
     <ItemGroup>

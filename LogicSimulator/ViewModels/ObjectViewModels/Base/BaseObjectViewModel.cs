@@ -61,35 +61,4 @@ public abstract class BaseObjectViewModel : BindableBase, ICloneable<BaseObjectV
     };
 
     public abstract BaseObjectViewModel MakeClone();
-
-    //TODO: Переместить в WpfExtensions
-    protected bool Set<TModel, T>(T oldValue, T newValue, TModel model, Action<TModel, T> callback, [CallerMemberName] string? propertyName = null) where TModel : class
-    {
-        ArgumentNullException.ThrowIfNull(model);
-        ArgumentNullException.ThrowIfNull(callback);
-
-        if (EqualityComparer<T>.Default.Equals(oldValue, newValue))
-            return false;
-
-        callback(model, newValue);
-        OnPropertyChanged(propertyName);
-
-        return true;
-    }
-
-    //TODO: Переместить в WpfExtensions
-    protected bool Set<TModel, T>(T oldValue, T newValue, IEqualityComparer<T> comparer, TModel model, Action<TModel, T> callback, [CallerMemberName] string? propertyName = null) where TModel : class
-    {
-        ArgumentNullException.ThrowIfNull(comparer);
-        ArgumentNullException.ThrowIfNull(model);
-        ArgumentNullException.ThrowIfNull(callback);
-
-        if (comparer.Equals(oldValue, newValue))
-            return false;
-
-        callback(model, newValue);
-        OnPropertyChanged(propertyName);
-
-        return true;
-    }
 }
