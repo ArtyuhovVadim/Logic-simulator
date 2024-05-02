@@ -19,7 +19,9 @@ public class InputPort : BasePort
         if (State == newState)
             return;
 
+        var oldState = State;
         State = newState;
+        simulator.OnPortStateChanged(this, oldState, newState);
 
         Parent.Invalidate(simulator);
     }

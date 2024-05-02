@@ -14,7 +14,7 @@ public abstract class BasePort
 
     public IEnumerable<Connection> Connections => ConnectionsInternal;
 
-    protected BaseGate Parent { get; }
+    public BaseGate Parent { get; }
 
     protected List<Connection> ConnectionsInternal { get; } = [];
 
