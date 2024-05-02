@@ -1,4 +1,5 @@
-﻿using LogicSimulator.Models;
+﻿using LogicSimulator.Infrastructure.Services;
+using LogicSimulator.Models;
 using LogicSimulator.ViewModels.ObjectViewModels.Gates.Base;
 using SharpDX;
 
@@ -16,6 +17,8 @@ public class InputGateViewModel : BaseGateViewModel
 
     public override InputGateModel Model { get; }
 
+    public override IEnumerable<PortViewModel> Ports => [OutputPort];
+
     #region OutputPort
 
     public PortViewModel OutputPort { get; }
@@ -23,6 +26,8 @@ public class InputGateViewModel : BaseGateViewModel
     #endregion
 
     public override InputGateViewModel MakeClone() => new(Model.MakeClone());
+
+    public override void AcceptSchemeBuilder(SchemeBuilderService builder) => builder.CreateLogicModelFrom(this);
 
     protected override void OnSizeChanged() => OutputPort.Location = new Vector2(Width / 2, 0);
 }

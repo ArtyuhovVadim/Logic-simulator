@@ -182,7 +182,6 @@ public abstract class SceneObjectView : DisposableFrameworkContentElement, ISele
         IsDirty = true;
     }
 
-    //TODO: Избавится от мирового трансформа
     public abstract bool HitTest(Vector2 pos, Matrix3x2 transform, float tolerance = 0.25f);
 
     public abstract GeometryRelation HitTest(Geometry inputGeometry, Matrix3x2 transform, float tolerance = 0.25f);

@@ -1,5 +1,8 @@
-﻿using LogicSimulator.Infrastructure;
+﻿using System.Diagnostics;
+using LogicSimulator.Core;
+using LogicSimulator.Infrastructure;
 using LogicSimulator.Infrastructure.Factories.Interfaces;
+using LogicSimulator.Infrastructure.Services;
 using LogicSimulator.Infrastructure.Services.Interfaces;
 using LogicSimulator.Models;
 using LogicSimulator.Models.Base;
@@ -14,6 +17,9 @@ namespace LogicSimulator.ViewModels.AnchorableViewModels;
 
 public class SchemeViewModel : DocumentViewModel, IModelBased<Scheme>, ICloseable
 {
+    private readonly Simulator _simulator = new();
+    private LogicScheme? _currentScheme;
+
     private readonly DockingViewModel _dockingViewModel;
     private readonly SchemeStatusViewModel _statusViewModel;
     private List<BaseObjectViewModel> _selectedObjects = [];
@@ -36,6 +42,14 @@ public class SchemeViewModel : DocumentViewModel, IModelBased<Scheme>, ICloseabl
 
         IconSource = new Uri("pack://application:,,,/Resources/Icons/scheme-icon16x16.png");
         base.Title = Model.FileInfo?.Name ?? throw new InvalidOperationException();
+
+        _simulator.PortStateChanged += (simulator, gate, port, oldState, newState) =>
+        {
+            if (_currentScheme is null)
+                return;
+
+            _currentScheme.GatesMap[gate].PortsMap[port].ViewModel.State = newState;
+        };
     }
 
     public event Action? Closed;
@@ -223,6 +237,46 @@ public class SchemeViewModel : DocumentViewModel, IModelBased<Scheme>, ICloseabl
             obj.RotateCounterclockwise();
         }
     }, () => ToolsViewModel.IsDefaultToolSelected);
+
+    #endregion
+
+    #region BuildSchemeCommand
+
+    private ICommand? _buildSchemeCommand;
+
+    public ICommand BuildSchemeCommand => _buildSchemeCommand ??= new LambdaCommand(() =>
+    {
+        try
+        {
+            var service = new SchemeBuilderService();
+            _currentScheme = service.BuildFromViewModels(Objects);
+        }
+        catch (Exception e)
+        {
+            Debug.WriteLine(e);
+        }
+    });
+
+    #endregion
+
+    #region SimulateCommand
+
+    private ICommand? _simulateCommand;
+
+    public ICommand SimulateCommand => _simulateCommand ??= new LambdaCommand(() =>
+    {
+        if (_currentScheme is null)
+            return;
+
+        try
+        {
+            _simulator.Simulate(_currentScheme.InputGates);
+        }
+        catch (Exception e)
+        {
+            Debug.WriteLine(e);
+        }
+    });
 
     #endregion
 

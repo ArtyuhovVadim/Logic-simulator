@@ -18,6 +18,8 @@ public abstract class SimpleGateViewModel : BaseGateViewModel
         _inputPorts.CollectionChanged += OnInputPortsCollectionChanged;
     }
 
+    public override IEnumerable<PortViewModel> Ports => [..InputPorts, OutputPort];
+
     #region OutputPort
 
     public PortViewModel OutputPort { get; }

@@ -1,6 +1,5 @@
 ﻿using LogicSimulator.Infrastructure;
 using SharpDX;
-using System.Runtime.CompilerServices;
 using LogicSimulator.Models.Base;
 using WpfExtensions.Mvvm;
 

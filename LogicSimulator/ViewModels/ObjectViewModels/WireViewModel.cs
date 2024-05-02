@@ -17,6 +17,8 @@ public class WireViewModel : BaseObjectViewModel, ISegmentedObject
 
     public override WireModel Model { get; }
 
+    public IEnumerable<Vector2> AbsoluteVertexes => [Location, .. Vertexes.Select(x => Location + x)];
+
     #region Vertexes
 
     private readonly SynchronizedObservableCollection<Vector2, Vector2> _vertexes;

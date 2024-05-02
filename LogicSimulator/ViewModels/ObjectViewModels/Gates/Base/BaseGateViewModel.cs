@@ -1,4 +1,5 @@
 ﻿using System.Windows.Media;
+using LogicSimulator.Infrastructure.Services;
 using LogicSimulator.Models.Base;
 using LogicSimulator.Scene;
 using LogicSimulator.ViewModels.ObjectViewModels.Base;
@@ -10,6 +11,8 @@ public abstract class BaseGateViewModel : BaseObjectViewModel
     public override BaseGateModel Model { get; }
 
     protected BaseGateViewModel(BaseGateModel model) => Model = model;
+
+    public abstract IEnumerable<PortViewModel> Ports { get; }
 
     #region Scale
 
@@ -112,6 +115,8 @@ public abstract class BaseGateViewModel : BaseObjectViewModel
     }
 
     #endregion
+
+    public abstract void AcceptSchemeBuilder(SchemeBuilderService builder);
 
     protected abstract void OnSizeChanged();
 }

@@ -46,6 +46,7 @@
                         Location="{Binding Path=Location}"
                         Rotation="{Binding Path=Rotation,
                                            Converter={StaticResource RotationToFloatConverter}}"
+                        State="{Binding Path=State}"
                         StrokeColor="{Binding Path=Parent.StrokeColor}"
                         StrokeThickness="{Binding Path=Parent.StrokeThickness}"
                         StrokeThicknessType="{Binding Path=Parent.StrokeThicknessType}" />
@@ -309,15 +310,6 @@
                                     Location="{Binding Path=Location}"
                                     Rotation="{Binding Path=Rotation,
                                                        Converter={StaticResource RotationToFloatConverter}}">
-                                    <sceneViews:GateView
-                                        Width="{Binding Path=Width}"
-                                        Height="{Binding Path=Height}"
-                                        FillColor="{Binding Path=FillColor}"
-                                        Geometry="M 0 0 L 25 0 L 40 15 L 25 30 L 0 30 Z"
-                                        SelectionPadding="10"
-                                        StrokeColor="{Binding Path=StrokeColor}"
-                                        StrokeThickness="{Binding Path=StrokeThickness}"
-                                        StrokeThicknessType="{Binding Path=StrokeThicknessType}" />
                                     <sceneViews:PortView
                                         IsSelected="{Binding Path=OutputPort.IsSelected}"
                                         Label="{Binding Path=OutputPort.Name}"
@@ -325,6 +317,16 @@
                                         Location="{Binding Path=OutputPort.Location}"
                                         Rotation="{Binding Path=OutputPort.Rotation,
                                                            Converter={StaticResource RotationToFloatConverter}}"
+                                        State="{Binding Path=OutputPort.State}"
+                                        StrokeColor="{Binding Path=StrokeColor}"
+                                        StrokeThickness="{Binding Path=StrokeThickness}"
+                                        StrokeThicknessType="{Binding Path=StrokeThicknessType}" />
+                                    <sceneViews:GateView
+                                        Width="{Binding Path=Width}"
+                                        Height="{Binding Path=Height}"
+                                        FillColor="{Binding Path=FillColor}"
+                                        Geometry="M 0 0 L 25 0 L 40 15 L 25 30 L 0 30 Z"
+                                        SelectionPadding="10"
                                         StrokeColor="{Binding Path=StrokeColor}"
                                         StrokeThickness="{Binding Path=StrokeThickness}"
                                         StrokeThicknessType="{Binding Path=StrokeThicknessType}" />
@@ -338,15 +340,6 @@
                                     Location="{Binding Path=Location}"
                                     Rotation="{Binding Path=Rotation,
                                                        Converter={StaticResource RotationToFloatConverter}}">
-                                    <sceneViews:GateView
-                                        Width="{Binding Path=Width}"
-                                        Height="{Binding Path=Height}"
-                                        FillColor="{Binding Path=FillColor}"
-                                        Geometry="M 40 30 L 15 30 L 0 15 L 15 0 L 40 0 Z"
-                                        SelectionPadding="10"
-                                        StrokeColor="{Binding Path=StrokeColor}"
-                                        StrokeThickness="{Binding Path=StrokeThickness}"
-                                        StrokeThicknessType="{Binding Path=StrokeThicknessType}" />
                                     <sceneViews:PortView
                                         IsSelected="{Binding Path=InputPort.IsSelected}"
                                         Label="{Binding Path=InputPort.Name}"
@@ -354,6 +347,16 @@
                                         Location="{Binding Path=InputPort.Location}"
                                         Rotation="{Binding Path=InputPort.Rotation,
                                                            Converter={StaticResource RotationToFloatConverter}}"
+                                        State="{Binding Path=InputPort.State}"
+                                        StrokeColor="{Binding Path=StrokeColor}"
+                                        StrokeThickness="{Binding Path=StrokeThickness}"
+                                        StrokeThicknessType="{Binding Path=StrokeThicknessType}" />
+                                    <sceneViews:GateView
+                                        Width="{Binding Path=Width}"
+                                        Height="{Binding Path=Height}"
+                                        FillColor="{Binding Path=FillColor}"
+                                        Geometry="M 40 30 L 15 30 L 0 15 L 15 0 L 40 0 Z"
+                                        SelectionPadding="10"
                                         StrokeColor="{Binding Path=StrokeColor}"
                                         StrokeThickness="{Binding Path=StrokeThickness}"
                                         StrokeThicknessType="{Binding Path=StrokeThicknessType}" />
@@ -368,15 +371,6 @@
                                     Rotation="{Binding Path=Rotation,
                                                        Converter={StaticResource RotationToFloatConverter}}">
                                     <sceneViews:ObjectsGroupView ItemTemplateSelector="{StaticResource PortViewTemplateSelector}" ItemsSource="{Binding Path=InputPorts}" />
-                                    <sceneViews:GateView
-                                        Width="{Binding Path=Width}"
-                                        Height="{Binding Path=Height}"
-                                        FillColor="{Binding Path=FillColor}"
-                                        Geometry="M 0 0 L 40 0 A 12.5 12.5 90 0 1 40 80 L 0 80 Z"
-                                        SelectionPadding="10"
-                                        StrokeColor="{Binding Path=StrokeColor}"
-                                        StrokeThickness="{Binding Path=StrokeThickness}"
-                                        StrokeThicknessType="{Binding Path=StrokeThicknessType}" />
                                     <sceneViews:PortView
                                         IsSelected="{Binding Path=OutputPort.IsSelected}"
                                         Label="{Binding Path=OutputPort.Name}"
@@ -384,6 +378,16 @@
                                         Location="{Binding Path=OutputPort.Location}"
                                         Rotation="{Binding Path=OutputPort.Rotation,
                                                            Converter={StaticResource RotationToFloatConverter}}"
+                                        State="{Binding Path=OutputPort.State}"
+                                        StrokeColor="{Binding Path=StrokeColor}"
+                                        StrokeThickness="{Binding Path=StrokeThickness}"
+                                        StrokeThicknessType="{Binding Path=StrokeThicknessType}" />
+                                    <sceneViews:GateView
+                                        Width="{Binding Path=Width}"
+                                        Height="{Binding Path=Height}"
+                                        FillColor="{Binding Path=FillColor}"
+                                        Geometry="M 0 0 L 40 0 A 12.5 12.5 90 0 1 40 80 L 0 80 Z"
+                                        SelectionPadding="10"
                                         StrokeColor="{Binding Path=StrokeColor}"
                                         StrokeThickness="{Binding Path=StrokeThickness}"
                                         StrokeThicknessType="{Binding Path=StrokeThicknessType}" />
@@ -453,7 +457,26 @@
                 <StackPanel.Resources>
                     <Style BasedOn="{StaticResource VerticalSeparator}" TargetType="{x:Type Separator}" />
                 </StackPanel.Resources>
-
+                <!--  TODO  -->
+                <Button
+                    Width="{Binding Path=ActualHeight,
+                                    RelativeSource={RelativeSource Self}}"
+                    Padding="7"
+                    Background="Transparent"
+                    BorderThickness="0"
+                    Command="{Binding Path=DataContext.SimulateCommand,
+                                      RelativeSource={RelativeSource AncestorType={x:Type UserControl}}}"
+                    Content="&gt;" />
+                <Button
+                    Width="{Binding Path=ActualHeight,
+                                    RelativeSource={RelativeSource Self}}"
+                    Padding="7"
+                    Background="Transparent"
+                    BorderThickness="0"
+                    Command="{Binding Path=DataContext.BuildSchemeCommand,
+                                      RelativeSource={RelativeSource AncestorType={x:Type UserControl}}}"
+                    Content="B" />
+                <Separator />
                 <views:SchemeToolView DataContext="{Binding Path=SelectionTool}">
                     <Path
                         Data="{StaticResource SelectionToolIcon}"

@@ -107,6 +107,19 @@ public class PortView : SceneObjectView, IStroked
 
     #endregion
 
+    #region State
+
+    public SignalType State
+    {
+        get => (SignalType)GetValue(StateProperty);
+        set => SetValue(StateProperty, value);
+    }
+
+    public static readonly DependencyProperty StateProperty =
+        DependencyProperty.Register(nameof(State), typeof(SignalType), typeof(PortView), new PropertyMetadata(SignalType.Undefined, DefaultPropertyChangedHandler));
+
+    #endregion
+
     public override bool HitTest(Vector2 pos, Matrix3x2 transform, float tolerance = 0.25f) =>
         Cache.Get<RectangleGeometry>(this, HitTestGeometryResource).StrokeContainsPoint(pos, this.GetStrokeThickness(), null, WorldTransformMatrix * transform, tolerance);
 
@@ -115,7 +128,9 @@ public class PortView : SceneObjectView, IStroked
 
     protected override void OnRender(Scene2D scene, D2DContext context)
     {
-        var brush = Cache.Get<SolidColorBrush>(this, StrokeBrushResource);
+        //TODO: Рисовать состояние порта только в режиме симуляции
+        //var brush = Cache.Get<SolidColorBrush>(this, StrokeBrushResource);
+        var brush = GetSignalBrush(State);
         var strokeThickness = this.GetStrokeThickness(scene);
         context.DrawingContext.DrawLine(Vector2.Zero, new Vector2(Length, 0), brush, strokeThickness, Cache.Get<StrokeStyle>(StrokeStyleResource));
     }
