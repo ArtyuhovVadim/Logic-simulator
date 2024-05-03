@@ -1,4 +1,5 @@
 ﻿using LogicSimulator.Infrastructure;
+using LogicSimulator.Infrastructure.ExtensionMethods;
 using LogicSimulator.Models;
 using LogicSimulator.Scene;
 using LogicSimulator.ViewModels.ObjectViewModels.Base;
@@ -17,7 +18,7 @@ public class WireViewModel : BaseObjectViewModel, ISegmentedObject
 
     public override WireModel Model { get; }
 
-    public IEnumerable<Vector2> AbsoluteVertexes => [Location, .. Vertexes.Select(x => Location + x)];
+    public IEnumerable<Vector2> AbsoluteVertexes => [Location, .. Vertexes.Select(x => Location + x.Transform(Rotation))];
 
     #region Vertexes
 
