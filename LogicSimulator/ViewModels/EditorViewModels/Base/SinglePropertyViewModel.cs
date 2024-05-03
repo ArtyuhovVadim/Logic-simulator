@@ -26,9 +26,9 @@ public abstract class SinglePropertyViewModel : PropertyViewModel
         }
     }
 
-    protected abstract object GetPropertyValue(IEnumerable<object> objects);
+    protected abstract object GetPropertyValue(IReadOnlyCollection<object> objects);
 
-    protected abstract void SetPropertyValue(IEnumerable<object> objects, object value);
+    protected abstract void SetPropertyValue(IReadOnlyCollection<object> objects, object value);
 
     protected TProperty GetValue<TProperty>(object obj) => (TProperty)GettersAndSettersCache.GetGetter(PropertyName, obj)(obj);
 

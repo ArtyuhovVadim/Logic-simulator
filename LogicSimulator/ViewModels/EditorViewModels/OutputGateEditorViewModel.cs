@@ -8,26 +8,21 @@ using LogicSimulator.ViewModels.ObjectViewModels.Gates;
 
 namespace LogicSimulator.ViewModels.EditorViewModels;
 
-[Editor(typeof(InputGateViewModel))]
-public class InputGateEditorViewModel : EditorViewModel
+[Editor(typeof(OutputGateViewModel))]
+public class OutputGateEditorViewModel : EditorViewModel
 {
     protected override EditorLayout CreateLayout() => LayoutBuilder
         .Create(this)
-        .WithName("Вход")
+        .WithName("Выход")
         .WithLocationRotationGroup()
-        .WithGroup(groupBuilder => groupBuilder
-            .WithGroupName("Свойства")
-            .WithRow(rowBuilder => rowBuilder
-                .WithRowName("Задержка")
-                .WithSingleProperty<NumberPropertyViewModel<ulong>>(nameof(InputGateViewModel.Delay))))
         .WithGroup(groupBuilder => groupBuilder
             .WithGroupName("Вид")
             .WithRow(rowBuilder => rowBuilder
                 .WithRowName("Масштаб")
-                .WithSingleProperty<NumberPropertyViewModel<float>>(nameof(InputGateViewModel.Scale)))
+                .WithSingleProperty<NumberPropertyViewModel<float>>(nameof(OutputGateViewModel.Scale)))
             .WithBorderRow()
             .WithRow(rowBuilder => rowBuilder
                 .WithRowName("Цвет заливки")
-                .WithSingleProperty<ColorPropertyViewModel>(nameof(InputGateViewModel.FillColor))))
+                .WithSingleProperty<ColorPropertyViewModel>(nameof(OutputGateViewModel.FillColor))))
         .Build();
 }

@@ -8,19 +8,19 @@ using LogicSimulator.ViewModels.ObjectViewModels;
 
 namespace LogicSimulator.ViewModels.EditorViewModels;
 
-[Editor(typeof(LineViewModel))]
-public class LineEditorViewModel : EditorViewModel
+[Editor(typeof(WireViewModel))]
+public class WireEditorViewModel : EditorViewModel
 {
     protected override EditorLayout CreateLayout() => LayoutBuilder
         .Create(this)
-        .WithName("Ломаная линия")
+        .WithName("Провод")
         .WithLocationRotationGroup()
-         .WithGroup(groupBuilder => groupBuilder
-             .WithGroupName("Вершины")
-             .WithRow(rowBuilder => rowBuilder
-                 .WithSingleProperty<VerticesPropertyViewModel>(nameof(LineViewModel.Vertexes))))
         .WithGroup(groupBuilder => groupBuilder
-            .WithGroupName("Свойства")
+            .WithGroupName("Вершины")
+            .WithRow(rowBuilder => rowBuilder
+                .WithSingleProperty<VerticesPropertyViewModel>(nameof(WireViewModel.Vertexes))))
+        .WithGroup(groupBuilder => groupBuilder
+            .WithGroupName("Вид")
             .WithBorderRow())
         .Build();
 }

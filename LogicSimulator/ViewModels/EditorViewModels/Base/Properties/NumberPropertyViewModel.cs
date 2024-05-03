@@ -1,31 +1,18 @@
 ﻿using System.Globalization;
+using System.Numerics;
 using LogicSimulator.Utils;
-using MathExpressionParser;
 
 namespace LogicSimulator.ViewModels.EditorViewModels.Base.Properties;
 
-public class FloatPropertyViewModel : SinglePropertyViewModel
+public class NumberPropertyViewModel<T> : BaseNumberPropertyViewModel where T : INumber<T>, IMinMaxValue<T>
 {
-    private static readonly MathParser Parser = MathParserBuilder.BuildDefaultParser();
     private string _invalidValue = string.Empty;
-
-    #region IsValueUndefined
-
-    private bool _isValueUndefined;
-
-    public bool IsValueUndefined
-    {
-        get => _isValueUndefined;
-        set => Set(ref _isValueUndefined, value);
-    }
-
-    #endregion
 
     #region MaxNumber
 
-    private double _maxNumber = double.MaxValue;
+    private T _maxNumber = T.MaxValue;
 
-    public double MaxNumber
+    public T MaxNumber
     {
         get => _maxNumber;
         set => Set(ref _maxNumber, value);
@@ -35,9 +22,9 @@ public class FloatPropertyViewModel : SinglePropertyViewModel
 
     #region MinNumber
 
-    private double _minNumber = double.MinValue;
+    private T _minNumber = T.MinValue;
 
-    public double MinNumber
+    public T MinNumber
     {
         get => _minNumber;
         set => Set(ref _minNumber, value);
@@ -59,9 +46,9 @@ public class FloatPropertyViewModel : SinglePropertyViewModel
 
     #region DisplayCoefficient
 
-    private double _displayCoefficient = 1f;
+    private T _displayCoefficient = T.One;
 
-    public double DisplayCoefficient
+    public T DisplayCoefficient
     {
         get => _displayCoefficient;
         set => Set(ref _displayCoefficient, value);
@@ -69,31 +56,32 @@ public class FloatPropertyViewModel : SinglePropertyViewModel
 
     #endregion
 
-    protected override object GetPropertyValue(IEnumerable<object> objects)
+    protected override object GetPropertyValue(IReadOnlyCollection<object> objects)
     {
         if (HasErrors)
             return _invalidValue;
 
         var firstObj = objects.First();
+        var firstObjValue = GetValue<T>(firstObj);
 
-        IsValueUndefined = objects.Any(o => !Equals(GetValue<float>(o), GetValue<float>(firstObj)));
+        IsValueUndefined = objects.Any(o => GetValue<T>(o) != GetValue<T>(firstObj));
 
         if (NumberSuffix.Length != 0)
-            return string.Format(CultureInfo.InvariantCulture, "{0:0.###}{1}", GetValue<float>(firstObj) / DisplayCoefficient, NumberSuffix);
+            return string.Format(CultureInfo.InvariantCulture, "{0:0.###}{1}", firstObjValue / DisplayCoefficient, NumberSuffix);
 
-        return GetValue<float>(firstObj);
+        return GetValue<T>(firstObj);
     }
 
-    protected override void SetPropertyValue(IEnumerable<object> objects, object value)
+    protected override void SetPropertyValue(IReadOnlyCollection<object> objects, object value)
     {
         ClearAllErrors();
 
         var originalExpr = (string)value;
         var exprWithoutSuffix = originalExpr;
 
-        if (NumberSuffix.Length != 0 && originalExpr.EndsWith(NumberSuffix))
+        if (NumberSuffix.Length != 0)
         {
-            exprWithoutSuffix = originalExpr[..^NumberSuffix.Length];
+            exprWithoutSuffix = originalExpr.Replace(NumberSuffix, string.Empty);
         }
 
         if (!Parser.TryParse(exprWithoutSuffix, out var number, out var e))
@@ -103,7 +91,9 @@ public class FloatPropertyViewModel : SinglePropertyViewModel
             return;
         }
 
-        if (number > MaxNumber || number < MinNumber)
+        var numberT = T.CreateSaturating(number) * DisplayCoefficient;
+
+        if (numberT > MaxNumber || numberT < MinNumber)
         {
             _invalidValue = originalExpr;
             AddError($"Число должно находиться в интервале [{MinNumber}, {MaxNumber}]", nameof(Value));
@@ -112,17 +102,15 @@ public class FloatPropertyViewModel : SinglePropertyViewModel
 
         IsValueUndefined = false;
 
-        var newValue = (float)(number * DisplayCoefficient);
-
         foreach (var obj in objects)
         {
-            SetValue(obj, newValue);
+            SetValue(obj, numberT);
         }
     }
 
     protected override void OnEndEdit(IEnumerable<object> objects) => ClearAllErrors();
 
-    public override PropertyViewModel MakeCopy(EditorViewModel editor) => new FloatPropertyViewModel
+    public override PropertyViewModel MakeCopy(EditorViewModel editor) => new NumberPropertyViewModel<T>
     {
         PropertyName = PropertyName,
         EditorViewModel = editor,

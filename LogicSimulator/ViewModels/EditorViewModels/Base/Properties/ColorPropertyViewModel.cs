@@ -16,16 +16,16 @@ public class ColorPropertyViewModel : SinglePropertyViewModel
 
     #endregion  
 
-    protected override object GetPropertyValue(IEnumerable<object> objects)
+    protected override object GetPropertyValue(IReadOnlyCollection<object> objects)
     {
-        var firstObj = objects.First();
+        var firstObjValue = GetValue<Color>(objects.First());
 
-        IsValueUndefined = objects.Any(o => !Equals(GetValue<Color>(o), GetValue<Color>(firstObj)));
+        IsValueUndefined = objects.Any(o => !Equals(GetValue<Color>(o), firstObjValue));
 
-        return GetValue<Color>(firstObj);
+        return firstObjValue;
     }
 
-    protected override void SetPropertyValue(IEnumerable<object> objects, object value)
+    protected override void SetPropertyValue(IReadOnlyCollection<object> objects, object value)
     {
         IsValueUndefined = false;
 

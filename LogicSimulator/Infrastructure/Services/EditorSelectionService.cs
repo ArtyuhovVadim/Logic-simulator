@@ -51,8 +51,15 @@ public class EditorSelectionService : IEditorSelectionService
 
         if (!EditorsMap.TryGetValue(firstObjectType, out var editor))
         {
-            SetEmptyEditor();
-            return;
+            if (EditorsMap.Keys.FirstOrDefault(firstObjectType.IsSubclassOf) is { } subType)
+            {
+                editor = EditorsMap[subType];
+            }
+            else
+            {
+                SetEmptyEditor();
+                return;
+            }
         }
 
         _propertiesViewModel.CurrentEditorViewModel?.StopObjectsEdit();

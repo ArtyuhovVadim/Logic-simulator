@@ -58,9 +58,9 @@ public class VerticesPropertyViewModel : SinglePropertyViewModel
         SelectedVertexIndex = vertexes.Count - 1;
     }
 
-    protected override object GetPropertyValue(IEnumerable<object> objects)
+    protected override object GetPropertyValue(IReadOnlyCollection<object> objects)
     {
-        if (objects.Count() > 1)
+        if (objects.Count > 1)
             return null!;
 
         var vertexes = GetValue<ObservableCollection<Vector2>>(_firstObject);
@@ -70,7 +70,7 @@ public class VerticesPropertyViewModel : SinglePropertyViewModel
         return _vertexes;
     }
 
-    protected override void SetPropertyValue(IEnumerable<object> objects, object value) { }
+    protected override void SetPropertyValue(IReadOnlyCollection<object> objects, object value) => throw new NotSupportedException();
 
     protected override void OnEndEdit(IEnumerable<object> objects)
     {

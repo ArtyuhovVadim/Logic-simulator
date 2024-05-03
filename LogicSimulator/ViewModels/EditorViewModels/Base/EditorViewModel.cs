@@ -10,11 +10,11 @@ public abstract class EditorViewModel : BindableBase
 {
     private EditorLayout? _layout;
 
-    private IEnumerable<INotifyPropertyChanged>? _objectsToEdit;
+    private IReadOnlyCollection<INotifyPropertyChanged>? _objectsToEdit;
 
     public EditorLayout Layout => _layout ??= CreateLayout();
 
-    public IEnumerable<object> Objects => _objectsToEdit!;
+    public IReadOnlyCollection<object> Objects => _objectsToEdit!;
 
     public void SetObjectsToEdit<T>(ICollection<T> objects) where T : class, INotifyPropertyChanged
     {
@@ -63,26 +63,26 @@ public abstract class EditorViewModel : BindableBase
 
     protected abstract EditorLayout CreateLayout();
 
-    protected static void ConfigureAsPositionVector(Vector2PropertyViewModel prop)
+    public static void ConfigureAsPositionVector(Vector2PropertyViewModel prop)
     {
         prop.NumberSuffix = Constants.MillimetreSuffix;
         prop.DisplayCoefficient = Constants.MillimetreToPixelFactor;
     }
 
-    protected static void ConfigureAsSizeNumber(FloatPropertyViewModel prop)
+    public static void ConfigureAsSizeNumber(NumberPropertyViewModel<float> prop)
     {
         prop.MinNumber = 1;
         prop.NumberSuffix = Constants.MillimetreSuffix;
-        prop.DisplayCoefficient = Constants.MillimetreToPixelFactor;
+        prop.DisplayCoefficient = (float)Constants.MillimetreToPixelFactor;
     }
 
-    protected static void ConfigureAsFontSizeNumber(FloatPropertyViewModel prop)
+    public static void ConfigureAsFontSizeNumber(NumberPropertyViewModel<float> prop)
     {
         prop.MinNumber = 6;
         prop.NumberSuffix = Constants.PixelSuffix;
     }
 
-    protected static void ConfigureAsAngleNumber(FloatPropertyViewModel prop)
+    public static void ConfigureAsAngleNumber(NumberPropertyViewModel<float> prop)
     {
         prop.NumberSuffix = Constants.AngleSuffix;
     }

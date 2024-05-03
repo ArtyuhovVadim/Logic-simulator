@@ -14,16 +14,16 @@ public class FontNamePropertyViewModel : SinglePropertyViewModel
 
     #endregion
 
-    protected override string GetPropertyValue(IEnumerable<object> objects)
+    protected override object GetPropertyValue(IReadOnlyCollection<object> objects)
     {
-        var firstObj = objects.First();
+        var firstObjValue = GetValue<string>(objects.First());
 
-        IsValueUndefined = objects.Any(o => !Equals(GetValue<string>(o), GetValue<string>(firstObj)));
+        IsValueUndefined = objects.Any(o => !Equals(GetValue<string>(o), firstObjValue));
 
-        return GetValue<string>(firstObj);
+        return firstObjValue;
     }
 
-    protected override void SetPropertyValue(IEnumerable<object> objects, object value)
+    protected override void SetPropertyValue(IReadOnlyCollection<object> objects, object value)
     {
         IsValueUndefined = false;
 

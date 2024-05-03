@@ -17,7 +17,7 @@
     mc:Ignorable="d">
 
     <UserControl.Resources>
-        <DataTemplate DataType="{x:Type properties:FloatPropertyViewModel}">
+        <DataTemplate DataType="{x:Type properties:BaseNumberPropertyViewModel}">
             <AdornedControl
                 x:Name="AdornedControl"
                 Margin="0,0,6,0"
