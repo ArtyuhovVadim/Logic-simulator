@@ -18,6 +18,9 @@ public class InputGateEditorViewModel : EditorViewModel
         .WithGroup(groupBuilder => groupBuilder
             .WithGroupName("Свойства")
             .WithRow(rowBuilder => rowBuilder
+                .WithRowName("Имя")
+                .WithSingleProperty<StringPropertyViewModel>(nameof(InputGateViewModel.Name)))
+            .WithRow(rowBuilder => rowBuilder
                 .WithRowName("Задержка")
                 .WithSingleProperty<NumberPropertyViewModel<ulong>>(nameof(InputGateViewModel.Delay))))
         .WithGroup(groupBuilder => groupBuilder

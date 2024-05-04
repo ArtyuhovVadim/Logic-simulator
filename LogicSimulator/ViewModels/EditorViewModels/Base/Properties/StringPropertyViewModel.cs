@@ -2,6 +2,8 @@
 
 public class StringPropertyViewModel : SinglePropertyViewModel
 {
+    public bool IsMultiline { get; set; } = false;
+
     #region IsValueUndefined
 
     private bool _isValueUndefined;

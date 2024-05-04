@@ -5,6 +5,8 @@ namespace LogicSimulator.Models.Base;
 
 public abstract class BaseGateModel : BaseObjectModel
 {
+    public string Name { get; set; } = string.Empty;
+
     public Color FillColor { get; set; } = Colors.White;
 
     public Color StrokeColor { get; set; } = Colors.Black;

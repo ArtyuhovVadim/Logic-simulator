@@ -19,7 +19,7 @@ public class TextBlockEditorViewModel : EditorViewModel
             .WithGroupName("Свойства")
             .WithRow(rowBuilder => rowBuilder
                 .WithRowName("Текст")
-                .WithSingleProperty<StringPropertyViewModel>(nameof(TextBlockViewModel.Text)))
+                .WithSingleProperty<StringPropertyViewModel>(nameof(TextBlockViewModel.Text), prop => prop.IsMultiline = true))
             .WithRow(rowBuilder => rowBuilder
                 .WithRowName("Шрифт")
                 .WithSingleProperty<FontNamePropertyViewModel>(nameof(TextBlockViewModel.FontName))

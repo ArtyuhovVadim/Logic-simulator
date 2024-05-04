@@ -18,6 +18,9 @@ public class AndGateEditorViewModel : EditorViewModel
         .WithGroup(groupBuilder => groupBuilder
             .WithGroupName("Свойства")
             .WithRow(rowBuilder => rowBuilder
+                .WithRowName("Имя")
+                .WithSingleProperty<StringPropertyViewModel>(nameof(AndGateViewModel.Name)))
+            .WithRow(rowBuilder => rowBuilder
                 .WithRowName("Задержка")
                 .WithSingleProperty<NumberPropertyViewModel<ulong>>(nameof(AndGateViewModel.Delay)))
             .WithRow(rowBuilder => rowBuilder

@@ -209,16 +209,18 @@
                 </AdornedControl.AdornerContent>
                 <TextBoxEx
                     x:Name="TextBoxEx"
-                    VerticalContentAlignment="Top"
-                    AcceptsReturn="True"
                     HorizontalScrollBarVisibility="Auto"
-                    MaxLines="8"
-                    MinLines="8"
                     SelectAllTextOnFocus="False"
                     Text="{Binding Path=Value}"
                     VerticalScrollBarVisibility="Auto" />
             </AdornedControl>
             <DataTemplate.Triggers>
+                <DataTrigger Binding="{Binding Path=IsMultiline}" Value="True">
+                    <Setter TargetName="TextBoxEx" Property="VerticalContentAlignment" Value="Top" />
+                    <Setter TargetName="TextBoxEx" Property="AcceptsReturn" Value="True" />
+                    <Setter TargetName="TextBoxEx" Property="MaxLines" Value="8" />
+                    <Setter TargetName="TextBoxEx" Property="MinLines" Value="8" />
+                </DataTrigger>
                 <Trigger SourceName="TextBoxEx" Property="IsFocused" Value="True">
                     <Setter TargetName="AdornedControl" Property="IsAdornerVisible" Value="False" />
                 </Trigger>

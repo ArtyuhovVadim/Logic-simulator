@@ -14,6 +14,16 @@ public abstract class BaseGateViewModel : BaseObjectViewModel
 
     public abstract IEnumerable<PortViewModel> Ports { get; }
 
+    #region Name
+
+    public string Name
+    {
+        get => Model.Name;
+        set => Set(Model.Name, value, Model, (model, value) => model.Name = value);
+    }
+
+    #endregion
+
     #region Scale
 
     public float Scale

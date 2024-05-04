@@ -16,6 +16,11 @@ public class OutputGateEditorViewModel : EditorViewModel
         .WithName("Выход")
         .WithLocationRotationGroup()
         .WithGroup(groupBuilder => groupBuilder
+            .WithGroupName("Свойства")
+            .WithRow(rowBuilder => rowBuilder
+                .WithRowName("Имя")
+                .WithSingleProperty<StringPropertyViewModel>(nameof(OutputGateViewModel.Name))))
+        .WithGroup(groupBuilder => groupBuilder
             .WithGroupName("Вид")
             .WithRow(rowBuilder => rowBuilder
                 .WithRowName("Масштаб")
