@@ -18,11 +18,43 @@ public abstract class SimpleGateViewModel : BaseGateViewModel
         _inputPorts.CollectionChanged += OnInputPortsCollectionChanged;
     }
 
-    public override IEnumerable<PortViewModel> Ports => [..InputPorts, OutputPort];
+    public override IEnumerable<PortViewModel> Ports => [.. InputPorts, OutputPort];
 
     #region OutputPort
 
     public PortViewModel OutputPort { get; }
+
+    #endregion
+
+    #region InputPortsCount
+
+    public int InputPortsCount
+    {
+        get => _inputPorts.Count;
+        set
+        {
+            ArgumentOutOfRangeException.ThrowIfLessThan(value, 2);
+            var tmp = InputPortsCount;
+            if (InputPortsCount != value)
+            {
+                if (value > tmp)
+                {
+                    for (var i = 0; i < value - tmp; i++)
+                    {
+                        _inputPorts.Add(new PortModel());
+                    }
+                }
+                else
+                {
+                    for (var i = 0; i < tmp - value; i++)
+                    {
+                        _inputPorts.RemoveAt(_inputPorts.Count - 1);
+                    }
+                }
+                OnPropertyChanged();
+            }
+        }
+    }
 
     #endregion
 

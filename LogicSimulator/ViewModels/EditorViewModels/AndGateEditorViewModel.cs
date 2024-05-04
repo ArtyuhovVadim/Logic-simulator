@@ -19,7 +19,11 @@ public class AndGateEditorViewModel : EditorViewModel
             .WithGroupName("Свойства")
             .WithRow(rowBuilder => rowBuilder
                 .WithRowName("Задержка")
-                .WithSingleProperty<NumberPropertyViewModel<ulong>>(nameof(AndGateViewModel.Delay))))
+                .WithSingleProperty<NumberPropertyViewModel<ulong>>(nameof(AndGateViewModel.Delay)))
+            .WithRow(rowBuilder => rowBuilder
+                .WithRowName("Кол-во входов")
+                //TODO: Ограничить максимальное число
+                .WithSingleProperty<NumberPropertyViewModel<int>>(nameof(AndGateViewModel.InputPortsCount), prop => prop.MinNumber = 2)))
         .WithGroup(groupBuilder => groupBuilder
             .WithGroupName("Вид")
             .WithRow(rowBuilder => rowBuilder

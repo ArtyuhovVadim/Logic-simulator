@@ -6,12 +6,14 @@ namespace LogicSimulator.Infrastructure;
 public class SynchronizedObservableCollection<TSourceItem, TRecipientItem> : ObservableCollection<TSourceItem>
 {
     private readonly IList<TRecipientItem> _collectionToSynchronize;
+    private readonly Func<TRecipientItem, TSourceItem> _recipientToSourceItem;
     private readonly Func<TSourceItem, TRecipientItem> _sourceToRecipientItem;
     private readonly bool _suppressCollectionChanged;
 
     public SynchronizedObservableCollection(IList<TRecipientItem> collectionToSynchronize, Func<TRecipientItem, TSourceItem> recipientToSourceItem, Func<TSourceItem, TRecipientItem> sourceToRecipientItem)
     {
         _collectionToSynchronize = collectionToSynchronize;
+        _recipientToSourceItem = recipientToSourceItem;
         _sourceToRecipientItem = sourceToRecipientItem;
 
         _suppressCollectionChanged = true;
@@ -19,6 +21,8 @@ public class SynchronizedObservableCollection<TSourceItem, TRecipientItem> : Obs
             Add(recipientToSourceItem(model));
         _suppressCollectionChanged = false;
     }
+
+    public void Add(TRecipientItem item) => Add(_recipientToSourceItem(item));
 
     protected override void OnCollectionChanged(NotifyCollectionChangedEventArgs args)
     {
