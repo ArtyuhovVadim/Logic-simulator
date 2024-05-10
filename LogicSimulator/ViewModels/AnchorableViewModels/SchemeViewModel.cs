@@ -17,13 +17,15 @@ namespace LogicSimulator.ViewModels.AnchorableViewModels;
 
 public class SchemeViewModel : DocumentViewModel, IModelBased<Scheme>, ICloseable
 {
-    private readonly Simulator _simulator = new();
-    private LogicScheme? _currentScheme;
-
     private readonly DockingViewModel _dockingViewModel;
     private readonly SchemeStatusViewModel _statusViewModel;
     private List<BaseObjectViewModel> _selectedObjects = [];
     private readonly IEditorSelectionService _editorSelectionService;
+
+    //TODO: Перенести в DI
+    private readonly SchemeBuilderService _schemeBuilderService = new();
+    private readonly SchemeSimulatorService _schemeSimulatorService = new();
+    private LogicScheme? _currentScheme;
 
     public SchemeViewModel(Scheme scheme,
                            DockingViewModel dockingViewModel,
@@ -42,14 +44,6 @@ public class SchemeViewModel : DocumentViewModel, IModelBased<Scheme>, ICloseabl
 
         IconSource = new Uri("pack://application:,,,/Resources/Icons/scheme-icon16x16.png");
         base.Title = Model.FileInfo?.Name ?? throw new InvalidOperationException();
-
-        _simulator.PortStateChanged += (simulator, gate, port, oldState, newState) =>
-        {
-            if (_currentScheme is null)
-                return;
-
-            _currentScheme.GatesMap[gate].PortsMap[port].ViewModel.State = newState;
-        };
     }
 
     public event Action? Closed;
@@ -240,43 +234,92 @@ public class SchemeViewModel : DocumentViewModel, IModelBased<Scheme>, ICloseabl
 
     #endregion
 
-    #region BuildSchemeCommand
+    #region StartSimulationCommand
 
-    private ICommand? _buildSchemeCommand;
+    private ICommand? _startSimulationCommand;
 
-    public ICommand BuildSchemeCommand => _buildSchemeCommand ??= new LambdaCommand(() =>
+    public ICommand StartSimulationCommand => _startSimulationCommand ??= new LambdaCommand(() =>
     {
         try
         {
-            var service = new SchemeBuilderService();
-            _currentScheme = service.BuildFromViewModels(Objects);
+            if (_schemeSimulatorService.State is SimulationState.Stopped)
+            {
+                _currentScheme = _schemeBuilderService.BuildFromViewModels(Objects);
+
+                //TODO: Test
+                foreach (var gate in _currentScheme.InputGates)
+                    gate.State = SignalType.High;
+                _currentScheme.InputGates.First().State = SignalType.Low;
+
+                _schemeSimulatorService.StartSimulation(_currentScheme, new SimulatorSettings { IsPauseSupported = true, StepByStepOnStart = true });
+            }
+            else
+            {
+                _schemeSimulatorService.ResumeSimulation();
+            }
         }
         catch (Exception e)
         {
+            _schemeSimulatorService.StopSimulation();
             Debug.WriteLine(e);
         }
-    });
+    }, () => _schemeSimulatorService.CanStart || _schemeSimulatorService.CanResume);
 
     #endregion
 
-    #region SimulateCommand
+    #region PauseSimulationCommand
 
-    private ICommand? _simulateCommand;
+    private ICommand? _pauseSimulationCommand;
 
-    public ICommand SimulateCommand => _simulateCommand ??= new LambdaCommand(() =>
+    public ICommand PauseSimulationCommand => _pauseSimulationCommand ??= new LambdaCommand(() =>
     {
-        if (_currentScheme is null)
-            return;
-
         try
         {
-            _simulator.Simulate(_currentScheme.InputGates);
+            _schemeSimulatorService.PauseSimulation();
+        }
+        catch (Exception e)
+        {
+            _schemeSimulatorService.StopSimulation();
+            Debug.WriteLine(e);
+        }
+    }, () => _schemeSimulatorService.CanPause);
+
+    #endregion
+
+    #region NextSimulationStepCommand
+
+    private ICommand? _nextSimulationStepCommand;
+
+    public ICommand NextSimulationStepCommand => _nextSimulationStepCommand ??= new LambdaCommand(() =>
+    {
+        try
+        {
+            _schemeSimulatorService.SimulateNextStep();
+        }
+        catch (Exception e)
+        {
+            _schemeSimulatorService.StopSimulation();
+            Debug.WriteLine(e);
+        }
+    }, () => _schemeSimulatorService.State is SimulationState.Paused);
+
+    #endregion
+
+    #region StopSimulationCommandCommand
+
+    private ICommand? _stopSimulationCommandCommand;
+
+    public ICommand StopSimulationCommandCommand => _stopSimulationCommandCommand ??= new LambdaCommand(() =>
+    {
+        try
+        {
+            _schemeSimulatorService.StopSimulation();
         }
         catch (Exception e)
         {
             Debug.WriteLine(e);
         }
-    });
+    }, () => _schemeSimulatorService.CanStop);
 
     #endregion
 

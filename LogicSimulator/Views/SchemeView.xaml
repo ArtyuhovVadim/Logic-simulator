@@ -443,144 +443,181 @@
             </layers:RectangleSelectionLayer>
         </scene:Scene2D>
 
-        <ClippingBorder
+        <StackPanelEx
             Height="28"
             Margin="5"
             HorizontalAlignment="Center"
             VerticalAlignment="Top"
-            Background="{DynamicResource {x:Static brushes:BrushesKeys+SchemeView.ToolsPanelBackground}}"
-            CornerRadius="5"
-            RenderOptions.EdgeMode="Unspecified"
-            SnapsToDevicePixels="True"
-            UseLayoutRounding="True">
-            <StackPanel DataContext="{Binding Path=ToolsViewModel}" Orientation="Horizontal">
-                <StackPanel.Resources>
-                    <Style BasedOn="{StaticResource VerticalSeparator}" TargetType="{x:Type Separator}" />
-                </StackPanel.Resources>
-                <!--  TODO  -->
-                <Button
-                    Width="{Binding Path=ActualHeight,
-                                    RelativeSource={RelativeSource Self}}"
-                    Padding="7"
-                    Background="Transparent"
-                    BorderThickness="0"
-                    Command="{Binding Path=DataContext.SimulateCommand,
-                                      RelativeSource={RelativeSource AncestorType={x:Type UserControl}}}"
-                    Content="&gt;" />
-                <Button
-                    Width="{Binding Path=ActualHeight,
-                                    RelativeSource={RelativeSource Self}}"
-                    Padding="7"
-                    Background="Transparent"
-                    BorderThickness="0"
-                    Command="{Binding Path=DataContext.BuildSchemeCommand,
-                                      RelativeSource={RelativeSource AncestorType={x:Type UserControl}}}"
-                    Content="B" />
-                <Separator />
-                <views:SchemeToolView DataContext="{Binding Path=SelectionTool}">
-                    <Path
-                        Data="{StaticResource SelectionToolIcon}"
-                        Fill="{DynamicResource {x:Static brushes:BrushesKeys+SchemeView.ToolIconBrush}}"
-                        Stretch="Uniform" />
-                </views:SchemeToolView>
-                <views:SchemeToolView DataContext="{Binding Path=DragTool}">
-                    <Path
-                        Margin="-1"
-                        Data="{StaticResource DragToolIcon}"
-                        Fill="{DynamicResource {x:Static brushes:BrushesKeys+SchemeView.ToolIconBrush}}"
-                        Stretch="Uniform" />
-                </views:SchemeToolView>
-                <views:SchemeToolView DataContext="{Binding Path=RectangleSelectionTool}">
-                    <Path
-                        Data="{StaticResource RectangleSelectionToolIcon}"
-                        Fill="{DynamicResource {x:Static brushes:BrushesKeys+SchemeView.ToolIconBrush}}"
-                        Stretch="Uniform" />
-                </views:SchemeToolView>
-                <views:SchemeToolView DataContext="{Binding Path=NodeDragTool}">
-                    <Path
-                        Margin="-1"
-                        Data="{StaticResource NodeDragToolIcon}"
-                        Fill="{DynamicResource {x:Static brushes:BrushesKeys+SchemeView.ToolIconBrush}}"
-                        Stretch="Uniform" />
-                </views:SchemeToolView>
-                <Separator />
-                <views:SchemeToolView DataContext="{Binding Path=RectanglePlacingTool}">
-                    <Rectangle Fill="{DynamicResource {x:Static brushes:BrushesKeys+SchemeView.ToolIconBrush}}" Stretch="Uniform" />
-                </views:SchemeToolView>
-                <views:SchemeToolView DataContext="{Binding Path=RoundedRectanglePlacingTool}">
-                    <Rectangle
-                        Fill="{DynamicResource {x:Static brushes:BrushesKeys+SchemeView.ToolIconBrush}}"
-                        RadiusX="4"
-                        RadiusY="4"
-                        Stretch="Uniform" />
-                </views:SchemeToolView>
-                <views:SchemeToolView DataContext="{Binding Path=EllipsePlacingTool}">
-                    <Ellipse
-                        Margin="0,2"
-                        Fill="{DynamicResource {x:Static brushes:BrushesKeys+SchemeView.ToolIconBrush}}"
-                        Stretch="Fill" />
-                </views:SchemeToolView>
-                <views:SchemeToolView DataContext="{Binding Path=ArcPlacingTool}">
-                    <Path
-                        Data="{StaticResource ArcPlacingToolIcon}"
-                        Stretch="Uniform"
-                        Stroke="{DynamicResource {x:Static brushes:BrushesKeys+SchemeView.ToolIconBrush}}"
-                        StrokeEndLineCap="Round"
-                        StrokeStartLineCap="Round"
-                        StrokeThickness="2" />
-                </views:SchemeToolView>
-                <views:SchemeToolView DataContext="{Binding Path=LinePlacingTool}">
-                    <Path
-                        Data="{StaticResource LinePlacingToolIcon}"
-                        Stretch="Uniform"
-                        Stroke="{DynamicResource {x:Static brushes:BrushesKeys+SchemeView.ToolIconBrush}}"
-                        StrokeEndLineCap="Round"
-                        StrokeStartLineCap="Round"
-                        StrokeThickness="2" />
-                </views:SchemeToolView>
-                <views:SchemeToolView DataContext="{Binding Path=BezierCurvePlacingTool}">
-                    <Path
-                        Data="{StaticResource BezierCurvePlacingToolIcon}"
-                        Stretch="Uniform"
-                        Stroke="{DynamicResource {x:Static brushes:BrushesKeys+SchemeView.ToolIconBrush}}"
-                        StrokeEndLineCap="Round"
-                        StrokeStartLineCap="Round"
-                        StrokeThickness="2" />
-                </views:SchemeToolView>
-                <views:SchemeToolView DataContext="{Binding Path=TextPlacingTool}">
-                    <Path
-                        Data="{StaticResource TextPlacingToolIcon}"
-                        Fill="{DynamicResource {x:Static brushes:BrushesKeys+SchemeView.ToolIconBrush}}"
-                        Stretch="Uniform" />
-                </views:SchemeToolView>
-                <Separator />
-                <views:SchemeToolView DataContext="{Binding Path=InputGatePlacingTool}">
-                    <TextBlock
-                        HorizontalAlignment="Center"
-                        VerticalAlignment="Center"
-                        Text="I" />
-                </views:SchemeToolView>
-                <views:SchemeToolView DataContext="{Binding Path=OutputGatePlacingTool}">
-                    <TextBlock
-                        HorizontalAlignment="Center"
-                        VerticalAlignment="Center"
-                        Text="O" />
-                </views:SchemeToolView>
-                <Separator />
-                <views:SchemeToolView DataContext="{Binding Path=AndGatePlacingTool}">
-                    <TextBlock
-                        HorizontalAlignment="Center"
-                        VerticalAlignment="Center"
-                        Text="&amp;" />
-                </views:SchemeToolView>
-                <Separator />
-                <views:SchemeToolView DataContext="{Binding Path=WirePlacingTool}">
-                    <TextBlock
-                        HorizontalAlignment="Center"
-                        VerticalAlignment="Center"
-                        Text="W" />
-                </views:SchemeToolView>
-            </StackPanel>
-        </ClippingBorder>
+            Gap="10"
+            Orientation="Horizontal">
+            <ClippingBorder
+                Background="{DynamicResource {x:Static brushes:BrushesKeys+SchemeView.ToolsPanelBackground}}"
+                CornerRadius="5"
+                SnapsToDevicePixels="True"
+                UseLayoutRounding="True">
+                <StackPanel Orientation="Horizontal">
+                    <StackPanel.Resources>
+                        <Style BasedOn="{StaticResource {x:Type Button}}" TargetType="{x:Type Button}">
+                            <Setter Property="Width" Value="{Binding Path=ActualHeight, RelativeSource={RelativeSource Self}}" />
+                            <Setter Property="BorderThickness" Value="0" />
+                            <Setter Property="Background" Value="Transparent" />
+                        </Style>
+                        <Style TargetType="{x:Type Path}">
+                            <Setter Property="Margin" Value="7" />
+                            <Setter Property="SnapsToDevicePixels" Value="True" />
+                            <Setter Property="UseLayoutRounding" Value="True" />
+                        </Style>
+                    </StackPanel.Resources>
+                    <Button Command="{Binding Path=StartSimulationCommand}">
+                        <Path
+                            Data="M 0 0 L 4 2 L 0 4 Z"
+                            Fill="#8AE28A"
+                            Stretch="Uniform"
+                            Stroke="#8AE28A"
+                            StrokeThickness="1" />
+                    </Button>
+                    <Button Command="{Binding Path=PauseSimulationCommand}">
+                        <Path
+                            Data="M 0 0 L 3 0 L 3 10 L 0 10 Z M 7 0 L 10 0 L 10 10 L 7 10 Z"
+                            Fill="#B0B0B0"
+                            RenderOptions.EdgeMode="Aliased"
+                            Stretch="Uniform"
+                            Stroke="#E0E0E0"
+                            StrokeThickness="1" />
+                    </Button>
+                    <Button Command="{Binding Path=NextSimulationStepCommand}">
+                        <Path
+                            Data="M 0 0 L 7 5 L 0 10 Z M 8 0 L 10 0 L 10 10 L 8 10 Z"
+                            Fill="#B0B0B0"
+                            Stretch="Uniform"
+                            Stroke="#E0E0E0"
+                            StrokeThickness="1" />
+                    </Button>
+                    <Button Command="{Binding Path=StopSimulationCommandCommand}">
+                        <Path
+                            Data="M 0 0 L 5 0 L 5 5 L 0 5 Z"
+                            Fill="#C04048"
+                            Stretch="Uniform"
+                            Stroke="#F44B56"
+                            StrokeThickness="1" />
+                    </Button>
+                </StackPanel>
+            </ClippingBorder>
+
+            <ClippingBorder
+                Background="{DynamicResource {x:Static brushes:BrushesKeys+SchemeView.ToolsPanelBackground}}"
+                CornerRadius="5"
+                SnapsToDevicePixels="True"
+                UseLayoutRounding="True">
+                <StackPanel DataContext="{Binding Path=ToolsViewModel}" Orientation="Horizontal">
+                    <StackPanel.Resources>
+                        <Style BasedOn="{StaticResource VerticalSeparator}" TargetType="{x:Type Separator}" />
+                    </StackPanel.Resources>
+                    <views:SchemeToolView DataContext="{Binding Path=SelectionTool}">
+                        <Path
+                            Data="{StaticResource SelectionToolIcon}"
+                            Fill="{DynamicResource {x:Static brushes:BrushesKeys+SchemeView.ToolIconBrush}}"
+                            Stretch="Uniform" />
+                    </views:SchemeToolView>
+                    <views:SchemeToolView DataContext="{Binding Path=DragTool}">
+                        <Path
+                            Margin="-1"
+                            Data="{StaticResource DragToolIcon}"
+                            Fill="{DynamicResource {x:Static brushes:BrushesKeys+SchemeView.ToolIconBrush}}"
+                            Stretch="Uniform" />
+                    </views:SchemeToolView>
+                    <views:SchemeToolView DataContext="{Binding Path=RectangleSelectionTool}">
+                        <Path
+                            Data="{StaticResource RectangleSelectionToolIcon}"
+                            Fill="{DynamicResource {x:Static brushes:BrushesKeys+SchemeView.ToolIconBrush}}"
+                            Stretch="Uniform" />
+                    </views:SchemeToolView>
+                    <views:SchemeToolView DataContext="{Binding Path=NodeDragTool}">
+                        <Path
+                            Margin="-1"
+                            Data="{StaticResource NodeDragToolIcon}"
+                            Fill="{DynamicResource {x:Static brushes:BrushesKeys+SchemeView.ToolIconBrush}}"
+                            Stretch="Uniform" />
+                    </views:SchemeToolView>
+                    <Separator />
+                    <views:SchemeToolView DataContext="{Binding Path=RectanglePlacingTool}">
+                        <Rectangle Fill="{DynamicResource {x:Static brushes:BrushesKeys+SchemeView.ToolIconBrush}}" Stretch="Uniform" />
+                    </views:SchemeToolView>
+                    <views:SchemeToolView DataContext="{Binding Path=RoundedRectanglePlacingTool}">
+                        <Rectangle
+                            Fill="{DynamicResource {x:Static brushes:BrushesKeys+SchemeView.ToolIconBrush}}"
+                            RadiusX="4"
+                            RadiusY="4"
+                            Stretch="Uniform" />
+                    </views:SchemeToolView>
+                    <views:SchemeToolView DataContext="{Binding Path=EllipsePlacingTool}">
+                        <Ellipse
+                            Margin="0,2"
+                            Fill="{DynamicResource {x:Static brushes:BrushesKeys+SchemeView.ToolIconBrush}}"
+                            Stretch="Fill" />
+                    </views:SchemeToolView>
+                    <views:SchemeToolView DataContext="{Binding Path=ArcPlacingTool}">
+                        <Path
+                            Data="{StaticResource ArcPlacingToolIcon}"
+                            Stretch="Uniform"
+                            Stroke="{DynamicResource {x:Static brushes:BrushesKeys+SchemeView.ToolIconBrush}}"
+                            StrokeEndLineCap="Round"
+                            StrokeStartLineCap="Round"
+                            StrokeThickness="2" />
+                    </views:SchemeToolView>
+                    <views:SchemeToolView DataContext="{Binding Path=LinePlacingTool}">
+                        <Path
+                            Data="{StaticResource LinePlacingToolIcon}"
+                            Stretch="Uniform"
+                            Stroke="{DynamicResource {x:Static brushes:BrushesKeys+SchemeView.ToolIconBrush}}"
+                            StrokeEndLineCap="Round"
+                            StrokeStartLineCap="Round"
+                            StrokeThickness="2" />
+                    </views:SchemeToolView>
+                    <views:SchemeToolView DataContext="{Binding Path=BezierCurvePlacingTool}">
+                        <Path
+                            Data="{StaticResource BezierCurvePlacingToolIcon}"
+                            Stretch="Uniform"
+                            Stroke="{DynamicResource {x:Static brushes:BrushesKeys+SchemeView.ToolIconBrush}}"
+                            StrokeEndLineCap="Round"
+                            StrokeStartLineCap="Round"
+                            StrokeThickness="2" />
+                    </views:SchemeToolView>
+                    <views:SchemeToolView DataContext="{Binding Path=TextPlacingTool}">
+                        <Path
+                            Data="{StaticResource TextPlacingToolIcon}"
+                            Fill="{DynamicResource {x:Static brushes:BrushesKeys+SchemeView.ToolIconBrush}}"
+                            Stretch="Uniform" />
+                    </views:SchemeToolView>
+                    <Separator />
+                    <views:SchemeToolView DataContext="{Binding Path=InputGatePlacingTool}">
+                        <TextBlock
+                            HorizontalAlignment="Center"
+                            VerticalAlignment="Center"
+                            Text="I" />
+                    </views:SchemeToolView>
+                    <views:SchemeToolView DataContext="{Binding Path=OutputGatePlacingTool}">
+                        <TextBlock
+                            HorizontalAlignment="Center"
+                            VerticalAlignment="Center"
+                            Text="O" />
+                    </views:SchemeToolView>
+                    <Separator />
+                    <views:SchemeToolView DataContext="{Binding Path=AndGatePlacingTool}">
+                        <TextBlock
+                            HorizontalAlignment="Center"
+                            VerticalAlignment="Center"
+                            Text="&amp;" />
+                    </views:SchemeToolView>
+                    <Separator />
+                    <views:SchemeToolView DataContext="{Binding Path=WirePlacingTool}">
+                        <TextBlock
+                            HorizontalAlignment="Center"
+                            VerticalAlignment="Center"
+                            Text="W" />
+                    </views:SchemeToolView>
+                </StackPanel>
+            </ClippingBorder>
+        </StackPanelEx>
     </Grid>
 </UserControl>

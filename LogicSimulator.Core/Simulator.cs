@@ -19,7 +19,15 @@ public class Simulator
 
     public event PortStateChangedHandler? PortStateChanged;
 
+    public int EventsCount => _eventsMap.Count;
+
     public ulong CurrentTime { get; private set; }
+
+    public void Reset()
+    {
+        CurrentTime = 0;
+        _eventsMap.Clear();
+    }
 
     public void InvalidateInputs(IEnumerable<InputGate> inputs)
     {
@@ -55,6 +63,7 @@ public class Simulator
     {
         if (!_eventsMap.TryGetValue(CurrentTime, out var queue))
         {
+            SimulationStepExecuted?.Invoke(this);
             CurrentTime++;
             return;
         }
@@ -67,9 +76,8 @@ public class Simulator
         }
 
         _eventsMap.Remove(CurrentTime);
-        CurrentTime++;
-
         SimulationStepExecuted?.Invoke(this);
+        CurrentTime++;
     }
 
     private record SimulationEvent(BasePort Port, SignalType NewState, ulong RaiseTime, ulong Delay)

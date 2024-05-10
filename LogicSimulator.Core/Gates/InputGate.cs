@@ -17,6 +17,9 @@ public class InputGate : BaseGate
 
     protected override void OnInvalidate(Simulator simulator)
     {
+        if (Output.State == State)
+            return;
+
         simulator.PushEvent(Output, State, Delay);
     }
 }
