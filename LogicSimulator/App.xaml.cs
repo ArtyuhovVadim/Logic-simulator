@@ -70,6 +70,7 @@ public partial class App
             .AddSingleton<PropertiesViewModel>()
             .AddSingleton<ProjectExplorerViewModel>()
             .AddSingleton<MessagesOutputViewModel>()
+            .AddSingleton<TimelineViewModel>()
 
             .AddSingleton<MainWindow>(serviceProvider => new MainWindow { DataContext = serviceProvider.GetRequiredService<MainWindowViewModel>() })
 

@@ -13,6 +13,8 @@ public class PanesTemplateSelector : DataTemplateSelector
     public DataTemplate ProjectExplorerViewTemplate { get; set; } = null!;
 
     public DataTemplate MessagesOutputViewTemplate { get; set; } = null!;
+    
+    public DataTemplate TimelineViewDataTemplate { get; set; } = null!;
 
     public override DataTemplate SelectTemplate(object? item, DependencyObject container) => item switch
     {
@@ -20,6 +22,7 @@ public class PanesTemplateSelector : DataTemplateSelector
         PropertiesViewModel => PropertiesViewTemplate, 
         ProjectExplorerViewModel => ProjectExplorerViewTemplate,
         MessagesOutputViewModel => MessagesOutputViewTemplate,
+        TimelineViewModel => TimelineViewDataTemplate,
         _ => base.SelectTemplate(item, container)!
     };
 }

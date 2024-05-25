@@ -51,6 +51,11 @@
                         <local:MessagesOutputView />
                     </DataTemplate>
                 </selectors:PanesTemplateSelector.MessagesOutputViewTemplate>
+                <selectors:PanesTemplateSelector.TimelineViewDataTemplate>
+                    <DataTemplate DataType="{x:Type avm:TimelineViewModel}">
+                        <local:TimelineView />
+                    </DataTemplate>
+                </selectors:PanesTemplateSelector.TimelineViewDataTemplate>
             </selectors:PanesTemplateSelector>
         </DockingManager.LayoutItemTemplateSelector>
         <DockingManager.LayoutItemContainerStyleSelector>
