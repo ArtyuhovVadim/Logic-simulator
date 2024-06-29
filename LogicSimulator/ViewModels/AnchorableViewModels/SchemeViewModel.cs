@@ -251,7 +251,7 @@ public class SchemeViewModel : DocumentViewModel, IModelBased<Scheme>, ICloseabl
                     gate.State = SignalType.High;
                 _currentScheme.InputGates.First().State = SignalType.Low;
 
-                _schemeSimulatorService.StartSimulation(_currentScheme, new SimulatorSettings { IsPauseSupported = true, StepByStepOnStart = true, AdditionalSimulationTime = 100 });
+                _schemeSimulatorService.StartSimulation(_currentScheme, new SimulatorSettings { IsPauseSupported = false, IsPausedOnStart = false, AdditionalSimulationTime = 100 });
             }
             else
             {

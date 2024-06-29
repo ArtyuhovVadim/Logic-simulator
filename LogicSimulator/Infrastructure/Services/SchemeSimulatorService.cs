@@ -16,7 +16,7 @@ public struct SimulatorSettings()
 
     public bool IsPauseSupported = true;
 
-    public bool StepByStepOnStart = false;
+    public bool IsPausedOnStart = false;
 
     public ulong AdditionalSimulationTime = 0;
 }
@@ -29,7 +29,7 @@ public class SchemeSimulatorService
     private SimulatorSettings _settings;
     private ulong _additionalSimulationTime;
 
-    private CancellationTokenSource _cancellationTokenSource = new();
+    private CancellationTokenSource _cancellationTokenSource = null!;
     private readonly AutoResetEvent _simulationAutoResetEvent = new(false);
     private readonly AutoResetEvent _simulationStepAutoResetEvent = new(false);
     private Task? _simulationTask;
@@ -64,7 +64,7 @@ public class SchemeSimulatorService
         _cancellationTokenSource = new CancellationTokenSource();
         var token = _cancellationTokenSource.Token;
 
-        if (!settings.StepByStepOnStart)
+        if (!settings.IsPausedOnStart)
             _simulationStepAutoResetEvent.Set();
 
         _additionalSimulationTime = settings.AdditionalSimulationTime;
@@ -78,20 +78,23 @@ public class SchemeSimulatorService
 
                 while (!token.IsCancellationRequested)
                 {
+                    var sw = Stopwatch.StartNew();
+
                     while ((_simulator.EventsCount > 0 || _additionalSimulationTime > 0) && _simulator.CurrentTime < _settings.MaxTime)
                     {
-                        _simulationStepAutoResetEvent.WaitOne();
+                        if (_settings.IsPauseSupported)
+                            _simulationStepAutoResetEvent.WaitOne();
+
                         token.ThrowIfCancellationRequested();
                         _simulator.SimulateStep();
-                        //TODO:   if (!_settings.IsPauseSupported) continue;
 
                         if (_simulator.EventsCount == 0)
                             _additionalSimulationTime--;
                     }
 
                     token.ThrowIfCancellationRequested();
-
-                    Debug.WriteLine($"{Task.CurrentId} - Waiting...");
+                    sw.Stop();
+                    Debug.WriteLine($"{Task.CurrentId} - Waiting... {sw.Elapsed.TotalMilliseconds}");
                     _simulationAutoResetEvent.WaitOne();
                 }
             }
@@ -102,7 +105,7 @@ public class SchemeSimulatorService
             }
         }, token);
 
-        State = settings.StepByStepOnStart ? SimulationState.Paused : SimulationState.Started;
+        State = settings.IsPausedOnStart ? SimulationState.Paused : SimulationState.Started;
     }
 
     public void SimulateNextStep()
@@ -152,13 +155,18 @@ public class SchemeSimulatorService
 
     private void OnSimulationStepExecuted(Simulator simulator)
     {
-        if (State is SimulationState.Started)
+        if (_settings.IsPauseSupported)
         {
-            _simulationStepAutoResetEvent.Set();
+            if (State is SimulationState.Started)
+            {
+                _simulationStepAutoResetEvent.Set();
+            }
+            else if (State is SimulationState.Paused)
+            {
+                _simulationStepAutoResetEvent.Reset();
+            }
         }
-        else if (State is SimulationState.Paused)
-        {
-            _simulationStepAutoResetEvent.Reset();
-        }
+
+        //Debug.WriteLine($"Step: {simulator.CurrentTime}|In: {string.Join(' ', _scheme!.InputGates.Select(x => x.State))}|Out: {string.Join(' ', _scheme.OutputGates.Select(x => x.Input.State))}");
     }
 }
