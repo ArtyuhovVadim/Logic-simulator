@@ -5,108 +5,96 @@ using LogicSimulator.ViewModels.ObjectViewModels.Gates.Base;
 using LogicSimulator.ViewModels.ObjectViewModels;
 using LogicSimulator.ViewModels.ObjectViewModels.Base;
 using LogicSimulator.ViewModels.ObjectViewModels.Gates;
+using Microsoft.Extensions.Logging;
+using LogicSimulator.Infrastructure.Services.Interfaces;
+using LogicSimulator.Models;
 
 namespace LogicSimulator.Infrastructure.Services;
 
-public record PortLogicModelToViewModelLink(BasePort LogicModel, PortViewModel ViewModel);
-
-public record GateLogicModelToViewModelLink(BaseGate LogicModel, BaseGateViewModel ViewModel, Dictionary<BasePort, PortLogicModelToViewModelLink> PortsMap);
-
-public class LogicScheme
+public class SchemeBuilderService : ISchemeBuilderService
 {
-    public LogicScheme(List<BaseGate> gates, List<InputGate> inputGates, List<OutputGate> outputGates, List<Connection> connections, Dictionary<BaseGate, GateLogicModelToViewModelLink> gatesMap)
-    {
-        Gates = gates;
-        InputGates = inputGates;
-        OutputGates = outputGates;
-        Connections = connections;
-        GatesMap = gatesMap;
-    }
-
-    public List<BaseGate> Gates { get; set; }
-
-    public List<InputGate> InputGates { get; set; }
-
-    public List<OutputGate> OutputGates { get; set; }
-
-    public List<Connection> Connections { get; set; }
-
-    public Dictionary<BaseGate, GateLogicModelToViewModelLink> GatesMap { get; set; }
-}
-
-public class SchemeBuilderService
-{
+    private readonly ILogger<SchemeBuilderService> _logger;
     private readonly List<Connection> _connections = [];
     private readonly Dictionary<BaseGate, GateLogicModelToViewModelLink> _logicModelsMap = [];
 
+    public SchemeBuilderService(ILogger<SchemeBuilderService> logger) => _logger = logger;
+
     public LogicScheme BuildFromViewModels(IEnumerable<BaseObjectViewModel> objects)
     {
-        _connections.Clear();
-        _logicModelsMap.Clear();
-
-        var objectsList = objects.ToList();
-        var gates = objectsList.OfType<BaseGateViewModel>().ToList();
-        var wires = objectsList.OfType<WireViewModel>().ToList();
-
-        foreach (var gate in gates)
-            gate.AcceptSchemeBuilder(this);
-
-        foreach (var port in gates.SelectMany(x => x.Ports))
-            port.State = SignalType.Undefined;
-
-        var connectionPoints = wires.Select(x => (First: x.AbsoluteVertexes.First(), Last: x.AbsoluteVertexes.Last())).ToList();
-
-        foreach (var connectionPoint in connectionPoints)
+        try
         {
-            List<BasePort> firstPorts = [];
-            List<BasePort> lastPorts = [];
+            _connections.Clear();
+            _logicModelsMap.Clear();
 
-            foreach (var (gateModel, gateLink) in _logicModelsMap)
+            var objectsList = objects.ToList();
+            var gates = objectsList.OfType<BaseGateViewModel>().ToList();
+            var wires = objectsList.OfType<WireViewModel>().ToList();
+
+            foreach (var gate in gates)
+                gate.AcceptSchemeBuilder(this);
+
+            foreach (var port in gates.SelectMany(x => x.Ports))
+                port.State = SignalType.Undefined;
+
+            var connectionPoints = wires.Select(x => (First: x.AbsoluteVertexes.First(), Last: x.AbsoluteVertexes.Last())).ToList();
+
+            foreach (var connectionPoint in connectionPoints)
             {
-                foreach (var (portModel, portLink) in gateLink.PortsMap)
+                List<BasePort> firstPorts = [];
+                List<BasePort> lastPorts = [];
+
+                foreach (var (gateModel, gateLink) in _logicModelsMap)
                 {
-                    if (connectionPoint.First == portLink.ViewModel.AbsoluteLocation)
+                    foreach (var (portModel, portLink) in gateLink.PortsMap)
                     {
-                        firstPorts.Add(portModel);
-                    }
-                    else if (connectionPoint.Last == portLink.ViewModel.AbsoluteLocation)
-                    {
-                        lastPorts.Add(portModel);
+                        if (connectionPoint.First == portLink.ViewModel.AbsoluteLocation)
+                        {
+                            firstPorts.Add(portModel);
+                        }
+                        else if (connectionPoint.Last == portLink.ViewModel.AbsoluteLocation)
+                        {
+                            lastPorts.Add(portModel);
+                        }
                     }
                 }
+
+                if (firstPorts.Count != 1)
+                    throw new InvalidOperationException();
+
+                if (lastPorts.Count != 1)
+                    throw new InvalidOperationException();
+
+                InputPort inputPort;
+                OutputPort outputPort;
+
+                if (firstPorts[0] is InputPort inputPort0 && lastPorts[0] is OutputPort outputPort0)
+                {
+                    inputPort = inputPort0;
+                    outputPort = outputPort0;
+                }
+                else if (firstPorts[0] is OutputPort outputPort1 && lastPorts[0] is InputPort inputPort1)
+                {
+                    inputPort = inputPort1;
+                    outputPort = outputPort1;
+                }
+                else
+                {
+                    throw new InvalidOperationException();
+                }
+
+                var connection = new Connection(outputPort, inputPort);
+                _connections.Add(connection);
             }
 
-            if (firstPorts.Count != 1)
-                throw new InvalidOperationException();
+            var gateModels = _logicModelsMap.Keys.ToList();
 
-            if (lastPorts.Count != 1)
-                throw new InvalidOperationException();
-
-            InputPort inputPort;
-            OutputPort outputPort;
-
-            if (firstPorts[0] is InputPort inputPort0 && lastPorts[0] is OutputPort outputPort0)
-            {
-                inputPort = inputPort0;
-                outputPort = outputPort0;
-            }
-            else if (firstPorts[0] is OutputPort outputPort1 && lastPorts[0] is InputPort inputPort1)
-            {
-                inputPort = inputPort1;
-                outputPort = outputPort1;
-            }
-            else
-            {
-                throw new InvalidOperationException();
-            }
-
-            var connection = new Connection(outputPort, inputPort);
-            _connections.Add(connection);
+            return new LogicScheme(gateModels, gateModels.OfType<InputGate>().ToList(), gateModels.OfType<OutputGate>().ToList(), [.. _connections], _logicModelsMap.ToDictionary());
         }
-
-        var gateModels = _logicModelsMap.Keys.ToList();
-
-        return new LogicScheme(gateModels, gateModels.OfType<InputGate>().ToList(), gateModels.OfType<OutputGate>().ToList(), [.. _connections], _logicModelsMap.ToDictionary());
+        catch (Exception e)
+        {
+            _logger.LogError("Error occupied while building scheme:\n{e}", e);
+            throw;
+        }
     }
 
     public void CreateLogicModelFrom(InputGateViewModel gate)

@@ -1,29 +1,13 @@
-﻿using System.Diagnostics;
-using LogicSimulator.Core;
+﻿using LogicSimulator.Core;
+using LogicSimulator.Infrastructure.Services.Interfaces;
+using LogicSimulator.Models;
+using Microsoft.Extensions.Logging;
 
 namespace LogicSimulator.Infrastructure.Services;
 
-public enum SimulationState
+public class SchemeSimulatorService : ISchemeSimulatorService
 {
-    Started,
-    Paused,
-    Stopped
-}
-
-public struct SimulatorSettings()
-{
-    public ulong MaxTime = ulong.MaxValue;
-
-    public bool IsPauseSupported = true;
-
-    public bool IsPausedOnStart = false;
-
-    public ulong AdditionalSimulationTime = 0;
-}
-
-//TODO: Handle exceptions
-public class SchemeSimulatorService
-{
+    private readonly ILogger<SchemeSimulatorService> _logger;
     private readonly Simulator _simulator = new();
     private LogicScheme? _scheme;
     private SimulatorSettings _settings;
@@ -34,8 +18,9 @@ public class SchemeSimulatorService
     private readonly AutoResetEvent _simulationStepAutoResetEvent = new(false);
     private Task? _simulationTask;
 
-    public SchemeSimulatorService()
+    public SchemeSimulatorService(ILogger<SchemeSimulatorService> logger)
     {
+        _logger = logger;
         _simulator.SimulationStepExecuted += OnSimulationStepExecuted;
     }
 
@@ -58,6 +43,8 @@ public class SchemeSimulatorService
         if (!CanStart)
             return;
 
+        _logger.LogInformation("Simulation started");
+
         _scheme = scheme;
         _settings = settings;
 
@@ -78,9 +65,8 @@ public class SchemeSimulatorService
 
                 while (!token.IsCancellationRequested)
                 {
-                    var sw = Stopwatch.StartNew();
-
-                    while ((_simulator.EventsCount > 0 || _additionalSimulationTime > 0) && _simulator.CurrentTime < _settings.MaxTime)
+                    while ((_simulator.EventsCount > 0 || _additionalSimulationTime > 0) &&
+                           _simulator.CurrentTime < _settings.MaxTime)
                     {
                         if (_settings.IsPauseSupported)
                             _simulationStepAutoResetEvent.WaitOne();
@@ -93,15 +79,17 @@ public class SchemeSimulatorService
                     }
 
                     token.ThrowIfCancellationRequested();
-                    sw.Stop();
-                    Debug.WriteLine($"{Task.CurrentId} - Waiting... {sw.Elapsed.TotalMilliseconds}");
+                    _logger.LogInformation("Simulation thread is waiting...");
                     _simulationAutoResetEvent.WaitOne();
                 }
             }
-            catch (OperationCanceledException) { Debug.WriteLine("Simulation cancelled."); }
+            catch (OperationCanceledException)
+            {
+                _logger.LogInformation("Simulation cancelled");
+            }
             catch (Exception e)
             {
-                Debug.WriteLine(e);
+                _logger.LogError("Simulation error:\n{e}", e);
             }
         }, token);
 
@@ -115,6 +103,8 @@ public class SchemeSimulatorService
 
         _simulationStepAutoResetEvent.Set();
         _simulationStepAutoResetEvent.Set();
+
+        _logger.LogInformation("Simulation next step has been executed");
     }
 
     public void ResumeSimulation()
@@ -126,6 +116,8 @@ public class SchemeSimulatorService
         _simulationStepAutoResetEvent.Set();
 
         State = SimulationState.Started;
+
+        _logger.LogInformation("Simulation has been resumed");
     }
 
     public void PauseSimulation()
@@ -137,6 +129,8 @@ public class SchemeSimulatorService
         _simulationAutoResetEvent.Reset();
 
         State = SimulationState.Paused;
+
+        _logger.LogInformation("Simulation has been paused");
     }
 
     public void StopSimulation()
@@ -151,6 +145,8 @@ public class SchemeSimulatorService
         _simulationAutoResetEvent.Reset();
         _simulationStepAutoResetEvent.Reset();
         State = SimulationState.Stopped;
+
+        _logger.LogInformation("Simulation has been stopped");
     }
 
     private void OnSimulationStepExecuted(Simulator simulator)
@@ -166,7 +162,5 @@ public class SchemeSimulatorService
                 _simulationStepAutoResetEvent.Reset();
             }
         }
-
-        //Debug.WriteLine($"Step: {simulator.CurrentTime}|In: {string.Join(' ', _scheme!.InputGates.Select(x => x.State))}|Out: {string.Join(' ', _scheme.OutputGates.Select(x => x.Input.State))}");
     }
 }

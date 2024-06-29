@@ -2,7 +2,6 @@
 using LogicSimulator.Core;
 using LogicSimulator.Infrastructure;
 using LogicSimulator.Infrastructure.Factories.Interfaces;
-using LogicSimulator.Infrastructure.Services;
 using LogicSimulator.Infrastructure.Services.Interfaces;
 using LogicSimulator.Models;
 using LogicSimulator.Models.Base;
@@ -19,22 +18,26 @@ public class SchemeViewModel : DocumentViewModel, IModelBased<Scheme>, ICloseabl
 {
     private readonly DockingViewModel _dockingViewModel;
     private readonly SchemeStatusViewModel _statusViewModel;
-    private List<BaseObjectViewModel> _selectedObjects = [];
+    
     private readonly IEditorSelectionService _editorSelectionService;
+    private readonly ISchemeSimulatorService _schemeSimulatorService;
+    private readonly ISchemeBuilderService _schemeBuilderService;
 
-    //TODO: Перенести в DI
-    private readonly SchemeBuilderService _schemeBuilderService = new();
-    private readonly SchemeSimulatorService _schemeSimulatorService = new();
+    private List<BaseObjectViewModel> _selectedObjects = [];
     private LogicScheme? _currentScheme;
 
     public SchemeViewModel(Scheme scheme,
                            DockingViewModel dockingViewModel,
                            IEditorSelectionService editorSelectionService,
+                           ISchemeSimulatorService schemeSimulatorService,
+                           ISchemeBuilderService schemeBuilderService,
                            IMappedViewModelFactory<BaseObjectModel, BaseObjectViewModel> viewModelsFactory)
     {
         Model = scheme;
         _dockingViewModel = dockingViewModel;
         _editorSelectionService = editorSelectionService;
+        _schemeSimulatorService = schemeSimulatorService;
+        _schemeBuilderService = schemeBuilderService;
 
         _objects = new ObservableCollectionEx<BaseObjectViewModel, BaseObjectModel>(Model.Objects, viewModelsFactory.Create);
 
@@ -251,7 +254,7 @@ public class SchemeViewModel : DocumentViewModel, IModelBased<Scheme>, ICloseabl
                     gate.State = SignalType.High;
                 _currentScheme.InputGates.First().State = SignalType.Low;
 
-                _schemeSimulatorService.StartSimulation(_currentScheme, new SimulatorSettings { IsPauseSupported = false, IsPausedOnStart = false, AdditionalSimulationTime = 100 });
+                _schemeSimulatorService.StartSimulation(_currentScheme, new SimulatorSettings { IsPauseSupported = true, IsPausedOnStart = true, AdditionalSimulationTime = 100 });
             }
             else
             {

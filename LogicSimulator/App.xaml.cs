@@ -78,6 +78,8 @@ public partial class App
             .AddSingleton<ISchemeFileService, SchemeFileService>()
             .AddSingleton<IProjectFileService, ProjectFileService>()
             .AddSingleton<IEditorSelectionService, EditorSelectionService>()
+            .AddSingleton<ISchemeSimulatorService, SchemeSimulatorService>()
+            .AddSingleton<ISchemeBuilderService, SchemeBuilderService>()
 
             .AddSingleton<ISchemeViewModelFactory, SchemeViewModelFactory>()
             .AddSingleton<IProjectViewModelFactory, ProjectViewModelFactory>()
