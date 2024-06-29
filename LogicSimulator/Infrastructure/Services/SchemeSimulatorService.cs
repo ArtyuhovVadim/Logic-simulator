@@ -84,17 +84,17 @@ public class SchemeSimulatorService : ISchemeSimulatorService
                     }
 
                     token.ThrowIfCancellationRequested();
-                    _logger.LogInformation("Simulation thread is waiting...");
+                    _logger.LogInformation("Simulation thread is waiting... (CurrentTime: {CurrentTime})", _simulator.CurrentTime);
                     _simulationAutoResetEvent.WaitOne();
                 }
             }
             catch (OperationCanceledException)
             {
-                _logger.LogInformation("Simulation cancelled");
+                _logger.LogInformation("Simulation cancelled (CurrentTime: {CurrentTime})", _simulator.CurrentTime);
             }
             catch (Exception e)
             {
-                _logger.LogError("Simulation error:\n{e}", e);
+                _logger.LogError("Simulation error (CurrentTime: {CurrentTime}):\n{e}", _simulator.CurrentTime, e);
             }
         }, token);
 
@@ -109,7 +109,9 @@ public class SchemeSimulatorService : ISchemeSimulatorService
         _simulationStepAutoResetEvent.Set();
         _simulationStepAutoResetEvent.Set();
 
-        _logger.LogInformation("Simulation next step has been executed");
+        AddCurrentStatesToResult();
+
+        _logger.LogInformation("Simulation next step has been executed (CurrentTime: {CurrentTime})", _simulator.CurrentTime);
     }
 
     public void ResumeSimulation()
@@ -122,7 +124,7 @@ public class SchemeSimulatorService : ISchemeSimulatorService
 
         State = SimulationState.Started;
 
-        _logger.LogInformation("Simulation has been resumed");
+        _logger.LogInformation("Simulation has been resumed (CurrentTime: {CurrentTime})", _simulator.CurrentTime);
     }
 
     public void PauseSimulation()
@@ -135,7 +137,9 @@ public class SchemeSimulatorService : ISchemeSimulatorService
 
         State = SimulationState.Paused;
 
-        _logger.LogInformation("Simulation has been paused");
+        AddCurrentStatesToResult();
+
+        _logger.LogInformation("Simulation has been paused (CurrentTime: {CurrentTime})", _simulator.CurrentTime);
     }
 
     public void StopSimulation()
@@ -151,35 +155,13 @@ public class SchemeSimulatorService : ISchemeSimulatorService
         _simulationStepAutoResetEvent.Reset();
         State = SimulationState.Stopped;
 
-        foreach (var inputGate in _scheme!.InputGates)
-        {
-            var inputGateViewModel = _scheme.GatesMap[inputGate].ViewModel;
-            _simulationResult[inputGateViewModel.Name].States.Add(new PortState(_simulator.CurrentTime, inputGate.Output.State));
-        }
+        AddCurrentStatesToResult();
 
-        foreach (var outputGate in _scheme.OutputGates)
-        {
-            var outputGateViewModel = _scheme.GatesMap[outputGate].ViewModel;
-            _simulationResult[outputGateViewModel.Name].States.Add(new PortState(_simulator.CurrentTime, outputGate.Input.State));
-        }
-
-        _logger.LogInformation("Simulation has been stopped");
+        _logger.LogInformation("Simulation has been stopped (CurrentTime: {CurrentTime})", _simulator.CurrentTime);
     }
 
-    private void OnSimulationStepExecuted(Simulator simulator)
+    private void AddCurrentStatesToResultIfNotPresent()
     {
-        if (_settings.IsPauseSupported)
-        {
-            if (State is SimulationState.Started)
-            {
-                _simulationStepAutoResetEvent.Set();
-            }
-            else if (State is SimulationState.Paused)
-            {
-                _simulationStepAutoResetEvent.Reset();
-            }
-        }
-
         foreach (var inputGate in _scheme!.InputGates)
         {
             var inputGateViewModel = _scheme.GatesMap[inputGate].ViewModel;
@@ -207,5 +189,61 @@ public class SchemeSimulatorService : ISchemeSimulatorService
             if (result.States.Count == 0 || result.States.Last().State != outputGate.Input.State)
                 result.States.Add(new PortState(_simulator.CurrentTime, outputGate.Input.State));
         }
+    }
+
+    private void AddCurrentStatesToResult()
+    {
+        foreach (var inputGate in _scheme!.InputGates)
+        {
+            var inputGateViewModel = _scheme.GatesMap[inputGate].ViewModel;
+
+            if (!_simulationResult.TryGetValue(inputGateViewModel.Name, out var result))
+            {
+                result = new PortSimulationResult(inputGateViewModel.Name);
+                _simulationResult[inputGateViewModel.Name] = result;
+            }
+
+            var newState = new PortState(_simulator.CurrentTime, inputGate.Output.State);
+
+            if (result.States.Count > 1 && result.States[^2].State == inputGate.Output.State)
+                result.States[^1] = newState;
+            else
+                result.States.Add(newState);
+        }
+
+        foreach (var outputGate in _scheme.OutputGates)
+        {
+            var outputGateViewModel = _scheme.GatesMap[outputGate].ViewModel;
+
+            if (!_simulationResult.TryGetValue(outputGateViewModel.Name, out var result))
+            {
+                result = new PortSimulationResult(outputGateViewModel.Name);
+                _simulationResult[outputGateViewModel.Name] = result;
+            }
+
+            var newState = new PortState(_simulator.CurrentTime, outputGate.Input.State);
+
+            if (result.States.Count > 1 && result.States[^2].State == outputGate.Input.State)
+                result.States[^1] = newState;
+            else
+                result.States.Add(newState);
+        }
+    }
+
+    private void OnSimulationStepExecuted(Simulator simulator)
+    {
+        if (_settings.IsPauseSupported)
+        {
+            if (State is SimulationState.Started)
+            {
+                _simulationStepAutoResetEvent.Set();
+            }
+            else if (State is SimulationState.Paused)
+            {
+                _simulationStepAutoResetEvent.Reset();
+            }
+        }
+
+        AddCurrentStatesToResultIfNotPresent();
     }
 }

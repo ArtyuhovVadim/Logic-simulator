@@ -1,4 +1,5 @@
 ﻿using LogicSimulator.Core;
+using LogicSimulator.Models;
 using LogicSimulator.Shared;
 using WpfExtensions.Mvvm;
 
@@ -6,6 +7,12 @@ namespace LogicSimulator.ViewModels;
 
 public class GateStateViewModel : BindableBase, IWaveState
 {
+    public GateStateViewModel(PortState model)
+    {
+        Time = model.Time;
+        State = model.State;
+    }
+
     #region Time
 
     private ulong _time;

@@ -4,6 +4,8 @@ namespace LogicSimulator.Infrastructure.Services.Interfaces;
 
 public interface ISchemeSimulatorService
 {
+    IReadOnlyDictionary<string, PortSimulationResult> Result { get; }
+
     SimulatorSettings Settings { get; }
 
     SimulationState State { get; }

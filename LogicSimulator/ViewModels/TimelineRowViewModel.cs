@@ -1,10 +1,19 @@
-﻿using LogicSimulator.Shared;
+﻿using LogicSimulator.Models;
+using LogicSimulator.Shared;
 using WpfExtensions.Mvvm;
 
 namespace LogicSimulator.ViewModels;
 
 public class TimelineRowViewModel : BindableBase, IWave
 {
+    public TimelineRowViewModel() { }
+
+    public TimelineRowViewModel(PortSimulationResult model)
+    {
+        Label = model.Name;
+        States = new ObservableCollection<GateStateViewModel>(model.States.Select(x => new GateStateViewModel(x)));
+    }
+
     #region Label
 
     private string _label = string.Empty;

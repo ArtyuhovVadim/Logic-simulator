@@ -26,6 +26,7 @@ public class SchemeViewModel : DocumentViewModel, IModelBased<Scheme>, ICloseabl
 
     private List<BaseObjectViewModel> _selectedObjects = [];
     private LogicScheme? _currentScheme;
+    private ObservableCollection<TimelineRowViewModel> _simulationResult = [];
 
     public SchemeViewModel(Scheme scheme,
                            DockingViewModel dockingViewModel,
@@ -257,7 +258,7 @@ public class SchemeViewModel : DocumentViewModel, IModelBased<Scheme>, ICloseabl
                     gate.State = SignalType.High;
                 _currentScheme.InputGates.First().State = SignalType.Low;
 
-                _schemeSimulatorService.StartSimulation(_currentScheme, new SimulatorSettings { IsPauseSupported = true, IsPausedOnStart = true, AdditionalSimulationTime = 100 });
+                _schemeSimulatorService.StartSimulation(_currentScheme, new SimulatorSettings { IsPauseSupported = true, IsPausedOnStart = true, AdditionalSimulationTime = 10 });
             }
             else
             {
@@ -282,6 +283,9 @@ public class SchemeViewModel : DocumentViewModel, IModelBased<Scheme>, ICloseabl
         try
         {
             _schemeSimulatorService.PauseSimulation();
+            _simulationResult = new ObservableCollection<TimelineRowViewModel>(_schemeSimulatorService.Result.Select(x => new TimelineRowViewModel(x.Value)));
+            //TODO:
+            _dockingViewModel.ToolViewModels.OfType<TimelineViewModel>().Single().Waves = _simulationResult;
         }
         catch (Exception e)
         {
@@ -301,6 +305,9 @@ public class SchemeViewModel : DocumentViewModel, IModelBased<Scheme>, ICloseabl
         try
         {
             _schemeSimulatorService.SimulateNextStep();
+            _simulationResult = new ObservableCollection<TimelineRowViewModel>(_schemeSimulatorService.Result.Select(x => new TimelineRowViewModel(x.Value)));
+            //TODO:
+            _dockingViewModel.ToolViewModels.OfType<TimelineViewModel>().Single().Waves = _simulationResult;
         }
         catch (Exception e)
         {
@@ -320,6 +327,9 @@ public class SchemeViewModel : DocumentViewModel, IModelBased<Scheme>, ICloseabl
         try
         {
             _schemeSimulatorService.StopSimulation();
+            _simulationResult = new ObservableCollection<TimelineRowViewModel>(_schemeSimulatorService.Result.Select(x => new TimelineRowViewModel(x.Value)));
+            //TODO:
+            _dockingViewModel.ToolViewModels.OfType<TimelineViewModel>().Single().Waves = _simulationResult;
         }
         catch (Exception e)
         {
@@ -331,9 +341,19 @@ public class SchemeViewModel : DocumentViewModel, IModelBased<Scheme>, ICloseabl
 
     public void SelectedObjectsChanged() => OnSelectedObjectsChanged();
 
-    protected override void OnDocumentActivated() => OnSelectedObjectsChanged();
+    protected override void OnDocumentActivated()
+    {
+        OnSelectedObjectsChanged();
+        //TODO:
+        _dockingViewModel.ToolViewModels.OfType<TimelineViewModel>().Single().Waves = _simulationResult;
+    }
 
-    protected override void OnDocumentDeactivated() => _editorSelectionService.SetEmptyEditor();
+    protected override void OnDocumentDeactivated()
+    {
+        _editorSelectionService.SetEmptyEditor();
+        //TODO:
+        _dockingViewModel.ToolViewModels.OfType<TimelineViewModel>().Single().Waves = [];
+    }
 
     protected override void OnClose(object? p)
     {

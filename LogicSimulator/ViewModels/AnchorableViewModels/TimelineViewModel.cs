@@ -125,14 +125,17 @@ public class TimelineViewModel : ToolViewModel
 
     private ObservableCollection<TimelineRowViewModel> _waves = [];
 
-    public IEnumerable<TimelineRowViewModel> Waves
+    public ObservableCollection<TimelineRowViewModel> Waves
     {
         get => _waves;
         set
         {
-            if (Set(ref _waves, new ObservableCollection<TimelineRowViewModel>(value)))
+            if (Set(ref _waves, value))
             {
-                MaxSignalsTime = value.Max(x => x.States.Last().Time);
+                if (value.Any() && value.All(x => x.States.Count > 0))
+                    MaxSignalsTime = value.Max(x => x.States.Last().Time);
+                else
+                    MaxSignalsTime = 0;
                 OnPropertyChanged(nameof(WavesCount));
                 InvalidateWavesScaleAndOffset();
             }
