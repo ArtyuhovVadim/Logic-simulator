@@ -1,5 +1,6 @@
 ﻿namespace LogicSimulator.Core;
 
+// TODO: Переименовать
 public enum SignalType : byte
 {
     /// <summary>

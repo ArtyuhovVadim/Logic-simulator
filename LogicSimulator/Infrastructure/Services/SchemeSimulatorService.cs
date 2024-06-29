@@ -17,13 +17,17 @@ public struct SimulatorSettings()
     public bool IsPauseSupported = true;
 
     public bool StepByStepOnStart = false;
+
+    public ulong AdditionalSimulationTime = 0;
 }
 
+//TODO: Handle exceptions
 public class SchemeSimulatorService
 {
     private readonly Simulator _simulator = new();
     private LogicScheme? _scheme;
     private SimulatorSettings _settings;
+    private ulong _additionalSimulationTime;
 
     private CancellationTokenSource _cancellationTokenSource = new();
     private readonly AutoResetEvent _simulationAutoResetEvent = new(false);
@@ -63,6 +67,8 @@ public class SchemeSimulatorService
         if (!settings.StepByStepOnStart)
             _simulationStepAutoResetEvent.Set();
 
+        _additionalSimulationTime = settings.AdditionalSimulationTime;
+
         _simulationTask = Task.Run(() =>
         {
             try
@@ -72,12 +78,15 @@ public class SchemeSimulatorService
 
                 while (!token.IsCancellationRequested)
                 {
-                    while (_simulator.EventsCount > 0 && _simulator.CurrentTime < _settings.MaxTime)
+                    while ((_simulator.EventsCount > 0 || _additionalSimulationTime > 0) && _simulator.CurrentTime < _settings.MaxTime)
                     {
                         _simulationStepAutoResetEvent.WaitOne();
                         token.ThrowIfCancellationRequested();
                         _simulator.SimulateStep();
                         //TODO:   if (!_settings.IsPauseSupported) continue;
+
+                        if (_simulator.EventsCount == 0)
+                            _additionalSimulationTime--;
                     }
 
                     token.ThrowIfCancellationRequested();
@@ -151,7 +160,5 @@ public class SchemeSimulatorService
         {
             _simulationStepAutoResetEvent.Reset();
         }
-
-        Debug.WriteLine($"Step: {simulator.CurrentTime}|In: {string.Join(' ', _scheme!.InputGates.Select(x => x.State))}|Out: {string.Join(' ', _scheme.OutputGates.Select(x => x.Input.State))}");
     }
 }
