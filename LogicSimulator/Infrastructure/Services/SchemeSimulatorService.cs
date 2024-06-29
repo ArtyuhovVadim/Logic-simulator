@@ -18,11 +18,15 @@ public class SchemeSimulatorService : ISchemeSimulatorService
     private readonly AutoResetEvent _simulationStepAutoResetEvent = new(false);
     private Task? _simulationTask;
 
+    private Dictionary<string, PortSimulationResult> _simulationResult = null!;
+
     public SchemeSimulatorService(ILogger<SchemeSimulatorService> logger)
     {
         _logger = logger;
         _simulator.SimulationStepExecuted += OnSimulationStepExecuted;
     }
+
+    public IReadOnlyDictionary<string, PortSimulationResult> Result => _simulationResult;
 
     public SimulatorSettings Settings => _settings;
 
@@ -55,6 +59,7 @@ public class SchemeSimulatorService : ISchemeSimulatorService
             _simulationStepAutoResetEvent.Set();
 
         _additionalSimulationTime = settings.AdditionalSimulationTime;
+        _simulationResult = [];
 
         _simulationTask = Task.Run(() =>
         {
@@ -146,6 +151,18 @@ public class SchemeSimulatorService : ISchemeSimulatorService
         _simulationStepAutoResetEvent.Reset();
         State = SimulationState.Stopped;
 
+        foreach (var inputGate in _scheme!.InputGates)
+        {
+            var inputGateViewModel = _scheme.GatesMap[inputGate].ViewModel;
+            _simulationResult[inputGateViewModel.Name].States.Add(new PortState(_simulator.CurrentTime, inputGate.Output.State));
+        }
+
+        foreach (var outputGate in _scheme.OutputGates)
+        {
+            var outputGateViewModel = _scheme.GatesMap[outputGate].ViewModel;
+            _simulationResult[outputGateViewModel.Name].States.Add(new PortState(_simulator.CurrentTime, outputGate.Input.State));
+        }
+
         _logger.LogInformation("Simulation has been stopped");
     }
 
@@ -161,6 +178,34 @@ public class SchemeSimulatorService : ISchemeSimulatorService
             {
                 _simulationStepAutoResetEvent.Reset();
             }
+        }
+
+        foreach (var inputGate in _scheme!.InputGates)
+        {
+            var inputGateViewModel = _scheme.GatesMap[inputGate].ViewModel;
+
+            if (!_simulationResult.TryGetValue(inputGateViewModel.Name, out var result))
+            {
+                result = new PortSimulationResult(inputGateViewModel.Name);
+                _simulationResult[inputGateViewModel.Name] = result;
+            }
+
+            if (result.States.Count == 0 || result.States.Last().State != inputGate.Output.State)
+                result.States.Add(new PortState(_simulator.CurrentTime, inputGate.Output.State));
+        }
+
+        foreach (var outputGate in _scheme.OutputGates)
+        {
+            var outputGateViewModel = _scheme.GatesMap[outputGate].ViewModel;
+
+            if (!_simulationResult.TryGetValue(outputGateViewModel.Name, out var result))
+            {
+                result = new PortSimulationResult(outputGateViewModel.Name);
+                _simulationResult[outputGateViewModel.Name] = result;
+            }
+
+            if (result.States.Count == 0 || result.States.Last().State != outputGate.Input.State)
+                result.States.Add(new PortState(_simulator.CurrentTime, outputGate.Input.State));
         }
     }
 }

@@ -9,6 +9,7 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:vm="clr-namespace:LogicSimulator.ViewModels"
     d:DataContext="{d:DesignInstance Type=avm:TimelineViewModel,
                                      IsDesignTimeCreatable=True}"
     d:DesignHeight="720"
@@ -68,7 +69,7 @@
 
                 <ItemsControl Margin="0,0,0,1" ItemsSource="{Binding Path=Waves}">
                     <ItemsControl.ItemTemplate>
-                        <DataTemplate DataType="{x:Type avm:TimelineRowViewModel}">
+                        <DataTemplate DataType="{x:Type vm:TimelineRowViewModel}">
                             <Border
                                 Height="{Binding Path=DataContext.SignalHeight,
                                                  RelativeSource={RelativeSource AncestorType=UserControl}}"
@@ -112,7 +113,7 @@
 
                 <ItemsControl ItemsSource="{Binding Path=Waves}">
                     <ItemsControl.ItemTemplate>
-                        <DataTemplate DataType="{x:Type avm:TimelineRowViewModel}">
+                        <DataTemplate DataType="{x:Type vm:TimelineRowViewModel}">
                             <Border
                                 Height="{Binding Path=DataContext.SignalHeight,
                                                  RelativeSource={RelativeSource AncestorType=UserControl}}"
