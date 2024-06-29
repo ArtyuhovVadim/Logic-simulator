@@ -1,5 +1,4 @@
-﻿using System.Diagnostics;
-using LogicSimulator.Core;
+﻿using LogicSimulator.Core;
 using LogicSimulator.Infrastructure;
 using LogicSimulator.Infrastructure.Factories.Interfaces;
 using LogicSimulator.Infrastructure.Services.Interfaces;
@@ -9,6 +8,7 @@ using LogicSimulator.ViewModels.AnchorableViewModels.Base;
 using LogicSimulator.ViewModels.ObjectViewModels.Base;
 using LogicSimulator.ViewModels.StatusViewModels;
 using LogicSimulator.ViewModels.StatusViewModels.Base;
+using Microsoft.Extensions.Logging;
 using SharpDX;
 using WpfExtensions.Mvvm.Commands;
 
@@ -18,10 +18,11 @@ public class SchemeViewModel : DocumentViewModel, IModelBased<Scheme>, ICloseabl
 {
     private readonly DockingViewModel _dockingViewModel;
     private readonly SchemeStatusViewModel _statusViewModel;
-    
+
     private readonly IEditorSelectionService _editorSelectionService;
     private readonly ISchemeSimulatorService _schemeSimulatorService;
     private readonly ISchemeBuilderService _schemeBuilderService;
+    private readonly ILogger<SchemeViewModel> _logger;
 
     private List<BaseObjectViewModel> _selectedObjects = [];
     private LogicScheme? _currentScheme;
@@ -31,13 +32,15 @@ public class SchemeViewModel : DocumentViewModel, IModelBased<Scheme>, ICloseabl
                            IEditorSelectionService editorSelectionService,
                            ISchemeSimulatorService schemeSimulatorService,
                            ISchemeBuilderService schemeBuilderService,
-                           IMappedViewModelFactory<BaseObjectModel, BaseObjectViewModel> viewModelsFactory)
+                           IMappedViewModelFactory<BaseObjectModel, BaseObjectViewModel> viewModelsFactory,
+                           ILogger<SchemeViewModel> logger)
     {
         Model = scheme;
         _dockingViewModel = dockingViewModel;
         _editorSelectionService = editorSelectionService;
         _schemeSimulatorService = schemeSimulatorService;
         _schemeBuilderService = schemeBuilderService;
+        _logger = logger;
 
         _objects = new ObservableCollectionEx<BaseObjectViewModel, BaseObjectModel>(Model.Objects, viewModelsFactory.Create);
 
@@ -264,7 +267,7 @@ public class SchemeViewModel : DocumentViewModel, IModelBased<Scheme>, ICloseabl
         catch (Exception e)
         {
             _schemeSimulatorService.StopSimulation();
-            Debug.WriteLine(e);
+            _logger.LogError("{e}", e);
         }
     }, () => _schemeSimulatorService.CanStart || _schemeSimulatorService.CanResume);
 
@@ -283,7 +286,7 @@ public class SchemeViewModel : DocumentViewModel, IModelBased<Scheme>, ICloseabl
         catch (Exception e)
         {
             _schemeSimulatorService.StopSimulation();
-            Debug.WriteLine(e);
+            _logger.LogError("{e}", e);
         }
     }, () => _schemeSimulatorService.CanPause);
 
@@ -302,7 +305,7 @@ public class SchemeViewModel : DocumentViewModel, IModelBased<Scheme>, ICloseabl
         catch (Exception e)
         {
             _schemeSimulatorService.StopSimulation();
-            Debug.WriteLine(e);
+            _logger.LogError("{e}", e);
         }
     }, () => _schemeSimulatorService.State is SimulationState.Paused);
 
@@ -320,7 +323,7 @@ public class SchemeViewModel : DocumentViewModel, IModelBased<Scheme>, ICloseabl
         }
         catch (Exception e)
         {
-            Debug.WriteLine(e);
+            _logger.LogError("{e}", e);
         }
     }, () => _schemeSimulatorService.CanStop);
 
