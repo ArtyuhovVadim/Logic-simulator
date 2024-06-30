@@ -66,7 +66,7 @@ public class DragTool : BaseTool
     {
         _objectsUnderCursor = ObjectsLayer.Objects
             .Select(ObjectsLayer.GetViewFromItem)
-            .Where(objView => objView is not null && objView.HitTest(pos, Matrix3x2.Identity, (float)DragTolerance))
+            .Where(objView => objView is not null && objView.HitTest(pos, (float)DragTolerance))
             .Reverse()
             .ToList()!;
     }

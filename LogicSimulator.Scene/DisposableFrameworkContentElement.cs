@@ -1,5 +1,6 @@
 ﻿using System.Runtime.CompilerServices;
 using System.Windows;
+using System.Windows.Data;
 
 namespace LogicSimulator.Scene;
 
@@ -22,6 +23,7 @@ public abstract class DisposableFrameworkContentElement : FrameworkContentElemen
     {
         if (disposingManaged)
         {
+            BindingOperations.ClearAllBindings(this);
             // освобождаем управляемые ресурсы
         }
         // освобождаем неуправляемые ресурсы

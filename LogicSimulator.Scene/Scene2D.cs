@@ -2,6 +2,7 @@
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.Windows;
 using System.Windows.Input;
 using System.Windows.Interop;
@@ -234,7 +235,6 @@ public class Scene2D : FrameworkElement, IDisposable
         {
             if (_isRenderRequested || Layers.Any(x => x.IsDirty))
             {
-
                 _renderer!.RequestRender();
                 _isRenderRequested = false;
             }
@@ -269,7 +269,7 @@ public class Scene2D : FrameworkElement, IDisposable
         catch (Exception ex)
         {
             Reinitialize();
-            Console.WriteLine(ex);
+            Debug.WriteLine(ex);
         }
     }
 
@@ -324,6 +324,7 @@ public class Scene2D : FrameworkElement, IDisposable
 
         foreach (var layer in Layers)
         {
+            RemoveLogicalChild(layer);
             layer.Dispose();
         }
 

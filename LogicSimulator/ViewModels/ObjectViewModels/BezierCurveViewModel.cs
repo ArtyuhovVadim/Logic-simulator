@@ -1,4 +1,4 @@
-﻿using System.Windows.Media;
+﻿using LogicSimulator.Models;
 using LogicSimulator.Scene;
 using LogicSimulator.ViewModels.ObjectViewModels.Base;
 using SharpDX;
@@ -8,77 +8,69 @@ namespace LogicSimulator.ViewModels.ObjectViewModels;
 
 public class BezierCurveViewModel : BaseObjectViewModel
 {
-    #region Point1
+    public BezierCurveViewModel(BezierCurveModel model) => Model = model;
 
-    private Vector2 _point1;
+    public override BezierCurveModel Model { get; }
+
+    #region Point1
 
     public Vector2 Point1
     {
-        get => _point1;
-        set => Set(ref _point1, value);
+        get => Model.Point1;
+        set => Set(Model.Point1, value, Model, (model, value) => model.Point1 = value);
     }
 
     #endregion
 
     #region Point2
 
-    private Vector2 _point2;
-
     public Vector2 Point2
     {
-        get => _point2;
-        set => Set(ref _point2, value);
+        get => Model.Point2;
+        set => Set(Model.Point2, value, Model, (model, value) => model.Point2 = value);
     }
 
     #endregion
 
     #region Point3
 
-    private Vector2 _point3;
-
     public Vector2 Point3
     {
-        get => _point3;
-        set => Set(ref _point3, value);
+        get => Model.Point3;
+        set => Set(Model.Point3, value, Model, (model, value) => model.Point3 = value);
     }
 
     #endregion
 
     #region StrokeColor
 
-    private Color _strokeColor = Colors.Black;
-
     public Color StrokeColor
     {
-        get => _strokeColor;
-        set => Set(ref _strokeColor, value);
+        get => Model.StrokeColor;
+        set => Set(Model.StrokeColor, value, Model, (model, value) => model.StrokeColor = value);
     }
 
     #endregion
 
     #region StrokeThickness
 
-    private float _strokeThickness = 1f;
-
     public float StrokeThickness
     {
-        get => _strokeThickness;
-        set => Set(ref _strokeThickness, value);
+        get => Model.StrokeThickness;
+        set => Set(Model.StrokeThickness, value, Model, (model, value) => model.StrokeThickness = value);
     }
 
     #endregion
 
     #region StrokeThicknessType
 
-    private StrokeThicknessType _strokeThicknessType = StrokeThicknessType.Smallest;
-
     public StrokeThicknessType StrokeThicknessType
     {
-        get => _strokeThicknessType;
-        set => Set(ref _strokeThicknessType, value);
+        get => Model.StrokeThicknessType;
+        set => Set(Model.StrokeThicknessType, value, Model, (model, value) => model.StrokeThicknessType = value);
     }
 
     #endregion
 
-    public override BezierCurveViewModel MakeClone() => (BezierCurveViewModel)MemberwiseClone();
+    public override BezierCurveViewModel MakeClone() => new(Model.MakeClone());
 }

@@ -1,4 +1,5 @@
 ﻿using System.Windows.Media;
+using LogicSimulator.Models;
 using LogicSimulator.Scene;
 using LogicSimulator.ViewModels.ObjectViewModels.Base;
 
@@ -6,89 +7,79 @@ namespace LogicSimulator.ViewModels.ObjectViewModels;
 
 public class RectangleViewModel : BaseObjectViewModel
 {
-    #region Width
+    public RectangleViewModel(RectangleModel model) => Model = model;
 
-    private float _width;
+    public override RectangleModel Model { get; }
+
+    #region Width
 
     public float Width
     {
-        get => _width;
-        set => Set(ref _width, value);
+        get => Model.Width;
+        set => Set(Model.Width, value, Model, (model, value) => model.Width = value);
     }
 
     #endregion
 
     #region Height
 
-    private float _height;
-    
     public float Height
     {
-        get => _height;
-        set => Set(ref _height, value);
+        get => Model.Height;
+        set => Set(Model.Height, value, Model, (model, value) => model.Height = value);
     }
 
     #endregion
 
     #region FillColor
 
-    private Color _fillColor = Colors.White;
-    
     public Color FillColor
     {
-        get => _fillColor;
-        set => Set(ref _fillColor, value);
+        get => Model.FillColor;
+        set => Set(Model.FillColor, value, Model, (model, value) => model.FillColor = value);
     }
 
     #endregion
 
     #region StrokeColor
 
-    private Color _strokeColor = Colors.Black;
-    
     public Color StrokeColor
     {
-        get => _strokeColor;
-        set => Set(ref _strokeColor, value);
+        get => Model.StrokeColor;
+        set => Set(Model.StrokeColor, value, Model, (model, value) => model.StrokeColor = value);
     }
 
     #endregion
 
     #region StrokeThickness
 
-    private float _strokeThickness = 1f;
-    
     public float StrokeThickness
     {
-        get => _strokeThickness;
-        set => Set(ref _strokeThickness, value);
+        get => Model.StrokeThickness;
+        set => Set(Model.StrokeThickness, value, Model, (model, value) => model.StrokeThickness = value);
     }
 
     #endregion
 
     #region StrokeThicknessType
 
-    private StrokeThicknessType _strokeThicknessType = StrokeThicknessType.Smallest;
-
     public StrokeThicknessType StrokeThicknessType
     {
-        get => _strokeThicknessType;
-        set => Set(ref _strokeThicknessType, value);
+        get => Model.StrokeThicknessType;
+        set => Set(Model.StrokeThicknessType, value, Model, (model, value) => model.StrokeThicknessType = value);
     }
 
     #endregion
 
     #region IsFilled
 
-    private bool _isFilled = true;
-    
     public bool IsFilled
     {
-        get => _isFilled;
-        set => Set(ref _isFilled, value);
+        get => Model.IsFilled;
+        set => Set(Model.IsFilled, value, Model, (model, value) => model.IsFilled = value);
     }
 
     #endregion
 
-    public override RectangleViewModel MakeClone() => (RectangleViewModel)MemberwiseClone();
+    public override RectangleViewModel MakeClone() => new(Model.MakeClone());
 }

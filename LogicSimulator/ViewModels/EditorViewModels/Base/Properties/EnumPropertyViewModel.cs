@@ -14,16 +14,16 @@ public class EnumPropertyViewModel : SinglePropertyViewModel
 
     #endregion
 
-    protected override object GetPropertyValue(IEnumerable<object> objects)
+    protected override object GetPropertyValue(IReadOnlyCollection<object> objects)
     {
-        var firstObj = objects.First();
+        var firstObjValue = GetValue<Enum>(objects.First());
 
-        IsValueUndefined = objects.Any(o => !Equals(GetValue<Enum>(o), GetValue<Enum>(firstObj)));
+        IsValueUndefined = objects.Any(o => !Equals(GetValue<Enum>(o), firstObjValue));
 
-        return GetValue<Enum>(firstObj);
+        return firstObjValue;
     }
 
-    protected override void SetPropertyValue(IEnumerable<object> objects, object value)
+    protected override void SetPropertyValue(IReadOnlyCollection<object> objects, object value)
     {
         IsValueUndefined = false;
 

@@ -5,11 +5,16 @@ using WpfExtensions.Mvvm.Commands;
 
 namespace LogicSimulator.ViewModels.Tools.Base;
 
-public abstract class BasePlacingToolViewModel<T> : BaseSchemeToolViewModel where T : BaseObjectViewModel, new()
+public abstract class BasePlacingToolViewModel<T> : BaseSchemeToolViewModel where T : BaseObjectViewModel
 {
+    private readonly Func<T> _objectFactory;
     private PlacingStep<T>? _currentStep;
 
-    protected BasePlacingToolViewModel(string name, SchemeViewModel scheme) : base(name) => Scheme = scheme;
+    protected BasePlacingToolViewModel(SchemeViewModel scheme, Func<T> objectFactory)
+    {
+        _objectFactory = objectFactory;
+        Scheme = scheme;
+    }
 
     protected T? Object { get; private set; }
 
@@ -44,7 +49,7 @@ public abstract class BasePlacingToolViewModel<T> : BaseSchemeToolViewModel wher
     protected override void OnActivated()
     {
         _currentStep = FirstStep;
-        Object = new T();
+        Object = _objectFactory();
         Scheme.Objects.Add(Object);
         OnStartObjectPlacing(Object);
         _currentStep.EnterStep(Object, Scheme.MousePosition);
@@ -85,7 +90,7 @@ public abstract class BasePlacingToolViewModel<T> : BaseSchemeToolViewModel wher
         else
         {
             Scheme.Objects.Remove(Object!);
-            Object = new T();
+            Object = _objectFactory();
             Scheme.Objects.Add(Object);
             _currentStep!.ExitStep(Object, Scheme.MousePosition);
             _currentStep = FirstStep;
@@ -104,7 +109,7 @@ public abstract class BasePlacingToolViewModel<T> : BaseSchemeToolViewModel wher
         {
             if (!OnObjectPlaced(Object!)) Scheme.Objects.Remove(Object!);
             _currentStep = FirstStep;
-            Object = new T();
+            Object = _objectFactory();
             Scheme.Objects.Add(Object);
             Scheme.ToolsViewModel.IsCurrentToolLocked = false;
             OnStartObjectPlacing(Object!);

@@ -9,6 +9,7 @@ namespace LogicSimulator.Scene.Views.Base;
 
 public abstract class SceneObjectView : DisposableFrameworkContentElement, ISelectionRenderable, IResourceUser, ICacheHost
 {
+    private bool _isDirty;
     private Matrix3x2 _translateMatrix = Matrix3x2.Identity;
     private Matrix3x2 _rotationMatrix = Matrix3x2.Identity;
 
@@ -29,7 +30,7 @@ public abstract class SceneObjectView : DisposableFrameworkContentElement, ISele
         {
             DashStyle = DashStyle.Custom,
             DashCap = CapStyle.Flat
-        }, [2f, 2f]));
+        }, [3f, 2f]));
 
     #region Location
 
@@ -102,9 +103,13 @@ public abstract class SceneObjectView : DisposableFrameworkContentElement, ISele
     #endregion
 
     //https://stackoverflow.com/a/45392997
-    public Matrix3x2 TransformMatrix => _rotationMatrix * _translateMatrix;
+    public Matrix3x2 WorldTransformMatrix => _rotationMatrix * _translateMatrix;
 
-    public bool IsDirty { get; private set; }
+    public bool IsDirty
+    {
+        get => _isDirty || OnIsDirtyEvaluation();
+        private set => _isDirty = value;
+    }
 
     public void Select()
     {
@@ -136,24 +141,20 @@ public abstract class SceneObjectView : DisposableFrameworkContentElement, ISele
         SetValue(IsDraggingPropertyKey, false);
     }
 
-    public Vector2 WorldToLocalSpace(Vector2 worldPos) => worldPos.InvertAndTransform(TransformMatrix);
+    public Vector2 WorldToLocalSpace(Vector2 worldPos) => worldPos.InvertAndTransform(WorldTransformMatrix);
 
-    public Vector2 LocalToWorldSpace(Vector2 localPos) => localPos.Transform(TransformMatrix);
+    public Vector2 LocalToWorldSpace(Vector2 localPos) => localPos.Transform(WorldTransformMatrix);
 
     public bool HitTest(Vector2 pos, float tolerance = 0.25f) =>
         HitTest(pos, Matrix3x2.Identity, tolerance);
 
-    public abstract bool HitTest(Vector2 pos, Matrix3x2 worldTransform, float tolerance = 0.25f);
-
     public GeometryRelation HitTest(Geometry inputGeometry, float tolerance = 0.25f) =>
         HitTest(inputGeometry, Matrix3x2.Identity, tolerance);
-
-    public abstract GeometryRelation HitTest(Geometry inputGeometry, Matrix3x2 worldTransform, float tolerance = 0.25f);
 
     public void Render(Scene2D scene, D2DContext context)
     {
         ThrowIfDisposed();
-        context.DrawingContext.PushTransform(TransformMatrix);
+        context.DrawingContext.PushTransform(WorldTransformMatrix);
         OnRender(scene, context);
         IsDirty = false;
         context.DrawingContext.PopTransform();
@@ -162,20 +163,17 @@ public abstract class SceneObjectView : DisposableFrameworkContentElement, ISele
     public void RenderSelection(Scene2D scene, D2DContext context)
     {
         ThrowIfDisposed();
-        context.DrawingContext.PushTransform(TransformMatrix);
+        context.DrawingContext.PushTransform(WorldTransformMatrix);
         OnRenderSelection(scene, context);
         IsDirty = false;
         context.DrawingContext.PopTransform();
     }
 
-    protected abstract void OnRender(Scene2D scene, D2DContext context);
-
-    protected abstract void OnRenderSelection(Scene2D scene, D2DContext context);
-
     public void InitializeCache(ResourceCache cache)
     {
         ThrowIfDisposed();
         Cache = cache;
+        OnCacheChanged(cache);
     }
 
     protected void MakeDirty()
@@ -183,6 +181,18 @@ public abstract class SceneObjectView : DisposableFrameworkContentElement, ISele
         ThrowIfDisposed();
         IsDirty = true;
     }
+
+    public abstract bool HitTest(Vector2 pos, Matrix3x2 transform, float tolerance = 0.25f);
+
+    public abstract GeometryRelation HitTest(Geometry inputGeometry, Matrix3x2 transform, float tolerance = 0.25f);
+
+    protected abstract void OnRender(Scene2D scene, D2DContext context);
+
+    protected abstract void OnRenderSelection(Scene2D scene, D2DContext context);
+
+    protected virtual void OnCacheChanged(ResourceCache cache) { }
+
+    protected virtual bool OnIsDirtyEvaluation() => false;
 
     protected override void Dispose(bool disposingManaged)
     {

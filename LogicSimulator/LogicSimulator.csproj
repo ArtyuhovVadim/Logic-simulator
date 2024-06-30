@@ -24,6 +24,7 @@
     <ItemGroup>
         <ProjectReference Include="..\LogicSimulator.Controls\LogicSimulator.Controls.csproj" />
         <ProjectReference Include="..\LogicSimulator.Scene\LogicSimulator.Scene.csproj" />
+        <ProjectReference Include="..\LogicSimulator.Shared\LogicSimulator.Shared.csproj" />
     </ItemGroup>
 
     <ItemGroup>
@@ -52,8 +53,8 @@
         <PackageReference Include="Microsoft.Extensions.Hosting" Version="8.0.0" />
         <PackageReference Include="Microsoft.Extensions.Hosting.Abstractions" Version="8.0.0" />
         <PackageReference Include="Microsoft.Xaml.Behaviors.Wpf" Version="1.1.77" />
-        <PackageReference Include="WpfExtensions.Controls.DotNet" Version="1.0.0" />
-        <PackageReference Include="YamlDotNet" Version="13.7.1" />
+        <PackageReference Include="WpfExtensions.Controls.DotNet" Version="1.1.0" />
+        <PackageReference Include="YamlDotNet" Version="15.1.2" />
     </ItemGroup>
 
     <ItemGroup>

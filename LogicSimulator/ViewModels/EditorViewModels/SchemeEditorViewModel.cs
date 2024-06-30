@@ -17,23 +17,23 @@ public class SchemeEditorViewModel : EditorViewModel
             .WithGroupName("Свойства сетки")
             .WithRow(rowBuilder => rowBuilder
                 .WithRowName("Шаг")
-                .WithSingleProperty<FloatPropertyViewModel>(nameof(SchemeViewModel.GridStep), GridStepConfigure))
+                .WithSingleProperty<NumberPropertyViewModel<float>>(nameof(SchemeViewModel.GridStep), GridStepConfigure))
             .WithRow(rowBuilder => rowBuilder
                 .WithRowName("Ширина")
-                .WithSingleProperty<FloatPropertyViewModel>(nameof(SchemeViewModel.GridWidth), SizeStepConfigure))
+                .WithSingleProperty<NumberPropertyViewModel<float>>(nameof(SchemeViewModel.GridWidth), SizeStepConfigure))
             .WithRow(rowBuilder => rowBuilder
                 .WithRowName("Высота")
-                .WithSingleProperty<FloatPropertyViewModel>(nameof(SchemeViewModel.GridHeight), SizeStepConfigure)))
+                .WithSingleProperty<NumberPropertyViewModel<float>>(nameof(SchemeViewModel.GridHeight), SizeStepConfigure)))
         .Build();
 
-    private static void GridStepConfigure(FloatPropertyViewModel prop)
+    private static void GridStepConfigure(NumberPropertyViewModel<float> prop)
     {
         ConfigureAsSizeNumber(prop);
         prop.MaxNumber = 100;
-        prop.MinNumber = 0.5;
+        prop.MinNumber = 0.5f;
     }
 
-    private static void SizeStepConfigure(FloatPropertyViewModel prop)
+    private static void SizeStepConfigure(NumberPropertyViewModel<float> prop)
     {
         ConfigureAsSizeNumber(prop);
         prop.MaxNumber = 10000;

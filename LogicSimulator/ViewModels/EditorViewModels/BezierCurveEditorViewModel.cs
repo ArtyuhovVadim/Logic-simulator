@@ -1,4 +1,5 @@
 ﻿using LogicSimulator.Infrastructure;
+using LogicSimulator.Infrastructure.ExtensionMethods;
 using LogicSimulator.ViewModels.EditorViewModels.Base;
 using LogicSimulator.ViewModels.EditorViewModels.Base.Properties;
 using LogicSimulator.ViewModels.EditorViewModels.Layout;
@@ -13,14 +14,7 @@ public class BezierCurveEditorViewModel : EditorViewModel
     protected override EditorLayout CreateLayout() => LayoutBuilder
         .Create(this)
         .WithName("Кривая Безье")
-        .WithGroup(groupBuilder => groupBuilder
-            .WithGroupName("Расположение")
-            .WithRow(rowBuilder => rowBuilder
-                .WithRowName("(X/Y)")
-                .WithSingleProperty<Vector2PropertyViewModel>(nameof(BezierCurveViewModel.Location), ConfigureAsPositionVector))
-            .WithRow(rowBuilder => rowBuilder
-                .WithRowName("Поворот")
-                .WithSingleProperty<EnumPropertyViewModel>(nameof(BezierCurveViewModel.Rotation))))
+        .WithLocationRotationGroup()
         .WithGroup(groupBuilder => groupBuilder
             .WithGroupName("Вершины")
             .WithRow(rowBuilder => rowBuilder
@@ -34,11 +28,6 @@ public class BezierCurveEditorViewModel : EditorViewModel
                 .WithSingleProperty<Vector2PropertyViewModel>(nameof(BezierCurveViewModel.Point3), ConfigureAsPositionVector)))
         .WithGroup(groupBuilder => groupBuilder
             .WithGroupName("Свойства")
-            .WithRow(rowBuilder => rowBuilder
-                .WithRowName("Граница")
-                .WithMultiProperty<StrokePropertiesViewModel>(multiPropertyBuilder => multiPropertyBuilder
-                    .WithProperty<EnumPropertyViewModel>(nameof(BezierCurveViewModel.StrokeThicknessType))
-                    .WithProperty<FloatPropertyViewModel>(nameof(BezierCurveViewModel.StrokeThickness), ConfigureAsSizeNumber)
-                    .WithProperty<ColorPropertyViewModel>(nameof(BezierCurveViewModel.StrokeColor)))))
+            .WithBorderRow())
         .Build();
 }

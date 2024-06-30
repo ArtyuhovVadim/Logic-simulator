@@ -9,7 +9,8 @@ namespace LogicSimulator.Scene.DirectX;
 public class D2DDrawingContext
 {
     private readonly DirectXContext _context;
-    private readonly Stack<Matrix3x2> _transforms = new();
+    private readonly Stack<Matrix3x2> _transforms = [];
+    private readonly Stack<AntialiasMode> _antialiasModes = [];
 
     public int RenderedFramesCount { get; private set; }
 
@@ -33,11 +34,7 @@ public class D2DDrawingContext
         set => _context.D2DDeviceContext.Transform = _context.D2DDeviceContext.Transform with { M11 = value, M22 = value };
     }
 
-    public AntialiasMode AntialiasMode
-    {
-        get => _context.D2DDeviceContext.AntialiasMode;
-        set => _context.D2DDeviceContext.AntialiasMode = value;
-    }
+    public AntialiasMode AntialiasMode => _context.D2DDeviceContext.AntialiasMode;
 
     public TextAntialiasMode TextAntialiasMode
     {
@@ -55,19 +52,46 @@ public class D2DDrawingContext
         RenderedFramesCount++;
     }
 
+    public void PushAntialiasMode(AntialiasMode mode)
+    {
+        _antialiasModes.Push(mode);
+        if(mode == _context.D2DDeviceContext.AntialiasMode)
+            return;
+        RenderDebugger.StartMethodCall();
+        _context.D2DDeviceContext.AntialiasMode = mode;
+        RenderDebugger.EndMethodCall();
+    }
+
+    public void PopAntialiasMode()
+    {
+        _antialiasModes.Pop();
+        var antialiasModes = _antialiasModes.Count > 0 ? _antialiasModes.Peek() : AntialiasMode.Aliased;
+        if (antialiasModes == _context.D2DDeviceContext.AntialiasMode)
+            return;
+        RenderDebugger.StartMethodCall();
+        _context.D2DDeviceContext.AntialiasMode = antialiasModes;
+        RenderDebugger.EndMethodCall();
+    }
+
     public void PushTransform(Matrix3x2 transform)
     {
-        RenderDebugger.StartMethodCall();
         _transforms.Push(transform);
+        if (transform == Matrix3x2.Identity)
+            return;
+        RenderDebugger.StartMethodCall();
         Transform = _transforms.Peek() * Transform;
         RenderDebugger.EndMethodCall();
     }
 
     public void PopTransform()
     {
+        var transform = _transforms.Pop();
+
+        if (transform == Matrix3x2.Identity)
+            return;
+
         RenderDebugger.StartMethodCall();
-        Transform = Matrix3x2.Invert(_transforms.Peek()) * Transform;
-        _transforms.Pop();
+        Transform = Matrix3x2.Invert(transform) * Transform;
         RenderDebugger.EndMethodCall();
     }
 

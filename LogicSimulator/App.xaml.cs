@@ -10,6 +10,13 @@ using LogicSimulator.Views.Windows;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using LogicSimulator.Infrastructure.Factories;
+using LogicSimulator.Infrastructure.Factories.Interfaces;
+using LogicSimulator.Models;
+using LogicSimulator.Models.Base;
+using LogicSimulator.ViewModels.ObjectViewModels;
+using LogicSimulator.ViewModels.ObjectViewModels.Base;
+using LogicSimulator.ViewModels.ObjectViewModels.Gates;
 
 namespace LogicSimulator;
 
@@ -63,6 +70,7 @@ public partial class App
             .AddSingleton<PropertiesViewModel>()
             .AddSingleton<ProjectExplorerViewModel>()
             .AddSingleton<MessagesOutputViewModel>()
+            .AddSingleton<TimelineViewModel>()
 
             .AddSingleton<MainWindow>(serviceProvider => new MainWindow { DataContext = serviceProvider.GetRequiredService<MainWindowViewModel>() })
 
@@ -70,10 +78,28 @@ public partial class App
             .AddSingleton<ISchemeFileService, SchemeFileService>()
             .AddSingleton<IProjectFileService, ProjectFileService>()
             .AddSingleton<IEditorSelectionService, EditorSelectionService>()
+            .AddSingleton<ISchemeSimulatorService, SchemeSimulatorService>()
+            .AddSingleton<ISchemeBuilderService, SchemeBuilderService>()
 
             .AddSingleton<ISchemeViewModelFactory, SchemeViewModelFactory>()
             .AddSingleton<IProjectViewModelFactory, ProjectViewModelFactory>()
-            ;
+            .AddSingleton<IMappedViewModelFactory<BaseObjectModel, BaseObjectViewModel>>(_ =>
+            {
+                var factory = new SchemeObjectViewModelFactory();
+                factory.Register<ArcModel>(model => new ArcViewModel(model));
+                factory.Register<BezierCurveModel>(model => new BezierCurveViewModel(model));
+                factory.Register<EllipseModel>(model => new EllipseViewModel(model));
+                factory.Register<LineModel>(model => new LineViewModel(model));
+                factory.Register<RectangleModel>(model => new RectangleViewModel(model));
+                factory.Register<RoundedRectangleModel>(model => new RoundedRectangleViewModel(model));
+                factory.Register<TextBlockModel>(model => new TextBlockViewModel(model));
+
+                factory.Register<InputGateModel>(model => new InputGateViewModel(model));
+                factory.Register<OutputGateModel>(model => new OutputGateViewModel(model));
+                factory.Register<AndGateModel>(model => new AndGateViewModel(model));
+                factory.Register<WireModel>(model => new WireViewModel(model));
+                return factory;
+            });
     }
 
     private static void SetupGlobalExceptionHandling()

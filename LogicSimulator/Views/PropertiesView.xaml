@@ -3,13 +3,11 @@
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:avm="clr-namespace:LogicSimulator.ViewModels.AnchorableViewModels"
-    xmlns:b="clr-namespace:WpfExtensions.Behaviors;assembly=WpfExtensions"
     xmlns:br="clr-namespace:WpfExtensions.Controls.Resources.Brushes;assembly=WpfExtensions.Controls"
     xmlns:bruh="clr-namespace:LogicSimulator.Resources.Brushes"
     xmlns:cont="clr-namespace:LogicSimulator.Controls;assembly=LogicSimulator.Controls"
     xmlns:converters="clr-namespace:LogicSimulator.Infrastructure.Converters"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-    xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:me="clr-namespace:WpfExtensions.MarkupExtensions;assembly=WpfExtensions"
     xmlns:properties="clr-namespace:LogicSimulator.ViewModels.EditorViewModels.Base.Properties"
@@ -19,7 +17,7 @@
     mc:Ignorable="d">
 
     <UserControl.Resources>
-        <DataTemplate DataType="{x:Type properties:FloatPropertyViewModel}">
+        <DataTemplate DataType="{x:Type properties:BaseNumberPropertyViewModel}">
             <AdornedControl
                 x:Name="AdornedControl"
                 Margin="0,0,6,0"
@@ -113,6 +111,7 @@
                 </AdornedControl.AdornerContent>
                 <MinimizedColorPickerControl
                     x:Name="ColorPicker"
+                    HorizontalAlignment="Left"
                     RecentBrushesGroupName="ColorPropertyViewModelRecentBrushesGroup"
                     SelectedColor="{Binding Path=Value}" />
             </AdornedControl>
@@ -210,16 +209,18 @@
                 </AdornedControl.AdornerContent>
                 <TextBoxEx
                     x:Name="TextBoxEx"
-                    VerticalContentAlignment="Top"
-                    AcceptsReturn="True"
                     HorizontalScrollBarVisibility="Auto"
-                    MaxLines="8"
-                    MinLines="8"
                     SelectAllTextOnFocus="False"
                     Text="{Binding Path=Value}"
                     VerticalScrollBarVisibility="Auto" />
             </AdornedControl>
             <DataTemplate.Triggers>
+                <DataTrigger Binding="{Binding Path=IsMultiline}" Value="True">
+                    <Setter TargetName="TextBoxEx" Property="VerticalContentAlignment" Value="Top" />
+                    <Setter TargetName="TextBoxEx" Property="AcceptsReturn" Value="True" />
+                    <Setter TargetName="TextBoxEx" Property="MaxLines" Value="8" />
+                    <Setter TargetName="TextBoxEx" Property="MinLines" Value="8" />
+                </DataTrigger>
                 <Trigger SourceName="TextBoxEx" Property="IsFocused" Value="True">
                     <Setter TargetName="AdornedControl" Property="IsAdornerVisible" Value="False" />
                 </Trigger>

@@ -1,4 +1,5 @@
 ﻿using LogicSimulator.Infrastructure;
+using LogicSimulator.Infrastructure.ExtensionMethods;
 using LogicSimulator.ViewModels.EditorViewModels.Base;
 using LogicSimulator.ViewModels.EditorViewModels.Base.Properties;
 using LogicSimulator.ViewModels.EditorViewModels.Layout;
@@ -13,23 +14,16 @@ public class TextBlockEditorViewModel : EditorViewModel
     protected override EditorLayout CreateLayout() => LayoutBuilder
         .Create(this)
         .WithName("Текст")
-        .WithGroup(groupBuilder => groupBuilder
-            .WithGroupName("Расположение")
-            .WithRow(rowBuilder => rowBuilder
-                .WithRowName("(X/Y)")
-                .WithSingleProperty<Vector2PropertyViewModel>(nameof(TextBlockViewModel.Location), ConfigureAsPositionVector))
-            .WithRow(rowBuilder => rowBuilder
-                .WithRowName("Поворот")
-                .WithSingleProperty<EnumPropertyViewModel>(nameof(TextBlockViewModel.Rotation))))
+        .WithLocationRotationGroup()
         .WithGroup(groupBuilder => groupBuilder
             .WithGroupName("Свойства")
             .WithRow(rowBuilder => rowBuilder
                 .WithRowName("Текст")
-                .WithSingleProperty<StringPropertyViewModel>(nameof(TextBlockViewModel.Text)))
+                .WithSingleProperty<StringPropertyViewModel>(nameof(TextBlockViewModel.Text), prop => prop.IsMultiline = true))
             .WithRow(rowBuilder => rowBuilder
                 .WithRowName("Шрифт")
                 .WithSingleProperty<FontNamePropertyViewModel>(nameof(TextBlockViewModel.FontName))
-                .WithSingleProperty<FloatPropertyViewModel>(nameof(TextBlockViewModel.FontSize), ConfigureAsFontSizeNumber)
+                .WithSingleProperty<NumberPropertyViewModel<float>>(nameof(TextBlockViewModel.FontSize), ConfigureAsFontSizeNumber)
                 .WithSingleProperty<ColorPropertyViewModel>(nameof(TextBlockViewModel.TextColor))
                 .WithLayout(layoutBuilder => layoutBuilder
                     .WithRelativeSize(1)

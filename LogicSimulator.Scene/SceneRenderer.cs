@@ -76,7 +76,7 @@ public class SceneRenderer : DisposableObject
     private void Init(nint resourceHandle)
     {
         _d2dContext?.Dispose();
-
+        
         if (!_context.Initialize(resourceHandle))
         {
             throw new ApplicationException("Can't create DirectX context");

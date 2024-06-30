@@ -2,7 +2,6 @@
 using LogicSimulator.Views;
 using WpfExtensions.Utils;
 using LogicSimulator.Scene;
-using LogicSimulator.ViewModels.AnchorableViewModels;
 
 namespace LogicSimulator.Infrastructure.Behaviors;
 

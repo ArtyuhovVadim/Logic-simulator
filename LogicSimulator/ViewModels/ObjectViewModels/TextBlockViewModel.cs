@@ -1,105 +1,94 @@
 ﻿using System.Windows.Media;
+using LogicSimulator.Models;
 using LogicSimulator.ViewModels.ObjectViewModels.Base;
 
 namespace LogicSimulator.ViewModels.ObjectViewModels;
 
 public class TextBlockViewModel : BaseObjectViewModel
 {
-    #region Text
+    public TextBlockViewModel(TextBlockModel model) => Model = model;
 
-    private string _text = "Text";
+    public override TextBlockModel Model { get; }
+
+    #region Text
 
     public string Text
     {
-        get => _text;
-        set => Set(ref _text, value);
+        get => Model.Text;
+        set => Set(Model.Text, value, Model, (model, value) => model.Text = value);
     }
 
     #endregion
 
     #region FontName
 
-    private string _fontName = "Times New Roman";
-
     public string FontName
     {
-        get => _fontName;
-        set => Set(ref _fontName, value);
+        get => Model.FontName;
+        set => Set(Model.FontName, value, Model, (model, value) => model.FontName= value);
     }
 
     #endregion
 
     #region FontSize
 
-    private float _fontSize = 24f;
-
     public float FontSize
     {
-        get => _fontSize;
-        set => Set(ref _fontSize, value);
+        get => Model.FontSize;
+        set => Set(Model.FontSize, value, Model, (model, value) => model.FontSize = value);
     }
 
     #endregion
 
     #region IsBold
 
-    private bool _isBold;
-
     public bool IsBold
     {
-        get => _isBold;
-        set => Set(ref _isBold, value);
+        get => Model.IsBold;
+        set => Set(Model.IsBold, value, Model, (model, value) => model.IsBold = value);
     }
 
     #endregion
 
     #region IsItalic
 
-    private bool _isItalic;
-
     public bool IsItalic
     {
-        get => _isItalic;
-        set => Set(ref _isItalic, value);
+        get => Model.IsItalic;
+        set => Set(Model.IsItalic, value, Model, (model, value) => model.IsItalic = value);
     }
 
     #endregion
 
     #region IsUnderlined
 
-    private bool _isUnderlined;
-
     public bool IsUnderlined
     {
-        get => _isUnderlined;
-        set => Set(ref _isUnderlined, value);
+        get => Model.IsUnderlined;
+        set => Set(Model.IsUnderlined, value, Model, (model, value) => model.IsUnderlined = value);
     }
 
     #endregion
 
     #region IsCross
 
-    private bool _isCross;
-
     public bool IsCross
     {
-        get => _isCross;
-        set => Set(ref _isCross, value);
+        get => Model.IsCross;
+        set => Set(Model.IsCross, value, Model, (model, value) => model.IsCross = value);
     }
 
     #endregion
 
     #region TextColor
 
-    private Color _textColor = Colors.Black;
-
     public Color TextColor
     {
-        get => _textColor;
-        set => Set(ref _textColor, value);
+        get => Model.TextColor;
+        set => Set(Model.TextColor, value, Model, (model, value) => model.TextColor = value);
     }
 
     #endregion
 
-    public override TextBlockViewModel MakeClone() => (TextBlockViewModel)MemberwiseClone();
+    public override TextBlockViewModel MakeClone() => new(Model.MakeClone());
 }

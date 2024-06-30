@@ -14,16 +14,16 @@ public class BoolPropertyViewModel : SinglePropertyViewModel
 
     #endregion  
 
-    protected override object GetPropertyValue(IEnumerable<object> objects)
+    protected override object GetPropertyValue(IReadOnlyCollection<object> objects)
     {
-        var firstObj = objects.First();
+        var firstObjValue = GetValue<bool>(objects.First());
 
-        IsValueUndefined = objects.Any(o => !Equals(GetValue<bool>(o), GetValue<bool>(firstObj)));
+        IsValueUndefined = objects.Any(o => !Equals(GetValue<bool>(o), firstObjValue));
 
-        return GetValue<bool>(firstObj);
+        return firstObjValue;
     }
 
-    protected override void SetPropertyValue(IEnumerable<object> objects, object value)
+    protected override void SetPropertyValue(IReadOnlyCollection<object> objects, object value)
     {
         IsValueUndefined = false;
 

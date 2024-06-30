@@ -32,9 +32,9 @@ public class Vector2PropertyViewModel : SinglePropertyViewModel
 
             var exprWithoutSuffix = value;
 
-            if (NumberSuffix.Length != 0 && value.EndsWith(NumberSuffix))
+            if (NumberSuffix.Length != 0)
             {
-                exprWithoutSuffix = value[..^NumberSuffix.Length];
+                exprWithoutSuffix = value.Replace(NumberSuffix, string.Empty);
             }
 
             if (!Parser.TryParse(exprWithoutSuffix, out var x, out var e))
@@ -77,9 +77,9 @@ public class Vector2PropertyViewModel : SinglePropertyViewModel
 
             var exprWithoutSuffix = value;
 
-            if (NumberSuffix.Length != 0 && value.EndsWith(NumberSuffix))
+            if (NumberSuffix.Length != 0)
             {
-                exprWithoutSuffix = value[..^NumberSuffix.Length];
+                exprWithoutSuffix = value.Replace(NumberSuffix, string.Empty);
             }
 
             if (!Parser.TryParse(exprWithoutSuffix, out var y, out var e))
@@ -135,20 +135,20 @@ public class Vector2PropertyViewModel : SinglePropertyViewModel
 
     #endregion
 
-    protected override object GetPropertyValue(IEnumerable<object> objects)
+    protected override object GetPropertyValue(IReadOnlyCollection<object> objects)
     {
         if (_suppressPropertyGetter)
             return Vector2.Zero;
 
-        var firstObj = objects.First();
+        var firsObjValue = GetValue<Vector2>(objects.First());
 
-        IsXValueUndefined = objects.Any(o => !MathUtil.NearEqual(GetValue<Vector2>(o).X, GetValue<Vector2>(firstObj).X));
-        IsYValueUndefined = objects.Any(o => !MathUtil.NearEqual(GetValue<Vector2>(o).Y, GetValue<Vector2>(firstObj).Y));
+        IsXValueUndefined = objects.Any(o => !MathUtil.NearEqual(GetValue<Vector2>(o).X, firsObjValue.X));
+        IsYValueUndefined = objects.Any(o => !MathUtil.NearEqual(GetValue<Vector2>(o).Y, firsObjValue.Y));
 
-        return GetValue<Vector2>(firstObj);
+        return firsObjValue;
     }
 
-    protected override void SetPropertyValue(IEnumerable<object> objects, object value)
+    protected override void SetPropertyValue(IReadOnlyCollection<object> objects, object value)
     {
         var newVector = (Vector2)value;
 

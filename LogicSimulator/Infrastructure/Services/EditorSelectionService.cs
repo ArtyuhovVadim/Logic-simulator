@@ -32,10 +32,16 @@ public class EditorSelectionService : IEditorSelectionService
 
         if (objects.Any(x => x.GetType() != firstObjectType))
         {
-            var layouts = objects.Select(x => x.GetType()).Distinct().Select(x => EditorsMap[x]).Select(x => x.Layout);
+            var types = objects.Select(x => x.GetType()).Distinct().ToArray();
 
+            if (types.Any(x => !EditorsMap.ContainsKey(x)))
+            {
+                SetEmptyEditor();
+                return;
+            }
+
+            var layouts = types.Select(x => EditorsMap[x].Layout).ToArray();
             var multiEditor = new MultiObjectsEditorViewModel(layouts);
-
             _propertiesViewModel.CurrentEditorViewModel?.StopObjectsEdit();
             multiEditor.SetObjectsToEdit(objects);
             _propertiesViewModel.CurrentEditorViewModel = multiEditor;
@@ -45,8 +51,15 @@ public class EditorSelectionService : IEditorSelectionService
 
         if (!EditorsMap.TryGetValue(firstObjectType, out var editor))
         {
-            SetEmptyEditor();
-            return;
+            if (EditorsMap.Keys.FirstOrDefault(firstObjectType.IsSubclassOf) is { } subType)
+            {
+                editor = EditorsMap[subType];
+            }
+            else
+            {
+                SetEmptyEditor();
+                return;
+            }
         }
 
         _propertiesViewModel.CurrentEditorViewModel?.StopObjectsEdit();

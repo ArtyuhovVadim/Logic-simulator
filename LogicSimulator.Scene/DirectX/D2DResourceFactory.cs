@@ -192,6 +192,13 @@ public class D2DResourceFactory : DisposableObject
         return tmp;
     }
 
+    public PathGeometry ParsePathGeometry(string path)
+    {
+        var sink = BeginPathGeometry();
+        PathGeometryParser.ParseToSink(path, sink);
+        return EndPathGeometry();
+    }
+
     public IEnumerable<Triangle> CreateTriangles(Geometry geometry) => CreateTriangles(geometry, Matrix3x2.Identity);
 
     public IEnumerable<Triangle> CreateTriangles(Geometry geometry, Matrix3x2 transform, float flatteningTolerance = 0.25f)

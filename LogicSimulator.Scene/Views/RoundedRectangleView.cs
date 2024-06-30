@@ -208,19 +208,19 @@ public class RoundedRectangleView : EditableSceneObjectView, IStroked
 
     #endregion
 
-    public override bool HitTest(Vector2 pos, Matrix3x2 worldTransform, float tolerance = 0.25f)
+    public override bool HitTest(Vector2 pos, Matrix3x2 transform, float tolerance = 0.25f)
     {
         var geometry = Cache.Get<RectangleGeometry>(this, GeometryResource);
 
         return IsFilled ?
-            geometry.FillContainsPoint(pos, TransformMatrix * worldTransform, tolerance) :
-            geometry.StrokeContainsPoint(pos, this.GetStrokeThickness(), null, TransformMatrix * worldTransform, tolerance);
+            geometry.FillContainsPoint(pos, WorldTransformMatrix * transform, tolerance) :
+            geometry.StrokeContainsPoint(pos, this.GetStrokeThickness(), null, WorldTransformMatrix * transform, tolerance);
     }
 
-    public override GeometryRelation HitTest(Geometry inputGeometry, Matrix3x2 worldTransform, float tolerance = 0.25f)
+    public override GeometryRelation HitTest(Geometry inputGeometry, Matrix3x2 transform, float tolerance = 0.25f)
     {
         var rectGeometry = Cache.Get<RectangleGeometry>(this, GeometryResource);
-        return rectGeometry.Compare(inputGeometry, Matrix3x2.Invert(TransformMatrix) * worldTransform, tolerance);
+        return rectGeometry.Compare(inputGeometry, Matrix3x2.Invert(WorldTransformMatrix * transform), tolerance);
     }
 
     protected override void OnRender(Scene2D scene, D2DContext context)

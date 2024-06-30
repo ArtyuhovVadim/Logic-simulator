@@ -20,6 +20,7 @@ public class LayoutInitializer : MarkupExtension, ILayoutUpdateStrategy
             ProjectExplorerViewModel => Insert(layout, anchorableToShow, LeftPaneName),
             PropertiesViewModel => Insert(layout, anchorableToShow, RightPaneName),
             MessagesOutputViewModel => Insert(layout, anchorableToShow, BottomPaneName),
+            TimelineViewModel => Insert(layout, anchorableToShow, BottomPaneName),
             _ => false
         };
     }

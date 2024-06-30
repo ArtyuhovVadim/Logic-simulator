@@ -1,4 +1,5 @@
 ﻿using System.Windows.Media;
+using LogicSimulator.Models;
 using LogicSimulator.Scene;
 using LogicSimulator.ViewModels.ObjectViewModels.Base;
 
@@ -6,89 +7,79 @@ namespace LogicSimulator.ViewModels.ObjectViewModels;
 
 public class EllipseViewModel : BaseObjectViewModel
 {
+    public EllipseViewModel(EllipseModel model) => Model = model;
+
+    public override EllipseModel Model { get; }
+
     #region RadiusX
 
-    private float _radiusX;
-    
     public float RadiusX
     {
-        get => _radiusX;
-        set => Set(ref _radiusX, value);
+        get => Model.RadiusX;
+        set => Set(Model.RadiusX, value, Model, (model, value) => model.RadiusX = value);
     }
 
     #endregion
 
     #region RadiusY
 
-    private float _radiusY;
-    
     public float RadiusY
     {
-        get => _radiusY;
-        set => Set(ref _radiusY, value);
+        get => Model.RadiusY;
+        set => Set(Model.RadiusY, value, Model, (model, value) => model.RadiusY = value);
     }
 
     #endregion
 
     #region FillColor
 
-    private Color _fillColor = Colors.White;
-    
     public Color FillColor
     {
-        get => _fillColor;
-        set => Set(ref _fillColor, value);
+        get => Model.FillColor;
+        set => Set(Model.FillColor, value, Model, (model, value) => model.FillColor = value);
     }
 
     #endregion
 
     #region StrokeColor
 
-    private Color _strokeColor = Colors.Black;
-    
     public Color StrokeColor
     {
-        get => _strokeColor;
-        set => Set(ref _strokeColor, value);
+        get => Model.StrokeColor;
+        set => Set(Model.StrokeColor, value, Model, (model, value) => model.StrokeColor = value);
     }
 
     #endregion
 
     #region StrokeThickness
 
-    private float _strokeThickness = 1f;
-    
     public float StrokeThickness
     {
-        get => _strokeThickness;
-        set => Set(ref _strokeThickness, value);
+        get => Model.StrokeThickness;
+        set => Set(Model.StrokeThickness, value, Model, (model, value) => model.StrokeThickness = value);
     }
 
     #endregion
 
     #region StrokeThicknessType
 
-    private StrokeThicknessType _strokeThicknessType = StrokeThicknessType.Smallest;
-
     public StrokeThicknessType StrokeThicknessType
     {
-        get => _strokeThicknessType;
-        set => Set(ref _strokeThicknessType, value);
+        get => Model.StrokeThicknessType;
+        set => Set(Model.StrokeThicknessType, value, Model, (model, value) => model.StrokeThicknessType = value);
     }
 
     #endregion
 
     #region IsFilled
 
-    private bool _isFilled = true;
-    
     public bool IsFilled
     {
-        get => _isFilled;
-        set => Set(ref _isFilled, value);
+        get => Model.IsFilled;
+        set => Set(Model.IsFilled, value, Model, (model, value) => model.IsFilled = value);
     }
 
     #endregion
 
-    public override EllipseViewModel MakeClone() => (EllipseViewModel)MemberwiseClone();
+    public override EllipseViewModel MakeClone() => new(Model.MakeClone());
 }

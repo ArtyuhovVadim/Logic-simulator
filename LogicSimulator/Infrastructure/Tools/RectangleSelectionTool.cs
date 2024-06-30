@@ -133,7 +133,7 @@ public class RectangleSelectionTool : BaseTool
                 _isSelectionChanged = true;
             }
 
-            var compareResult = sceneObject!.HitTest(Geometry, Matrix3x2.Identity);
+            var compareResult = sceneObject!.HitTest(Geometry);
 
             if (compareResult is GeometryRelation.Disjoint or GeometryRelation.Unknown)
                 continue;
