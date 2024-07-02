@@ -265,11 +265,12 @@ public class Scene2D : FrameworkElement, IDisposable
             RenderDebugger.DrawStatistics(this, Context, new Vector2(5));
 
             Context.DrawingContext.EndDraw();
+            Context.DrawingContext.ResetTransform();
         }
         catch (Exception ex)
         {
-            Reinitialize();
             Debug.WriteLine(ex);
+            Reinitialize();
         }
     }
 
