@@ -29,6 +29,8 @@ public class SceneObjectTemplateSelector : DataTemplateSelector
 
     public DataTemplate LineDataTemplate { get; set; } = null!;
 
+    public DataTemplate PathDataTemplate { get; set; } = null!;
+
     public DataTemplate UnknownObjectDataTemplate { get; set; } = null!;
 
     public override DataTemplate SelectTemplate(object? item, DependencyObject container) => item switch
@@ -44,6 +46,7 @@ public class SceneObjectTemplateSelector : DataTemplateSelector
         ArcViewModel => ArcDataTemplate,
         TextBlockViewModel => TextBlockDataTemplate,
         LineViewModel => LineDataTemplate,
+        PathViewModel => PathDataTemplate,
         _ => UnknownObjectDataTemplate,
     };
 }
