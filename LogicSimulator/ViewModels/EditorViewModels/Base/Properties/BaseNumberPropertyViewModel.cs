@@ -4,7 +4,11 @@ namespace LogicSimulator.ViewModels.EditorViewModels.Base.Properties;
 
 public abstract class BaseNumberPropertyViewModel : SinglePropertyViewModel
 {
-    protected static readonly MathParser Parser = MathParserBuilder.BuildDefaultParser();
+    protected static readonly MathParser Parser = MathParserBuilder
+                                                  .Create()
+                                                  .WithDefaultFunctions()
+                                                  .WithDefaultConstants()
+                                                  .WithConstant("nan", double.NaN).Build();
 
     #region IsValueUndefined
 

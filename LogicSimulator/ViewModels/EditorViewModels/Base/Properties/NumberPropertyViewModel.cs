@@ -64,9 +64,18 @@ public class NumberPropertyViewModel<T> : BaseNumberPropertyViewModel where T : 
         var firstObj = objects.First();
         var firstObjValue = GetValue<T>(firstObj);
 
-        IsValueUndefined = objects.Any(o => GetValue<T>(o) != GetValue<T>(firstObj));
+        IsValueUndefined = objects.Any(o =>
+        {
+            if (T.IsNaN(GetValue<T>(o)) ^ T.IsNaN(GetValue<T>(firstObj)))
+                return true;
 
-        if (NumberSuffix.Length != 0)
+            if (T.IsNaN(GetValue<T>(o)) && T.IsNaN(GetValue<T>(firstObj)))
+                return false;
+
+            return GetValue<T>(o) != GetValue<T>(firstObj);
+        });
+
+        if (NumberSuffix.Length != 0 && !T.IsNaN(firstObjValue))
             return string.Format(CultureInfo.InvariantCulture, "{0:0.###}{1}", firstObjValue / DisplayCoefficient, NumberSuffix);
 
         return GetValue<T>(firstObj);
