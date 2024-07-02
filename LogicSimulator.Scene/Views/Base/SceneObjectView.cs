@@ -139,6 +139,7 @@ public abstract class SceneObjectView : DisposableFrameworkContentElement, ISele
     public virtual void EndDrag()
     {
         SetValue(IsDraggingPropertyKey, false);
+        MakeDirty();
     }
 
     public Vector2 WorldToLocalSpace(Vector2 worldPos) => worldPos.InvertAndTransform(WorldTransformMatrix);

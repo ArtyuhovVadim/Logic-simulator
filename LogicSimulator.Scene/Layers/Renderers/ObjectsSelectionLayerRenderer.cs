@@ -10,12 +10,9 @@ public class ObjectsSelectionLayerRenderer : BaseLayerRenderer<ObjectsSelectionL
         if (Layer?.Views is null)
             return;
 
-        foreach (var obj in Layer.Views)
+        foreach (var obj in Layer.Views.Where(x => x is { IsSelected: true, IsDragging: false }))
         {
-            if (obj.IsSelected)
-            {
-                obj.RenderSelection(scene, context);
-            }
+            obj.RenderSelection(scene, context);
         }
     }
 }

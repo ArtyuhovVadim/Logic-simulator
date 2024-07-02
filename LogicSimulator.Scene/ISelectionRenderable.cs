@@ -6,5 +6,7 @@ public interface ISelectionRenderable : IRenderable
 {
     bool IsSelected { get; }
 
+    bool IsDragging { get; }
+
     void RenderSelection(Scene2D scene, D2DContext context);
 }

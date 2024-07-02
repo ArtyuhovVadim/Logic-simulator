@@ -16,7 +16,7 @@ public class NodesLayerRenderer : BaseLayerRenderer<NodesLayer>
 
         var size = AbstractNode.NodeSize / scene.Scale;
 
-        foreach (var sceneObject in Layer.Views.OfType<EditableSceneObjectView>().Where(x => x.IsSelected))
+        foreach (var sceneObject in Layer.Views.OfType<EditableSceneObjectView>().Where(x => x is { IsSelected: true, IsDragging: false }))
         {
             foreach (var node in sceneObject.Nodes)
             {
