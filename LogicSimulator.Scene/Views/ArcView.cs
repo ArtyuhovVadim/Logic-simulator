@@ -16,13 +16,13 @@ public class ArcView : EditableSceneObjectView, IStroked
     private Vector2 _startAnglePos;
     private Vector2 _endAnglePos;
 
-    public static readonly IResource StrokeBrushResource =
-        ResourceCache.Register<ArcView>((factory, user) => factory.CreateSolidColorBrush(user.StrokeColor.ToColor4()));
+    public static readonly IStaticResource<StrokeStyle> StrokeStyleResource =
+        ResourceCache.RegisterStatic(factory => factory.CreateStrokeStyle(new StrokeStyleProperties { StartCap = CapStyle.Round, EndCap = CapStyle.Round, LineJoin = LineJoin.Round }));
 
-    public static readonly IResource StrokeStyleResource =
-        ResourceCache.Register<ArcView>((factory, _) => factory.CreateStrokeStyle(new StrokeStyleProperties { StartCap = CapStyle.Round, EndCap = CapStyle.Round, LineJoin = LineJoin.Round }));
+    public static readonly IResource<ArcView, SolidColorBrush> StrokeBrushResource =
+        ResourceCache.Register<ArcView, SolidColorBrush>((factory, user) => factory.CreateSolidColorBrush(user.StrokeColor.ToColor4()));
 
-    public static readonly IResource GeometryResource = ResourceCache.Register<ArcView>((factory, user) =>
+    public static readonly IResource<ArcView, Geometry> GeometryResource = ResourceCache.Register<ArcView, Geometry>((factory, user) =>
     {
         user._startAnglePos = MathHelper.GetPositionFromAngle(Vector2.Zero, user.RadiusX, user.RadiusY, -user.StartAngle);
         user._endAnglePos = MathHelper.GetPositionFromAngle(Vector2.Zero, user.RadiusX, user.RadiusY, -user.EndAngle);
@@ -153,29 +153,29 @@ public class ArcView : EditableSceneObjectView, IStroked
 
     public override bool HitTest(Vector2 pos, Matrix3x2 transform, float tolerance = 0.25f)
     {
-        var geometry = Cache.Get<PathGeometry>(this, GeometryResource);
+        var geometry = Cache.Get(this, GeometryResource);
         return geometry.StrokeContainsPoint(pos, this.GetStrokeThickness(), null, WorldTransformMatrix * transform, tolerance);
     }
 
     public override GeometryRelation HitTest(Geometry inputGeometry, Matrix3x2 transform, float tolerance = 0.25f)
     {
-        var geometry = Cache.Get<PathGeometry>(this, GeometryResource);
+        var geometry = Cache.Get(this, GeometryResource);
         return geometry.Compare(inputGeometry, Matrix3x2.Invert(WorldTransformMatrix * transform), tolerance);
     }
 
     protected override void OnRender(Scene2D scene, D2DContext context)
     {
-        var geometry = Cache.Get<Geometry>(this, GeometryResource);
-        var strokeBrush = Cache.Get<SolidColorBrush>(this, StrokeBrushResource);
-        var style = Cache.Get<StrokeStyle>(this, StrokeStyleResource);
+        var geometry = Cache.Get(this, GeometryResource);
+        var strokeBrush = Cache.Get(this, StrokeBrushResource);
+        var style = Cache.Get(StrokeStyleResource);
 
         context.DrawingContext.DrawGeometry(geometry, strokeBrush, this.GetStrokeThickness(scene), style);
     }
 
     protected override void OnRenderSelection(Scene2D scene, D2DContext context)
     {
-        var brush = Cache.Get<SolidColorBrush>(SelectionBrushStaticResource);
-        var style = Cache.Get<StrokeStyle>(SelectionStyleStaticResource);
+        var brush = Cache.Get(SelectionBrushStaticResource);
+        var style = Cache.Get(SelectionStyleStaticResource);
 
         var strokeWidth = 1f / scene.Scale;
 

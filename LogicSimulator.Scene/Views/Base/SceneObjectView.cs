@@ -22,10 +22,10 @@ public abstract class SceneObjectView : DisposableFrameworkContentElement, ISele
 
     public Guid Id { get; } = Guid.NewGuid();
 
-    public static readonly IStaticResource SelectionBrushStaticResource =
+    public static readonly IStaticResource<SolidColorBrush> SelectionBrushStaticResource =
         ResourceCache.RegisterStatic(factory => factory.CreateSolidColorBrush(new Color4(0, 1, 0, 1)));
 
-    public static readonly IStaticResource SelectionStyleStaticResource =
+    public static readonly IStaticResource<StrokeStyle> SelectionStyleStaticResource =
         ResourceCache.RegisterStatic(factory => factory.CreateStrokeStyle(new StrokeStyleProperties
         {
             DashStyle = DashStyle.Custom,

@@ -4,8 +4,8 @@ namespace LogicSimulator.Scene.Cache;
 
 public class ResourceCache : IDisposable
 {
-    private readonly Dictionary<Guid, Dictionary<long, IDisposable>> _cache = new();
-    private readonly Dictionary<long, IDisposable> _staticCache = new();
+    private readonly Dictionary<Guid, Dictionary<long, IDisposable>> _cache = [];
+    private readonly Dictionary<long, IDisposable> _staticCache = [];
 
     private static long _lastId;
 
@@ -15,7 +15,9 @@ public class ResourceCache : IDisposable
 
     public ResourceCache(D2DResourceFactory factory) => _factory = factory;
 
-    public void Update(IResourceUser user, IResource resource)
+    public void Update<TUser, TResource>(TUser user, IResource<TUser, TResource> resource)
+        where TResource : class, IDisposable
+        where TUser : class, IResourceUser
     {
         if (_cache.TryGetValue(user.Id, out var resourceMap))
         {
@@ -32,7 +34,7 @@ public class ResourceCache : IDisposable
         _cache[user.Id][resource.Id] = resource.Update(_factory, user);
     }
 
-    public void UpdateStatic(IStaticResource resource)
+    public void UpdateStatic<TResource>(IStaticResource<TResource> resource) where TResource : class, IDisposable
     {
         if (_staticCache.TryGetValue(resource.Id, out var managedResource))
         {
@@ -76,16 +78,18 @@ public class ResourceCache : IDisposable
         resources.Clear();
     }
 
-    public T Get<T>(IResourceUser user, IResource resource) where T : IDisposable
+    public TResource Get<TUser, TResource>(TUser user, IResource<TUser, TResource> resource)
+        where TResource : class, IDisposable
+        where TUser : class, IResourceUser
     {
         if (_cache.TryGetValue(user.Id, out var resourceMap))
         {
             if (resourceMap.TryGetValue(resource.Id, out var managedResource))
             {
-                if (managedResource is T t)
-                    return t;
+                if (managedResource is TResource res1)
+                    return res1;
 
-                throw new InvalidCastException($"Can not cast resource to {typeof(T).Name}.");
+                throw new InvalidCastException($"Can not cast resource to {typeof(TResource).Name}.");
             }
         }
         else
@@ -93,34 +97,28 @@ public class ResourceCache : IDisposable
             _cache[user.Id] = new Dictionary<long, IDisposable>(1);
         }
 
-        var managedResource1 = resource.Update(_factory, user);
+        var res2 = resource.Update(_factory, user);
 
-        _cache[user.Id][resource.Id] = managedResource1;
+        _cache[user.Id][resource.Id] = res2;
 
-        if (managedResource1 is T t1)
-            return t1;
-
-        throw new InvalidCastException($"Can not cast resource to {typeof(T).Name}.");
+        return res2;
     }
 
-    public T Get<T>(IStaticResource resource) where T : IDisposable
+    public TResource Get<TResource>(IStaticResource<TResource> resource) where TResource : class, IDisposable
     {
         if (_staticCache.TryGetValue(resource.Id, out var managedResource))
         {
-            if (managedResource is T t)
-                return t;
+            if (managedResource is TResource res1)
+                return res1;
 
-            throw new InvalidCastException($"Can not cast resource to {typeof(T).Name}.");
+            throw new InvalidCastException($"Can not cast resource to {typeof(TResource).Name}.");
         }
 
-        var managedResource1 = resource.Update(_factory);
+        var res2 = resource.Update(_factory);
 
-        _staticCache[resource.Id] = managedResource1;
+        _staticCache[resource.Id] = res2;
 
-        if (managedResource1 is T t1)
-            return t1;
-
-        throw new InvalidCastException($"Can not cast resource to {typeof(T).Name}.");
+        return res2;
     }
 
     public void Dispose()
@@ -130,17 +128,22 @@ public class ResourceCache : IDisposable
         GC.SuppressFinalize(this);
     }
 
-    public static IResource Register<TUser>(Func<D2DResourceFactory, TUser, IDisposable> updateCallback)
-        where TUser : class, IResourceUser => new Resource<TUser>(_lastId++, updateCallback);
+    public static IResource<TUser, TResource> Register<TUser, TResource>(Func<D2DResourceFactory, TUser, TResource> updateCallback)
+        where TUser : class, IResourceUser
+        where TResource : class, IDisposable =>
+        new Resource<TUser, TResource>(_lastId++, updateCallback);
 
-    public static IStaticResource RegisterStatic(Func<D2DResourceFactory, IDisposable> updateCallback)
-         => new StaticResource(_lastStaticId++, updateCallback);
+    public static IStaticResource<TResource> RegisterStatic<TResource>(Func<D2DResourceFactory, TResource> updateCallback)
+        where TResource : class, IDisposable =>
+        new StaticResource<TResource>(_lastStaticId++, updateCallback);
 
-    private class Resource<TUser> : IResource where TUser : class, IResourceUser
+    private class Resource<TUser, TResource> : IResource<TUser, TResource>
+        where TUser : class, IResourceUser
+        where TResource : class, IDisposable
     {
-        private readonly Func<D2DResourceFactory, TUser, IDisposable> _updateCallback;
+        private readonly Func<D2DResourceFactory, TUser, TResource> _updateCallback;
 
-        public Resource(long id, Func<D2DResourceFactory, TUser, IDisposable> updateCallback)
+        public Resource(long id, Func<D2DResourceFactory, TUser, TResource> updateCallback)
         {
             _updateCallback = updateCallback;
             Id = id;
@@ -148,15 +151,15 @@ public class ResourceCache : IDisposable
 
         public long Id { get; }
 
-        public IDisposable Update(D2DResourceFactory factory, IResourceUser user) =>
-            _updateCallback.Invoke(factory, (TUser)user);
+        public TResource Update(D2DResourceFactory factory, TUser user) =>
+            _updateCallback.Invoke(factory, user);
     }
 
-    private class StaticResource : IStaticResource
+    private class StaticResource<TResource> : IStaticResource<TResource> where TResource : class, IDisposable
     {
-        private readonly Func<D2DResourceFactory, IDisposable> _updateCallback;
+        private readonly Func<D2DResourceFactory, TResource> _updateCallback;
 
-        public StaticResource(long id, Func<D2DResourceFactory, IDisposable> updateCallback)
+        public StaticResource(long id, Func<D2DResourceFactory, TResource> updateCallback)
         {
             _updateCallback = updateCallback;
             Id = id;
@@ -164,7 +167,7 @@ public class ResourceCache : IDisposable
 
         public long Id { get; }
 
-        public IDisposable Update(D2DResourceFactory factory)
+        public TResource Update(D2DResourceFactory factory)
             => _updateCallback.Invoke(factory);
     }
 }

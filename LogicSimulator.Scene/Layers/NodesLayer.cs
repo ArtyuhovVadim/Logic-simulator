@@ -4,16 +4,17 @@ using LogicSimulator.Scene.Layers.Renderers;
 using System.Windows;
 using System.Windows.Media;
 using LogicSimulator.Utils;
+using SolidColorBrush = SharpDX.Direct2D1.SolidColorBrush;
 
 namespace LogicSimulator.Scene.Layers;
 
 public class NodesLayer : BaseSceneLayer
 {
-    public static readonly IResource StrokeBrushResource =
-        ResourceCache.Register<NodesLayerRenderer>((factory, user) => factory.CreateSolidColorBrush(user.Layer.StrokeColor.ToColor4()));
+    public static readonly IResource<NodesLayerRenderer, SolidColorBrush> StrokeBrushResource =
+        ResourceCache.Register<NodesLayerRenderer, SolidColorBrush>((factory, user) => factory.CreateSolidColorBrush(user.Layer.StrokeColor.ToColor4()));
 
-    public static readonly IResource FillBrushResource =
-        ResourceCache.Register<NodesLayerRenderer>((factory, user) => factory.CreateSolidColorBrush(user.Layer.FillColor.ToColor4()));
+    public static readonly IResource<NodesLayerRenderer, SolidColorBrush> FillBrushResource =
+        ResourceCache.Register<NodesLayerRenderer, SolidColorBrush>((factory, user) => factory.CreateSolidColorBrush(user.Layer.FillColor.ToColor4()));
 
     #region StrokeColor
 
@@ -32,7 +33,7 @@ public class NodesLayer : BaseSceneLayer
 
         layer.ThrowIfDisposed();
 
-        layer.Cache?.Update(layer.Renderer, StrokeBrushResource);
+        layer.Cache?.Update((NodesLayerRenderer)layer.Renderer, StrokeBrushResource);
 
         layer.MakeDirty();
     }
@@ -56,7 +57,7 @@ public class NodesLayer : BaseSceneLayer
 
         layer.ThrowIfDisposed();
 
-        layer.Cache?.Update(layer.Renderer, StrokeBrushResource);
+        layer.Cache?.Update((NodesLayerRenderer)layer.Renderer, StrokeBrushResource);
 
         layer.MakeDirty();
     }

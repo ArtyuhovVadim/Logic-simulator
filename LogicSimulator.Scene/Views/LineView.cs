@@ -14,14 +14,14 @@ namespace LogicSimulator.Scene.Views;
 
 public class LineView : EditableSceneObjectView, IStroked
 {
-    public static readonly IResource StrokeBrushResource =
-        ResourceCache.Register<LineView>((factory, user) => factory.CreateSolidColorBrush(user.StrokeColor.ToColor4()));
+    public static readonly IResource<LineView, SolidColorBrush> StrokeBrushResource =
+        ResourceCache.Register<LineView, SolidColorBrush>((factory, user) => factory.CreateSolidColorBrush(user.StrokeColor.ToColor4()));
 
-    public static readonly IResource GeometryResource =
-        ResourceCache.Register<LineView>((factory, user) => factory.CreatePolylineGeometry(Vector2.Zero, user.Vertexes));
+    public static readonly IResource<LineView, PathGeometry> GeometryResource =
+        ResourceCache.Register<LineView, PathGeometry>((factory, user) => factory.CreatePolylineGeometry(Vector2.Zero, user.Vertexes));
 
-    public static readonly IResource StrokeStyleResource =
-        ResourceCache.Register<LineView>((factory, _) => factory.CreateStrokeStyle(new StrokeStyleProperties { StartCap = CapStyle.Round, EndCap = CapStyle.Round, LineJoin = LineJoin.Round }));
+    public static readonly IStaticResource<StrokeStyle> StrokeStyleResource =
+        ResourceCache.RegisterStatic(factory => factory.CreateStrokeStyle(new StrokeStyleProperties { StartCap = CapStyle.Round, EndCap = CapStyle.Round, LineJoin = LineJoin.Round }));
 
     #region StrokeColor
 
@@ -145,30 +145,30 @@ public class LineView : EditableSceneObjectView, IStroked
 
     public override bool HitTest(Vector2 pos, Matrix3x2 transform, float tolerance = 0.25f)
     {
-        var geometry = Cache.Get<PathGeometry>(this, GeometryResource);
+        var geometry = Cache.Get(this, GeometryResource);
         return geometry.StrokeContainsPoint(pos, this.GetStrokeThickness(), null, WorldTransformMatrix * transform, tolerance);
     }
 
     public override GeometryRelation HitTest(Geometry inputGeometry, Matrix3x2 transform, float tolerance = 0.25f)
     {
-        var geometry = Cache.Get<PathGeometry>(this, GeometryResource);
+        var geometry = Cache.Get(this, GeometryResource);
         return geometry.Compare(inputGeometry, Matrix3x2.Invert(WorldTransformMatrix * transform), tolerance);
     }
 
     protected override void OnRender(Scene2D scene, D2DContext context)
     {
-        var geometry = Cache.Get<PathGeometry>(this, GeometryResource);
-        var strokeBrush = Cache.Get<SolidColorBrush>(this, StrokeBrushResource);
-        var strokeStyle = Cache.Get<StrokeStyle>(this, StrokeStyleResource);
+        var geometry = Cache.Get(this, GeometryResource);
+        var strokeBrush = Cache.Get(this, StrokeBrushResource);
+        var strokeStyle = Cache.Get(StrokeStyleResource);
 
         context.DrawingContext.DrawGeometry(geometry, strokeBrush, this.GetStrokeThickness(scene), strokeStyle);
     }
 
     protected override void OnRenderSelection(Scene2D scene, D2DContext context)
     {
-        var brush = Cache.Get<SolidColorBrush>(SelectionBrushStaticResource);
-        var style = Cache.Get<StrokeStyle>(SelectionStyleStaticResource);
-        var geometry = Cache.Get<PathGeometry>(this, GeometryResource);
+        var brush = Cache.Get(SelectionBrushStaticResource);
+        var style = Cache.Get(SelectionStyleStaticResource);
+        var geometry = Cache.Get(this, GeometryResource);
 
         var strokeWidth = 1f / scene.Scale;
 

@@ -15,13 +15,17 @@ namespace LogicSimulator.Scene.Views;
 
 public class PathView : SceneObjectView, IStroked
 {
-    public static readonly IResource GeometryResource = ResourceCache.Register<PathView>((factory, user) => factory.TryParsePathGeometry(user.Geometry));
+    public static readonly IResource<PathView, PathGeometry> GeometryResource =
+        ResourceCache.Register<PathView, PathGeometry>((factory, user) => factory.TryParsePathGeometry(user.Geometry));
 
-    public static readonly IResource TransformedGeometryResource = ResourceCache.Register<PathView>((factory, user) => factory.CreateTransformedGeometry(user.Cache.Get<PathGeometry>(user, GeometryResource), user.ComputeRenderTransform()));
+    public static readonly IResource<PathView, TransformedGeometry> TransformedGeometryResource =
+        ResourceCache.Register<PathView, TransformedGeometry>((factory, user) => factory.CreateTransformedGeometry(user.Cache.Get(user, GeometryResource), user.ComputeRenderTransform()));
 
-    public static readonly IResource FillBrushResource = ResourceCache.Register<PathView>((factory, user) => factory.CreateSolidColorBrush(user.FillColor.ToColor4()));
+    public static readonly IResource<PathView, SolidColorBrush> FillBrushResource =
+        ResourceCache.Register<PathView, SolidColorBrush>((factory, user) => factory.CreateSolidColorBrush(user.FillColor.ToColor4()));
 
-    public static readonly IResource StrokeBrushResource = ResourceCache.Register<PathView>((factory, user) => factory.CreateSolidColorBrush(user.StrokeColor.ToColor4()));
+    public static readonly IResource<PathView, SolidColorBrush> StrokeBrushResource =
+        ResourceCache.Register<PathView, SolidColorBrush>((factory, user) => factory.CreateSolidColorBrush(user.StrokeColor.ToColor4()));
 
     #region Geometry
 
@@ -231,7 +235,7 @@ public class PathView : SceneObjectView, IStroked
 
     public override bool HitTest(Vector2 pos, Matrix3x2 transform, float tolerance = 0.25f)
     {
-        var geometry = Cache.Get<TransformedGeometry>(this, TransformedGeometryResource);
+        var geometry = Cache.Get(this, TransformedGeometryResource);
         var matrix = WorldTransformMatrix * transform;
 
         if (IsFilled)
@@ -245,16 +249,16 @@ public class PathView : SceneObjectView, IStroked
 
     public override GeometryRelation HitTest(Geometry inputGeometry, Matrix3x2 transform, float tolerance = 0.25f)
     {
-        var geometry = Cache.Get<TransformedGeometry>(this, TransformedGeometryResource);
+        var geometry = Cache.Get(this, TransformedGeometryResource);
         var matrix = WorldTransformMatrix * transform;
         return geometry.Compare(inputGeometry, Matrix3x2.Invert(matrix), tolerance);
     }
 
     protected override void OnRender(Scene2D scene, D2DContext context)
     {
-        var fillBrush = Cache.Get<SolidColorBrush>(this, FillBrushResource);
-        var strokeBrush = Cache.Get<SolidColorBrush>(this, StrokeBrushResource);
-        var geometry = Cache.Get<TransformedGeometry>(this, TransformedGeometryResource);
+        var fillBrush = Cache.Get(this, FillBrushResource);
+        var strokeBrush = Cache.Get(this, StrokeBrushResource);
+        var geometry = Cache.Get(this, TransformedGeometryResource);
 
         if (IsAntiAliased)
             context.DrawingContext.PushAntialiasMode(AntialiasMode.PerPrimitive);
@@ -271,14 +275,14 @@ public class PathView : SceneObjectView, IStroked
 
     protected override void OnRenderSelection(Scene2D scene, D2DContext context)
     {
-        var brush = Cache.Get<SolidColorBrush>(SelectionBrushStaticResource);
-        var style = Cache.Get<StrokeStyle>(SelectionStyleStaticResource);
+        var brush = Cache.Get(SelectionBrushStaticResource);
+        var style = Cache.Get(SelectionStyleStaticResource);
         context.DrawingContext.DrawRectangle(Bounds.ToInflated(SelectionPadding), brush, 1f / scene.Scale, style);
     }
 
     private Matrix3x2 ComputeRenderTransform()
     {
-        var bounds = Cache.Get<PathGeometry>(this, GeometryResource).GetBounds().ToRect();
+        var bounds = Cache.Get(this, GeometryResource).GetBounds().ToRect();
         var result = Matrix3x2.Identity;
 
         result *= Matrix3x2.Translation(OriginPosition.ToVector2(bounds));
@@ -300,8 +304,8 @@ public class PathView : SceneObjectView, IStroked
 
         pathView.Cache?.Update(pathView, GeometryResource);
         pathView.Cache?.Update(pathView, TransformedGeometryResource);
-
-        pathView.Bounds = pathView.Cache?.Get<TransformedGeometry>(pathView, TransformedGeometryResource).GetBounds().ToRect() ?? RectangleF.Empty;
+        
+        pathView.Bounds = pathView.Cache?.Get(pathView, TransformedGeometryResource).GetBounds().ToRect() ?? RectangleF.Empty;
 
         pathView.MakeDirty();
     }

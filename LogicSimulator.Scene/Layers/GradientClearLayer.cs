@@ -8,12 +8,13 @@ using SharpDX;
 using SharpDX.Direct2D1;
 using Color = System.Windows.Media.Color;
 using GradientStop = SharpDX.Direct2D1.GradientStop;
+using LinearGradientBrush = SharpDX.Direct2D1.LinearGradientBrush;
 
 namespace LogicSimulator.Scene.Layers;
 
 public class GradientClearLayer : BaseSceneLayer
 {
-    public static readonly IResource BrushResource = ResourceCache.Register<GradientClearRenderer>((factory, user) =>
+    public static readonly IResource<GradientClearRenderer, LinearGradientBrush> BrushResource = ResourceCache.Register<GradientClearRenderer, LinearGradientBrush>((factory, user) =>
     {
         //TODO: Костыль, можно передавать width и height через свойства зависимости
         var scene = (Scene2D)user.Layer.Parent;
@@ -68,7 +69,7 @@ public class GradientClearLayer : BaseSceneLayer
 
         layer.ThrowIfDisposed();
 
-        layer.Cache?.Update(layer.Renderer, BrushResource);
+        layer.Cache?.Update((GradientClearRenderer)layer.Renderer, BrushResource);
 
         layer.MakeDirty();
     }

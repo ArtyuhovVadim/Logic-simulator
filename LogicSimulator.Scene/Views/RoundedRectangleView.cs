@@ -16,14 +16,14 @@ namespace LogicSimulator.Scene.Views;
 
 public class RoundedRectangleView : EditableSceneObjectView, IStroked
 {
-    public static readonly IResource FillBrushResource =
-        ResourceCache.Register<RoundedRectangleView>((factory, user) => factory.CreateSolidColorBrush(user.FillColor.ToColor4()));
+    public static readonly IResource<RoundedRectangleView, SolidColorBrush> FillBrushResource =
+        ResourceCache.Register<RoundedRectangleView, SolidColorBrush>((factory, user) => factory.CreateSolidColorBrush(user.FillColor.ToColor4()));
 
-    public static readonly IResource StrokeBrushResource =
-        ResourceCache.Register<RoundedRectangleView>((factory, user) => factory.CreateSolidColorBrush(user.StrokeColor.ToColor4()));
+    public static readonly IResource<RoundedRectangleView, SolidColorBrush> StrokeBrushResource =
+        ResourceCache.Register<RoundedRectangleView, SolidColorBrush>((factory, user) => factory.CreateSolidColorBrush(user.StrokeColor.ToColor4()));
 
-    public static readonly IResource GeometryResource =
-        ResourceCache.Register<RoundedRectangleView>((factory, user) => factory.CreateRectangleGeometry(user.Width, user.Height));
+    public static readonly IResource<RoundedRectangleView, RectangleGeometry> GeometryResource =
+        ResourceCache.Register<RoundedRectangleView, RectangleGeometry>((factory, user) => factory.CreateRectangleGeometry(user.Width, user.Height));
 
     private static readonly AbstractNode[] AbstractNodes =
     [
@@ -210,7 +210,7 @@ public class RoundedRectangleView : EditableSceneObjectView, IStroked
 
     public override bool HitTest(Vector2 pos, Matrix3x2 transform, float tolerance = 0.25f)
     {
-        var geometry = Cache.Get<RectangleGeometry>(this, GeometryResource);
+        var geometry = Cache.Get(this, GeometryResource);
 
         return IsFilled ?
             geometry.FillContainsPoint(pos, WorldTransformMatrix * transform, tolerance) :
@@ -219,7 +219,7 @@ public class RoundedRectangleView : EditableSceneObjectView, IStroked
 
     public override GeometryRelation HitTest(Geometry inputGeometry, Matrix3x2 transform, float tolerance = 0.25f)
     {
-        var rectGeometry = Cache.Get<RectangleGeometry>(this, GeometryResource);
+        var rectGeometry = Cache.Get(this, GeometryResource);
         return rectGeometry.Compare(inputGeometry, Matrix3x2.Invert(WorldTransformMatrix * transform), tolerance);
     }
 
@@ -238,19 +238,19 @@ public class RoundedRectangleView : EditableSceneObjectView, IStroked
 
         if (IsFilled)
         {
-            var fillBrush = Cache.Get<SolidColorBrush>(this, FillBrushResource);
+            var fillBrush = Cache.Get(this, FillBrushResource);
             context.DrawingContext.FillRoundedRectangle(rect, fillBrush);
         }
 
-        var strokeBrush = Cache.Get<SolidColorBrush>(this, StrokeBrushResource);
+        var strokeBrush = Cache.Get(this, StrokeBrushResource);
 
         context.DrawingContext.DrawRoundedRectangle(rect, strokeBrush, this.GetStrokeThickness(scene));
     }
 
     protected override void OnRenderSelection(Scene2D scene, D2DContext context)
     {
-        var brush = Cache.Get<SolidColorBrush>(SelectionBrushStaticResource);
-        var style = Cache.Get<StrokeStyle>(SelectionStyleStaticResource);
+        var brush = Cache.Get(SelectionBrushStaticResource);
+        var style = Cache.Get(SelectionStyleStaticResource);
 
         var rect = new RoundedRectangle
         {

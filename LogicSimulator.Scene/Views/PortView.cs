@@ -13,23 +13,25 @@ namespace LogicSimulator.Scene.Views;
 
 public class PortView : SceneObjectView, IStroked
 {
-    public static readonly IStaticResource HighSignalBrushResource = ResourceCache.RegisterStatic(factory => factory.CreateSolidColorBrush(new DxColor(0, 210, 0)));
+    public static readonly IStaticResource<SolidColorBrush> HighSignalBrushResource = ResourceCache.RegisterStatic(factory => factory.CreateSolidColorBrush(new DxColor(0, 210, 0)));
 
-    public static readonly IStaticResource LowSignalBrushResource = ResourceCache.RegisterStatic(factory => factory.CreateSolidColorBrush(new DxColor(0, 100, 0)));
+    public static readonly IStaticResource<SolidColorBrush> LowSignalBrushResource = ResourceCache.RegisterStatic(factory => factory.CreateSolidColorBrush(new DxColor(0, 100, 0)));
 
-    public static readonly IStaticResource UndefinedSignalBrushResource = ResourceCache.RegisterStatic(factory => factory.CreateSolidColorBrush(new DxColor(40, 40, 255)));
+    public static readonly IStaticResource<SolidColorBrush> UndefinedSignalBrushResource = ResourceCache.RegisterStatic(factory => factory.CreateSolidColorBrush(new DxColor(40, 40, 255)));
 
-    public static readonly IStaticResource PosEdgeSignalBrushResource = ResourceCache.RegisterStatic(factory => factory.CreateSolidColorBrush(new DxColor(255, 210, 0)));
+    public static readonly IStaticResource<SolidColorBrush> PosEdgeSignalBrushResource = ResourceCache.RegisterStatic(factory => factory.CreateSolidColorBrush(new DxColor(255, 210, 0)));
 
-    public static readonly IStaticResource NegEdgeSignalBrushResource = ResourceCache.RegisterStatic(factory => factory.CreateSolidColorBrush(new DxColor(255, 100, 0)));
+    public static readonly IStaticResource<SolidColorBrush> NegEdgeSignalBrushResource = ResourceCache.RegisterStatic(factory => factory.CreateSolidColorBrush(new DxColor(255, 100, 0)));
 
-    public static readonly IStaticResource HighImpSignalBrushResource = ResourceCache.RegisterStatic(factory => factory.CreateSolidColorBrush(new DxColor(128, 128, 128)));
+    public static readonly IStaticResource<SolidColorBrush> HighImpSignalBrushResource = ResourceCache.RegisterStatic(factory => factory.CreateSolidColorBrush(new DxColor(128, 128, 128)));
 
-    public static readonly IStaticResource StrokeStyleResource = ResourceCache.RegisterStatic(factory => factory.CreateStrokeStyle(new StrokeStyleProperties { StartCap = CapStyle.Round, EndCap = CapStyle.Round, LineJoin = LineJoin.Round }));
+    public static readonly IStaticResource<StrokeStyle> StrokeStyleResource = ResourceCache.RegisterStatic(factory => factory.CreateStrokeStyle(new StrokeStyleProperties { StartCap = CapStyle.Round, EndCap = CapStyle.Round, LineJoin = LineJoin.Round }));
 
-    public static readonly IResource HitTestGeometryResource = ResourceCache.Register<PortView>((factory, user) => factory.CreateRectangleGeometry(user.Length, user.GetStrokeThickness()));
+    public static readonly IResource<PortView, RectangleGeometry> HitTestGeometryResource = 
+        ResourceCache.Register<PortView, RectangleGeometry>((factory, user) => factory.CreateRectangleGeometry(user.Length, user.GetStrokeThickness()));
 
-    public static readonly IResource StrokeBrushResource = ResourceCache.Register<PortView>((factory, user) => factory.CreateSolidColorBrush(user.StrokeColor.ToColor4()));
+    public static readonly IResource<PortView, SolidColorBrush> StrokeBrushResource = 
+        ResourceCache.Register<PortView, SolidColorBrush>((factory, user) => factory.CreateSolidColorBrush(user.StrokeColor.ToColor4()));
 
     #region Label
 
@@ -121,10 +123,10 @@ public class PortView : SceneObjectView, IStroked
     #endregion
 
     public override bool HitTest(Vector2 pos, Matrix3x2 transform, float tolerance = 0.25f) =>
-        Cache.Get<RectangleGeometry>(this, HitTestGeometryResource).StrokeContainsPoint(pos, this.GetStrokeThickness(), null, WorldTransformMatrix * transform, tolerance);
+        Cache.Get(this, HitTestGeometryResource).StrokeContainsPoint(pos, this.GetStrokeThickness(), null, WorldTransformMatrix * transform, tolerance);
 
     public override GeometryRelation HitTest(Geometry inputGeometry, Matrix3x2 transform, float tolerance = 0.25f) =>
-        Cache.Get<RectangleGeometry>(this, HitTestGeometryResource).Compare(inputGeometry, Matrix3x2.Invert(WorldTransformMatrix * transform), tolerance);
+        Cache.Get(this, HitTestGeometryResource).Compare(inputGeometry, Matrix3x2.Invert(WorldTransformMatrix * transform), tolerance);
 
     protected override void OnRender(Scene2D scene, D2DContext context)
     {
@@ -132,19 +134,19 @@ public class PortView : SceneObjectView, IStroked
         //var brush = Cache.Get<SolidColorBrush>(this, StrokeBrushResource);
         var brush = GetSignalBrush(State);
         var strokeThickness = this.GetStrokeThickness(scene);
-        context.DrawingContext.DrawLine(Vector2.Zero, new Vector2(Length, 0), brush, strokeThickness, Cache.Get<StrokeStyle>(StrokeStyleResource));
+        context.DrawingContext.DrawLine(Vector2.Zero, new Vector2(Length, 0), brush, strokeThickness, Cache.Get(StrokeStyleResource));
     }
 
     protected override void OnRenderSelection(Scene2D scene, D2DContext context) { }
 
     protected Brush GetSignalBrush(SignalType type) => type switch
     {
-        SignalType.Low => Cache.Get<SolidColorBrush>(LowSignalBrushResource),
-        SignalType.High => Cache.Get<SolidColorBrush>(HighSignalBrushResource),
-        SignalType.Undefined => Cache.Get<SolidColorBrush>(UndefinedSignalBrushResource),
-        SignalType.PosEdge => Cache.Get<SolidColorBrush>(PosEdgeSignalBrushResource),
-        SignalType.NegEdge => Cache.Get<SolidColorBrush>(NegEdgeSignalBrushResource),
-        SignalType.HighImp => Cache.Get<SolidColorBrush>(HighImpSignalBrushResource),
+        SignalType.Low => Cache.Get(LowSignalBrushResource),
+        SignalType.High => Cache.Get(HighSignalBrushResource),
+        SignalType.Undefined => Cache.Get(UndefinedSignalBrushResource),
+        SignalType.PosEdge => Cache.Get(PosEdgeSignalBrushResource),
+        SignalType.NegEdge => Cache.Get(NegEdgeSignalBrushResource),
+        SignalType.HighImp => Cache.Get(HighImpSignalBrushResource),
         _ => throw new ArgumentOutOfRangeException(nameof(type), type, null)
     };
 }
