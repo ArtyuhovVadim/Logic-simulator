@@ -24,10 +24,23 @@ public class PathEditorViewModel : EditorViewModel
             .WithRow(rowBuilder => rowBuilder
                 .WithRowName("Точка отсчета")
                 .WithSingleProperty<EnumPropertyViewModel>(nameof(PathViewModel.OriginPosition)))
-            .WithSizeRow()
+            .WithRow(rowBuilder => rowBuilder
+                .WithRowName("Ширина")
+                .WithSingleProperty<NumberPropertyViewModel<float>>(nameof(PathViewModel.Width), prop =>
+                {
+                    ConfigureAsSizeNumber(prop);
+                    prop.IsNanAllowed = true;
+                }))
+            .WithRow(rowBuilder => rowBuilder
+                .WithRowName("Высота")
+                .WithSingleProperty<NumberPropertyViewModel<float>>(nameof(PathViewModel.Height), prop =>
+                {
+                    ConfigureAsSizeNumber(prop);
+                    prop.IsNanAllowed = true;
+                }))
             .WithRow(rowBuilder => rowBuilder
                 .WithRowName("Масштаб")
-                .WithSingleProperty<NumberPropertyViewModel<float>>(nameof(PathViewModel.Scale))))
+                .WithSingleProperty<NumberPropertyViewModel<float>>(nameof(PathViewModel.Scale), prop => prop.IsNanAllowed = true)))
         .WithGroup(groupBuilder => groupBuilder
             .WithGroupName("Вид")
             .WithRow(rowBuilder => rowBuilder

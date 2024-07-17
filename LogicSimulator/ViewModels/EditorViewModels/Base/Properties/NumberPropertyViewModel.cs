@@ -8,6 +8,18 @@ public class NumberPropertyViewModel<T> : BaseNumberPropertyViewModel where T : 
 {
     private string _invalidValue = string.Empty;
 
+    #region IsNanAllowed
+
+    private bool _isNanAllowed;
+
+    public bool IsNanAllowed
+    {
+        get => _isNanAllowed;
+        set => Set(ref _isNanAllowed, value);
+    }
+
+    #endregion
+
     #region MaxNumber
 
     private T _maxNumber = T.MaxValue;
@@ -102,6 +114,13 @@ public class NumberPropertyViewModel<T> : BaseNumberPropertyViewModel where T : 
 
         var numberT = T.CreateSaturating(number) * DisplayCoefficient;
 
+        if (!IsNanAllowed && T.IsNaN(numberT))
+        {
+            _invalidValue = originalExpr;
+            AddError("NaN не разрешен", nameof(Value));
+            return;
+        }
+
         if (numberT > MaxNumber || numberT < MinNumber)
         {
             _invalidValue = originalExpr;
@@ -126,6 +145,7 @@ public class NumberPropertyViewModel<T> : BaseNumberPropertyViewModel where T : 
         MinNumber = MinNumber,
         MaxNumber = MaxNumber,
         DisplayCoefficient = DisplayCoefficient,
-        NumberSuffix = NumberSuffix
+        NumberSuffix = NumberSuffix,
+        IsNanAllowed = IsNanAllowed
     };
 }
