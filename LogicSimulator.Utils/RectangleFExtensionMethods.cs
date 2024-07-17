@@ -4,6 +4,13 @@ namespace LogicSimulator.Utils;
 
 public static class RectangleFExtensionMethods
 {
+    public static bool IntersectsInclusive(this RectangleF a, RectangleF b) => a.Left <= b.Right && a.Right >= b.Left && a.Top <= b.Bottom && a.Bottom >= b.Top;
+
+    public static bool Contains(this RectangleF a, RectangleF b) => a.X <= b.X && b.Right <= a.Right && a.Y <= b.Y && b.Bottom <= a.Bottom;
+
+    public static bool IsNormal(this RectangleF rect) => !float.IsNaN(rect.Left) && !float.IsNaN(rect.Top) && !float.IsNaN(rect.Right) && !float.IsNaN(rect.Bottom) &&
+                                                         !float.IsInfinity(rect.Left) && !float.IsInfinity(rect.Top) && !float.IsInfinity(rect.Right) && !float.IsInfinity(rect.Bottom);
+
     public static RectangleF ScaleSize(this RectangleF rect, float scale) => rect with { Width = rect.Width * scale, Height = rect.Height * scale };
 
     public static RectangleF ScaleAtCenter(this RectangleF rect, float scaleX, float scaleY)

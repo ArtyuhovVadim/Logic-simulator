@@ -30,6 +30,6 @@ public static class Vector2ExtensionMethods
         (rect.Left >= vector.X && vector.X >= rect.Right || rect.Right >= vector.X && vector.X >= rect.Left) &&
         (rect.Top >= vector.Y && vector.Y >= rect.Bottom || rect.Bottom >= vector.Y && vector.Y >= rect.Top);
 
-    public static RawRectangleF RectangleRelativePointAsCenter(this in Vector2 vector, float size) =>
-        new(vector.X - size, vector.Y - size, vector.X + size, vector.Y + size);
+    public static RectangleF RectangleRelativePointAsCenter(this in Vector2 vector, float size) =>
+        new() { Left = vector.X - size, Top = vector.Y - size, Right = vector.X + size, Bottom = vector.Y + size };
 }
