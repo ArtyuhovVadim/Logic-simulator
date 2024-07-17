@@ -5,6 +5,7 @@ using System.Windows;
 using System.Windows.Media;
 using LogicSimulator.Utils;
 using SolidColorBrush = SharpDX.Direct2D1.SolidColorBrush;
+using LogicSimulator.Scene.Views.Base;
 
 namespace LogicSimulator.Scene.Layers;
 
@@ -66,14 +67,14 @@ public class NodesLayer : BaseSceneLayer
 
     #region Views
 
-    public IEnumerable<ISelectionRenderable> Views
+    public IEnumerable<SceneObjectView> Views
     {
-        get => (IEnumerable<ISelectionRenderable>)GetValue(ViewsProperty);
+        get => (IEnumerable<SceneObjectView>)GetValue(ViewsProperty);
         set => SetValue(ViewsProperty, value);
     }
 
     public static readonly DependencyProperty ViewsProperty =
-        DependencyProperty.Register(nameof(Views), typeof(IEnumerable<ISelectionRenderable>), typeof(NodesLayer), new PropertyMetadata(default(IEnumerable<ISelectionRenderable>), DefaultPropertyChangedHandler));
+        DependencyProperty.Register(nameof(Views), typeof(IEnumerable<SceneObjectView>), typeof(NodesLayer), new PropertyMetadata(default(IEnumerable<SceneObjectView>), DefaultPropertyChangedHandler));
 
     #endregion
 }

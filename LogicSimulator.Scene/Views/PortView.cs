@@ -28,7 +28,7 @@ public class PortView : SceneObjectView, IStroked
     public static readonly IStaticResource<StrokeStyle> StrokeStyleResource = ResourceCache.RegisterStatic(factory => factory.CreateStrokeStyle(new StrokeStyleProperties { StartCap = CapStyle.Round, EndCap = CapStyle.Round, LineJoin = LineJoin.Round }));
 
     public static readonly IResource<PortView, RectangleGeometry> HitTestGeometryResource = 
-        ResourceCache.Register<PortView, RectangleGeometry>((factory, user) => factory.CreateRectangleGeometry(user.Length, user.GetStrokeThickness()));
+        ResourceCache.Register<PortView, RectangleGeometry>((factory, user) => factory.CreateRectangleGeometry(new RectangleF(0, -user.GetStrokeThickness() / 2f, user.Length, user.GetStrokeThickness())));
 
     public static readonly IResource<PortView, SolidColorBrush> StrokeBrushResource = 
         ResourceCache.Register<PortView, SolidColorBrush>((factory, user) => factory.CreateSolidColorBrush(user.StrokeColor.ToColor4()));
@@ -55,7 +55,7 @@ public class PortView : SceneObjectView, IStroked
     }
 
     public static readonly DependencyProperty LengthProperty =
-        DependencyProperty.Register(nameof(Length), typeof(float), typeof(PortView), new PropertyMetadata(10f, DefaultPropertyChangedHandler));
+        DependencyProperty.Register(nameof(Length), typeof(float), typeof(PortView), new PropertyMetadata(10f, OnGeometryChanged));
 
     #endregion
 
@@ -68,7 +68,7 @@ public class PortView : SceneObjectView, IStroked
     }
 
     public static readonly DependencyProperty StrokeThicknessProperty =
-        DependencyProperty.Register(nameof(StrokeThickness), typeof(float), typeof(PortView), new FrameworkPropertyMetadata(1f, FrameworkPropertyMetadataOptions.BindsTwoWayByDefault, DefaultPropertyChangedHandler));
+        DependencyProperty.Register(nameof(StrokeThickness), typeof(float), typeof(PortView), new FrameworkPropertyMetadata(1f, FrameworkPropertyMetadataOptions.BindsTwoWayByDefault, OnGeometryChanged));
 
     #endregion
 
@@ -81,7 +81,7 @@ public class PortView : SceneObjectView, IStroked
     }
 
     public static readonly DependencyProperty StrokeThicknessTypeProperty =
-        DependencyProperty.Register(nameof(StrokeThicknessType), typeof(StrokeThicknessType), typeof(PortView), new FrameworkPropertyMetadata(StrokeThicknessType.Smallest, FrameworkPropertyMetadataOptions.BindsTwoWayByDefault, DefaultPropertyChangedHandler));
+        DependencyProperty.Register(nameof(StrokeThicknessType), typeof(StrokeThicknessType), typeof(PortView), new FrameworkPropertyMetadata(StrokeThicknessType.Smallest, FrameworkPropertyMetadataOptions.BindsTwoWayByDefault, OnGeometryChanged));
 
     #endregion
 
@@ -122,6 +122,8 @@ public class PortView : SceneObjectView, IStroked
 
     #endregion
 
+    protected override RectangleF OnWorldBoundsChanged() => Cache?.Get(this, HitTestGeometryResource).GetBounds(WorldTransformMatrix).ToRect() ?? RectangleF.Empty;
+
     public override bool HitTest(Vector2 pos, Matrix3x2 transform, float tolerance = 0.25f) =>
         Cache.Get(this, HitTestGeometryResource).StrokeContainsPoint(pos, this.GetStrokeThickness(), null, WorldTransformMatrix * transform, tolerance);
 
@@ -139,7 +141,14 @@ public class PortView : SceneObjectView, IStroked
 
     protected override void OnRenderSelection(Scene2D scene, D2DContext context) { }
 
-    protected Brush GetSignalBrush(SignalType type) => type switch
+    protected override void OnCacheChanged(ResourceCache cache)
+    {
+        base.OnCacheChanged(cache);
+        Cache.Update(this, HitTestGeometryResource);
+        WorldBoundsChanged();
+    }
+
+    private Brush GetSignalBrush(SignalType type) => type switch
     {
         SignalType.Low => Cache.Get(LowSignalBrushResource),
         SignalType.High => Cache.Get(HighSignalBrushResource),
@@ -149,4 +158,16 @@ public class PortView : SceneObjectView, IStroked
         SignalType.HighImp => Cache.Get(HighImpSignalBrushResource),
         _ => throw new ArgumentOutOfRangeException(nameof(type), type, null)
     };
+
+    private static void OnGeometryChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+    {
+        if (d is not PortView portView) return;
+
+        portView.ThrowIfDisposed();
+
+        portView.Cache?.Update(portView, HitTestGeometryResource);
+        portView.WorldBoundsChanged();
+
+        portView.MakeDirty();
+    }
 }

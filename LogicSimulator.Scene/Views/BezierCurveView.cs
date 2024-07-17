@@ -129,6 +129,9 @@ public class BezierCurveView : EditableSceneObjectView, IStroked
 
     #endregion
 
+    protected override RectangleF OnWorldBoundsChanged() => 
+        Cache?.Get(this, GeometryResource).GetWidenedBounds(this.GetStrokeThickness(), null, WorldTransformMatrix, D2D1.DefaultFlatteningTolerance).ToRect() ?? RectangleF.Empty;
+
     public override bool HitTest(Vector2 pos, Matrix3x2 transform, float tolerance = 0.25f)
     {
         var geometry = Cache.Get(this, GeometryResource);
@@ -166,6 +169,14 @@ public class BezierCurveView : EditableSceneObjectView, IStroked
         context.DrawingContext.DrawLine(Point2, Point3, brush, strokeWidth, style);
     }
 
+    protected override void OnCacheChanged(ResourceCache cache)
+    {
+        base.OnCacheChanged(cache);
+        Cache.Update(this, GeometryResource);
+        Cache.Update(this, StrokeBrushResource);
+        WorldBoundsChanged();
+    }
+
     private static void OnGeometryChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
     {
         if (d is not BezierCurveView bezierCurveView) return;
@@ -173,6 +184,7 @@ public class BezierCurveView : EditableSceneObjectView, IStroked
         bezierCurveView.ThrowIfDisposed();
 
         bezierCurveView.Cache?.Update(bezierCurveView, GeometryResource);
+        bezierCurveView.WorldBoundsChanged();
 
         bezierCurveView.MakeDirty();
     }

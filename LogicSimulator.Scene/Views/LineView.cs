@@ -143,6 +143,10 @@ public class LineView : EditableSceneObjectView, IStroked
         }
     }
 
+    protected override RectangleF OnWorldBoundsChanged() => Vertexes.Count == 0 ? 
+            new RectangleF(Location.X, Location.Y, 1, 1)
+            : Cache?.Get(this, GeometryResource).GetWidenedBounds(this.GetStrokeThickness(), null, WorldTransformMatrix, D2D1.DefaultFlatteningTolerance).ToRect() ?? RectangleF.Empty;
+
     public override bool HitTest(Vector2 pos, Matrix3x2 transform, float tolerance = 0.25f)
     {
         var geometry = Cache.Get(this, GeometryResource);
@@ -175,9 +179,17 @@ public class LineView : EditableSceneObjectView, IStroked
         context.DrawingContext.DrawGeometry(geometry, brush, strokeWidth, style);
     }
 
+    protected override void OnCacheChanged(ResourceCache cache)
+    {
+        base.OnCacheChanged(cache);
+        Cache.Update(this, GeometryResource);
+        WorldBoundsChanged();
+    }
+
     private void OnVertexesCollectionChanged(object? sender, NotifyCollectionChangedEventArgs e)
     {
-        Cache.Update(this, GeometryResource);
+        Cache?.Update(this, GeometryResource);
+        WorldBoundsChanged();
         MakeDirty();
     }
 

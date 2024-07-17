@@ -143,6 +143,8 @@ public class EllipseView : EditableSceneObjectView, IStroked
 
     #endregion
 
+    protected override RectangleF OnWorldBoundsChanged() => Cache?.Get(this, GeometryResource).GetBounds(WorldTransformMatrix).ToRect() ?? RectangleF.Empty;
+
     public override bool HitTest(Vector2 pos, Matrix3x2 transform, float tolerance = 0.25f)
     {
         var geometry = Cache.Get(this, GeometryResource);
@@ -191,6 +193,15 @@ public class EllipseView : EditableSceneObjectView, IStroked
         context.DrawingContext.DrawEllipse(ellipse, brush, 1f / scene.Scale, style);
     }
 
+    protected override void OnCacheChanged(ResourceCache cache)
+    {
+        base.OnCacheChanged(cache);
+        Cache.Update(this, GeometryResource);
+        Cache.Update(this, FillBrushResource);
+        Cache.Update(this, StrokeBrushResource);
+        WorldBoundsChanged();
+    }
+
     private static void OnGeometryChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
     {
         if (d is not EllipseView ellipseView) return;
@@ -198,6 +209,7 @@ public class EllipseView : EditableSceneObjectView, IStroked
         ellipseView.ThrowIfDisposed();
 
         ellipseView.Cache?.Update(ellipseView, GeometryResource);
+        ellipseView.WorldBoundsChanged();
 
         ellipseView.MakeDirty();
     }

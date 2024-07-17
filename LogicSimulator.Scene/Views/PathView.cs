@@ -18,14 +18,20 @@ public class PathView : SceneObjectView, IStroked
     public static readonly IResource<PathView, PathGeometry> GeometryResource =
         ResourceCache.Register<PathView, PathGeometry>((factory, user) => factory.TryParsePathGeometry(user.Geometry));
 
-    public static readonly IResource<PathView, TransformedGeometry> TransformedGeometryResource =
-        ResourceCache.Register<PathView, TransformedGeometry>((factory, user) => factory.CreateTransformedGeometry(user.Cache.Get(user, GeometryResource), user.ComputeRenderTransform()));
+    public static readonly IResource<PathView, TransformedGeometry> TransformedGeometryResource = ResourceCache.Register<PathView, TransformedGeometry>((factory, user) =>
+    {
+        var geometry = factory.CreateTransformedGeometry(user.Cache.Get(user, GeometryResource), user.ComputeRenderTransform());
+        user._localBounds = geometry.GetBounds().ToRect();
+        return geometry;
+    });
 
     public static readonly IResource<PathView, SolidColorBrush> FillBrushResource =
         ResourceCache.Register<PathView, SolidColorBrush>((factory, user) => factory.CreateSolidColorBrush(user.FillColor.ToColor4()));
 
     public static readonly IResource<PathView, SolidColorBrush> StrokeBrushResource =
         ResourceCache.Register<PathView, SolidColorBrush>((factory, user) => factory.CreateSolidColorBrush(user.StrokeColor.ToColor4()));
+
+    private RectangleF _localBounds = RectangleF.Empty;
 
     #region Geometry
 
@@ -231,7 +237,7 @@ public class PathView : SceneObjectView, IStroked
 
     #endregion
 
-    public RectangleF Bounds { get; private set; }
+    protected override RectangleF OnWorldBoundsChanged() => _localBounds.Transform(WorldTransformMatrix);
 
     public override bool HitTest(Vector2 pos, Matrix3x2 transform, float tolerance = 0.25f)
     {
@@ -277,7 +283,18 @@ public class PathView : SceneObjectView, IStroked
     {
         var brush = Cache.Get(SelectionBrushStaticResource);
         var style = Cache.Get(SelectionStyleStaticResource);
-        context.DrawingContext.DrawRectangle(Bounds.ToInflated(SelectionPadding), brush, 1f / scene.Scale, style);
+        context.DrawingContext.DrawRectangle(_localBounds.ToInflated(SelectionPadding), brush, 1f / scene.Scale, style);
+    }
+
+    protected override void OnCacheChanged(ResourceCache cache)
+    {
+        base.OnCacheChanged(cache);
+
+        Cache.Update(this, StrokeBrushResource);
+        Cache.Update(this, FillBrushResource);
+        Cache.Update(this, GeometryResource);
+        Cache.Update(this, TransformedGeometryResource);
+        WorldBoundsChanged();
     }
 
     private Matrix3x2 ComputeRenderTransform()
@@ -304,8 +321,7 @@ public class PathView : SceneObjectView, IStroked
 
         pathView.Cache?.Update(pathView, GeometryResource);
         pathView.Cache?.Update(pathView, TransformedGeometryResource);
-        
-        pathView.Bounds = pathView.Cache?.Get(pathView, TransformedGeometryResource).GetBounds().ToRect() ?? RectangleF.Empty;
+        pathView.WorldBoundsChanged();
 
         pathView.MakeDirty();
     }

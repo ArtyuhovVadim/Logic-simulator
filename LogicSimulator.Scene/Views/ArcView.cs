@@ -151,6 +151,9 @@ public class ArcView : EditableSceneObjectView, IStroked
 
     #endregion
 
+    protected override RectangleF OnWorldBoundsChanged() =>
+        Cache?.Get(this, GeometryResource).GetWidenedBounds(this.GetStrokeThickness(), null, WorldTransformMatrix, D2D1.DefaultFlatteningTolerance).ToRect() ?? RectangleF.Empty;
+
     public override bool HitTest(Vector2 pos, Matrix3x2 transform, float tolerance = 0.25f)
     {
         var geometry = Cache.Get(this, GeometryResource);
@@ -184,6 +187,15 @@ public class ArcView : EditableSceneObjectView, IStroked
         context.DrawingContext.DrawLine(Vector2.Zero, _endAnglePos, brush, strokeWidth, style);
     }
 
+    protected override void OnCacheChanged(ResourceCache cache)
+    {
+        base.OnCacheChanged(cache);
+
+        Cache.Update(this, GeometryResource);
+        Cache.Update(this, StrokeBrushResource);
+        WorldBoundsChanged();
+    }
+
     private static void OnGeometryChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
     {
         if (d is not ArcView arcView) return;
@@ -191,6 +203,7 @@ public class ArcView : EditableSceneObjectView, IStroked
         arcView.ThrowIfDisposed();
 
         arcView.Cache?.Update(arcView, GeometryResource);
+        arcView.WorldBoundsChanged();
 
         arcView.MakeDirty();
     }

@@ -166,6 +166,8 @@ public class TextView : SceneObjectView
 
     #endregion
 
+    protected override RectangleF OnWorldBoundsChanged() => Cache?.Get(this, GeometryResource).GetBounds(WorldTransformMatrix).ToRect() ?? RectangleF.Empty;
+
     public override bool HitTest(Vector2 pos, Matrix3x2 transform, float tolerance = 0.25f)
     {
         var geometry = Cache.Get(this, GeometryResource);
@@ -197,6 +199,15 @@ public class TextView : SceneObjectView
         context.DrawingContext.DrawGeometry(geometry, brush, 1f / scene.Scale, style);
     }
 
+    protected override void OnCacheChanged(ResourceCache cache)
+    {
+        base.OnCacheChanged(cache);
+        Cache.Update(this, GeometryResource);
+        Cache.Update(this, TextFormatResource);
+        Cache.Update(this, TextLayoutResource);
+        WorldBoundsChanged();
+    }
+
     private static void OnTextLayoutChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
     {
         if (d is not TextView textView) return;
@@ -206,6 +217,7 @@ public class TextView : SceneObjectView
         textView.Cache?.Update(textView, TextFormatResource);
         textView.Cache?.Update(textView, TextLayoutResource);
         textView.Cache?.Update(textView, GeometryResource);
+        textView.WorldBoundsChanged();
 
         textView.MakeDirty();
     }

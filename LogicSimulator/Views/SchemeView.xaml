@@ -168,7 +168,12 @@
                 <behaviors:SceneToolEventProviderBehaviour />
             </b:Interaction.Behaviors>
 
-            <layers:GradientClearLayer EndColor="{DynamicResource {x:Static brushes:BrushesKeys+SchemeView.EndBackgroundColor}}" StartColor="{DynamicResource {x:Static brushes:BrushesKeys+SchemeView.StartBackgroundColor}}">
+            <layers:GradientClearLayer
+                EndColor="{DynamicResource {x:Static brushes:BrushesKeys+SchemeView.EndBackgroundColor}}"
+                PixelSize="{Binding ElementName=Scene2D,
+                                    Path=PixelSize,
+                                    Mode=OneWay}"
+                StartColor="{DynamicResource {x:Static brushes:BrushesKeys+SchemeView.StartBackgroundColor}}">
                 <layers:GradientClearLayer.Renderer>
                     <renderers:GradientClearRenderer />
                 </layers:GradientClearLayer.Renderer>
@@ -184,7 +189,12 @@
                     <renderers:GridLayerRenderer />
                 </layers:GridLayer.Renderer>
             </layers:GridLayer>
-            <layers:ObjectsLayer x:Name="ObjectsLayer" Objects="{Binding Path=Objects}">
+            <layers:ObjectsLayer
+                x:Name="ObjectsLayer"
+                Objects="{Binding Path=Objects}"
+                ViewportInWorldSpace="{Binding ElementName=Scene2D,
+                                               Path=ViewportInWorldSpace,
+                                               Mode=OneWay}">
                 <layers:ObjectsLayer.ObjectTemplateSelector>
                     <selectors:SceneObjectTemplateSelector>
                         <selectors:SceneObjectTemplateSelector.UnknownObjectDataTemplate>

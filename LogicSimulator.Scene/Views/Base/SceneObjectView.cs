@@ -7,11 +7,9 @@ using SharpDX.Direct2D1;
 
 namespace LogicSimulator.Scene.Views.Base;
 
-public abstract class SceneObjectView : DisposableFrameworkContentElement, ISelectionRenderable, IResourceUser, ICacheHost
+public abstract class SceneObjectView : DisposableFrameworkContentElement, IResourceUser, ICacheHost
 {
     private bool _isDirty;
-    private Matrix3x2 _translateMatrix = Matrix3x2.Identity;
-    private Matrix3x2 _rotationMatrix = Matrix3x2.Identity;
 
     private Vector2 _startDragPosition = Vector2.Zero;
     private Vector2 _startDragLocation = Vector2.Zero;
@@ -41,18 +39,7 @@ public abstract class SceneObjectView : DisposableFrameworkContentElement, ISele
     }
 
     public static readonly DependencyProperty LocationProperty =
-        DependencyProperty.Register(nameof(Location), typeof(Vector2), typeof(SceneObjectView), new FrameworkPropertyMetadata(default(Vector2), FrameworkPropertyMetadataOptions.BindsTwoWayByDefault, OnLocationChanged));
-
-    private static void OnLocationChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
-    {
-        if (d is not SceneObjectView view) return;
-
-        view.ThrowIfDisposed();
-
-        view._translateMatrix = Matrix3x2.Translation((Vector2)e.NewValue);
-
-        view.MakeDirty();
-    }
+        DependencyProperty.Register(nameof(Location), typeof(Vector2), typeof(SceneObjectView), new FrameworkPropertyMetadata(default(Vector2), FrameworkPropertyMetadataOptions.BindsTwoWayByDefault, OnWorldTransformMatrixChanged));
 
     #endregion
 
@@ -65,18 +52,7 @@ public abstract class SceneObjectView : DisposableFrameworkContentElement, ISele
     }
 
     public static readonly DependencyProperty RotationProperty =
-        DependencyProperty.Register(nameof(Rotation), typeof(float), typeof(SceneObjectView), new FrameworkPropertyMetadata(default(float), FrameworkPropertyMetadataOptions.BindsTwoWayByDefault, OnRotationChanged));
-
-    private static void OnRotationChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
-    {
-        if (d is not SceneObjectView view) return;
-
-        view.ThrowIfDisposed();
-
-        view._rotationMatrix = Matrix3x2.Rotation(MathUtil.DegreesToRadians((float)e.NewValue), Vector2.Zero);
-
-        view.MakeDirty();
-    }
+        DependencyProperty.Register(nameof(Rotation), typeof(float), typeof(SceneObjectView), new FrameworkPropertyMetadata(default(float), FrameworkPropertyMetadataOptions.BindsTwoWayByDefault, OnWorldTransformMatrixChanged));
 
     #endregion
 
@@ -103,7 +79,7 @@ public abstract class SceneObjectView : DisposableFrameworkContentElement, ISele
     #endregion
 
     //https://stackoverflow.com/a/45392997
-    public Matrix3x2 WorldTransformMatrix => _rotationMatrix * _translateMatrix;
+    public Matrix3x2 WorldTransformMatrix { get; private set; } = Matrix3x2.Identity;
 
     public bool IsDirty
     {
@@ -111,14 +87,18 @@ public abstract class SceneObjectView : DisposableFrameworkContentElement, ISele
         private set => _isDirty = value;
     }
 
+    public RectangleF WorldBounds { get; private set; }
+
     public void Select()
     {
+        if (IsSelected) return;
         IsSelected = true;
         MakeDirty();
     }
 
     public void Unselect()
     {
+        if (!IsSelected) return;
         IsSelected = false;
         MakeDirty();
     }
@@ -183,6 +163,13 @@ public abstract class SceneObjectView : DisposableFrameworkContentElement, ISele
         IsDirty = true;
     }
 
+    protected void WorldBoundsChanged() => WorldBounds = OnWorldBoundsChanged();
+
+    protected virtual RectangleF OnWorldBoundsChanged()
+    {
+        return RectangleF.Empty;
+    }
+
     public abstract bool HitTest(Vector2 pos, Matrix3x2 transform, float tolerance = 0.25f);
 
     public abstract GeometryRelation HitTest(Geometry inputGeometry, Matrix3x2 transform, float tolerance = 0.25f);
@@ -214,5 +201,17 @@ public abstract class SceneObjectView : DisposableFrameworkContentElement, ISele
         obj.ThrowIfDisposed();
 
         obj.MakeDirty();
+    }
+
+    private static void OnWorldTransformMatrixChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+    {
+        if (d is not SceneObjectView view) return;
+
+        view.ThrowIfDisposed();
+
+        view.WorldTransformMatrix = Matrix3x2.Transformation(1, 1, MathUtil.DegreesToRadians(view.Rotation), view.Location.X, view.Location.Y);
+        view.WorldBoundsChanged();
+
+        view.MakeDirty();
     }
 }

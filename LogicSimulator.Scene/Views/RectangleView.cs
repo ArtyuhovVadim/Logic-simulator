@@ -175,6 +175,8 @@ public class RectangleView : EditableSceneObjectView, IStroked
 
     #endregion
 
+    protected override RectangleF OnWorldBoundsChanged() => Cache?.Get(this, GeometryResource).GetBounds(WorldTransformMatrix).ToRect() ?? RectangleF.Empty;
+
     public override bool HitTest(Vector2 pos, Matrix3x2 transform, float tolerance = 0.25f)
     {
         var geometry = Cache.Get(this, GeometryResource);
@@ -201,7 +203,7 @@ public class RectangleView : EditableSceneObjectView, IStroked
         }
 
         var strokeBrush = Cache.Get(this, StrokeBrushResource);
-
+        
         context.DrawingContext.DrawRectangle(rect, strokeBrush, this.GetStrokeThickness(scene));
     }
 
@@ -215,6 +217,15 @@ public class RectangleView : EditableSceneObjectView, IStroked
         context.DrawingContext.DrawRectangle(rect, brush, 1f / scene.Scale, style);
     }
 
+    protected override void OnCacheChanged(ResourceCache cache)
+    {
+        base.OnCacheChanged(cache);
+        Cache.Update(this, GeometryResource);
+        Cache.Update(this, FillBrushResource);
+        Cache.Update(this, StrokeBrushResource);
+        WorldBoundsChanged();
+    }
+
     private static void OnGeometryChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
     {
         if (d is not RectangleView rectangleView) return;
@@ -222,6 +233,7 @@ public class RectangleView : EditableSceneObjectView, IStroked
         rectangleView.ThrowIfDisposed();
 
         rectangleView.Cache?.Update(rectangleView, GeometryResource);
+        rectangleView.WorldBoundsChanged();
 
         rectangleView.MakeDirty();
     }

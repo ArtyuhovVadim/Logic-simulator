@@ -45,6 +45,7 @@ public class Scene2D : FrameworkElement, IDisposable
         if (d is not Scene2D scene) return;
 
         scene._scaleMatrix = Matrix3x2.Scaling((float)e.NewValue);
+        scene.UpdateViewportRect();
 
         scene._isRenderRequested = true;
     }
@@ -67,6 +68,7 @@ public class Scene2D : FrameworkElement, IDisposable
         if (d is not Scene2D scene) return;
 
         scene._translationMatrix = Matrix3x2.Translation((Vector2)e.NewValue);
+        scene.UpdateViewportRect();
 
         scene._isRenderRequested = true;
     }
@@ -89,6 +91,7 @@ public class Scene2D : FrameworkElement, IDisposable
         if (d is not Scene2D scene) return;
 
         scene._rotationMatrix = Matrix3x2.Rotation(MathUtil.DegreesToRadians((float)e.NewValue));
+        scene.UpdateViewportRect();
 
         scene._isRenderRequested = true;
     }
@@ -111,6 +114,42 @@ public class Scene2D : FrameworkElement, IDisposable
 
     #endregion
 
+    #region ViewportInWorldSpace
+
+    private static readonly DependencyPropertyKey ViewportInWorldSpacePropertyKey
+        = DependencyProperty.RegisterReadOnly(nameof(ViewportInWorldSpace), typeof(RectangleF), typeof(Scene2D), new PropertyMetadata(default(RectangleF)));
+
+    public static readonly DependencyProperty ViewportInWorldSpaceProperty = ViewportInWorldSpacePropertyKey.DependencyProperty;
+
+    public RectangleF ViewportInWorldSpace
+    {
+        get => (RectangleF)GetValue(ViewportInWorldSpaceProperty);
+        private set => SetValue(ViewportInWorldSpacePropertyKey, value);
+    }
+
+    #endregion
+
+    #region PixelSize
+
+    private static readonly DependencyPropertyKey PixelSizePropertyKey
+        = DependencyProperty.RegisterReadOnly(nameof(PixelSize), typeof(Size2F), typeof(Scene2D), new PropertyMetadata(default(Size2F), OnPixelSizePropertyChanged));
+
+    private static void OnPixelSizePropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+    {
+        if (d is not Scene2D scene) return;
+        scene.UpdateViewportRect();
+    }
+
+    public static readonly DependencyProperty PixelSizeProperty = PixelSizePropertyKey.DependencyProperty;
+
+    public Size2F PixelSize
+    {
+        get => (Size2F)GetValue(PixelSizeProperty);
+        private set => SetValue(PixelSizePropertyKey, value);
+    }
+
+    #endregion
+
     #region IsRequiredRenderingEnabled
 
     public bool IsRequiredRenderingEnabled
@@ -124,11 +163,9 @@ public class Scene2D : FrameworkElement, IDisposable
 
     #endregion
 
-    public ObservableCollection<BaseSceneLayer> Layers { get; } = new();
+    public ObservableCollection<BaseSceneLayer> Layers { get; } = [];
 
     public Matrix3x2 Transform => _scaleMatrix * _rotationMatrix * _translationMatrix;
-
-    public Size2F PixelSize => Context.DrawingContext.DrawingSize;
 
     public float Dpi { private set; get; }
 
@@ -164,6 +201,7 @@ public class Scene2D : FrameworkElement, IDisposable
             layer.InitializeCache(Context.Cache);
         }
 
+        PixelSize = Context.DrawingContext.DrawingSize;
         _renderer.RequestRender();
     }
 
@@ -223,6 +261,7 @@ public class Scene2D : FrameworkElement, IDisposable
 
         CompositionTarget.Rendering += OnCompositionTargetRendering;
 
+        PixelSize = Context.DrawingContext.DrawingSize;
         _renderer.RequestRender();
     }
 
@@ -309,8 +348,11 @@ public class Scene2D : FrameworkElement, IDisposable
 
         CompositionTarget.Rendering += OnCompositionTargetRendering;
 
+        PixelSize = Context.DrawingContext.DrawingSize;
         _renderer.RequestRender();
     }
+
+    private void UpdateViewportRect() => ViewportInWorldSpace = new RectangleF(0, 0, PixelSize.Width, PixelSize.Height).Transform(Matrix3x2.Invert(Transform));
 
     public void Dispose()
     {

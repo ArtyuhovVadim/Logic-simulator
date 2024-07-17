@@ -5,7 +5,7 @@ using LogicSimulator.Scene.Layers.Renderers.Base;
 
 namespace LogicSimulator.Scene.Layers.Base;
 
-public abstract class BaseSceneLayer : DisposableFrameworkContentElement, IRenderable, ICacheHost
+public abstract class BaseSceneLayer : DisposableFrameworkContentElement, ICacheHost
 {
     private bool _isDirty;
 

@@ -8,6 +8,8 @@ namespace LogicSimulator.Scene.Views;
 
 public class UnknownObjectView : SceneObjectView
 {
+    protected override RectangleF OnWorldBoundsChanged() => new(Location.X, Location.Y, 100, 100);
+
     public override bool HitTest(Vector2 pos, Matrix3x2 transform, float tolerance = 0.25f) => false;
 
     public override GeometryRelation HitTest(Geometry inputGeometry, Matrix3x2 transform, float tolerance = 0.25f) => GeometryRelation.Unknown;
@@ -37,6 +39,6 @@ public class UnknownObjectView : SceneObjectView
 
     protected override void OnRenderSelection(Scene2D scene, D2DContext context)
     {
-        
+
     }
 }

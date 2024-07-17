@@ -13,7 +13,7 @@ public class SceneRenderer : DisposableObject
 
     private DirectXContext _context;
     private D2DContext? _d2dContext;
-    private  D3D11Image _image;
+    private readonly D3D11Image _image;
     private readonly Action<DirectXContext> _onRender;
 
     public event Action<bool>? IsFrontBufferAvailableChanged;
@@ -76,7 +76,7 @@ public class SceneRenderer : DisposableObject
     private void Init(nint resourceHandle)
     {
         _d2dContext?.Dispose();
-        
+
         if (!_context.Initialize(resourceHandle))
         {
             throw new ApplicationException("Can't create DirectX context");
