@@ -101,6 +101,7 @@ public class LineView : EditableSceneObjectView, IStroked
         lineView.ThrowIfDisposed();
 
         lineView.Cache?.Update(lineView, GeometryResource);
+        lineView.WorldBoundsChanged();
 
         lineView.MakeDirty();
     }

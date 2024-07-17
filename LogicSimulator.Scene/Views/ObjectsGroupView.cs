@@ -113,6 +113,8 @@ public class ObjectsGroupView : SceneObjectView, ISceneViewsGeneratorHost
         if (!ItemsInternal.Any(x => x.IsLoaded))
             return;
 
+        WorldBoundsChanged();
+
         foreach (var item in ItemsInternal)
         {
             item.Render(scene, context);
