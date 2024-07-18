@@ -73,12 +73,14 @@ public class D2DDrawingContext
         RenderDebugger.EndMethodCall();
     }
 
+    public void ResetTransform() => Transform = Matrix3x2.Identity;
+
     public void PushTransform(Matrix3x2 transform)
     {
         _transforms.Push(transform);
         if (transform == Matrix3x2.Identity)
             return;
-        RenderDebugger.StartMethodCall();
+            RenderDebugger.StartMethodCall();
         Transform = _transforms.Peek() * Transform;
         RenderDebugger.EndMethodCall();
     }
@@ -176,6 +178,13 @@ public class D2DDrawingContext
     {
         RenderDebugger.StartMethodCall();
         _context.D2DDeviceContext.FillEllipse(ellipse, brush);
+        RenderDebugger.EndMethodCall();
+    }
+
+    public void DrawGeometryRealization(GeometryRealization geometry, Brush brush)
+    {
+        RenderDebugger.StartMethodCall();
+        _context.D2DDeviceContext.DrawGeometryRealization(geometry, brush);
         RenderDebugger.EndMethodCall();
     }
 

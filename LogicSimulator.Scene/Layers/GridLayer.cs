@@ -4,19 +4,20 @@ using LogicSimulator.Scene.Cache;
 using LogicSimulator.Scene.Layers.Base;
 using LogicSimulator.Scene.Layers.Renderers;
 using LogicSimulator.Utils;
+using SolidColorBrush = SharpDX.Direct2D1.SolidColorBrush;
 
 namespace LogicSimulator.Scene.Layers;
 
 public class GridLayer : BaseSceneLayer
 {
-    public static readonly IResource BackgroundBrushResource =
-        ResourceCache.Register<GridLayerRenderer>((factory, user) => factory.CreateSolidColorBrush(user.Layer.Background.ToColor4()));
+    public static readonly IResource<GridLayerRenderer, SolidColorBrush> BackgroundBrushResource =
+        ResourceCache.Register<GridLayerRenderer, SolidColorBrush>((factory, user) => factory.CreateSolidColorBrush(user.Layer.Background.ToColor4()));
 
-    public static readonly IResource LineBrushResource =
-        ResourceCache.Register<GridLayerRenderer>((factory, user) => factory.CreateSolidColorBrush(user.Layer.LineColor.ToColor4()));
+    public static readonly IResource<GridLayerRenderer, SolidColorBrush> LineBrushResource =
+        ResourceCache.Register<GridLayerRenderer, SolidColorBrush>((factory, user) => factory.CreateSolidColorBrush(user.Layer.LineColor.ToColor4()));
 
-    public static readonly IResource BoldLineBrushResource =
-        ResourceCache.Register<GridLayerRenderer>((factory, user) => factory.CreateSolidColorBrush(user.Layer.BoldLineColor.ToColor4()));
+    public static readonly IResource<GridLayerRenderer, SolidColorBrush> BoldLineBrushResource =
+        ResourceCache.Register<GridLayerRenderer, SolidColorBrush>((factory, user) => factory.CreateSolidColorBrush(user.Layer.BoldLineColor.ToColor4()));
 
     #region Background
 
@@ -35,7 +36,7 @@ public class GridLayer : BaseSceneLayer
         
         gridLayer.ThrowIfDisposed();
 
-        gridLayer.Cache?.Update(gridLayer.Renderer, BackgroundBrushResource);
+        gridLayer.Cache?.Update((GridLayerRenderer)gridLayer.Renderer, BackgroundBrushResource);
 
         gridLayer.MakeDirty();
     }
@@ -59,7 +60,7 @@ public class GridLayer : BaseSceneLayer
 
         gridLayer.ThrowIfDisposed();
 
-        gridLayer.Cache?.Update(gridLayer.Renderer, LineBrushResource);
+        gridLayer.Cache?.Update((GridLayerRenderer)gridLayer.Renderer, LineBrushResource);
 
         gridLayer.MakeDirty();
     }
@@ -83,7 +84,7 @@ public class GridLayer : BaseSceneLayer
 
         gridLayer.ThrowIfDisposed();
 
-        gridLayer.Cache?.Update(gridLayer.Renderer, BoldLineBrushResource);
+        gridLayer.Cache?.Update((GridLayerRenderer)gridLayer.Renderer, BoldLineBrushResource);
 
         gridLayer.MakeDirty();
     }

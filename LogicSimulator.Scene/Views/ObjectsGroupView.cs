@@ -5,6 +5,7 @@ using System.Windows.Markup;
 using LogicSimulator.Scene.Cache;
 using LogicSimulator.Scene.DirectX;
 using LogicSimulator.Scene.Views.Base;
+using LogicSimulator.Utils;
 using SharpDX;
 using SharpDX.Direct2D1;
 
@@ -21,7 +22,7 @@ public class ObjectsGroupView : SceneObjectView, ISceneViewsGeneratorHost
         Loaded += OnLoaded;
     }
 
-    private IEnumerable<SceneObjectView> ItemsInternal => _generator is null ? Items : _generator.Views;
+    private IReadOnlyList<SceneObjectView> ItemsInternal => _generator is null ? Items : _generator.Views;
 
     #region ItemsSource
 
@@ -69,6 +70,13 @@ public class ObjectsGroupView : SceneObjectView, ISceneViewsGeneratorHost
 
     public List<SceneObjectView> Items { get; } = [];
 
+    protected override RectangleF OnWorldBoundsChanged() => ItemsInternal.Count switch
+    {
+        0 => RectangleF.Empty,
+        1 => ItemsInternal[0].WorldBounds,
+        _ => ItemsInternal.Skip(1).Aggregate(ItemsInternal[0].WorldBounds, (current, item) => RectangleF.Union(current, item.WorldBounds)).Transform(WorldTransformMatrix)
+    };
+
     public override bool HitTest(Vector2 pos, Matrix3x2 transform, float tolerance = 0.25f)
     {
         var totalMatrix = WorldTransformMatrix * transform;
@@ -104,6 +112,8 @@ public class ObjectsGroupView : SceneObjectView, ISceneViewsGeneratorHost
 
         if (!ItemsInternal.Any(x => x.IsLoaded))
             return;
+
+        WorldBoundsChanged();
 
         foreach (var item in ItemsInternal)
         {

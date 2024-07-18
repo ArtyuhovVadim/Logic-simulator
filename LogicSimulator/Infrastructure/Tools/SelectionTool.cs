@@ -82,8 +82,7 @@ public class SelectionTool : BaseTool
 
     protected override void OnMouseLeftButtonDown(Scene2D scene, Vector2 pos)
     {
-        var isNodeThatIntersectPointExists = ObjectsLayer.Objects
-            .Select(ObjectsLayer.GetViewFromItem)
+        var isNodeThatIntersectPointExists = ObjectsLayer.Views
             .OfType<EditableSceneObjectView>()
             .Any(obj => obj.Nodes.Any(node => obj.IsSelected && pos.IsInRectangle(node.GetLocation(obj).RectangleRelativePointAsCenter(AbstractNode.NodeSize / scene.Scale))));
 
@@ -93,11 +92,10 @@ public class SelectionTool : BaseTool
             return;
         }
 
-        _objectsUnderCursor = ObjectsLayer.Objects
-            .Select(ObjectsLayer.GetViewFromItem)
-            .Where(objView => objView is not null && objView.HitTest(pos, (float)SelectionTolerance))
+        _objectsUnderCursor = ObjectsLayer.Views
+            .Where(objView => objView.HitTest(pos, (float)SelectionTolerance))
             .Reverse()
-            .ToList()!;
+            .ToList();
 
         _startPos = pos;
     }

@@ -8,6 +8,18 @@ public class NumberPropertyViewModel<T> : BaseNumberPropertyViewModel where T : 
 {
     private string _invalidValue = string.Empty;
 
+    #region IsNanAllowed
+
+    private bool _isNanAllowed;
+
+    public bool IsNanAllowed
+    {
+        get => _isNanAllowed;
+        set => Set(ref _isNanAllowed, value);
+    }
+
+    #endregion
+
     #region MaxNumber
 
     private T _maxNumber = T.MaxValue;
@@ -64,9 +76,18 @@ public class NumberPropertyViewModel<T> : BaseNumberPropertyViewModel where T : 
         var firstObj = objects.First();
         var firstObjValue = GetValue<T>(firstObj);
 
-        IsValueUndefined = objects.Any(o => GetValue<T>(o) != GetValue<T>(firstObj));
+        IsValueUndefined = objects.Any(o =>
+        {
+            if (T.IsNaN(GetValue<T>(o)) ^ T.IsNaN(GetValue<T>(firstObj)))
+                return true;
 
-        if (NumberSuffix.Length != 0)
+            if (T.IsNaN(GetValue<T>(o)) && T.IsNaN(GetValue<T>(firstObj)))
+                return false;
+
+            return GetValue<T>(o) != GetValue<T>(firstObj);
+        });
+
+        if (NumberSuffix.Length != 0 && !T.IsNaN(firstObjValue))
             return string.Format(CultureInfo.InvariantCulture, "{0:0.###}{1}", firstObjValue / DisplayCoefficient, NumberSuffix);
 
         return GetValue<T>(firstObj);
@@ -93,6 +114,13 @@ public class NumberPropertyViewModel<T> : BaseNumberPropertyViewModel where T : 
 
         var numberT = T.CreateSaturating(number) * DisplayCoefficient;
 
+        if (!IsNanAllowed && T.IsNaN(numberT))
+        {
+            _invalidValue = originalExpr;
+            AddError("NaN не разрешен", nameof(Value));
+            return;
+        }
+
         if (numberT > MaxNumber || numberT < MinNumber)
         {
             _invalidValue = originalExpr;
@@ -117,6 +145,7 @@ public class NumberPropertyViewModel<T> : BaseNumberPropertyViewModel where T : 
         MinNumber = MinNumber,
         MaxNumber = MaxNumber,
         DisplayCoefficient = DisplayCoefficient,
-        NumberSuffix = NumberSuffix
+        NumberSuffix = NumberSuffix,
+        IsNanAllowed = IsNanAllowed
     };
 }

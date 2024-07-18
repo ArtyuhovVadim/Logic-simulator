@@ -2,9 +2,9 @@
 
 namespace LogicSimulator.Scene.Cache;
 
-public interface IStaticResource
+public interface IStaticResource<out TResource> where TResource : class, IDisposable
 {
     long Id { get; }
 
-    IDisposable Update(D2DResourceFactory factory);
+    TResource Update(D2DResourceFactory factory);
 }

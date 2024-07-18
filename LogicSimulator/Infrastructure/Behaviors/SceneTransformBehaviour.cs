@@ -211,12 +211,12 @@ public class SceneTransformBehaviour : Behavior<Scene2D>
         var p = pos.InvertAndTransform(scene.Transform);
 
         var newScaleCoefficient = 1 + delta / scene.Scale;
-        var newScale = (float)Math.Round(scene.Scale * newScaleCoefficient, 2);
+        var newScale = scene.Scale * newScaleCoefficient;
 
         if (newScale < min || newScale > max) return;
 
         scene.Translation += p * (float)((1 - newScaleCoefficient) * scene.Scale);
 
-        scene.Scale = newScale;
+        scene.Scale = (float)newScale;
     }
 }

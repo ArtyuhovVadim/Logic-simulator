@@ -11,7 +11,7 @@ public class RectanglePlacingToolViewModel : BasePlacingToolViewModel<RectangleV
 {
     private readonly PlacingStep<RectangleViewModel> _setSizeStep;
 
-    public RectanglePlacingToolViewModel(SchemeViewModel scheme) : base(scheme, () => new RectangleViewModel(new RoundedRectangleModel()))
+    public RectanglePlacingToolViewModel(SchemeViewModel scheme) : base(scheme, () => new RectangleViewModel(new RectangleModel()))
     {
         FirstStep = new PlacingStep<RectangleViewModel>(UpdateLocation, null, UpdateLocation, LocationStepTransition);
         _setSizeStep = new PlacingStep<RectangleViewModel>(UpdateSize, SizeStepTransition);

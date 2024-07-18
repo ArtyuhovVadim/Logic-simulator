@@ -19,6 +19,9 @@ public class D2DResourceFactory : DisposableObject
 
     private readonly FakeTessellationSink _fakeTessellationSink = new();
 
+    private const string ErrorPath =
+        "M 96 48 A 47.502 47.502 90 1 1 48 0 A 47.496 47.496 90 0 1 96 48 Z M 54 48 L 72 30 A 4.752 4.752 90 0 0 66 24 L 48 42 L 30 24 A 4.752 4.752 90 0 0 24 30 L 42 48 L 24 66 A 4.752 4.752 90 0 0 30 72 L 48 54 L 66 72 A 4.752 4.752 90 0 0 72 66 Z";
+
     public D2DResourceFactory(DirectXContext context)
     {
         _context = context;
@@ -38,6 +41,21 @@ public class D2DResourceFactory : DisposableObject
         gradientStopCollection.Dispose();
 
         return linearGradientBrush;
+    }
+
+    public GeometryRealization CreateFilledGeometryRealization(Geometry geometry, float tolerance = D2D1.DefaultFlatteningTolerance)
+    {
+        return new GeometryRealization(_context.D2DDeviceContext, geometry, tolerance);
+    }
+
+    public GeometryRealization CreateStrokedGeometryRealization(Geometry geometry, float strokeWidth, float tolerance = D2D1.DefaultFlatteningTolerance, StrokeStyle? strokesStyle = null)
+    {
+        return new GeometryRealization(_context.D2DDeviceContext, geometry, tolerance, strokeWidth, strokesStyle);
+    }
+
+    public TransformedGeometry CreateTransformedGeometry(Geometry source, Matrix3x2 matrix)
+    {
+        return new TransformedGeometry(_context.D2DFactory, source, matrix);
     }
 
     public RectangleGeometry CreateRectangleGeometry(Vector2 startPoint, Vector2 endPoint)
@@ -192,6 +210,12 @@ public class D2DResourceFactory : DisposableObject
         return tmp;
     }
 
+    public PathGeometry TryParsePathGeometry(string path)
+    {
+        try { return ParsePathGeometry(path); }
+        catch { return ParsePathGeometry(ErrorPath); }
+    }
+
     public PathGeometry ParsePathGeometry(string path)
     {
         var sink = BeginPathGeometry();
@@ -199,18 +223,18 @@ public class D2DResourceFactory : DisposableObject
         return EndPathGeometry();
     }
 
-    public IEnumerable<Triangle> CreateTriangles(Geometry geometry) => CreateTriangles(geometry, Matrix3x2.Identity);
+    public IReadOnlyList<Triangle> CreateTriangles(Geometry geometry) => CreateTriangles(geometry, Matrix3x2.Identity);
 
-    public IEnumerable<Triangle> CreateTriangles(Geometry geometry, Matrix3x2 transform, float flatteningTolerance = 0.25f)
+    public IReadOnlyList<Triangle> CreateTriangles(Geometry geometry, Matrix3x2 transform, float flatteningTolerance = 0.25f)
     {
         _fakeTessellationSink.Reset();
         geometry.Tessellate(transform, flatteningTolerance, _fakeTessellationSink);
         return _fakeTessellationSink.Triangles;
     }
 
-    public IEnumerable<Triangle> CreateWidenTriangles(Geometry geometry, float stokeWidth) => CreateWidenTriangles(geometry, stokeWidth, Matrix3x2.Identity);
+    public IReadOnlyList<Triangle> CreateWidenTriangles(Geometry geometry, float stokeWidth) => CreateWidenTriangles(geometry, stokeWidth, Matrix3x2.Identity);
 
-    public IEnumerable<Triangle> CreateWidenTriangles(Geometry geometry, float stokeWidth, Matrix3x2 transform, float flatteningTolerance = 0.25f)
+    public IReadOnlyList<Triangle> CreateWidenTriangles(Geometry geometry, float stokeWidth, Matrix3x2 transform, float flatteningTolerance = 0.25f)
     {
         var path = new PathGeometry(_context.D2DDeviceContext.Factory);
         var sink = path.Open();
@@ -235,9 +259,9 @@ public class D2DResourceFactory : DisposableObject
 
     private class FakeTessellationSink : TessellationSink
     {
-        private readonly List<Triangle> _triangles = new();
+        private readonly List<Triangle> _triangles = [];
 
-        public IEnumerable<Triangle> Triangles => _triangles;
+        public IReadOnlyList<Triangle> Triangles => _triangles;
 
         public void Dispose()
         {

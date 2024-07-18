@@ -8,18 +8,40 @@ using SharpDX;
 using SharpDX.Direct2D1;
 using Color = System.Windows.Media.Color;
 using GradientStop = SharpDX.Direct2D1.GradientStop;
+using LinearGradientBrush = SharpDX.Direct2D1.LinearGradientBrush;
 
 namespace LogicSimulator.Scene.Layers;
 
 public class GradientClearLayer : BaseSceneLayer
 {
-    public static readonly IResource BrushResource = ResourceCache.Register<GradientClearRenderer>((factory, user) =>
-    {
-        //TODO: Костыль, можно передавать width и height через свойства зависимости
-        var scene = (Scene2D)user.Layer.Parent;
+    #region PixelSize
 
-        var width = scene.PixelSize.Width;
-        var height = scene.PixelSize.Height;
+    public Size2F PixelSize
+    {
+        get => (Size2F)GetValue(PixelSizeProperty);
+        set => SetValue(PixelSizeProperty, value);
+    }
+
+    public static readonly DependencyProperty PixelSizeProperty =
+        DependencyProperty.Register(nameof(PixelSize), typeof(Size2F), typeof(GradientClearLayer), new PropertyMetadata(default(Size2F), OnPixelSizePropertyChanged));
+
+    private static void OnPixelSizePropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+    {
+        if (d is not GradientClearLayer layer) return;
+
+        layer.ThrowIfDisposed();
+
+        layer.Cache?.Update((GradientClearRenderer)layer.Renderer, BrushResource);
+
+        layer.MakeDirty();
+    }
+
+    #endregion
+
+    public static readonly IResource<GradientClearRenderer, LinearGradientBrush> BrushResource = ResourceCache.Register<GradientClearRenderer, LinearGradientBrush>((factory, user) =>
+    {
+        var width = user.Layer.PixelSize.Width;
+        var height = user.Layer.PixelSize.Height;
 
         var gradientStopCollection = new GradientStop[]
         {
@@ -68,7 +90,7 @@ public class GradientClearLayer : BaseSceneLayer
 
         layer.ThrowIfDisposed();
 
-        layer.Cache?.Update(layer.Renderer, BrushResource);
+        layer.Cache?.Update((GradientClearRenderer)layer.Renderer, BrushResource);
 
         layer.MakeDirty();
     }

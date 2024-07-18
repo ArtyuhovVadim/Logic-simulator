@@ -13,14 +13,14 @@ namespace LogicSimulator.Scene.Views;
 
 public class BezierCurveView : EditableSceneObjectView, IStroked
 {
-    public static readonly IResource GeometryResource =
-        ResourceCache.Register<BezierCurveView>((factory, user) => factory.CreateBezierCurveGeometry(Vector2.Zero, user.Point1, user.Point2, user.Point3));
+    public static readonly IStaticResource<StrokeStyle> StrokeStyleResource =
+        ResourceCache.RegisterStatic(factory => factory.CreateStrokeStyle(new StrokeStyleProperties { StartCap = CapStyle.Round, EndCap = CapStyle.Round, LineJoin = LineJoin.Round }));
 
-    public static readonly IResource StrokeBrushResource =
-        ResourceCache.Register<BezierCurveView>((factory, user) => factory.CreateSolidColorBrush(user.StrokeColor.ToColor4()));
+    public static readonly IResource<BezierCurveView, PathGeometry> GeometryResource =
+        ResourceCache.Register<BezierCurveView, PathGeometry>((factory, user) => factory.CreateBezierCurveGeometry(Vector2.Zero, user.Point1, user.Point2, user.Point3));
 
-    public static readonly IResource StrokeStyleResource =
-        ResourceCache.Register<BezierCurveView>((factory, _) => factory.CreateStrokeStyle(new StrokeStyleProperties { StartCap = CapStyle.Round, EndCap = CapStyle.Round, LineJoin = LineJoin.Round }));
+    public static readonly IResource<BezierCurveView, SolidColorBrush> StrokeBrushResource =
+        ResourceCache.Register<BezierCurveView, SolidColorBrush>((factory, user) => factory.CreateSolidColorBrush(user.StrokeColor.ToColor4()));
 
     private static readonly AbstractNode[] AbstractNodes =
     [
@@ -129,34 +129,37 @@ public class BezierCurveView : EditableSceneObjectView, IStroked
 
     #endregion
 
+    protected override RectangleF OnWorldBoundsChanged() => 
+        Cache?.Get(this, GeometryResource).GetWidenedBounds(this.GetStrokeThickness(), null, WorldTransformMatrix, D2D1.DefaultFlatteningTolerance).ToRect() ?? RectangleF.Empty;
+
     public override bool HitTest(Vector2 pos, Matrix3x2 transform, float tolerance = 0.25f)
     {
-        var geometry = Cache.Get<PathGeometry>(this, GeometryResource);
+        var geometry = Cache.Get(this, GeometryResource);
 
         return geometry.StrokeContainsPoint(pos, this.GetStrokeThickness(), null, WorldTransformMatrix * transform, tolerance);
     }
 
     public override GeometryRelation HitTest(Geometry inputGeometry, Matrix3x2 transform, float tolerance = 0.25f)
     {
-        var geometry = Cache.Get<PathGeometry>(this, GeometryResource);
+        var geometry = Cache.Get(this, GeometryResource);
 
         return geometry.Compare(inputGeometry, Matrix3x2.Invert(WorldTransformMatrix * transform), tolerance);
     }
 
     protected override void OnRender(Scene2D scene, D2DContext context)
     {
-        var geometry = Cache.Get<PathGeometry>(this, GeometryResource);
-        var strokeBrush = Cache.Get<SolidColorBrush>(this, StrokeBrushResource);
-        var style = Cache.Get<StrokeStyle>(this, StrokeStyleResource);
+        var geometry = Cache.Get(this, GeometryResource);
+        var strokeBrush = Cache.Get(this, StrokeBrushResource);
+        var style = Cache.Get(StrokeStyleResource);
 
         context.DrawingContext.DrawGeometry(geometry, strokeBrush, this.GetStrokeThickness(scene), style);
     }
 
     protected override void OnRenderSelection(Scene2D scene, D2DContext context)
     {
-        var brush = Cache.Get<SolidColorBrush>(SelectionBrushStaticResource);
-        var style = Cache.Get<StrokeStyle>(SelectionStyleStaticResource);
-        var geometry = Cache.Get<PathGeometry>(this, GeometryResource);
+        var brush = Cache.Get(SelectionBrushStaticResource);
+        var style = Cache.Get(SelectionStyleStaticResource);
+        var geometry = Cache.Get(this, GeometryResource);
 
         var strokeWidth = 1f / scene.Scale;
 
@@ -166,6 +169,14 @@ public class BezierCurveView : EditableSceneObjectView, IStroked
         context.DrawingContext.DrawLine(Point2, Point3, brush, strokeWidth, style);
     }
 
+    protected override void OnCacheChanged(ResourceCache cache)
+    {
+        base.OnCacheChanged(cache);
+        Cache.Update(this, GeometryResource);
+        Cache.Update(this, StrokeBrushResource);
+        WorldBoundsChanged();
+    }
+
     private static void OnGeometryChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
     {
         if (d is not BezierCurveView bezierCurveView) return;
@@ -173,6 +184,7 @@ public class BezierCurveView : EditableSceneObjectView, IStroked
         bezierCurveView.ThrowIfDisposed();
 
         bezierCurveView.Cache?.Update(bezierCurveView, GeometryResource);
+        bezierCurveView.WorldBoundsChanged();
 
         bezierCurveView.MakeDirty();
     }

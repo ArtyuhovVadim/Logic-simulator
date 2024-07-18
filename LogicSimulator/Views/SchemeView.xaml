@@ -36,6 +36,7 @@
 
     <UserControl.Resources>
         <converters:RotationToFloatConverter x:Key="RotationToFloatConverter" />
+
         <selectors:PortViewTemplateSelector x:Key="PortViewTemplateSelector">
             <selectors:PortViewTemplateSelector.PortDataTemplate>
                 <DataTemplate DataType="{x:Type gates:PortViewModel}">
@@ -53,6 +54,255 @@
                 </DataTemplate>
             </selectors:PortViewTemplateSelector.PortDataTemplate>
         </selectors:PortViewTemplateSelector>
+
+        <selectors:SceneObjectTemplateSelector x:Key="SceneObjectTemplateSelector">
+            <selectors:SceneObjectTemplateSelector.UnknownObjectDataTemplate>
+                <DataTemplate xmlns:baseVm="clr-namespace:LogicSimulator.ViewModels.ObjectViewModels.Base" DataType="{x:Type baseVm:BaseObjectViewModel}">
+                    <sceneViews:UnknownObjectView Location="{Binding Path=Location}" Rotation="{Binding Path=Rotation, Converter={StaticResource RotationToFloatConverter}}" />
+                </DataTemplate>
+            </selectors:SceneObjectTemplateSelector.UnknownObjectDataTemplate>
+            <selectors:SceneObjectTemplateSelector.RectangleDataTemplate>
+                <DataTemplate DataType="{x:Type local:RectangleViewModel}">
+                    <sceneViews:RectangleView
+                        Width="{Binding Path=Width}"
+                        Height="{Binding Path=Height}"
+                        FillColor="{Binding Path=FillColor}"
+                        IsFilled="{Binding Path=IsFilled}"
+                        IsSelected="{Binding Path=IsSelected}"
+                        Location="{Binding Path=Location}"
+                        Rotation="{Binding Path=Rotation,
+                                           Converter={StaticResource RotationToFloatConverter}}"
+                        StrokeColor="{Binding Path=StrokeColor}"
+                        StrokeThickness="{Binding Path=StrokeThickness}"
+                        StrokeThicknessType="{Binding Path=StrokeThicknessType}" />
+                </DataTemplate>
+            </selectors:SceneObjectTemplateSelector.RectangleDataTemplate>
+            <selectors:SceneObjectTemplateSelector.RoundedRectangleDataTemplate>
+                <DataTemplate DataType="{x:Type local:RoundedRectangleViewModel}">
+                    <sceneViews:RoundedRectangleView
+                        Width="{Binding Path=Width}"
+                        Height="{Binding Path=Height}"
+                        FillColor="{Binding Path=FillColor}"
+                        IsFilled="{Binding Path=IsFilled}"
+                        IsSelected="{Binding Path=IsSelected}"
+                        Location="{Binding Path=Location}"
+                        RadiusX="{Binding Path=RadiusX}"
+                        RadiusY="{Binding Path=RadiusY}"
+                        Rotation="{Binding Path=Rotation,
+                                           Converter={StaticResource RotationToFloatConverter}}"
+                        StrokeColor="{Binding Path=StrokeColor}"
+                        StrokeThickness="{Binding Path=StrokeThickness}"
+                        StrokeThicknessType="{Binding Path=StrokeThicknessType}" />
+                </DataTemplate>
+            </selectors:SceneObjectTemplateSelector.RoundedRectangleDataTemplate>
+            <selectors:SceneObjectTemplateSelector.EllipseDataTemplate>
+                <DataTemplate DataType="{x:Type local:EllipseViewModel}">
+                    <sceneViews:EllipseView
+                        FillColor="{Binding Path=FillColor}"
+                        IsFilled="{Binding Path=IsFilled}"
+                        IsSelected="{Binding Path=IsSelected}"
+                        Location="{Binding Path=Location}"
+                        RadiusX="{Binding Path=RadiusX}"
+                        RadiusY="{Binding Path=RadiusY}"
+                        Rotation="{Binding Path=Rotation,
+                                           Converter={StaticResource RotationToFloatConverter}}"
+                        StrokeColor="{Binding Path=StrokeColor}"
+                        StrokeThickness="{Binding Path=StrokeThickness}"
+                        StrokeThicknessType="{Binding Path=StrokeThicknessType}" />
+                </DataTemplate>
+            </selectors:SceneObjectTemplateSelector.EllipseDataTemplate>
+            <selectors:SceneObjectTemplateSelector.BezierCurveDataTemplate>
+                <DataTemplate DataType="{x:Type local:BezierCurveViewModel}">
+                    <sceneViews:BezierCurveView
+                        IsSelected="{Binding Path=IsSelected}"
+                        Location="{Binding Path=Location}"
+                        Point1="{Binding Path=Point1}"
+                        Point2="{Binding Path=Point2}"
+                        Point3="{Binding Path=Point3}"
+                        Rotation="{Binding Path=Rotation,
+                                           Converter={StaticResource RotationToFloatConverter}}"
+                        StrokeColor="{Binding Path=StrokeColor}"
+                        StrokeThickness="{Binding Path=StrokeThickness}"
+                        StrokeThicknessType="{Binding Path=StrokeThicknessType}" />
+                </DataTemplate>
+            </selectors:SceneObjectTemplateSelector.BezierCurveDataTemplate>
+            <selectors:SceneObjectTemplateSelector.ArcDataTemplate>
+                <DataTemplate DataType="{x:Type local:ArcViewModel}">
+                    <sceneViews:ArcView
+                        EndAngle="{Binding Path=EndAngle}"
+                        IsSelected="{Binding Path=IsSelected}"
+                        Location="{Binding Path=Location}"
+                        RadiusX="{Binding Path=RadiusX}"
+                        RadiusY="{Binding Path=RadiusY}"
+                        Rotation="{Binding Path=Rotation,
+                                           Converter={StaticResource RotationToFloatConverter}}"
+                        StartAngle="{Binding Path=StartAngle}"
+                        StrokeColor="{Binding Path=StrokeColor}"
+                        StrokeThickness="{Binding Path=StrokeThickness}"
+                        StrokeThicknessType="{Binding Path=StrokeThicknessType}" />
+                </DataTemplate>
+            </selectors:SceneObjectTemplateSelector.ArcDataTemplate>
+            <selectors:SceneObjectTemplateSelector.TextBlockDataTemplate>
+                <DataTemplate DataType="{x:Type local:TextBlockViewModel}">
+                    <sceneViews:TextView
+                        FontName="{Binding Path=FontName}"
+                        FontSize="{Binding Path=FontSize}"
+                        IsBold="{Binding Path=IsBold}"
+                        IsCross="{Binding Path=IsCross}"
+                        IsItalic="{Binding Path=IsItalic}"
+                        IsSelected="{Binding Path=IsSelected}"
+                        IsUnderlined="{Binding Path=IsUnderlined}"
+                        Location="{Binding Path=Location}"
+                        Rotation="{Binding Path=Rotation,
+                                           Converter={StaticResource RotationToFloatConverter}}"
+                        Text="{Binding Path=Text}"
+                        TextColor="{Binding Path=TextColor}" />
+                </DataTemplate>
+            </selectors:SceneObjectTemplateSelector.TextBlockDataTemplate>
+            <selectors:SceneObjectTemplateSelector.LineDataTemplate>
+                <DataTemplate DataType="{x:Type local:LineViewModel}">
+                    <sceneViews:LineView
+                        IsSelected="{Binding Path=IsSelected}"
+                        Location="{Binding Path=Location}"
+                        Rotation="{Binding Path=Rotation,
+                                           Converter={StaticResource RotationToFloatConverter}}"
+                        StrokeColor="{Binding Path=StrokeColor}"
+                        StrokeThickness="{Binding Path=StrokeThickness}"
+                        StrokeThicknessType="{Binding Path=StrokeThicknessType}"
+                        Vertexes="{Binding Path=Vertexes}" />
+                </DataTemplate>
+            </selectors:SceneObjectTemplateSelector.LineDataTemplate>
+            <selectors:SceneObjectTemplateSelector.PathDataTemplate>
+                <DataTemplate DataType="{x:Type local:PathViewModel}">
+                    <sceneViews:PathView
+                        Width="{Binding Path=Width}"
+                        Height="{Binding Path=Height}"
+                        FillColor="{Binding Path=FillColor}"
+                        Geometry="{Binding Path=Geometry}"
+                        IsAntiAliased="{Binding Path=IsAntiAliased}"
+                        IsFilled="{Binding Path=IsFilled}"
+                        IsSelected="{Binding Path=IsSelected}"
+                        IsStroked="{Binding Path=IsStroked}"
+                        Location="{Binding Path=Location}"
+                        OriginPosition="{Binding Path=OriginPosition}"
+                        Rotation="{Binding Path=Rotation,
+                                           Converter={StaticResource RotationToFloatConverter}}"
+                        Scale="{Binding Path=Scale}"
+                        SelectionPadding="{Binding Path=SelectionPadding}"
+                        Stretch="{Binding Path=Stretch}"
+                        StrokeColor="{Binding Path=StrokeColor}"
+                        StrokeThickness="{Binding Path=StrokeThickness}"
+                        StrokeThicknessType="{Binding Path=StrokeThicknessType}" />
+                </DataTemplate>
+            </selectors:SceneObjectTemplateSelector.PathDataTemplate>
+            <selectors:SceneObjectTemplateSelector.InputGateDataTemplate>
+                <DataTemplate DataType="{x:Type gates:InputGateViewModel}">
+                    <sceneViews:ObjectsGroupView
+                        IsSelected="{Binding Path=IsSelected}"
+                        Location="{Binding Path=Location}"
+                        Rotation="{Binding Path=Rotation,
+                                           Converter={StaticResource RotationToFloatConverter}}">
+                        <sceneViews:PortView
+                            IsSelected="{Binding Path=OutputPort.IsSelected}"
+                            Label="{Binding Path=OutputPort.Name}"
+                            Length="{Binding Path=OutputPort.Length}"
+                            Location="{Binding Path=OutputPort.Location}"
+                            Rotation="{Binding Path=OutputPort.Rotation,
+                                               Converter={StaticResource RotationToFloatConverter}}"
+                            State="{Binding Path=OutputPort.State}"
+                            StrokeColor="{Binding Path=StrokeColor}"
+                            StrokeThickness="{Binding Path=StrokeThickness}"
+                            StrokeThicknessType="{Binding Path=StrokeThicknessType}" />
+                        <sceneViews:PathView
+                            Width="{Binding Path=Width}"
+                            Height="{Binding Path=Height}"
+                            FillColor="{Binding Path=FillColor}"
+                            Geometry="M 0 0 L 25 0 L 40 15 L 25 30 L 0 30 Z"
+                            SelectionPadding="10"
+                            Stretch="Uniform"
+                            StrokeColor="{Binding Path=StrokeColor}"
+                            StrokeThickness="{Binding Path=StrokeThickness}"
+                            StrokeThicknessType="{Binding Path=StrokeThicknessType}" />
+                    </sceneViews:ObjectsGroupView>
+                </DataTemplate>
+            </selectors:SceneObjectTemplateSelector.InputGateDataTemplate>
+            <selectors:SceneObjectTemplateSelector.OutputGateDataTemplate>
+                <DataTemplate DataType="{x:Type gates:OutputGateViewModel}">
+                    <sceneViews:ObjectsGroupView
+                        IsSelected="{Binding Path=IsSelected}"
+                        Location="{Binding Path=Location}"
+                        Rotation="{Binding Path=Rotation,
+                                           Converter={StaticResource RotationToFloatConverter}}">
+                        <sceneViews:PortView
+                            IsSelected="{Binding Path=InputPort.IsSelected}"
+                            Label="{Binding Path=InputPort.Name}"
+                            Length="{Binding Path=InputPort.Length}"
+                            Location="{Binding Path=InputPort.Location}"
+                            Rotation="{Binding Path=InputPort.Rotation,
+                                               Converter={StaticResource RotationToFloatConverter}}"
+                            State="{Binding Path=InputPort.State}"
+                            StrokeColor="{Binding Path=StrokeColor}"
+                            StrokeThickness="{Binding Path=StrokeThickness}"
+                            StrokeThicknessType="{Binding Path=StrokeThicknessType}" />
+                        <sceneViews:PathView
+                            Width="{Binding Path=Width}"
+                            Height="{Binding Path=Height}"
+                            FillColor="{Binding Path=FillColor}"
+                            Geometry="M 40 30 L 15 30 L 0 15 L 15 0 L 40 0 Z"
+                            SelectionPadding="10"
+                            Stretch="Uniform"
+                            StrokeColor="{Binding Path=StrokeColor}"
+                            StrokeThickness="{Binding Path=StrokeThickness}"
+                            StrokeThicknessType="{Binding Path=StrokeThicknessType}" />
+                    </sceneViews:ObjectsGroupView>
+                </DataTemplate>
+            </selectors:SceneObjectTemplateSelector.OutputGateDataTemplate>
+            <selectors:SceneObjectTemplateSelector.AndGateDataTemplate>
+                <DataTemplate DataType="{x:Type gates:AndGateViewModel}">
+                    <sceneViews:ObjectsGroupView
+                        IsSelected="{Binding Path=IsSelected}"
+                        Location="{Binding Path=Location}"
+                        Rotation="{Binding Path=Rotation,
+                                           Converter={StaticResource RotationToFloatConverter}}">
+                        <sceneViews:ObjectsGroupView ItemTemplateSelector="{StaticResource PortViewTemplateSelector}" ItemsSource="{Binding Path=InputPorts}" />
+                        <sceneViews:PortView
+                            IsSelected="{Binding Path=OutputPort.IsSelected}"
+                            Label="{Binding Path=OutputPort.Name}"
+                            Length="{Binding Path=OutputPort.Length}"
+                            Location="{Binding Path=OutputPort.Location}"
+                            Rotation="{Binding Path=OutputPort.Rotation,
+                                               Converter={StaticResource RotationToFloatConverter}}"
+                            State="{Binding Path=OutputPort.State}"
+                            StrokeColor="{Binding Path=StrokeColor}"
+                            StrokeThickness="{Binding Path=StrokeThickness}"
+                            StrokeThicknessType="{Binding Path=StrokeThicknessType}" />
+                        <sceneViews:PathView
+                            Width="{Binding Path=Width}"
+                            Height="{Binding Path=Height}"
+                            FillColor="{Binding Path=FillColor}"
+                            Geometry="M 0 0 L 40 0 A 12.5 12.5 90 0 1 40 80 L 0 80 Z"
+                            SelectionPadding="10"
+                            Stretch="Uniform"
+                            StrokeColor="{Binding Path=StrokeColor}"
+                            StrokeThickness="{Binding Path=StrokeThickness}"
+                            StrokeThicknessType="{Binding Path=StrokeThicknessType}" />
+                    </sceneViews:ObjectsGroupView>
+                </DataTemplate>
+            </selectors:SceneObjectTemplateSelector.AndGateDataTemplate>
+            <selectors:SceneObjectTemplateSelector.WireDataTemplate>
+                <DataTemplate DataType="{x:Type local:WireViewModel}">
+                    <sceneViews:LineView
+                        IsSelected="{Binding Path=IsSelected}"
+                        Location="{Binding Path=Location}"
+                        Rotation="{Binding Path=Rotation,
+                                           Converter={StaticResource RotationToFloatConverter}}"
+                        StrokeColor="{Binding Path=StrokeColor}"
+                        StrokeThickness="{Binding Path=StrokeThickness}"
+                        StrokeThicknessType="{Binding Path=StrokeThicknessType}"
+                        Vertexes="{Binding Path=Vertexes}" />
+                </DataTemplate>
+            </selectors:SceneObjectTemplateSelector.WireDataTemplate>
+        </selectors:SceneObjectTemplateSelector>
     </UserControl.Resources>
 
     <Grid>
@@ -168,7 +418,12 @@
                 <behaviors:SceneToolEventProviderBehaviour />
             </b:Interaction.Behaviors>
 
-            <layers:GradientClearLayer EndColor="{DynamicResource {x:Static brushes:BrushesKeys+SchemeView.EndBackgroundColor}}" StartColor="{DynamicResource {x:Static brushes:BrushesKeys+SchemeView.StartBackgroundColor}}">
+            <layers:GradientClearLayer
+                EndColor="{DynamicResource {x:Static brushes:BrushesKeys+SchemeView.EndBackgroundColor}}"
+                PixelSize="{Binding ElementName=Scene2D,
+                                    Path=PixelSize,
+                                    Mode=OneWay}"
+                StartColor="{DynamicResource {x:Static brushes:BrushesKeys+SchemeView.StartBackgroundColor}}">
                 <layers:GradientClearLayer.Renderer>
                     <renderers:GradientClearRenderer />
                 </layers:GradientClearLayer.Renderer>
@@ -184,231 +439,13 @@
                     <renderers:GridLayerRenderer />
                 </layers:GridLayer.Renderer>
             </layers:GridLayer>
-            <layers:ObjectsLayer x:Name="ObjectsLayer" Objects="{Binding Path=Objects}">
-                <layers:ObjectsLayer.ObjectTemplateSelector>
-                    <selectors:SceneObjectTemplateSelector>
-                        <selectors:SceneObjectTemplateSelector.UnknownObjectDataTemplate>
-                            <DataTemplate xmlns:baseVm="clr-namespace:LogicSimulator.ViewModels.ObjectViewModels.Base" DataType="{x:Type baseVm:BaseObjectViewModel}">
-                                <sceneViews:UnknownObjectView Location="{Binding Path=Location}" Rotation="{Binding Path=Rotation, Converter={StaticResource RotationToFloatConverter}}" />
-                            </DataTemplate>
-                        </selectors:SceneObjectTemplateSelector.UnknownObjectDataTemplate>
-                        <selectors:SceneObjectTemplateSelector.RectangleDataTemplate>
-                            <DataTemplate DataType="{x:Type local:RectangleViewModel}">
-                                <sceneViews:RectangleView
-                                    Width="{Binding Path=Width}"
-                                    Height="{Binding Path=Height}"
-                                    FillColor="{Binding Path=FillColor}"
-                                    IsFilled="{Binding Path=IsFilled}"
-                                    IsSelected="{Binding Path=IsSelected}"
-                                    Location="{Binding Path=Location}"
-                                    Rotation="{Binding Path=Rotation,
-                                                       Converter={StaticResource RotationToFloatConverter}}"
-                                    StrokeColor="{Binding Path=StrokeColor}"
-                                    StrokeThickness="{Binding Path=StrokeThickness}"
-                                    StrokeThicknessType="{Binding Path=StrokeThicknessType}" />
-                            </DataTemplate>
-                        </selectors:SceneObjectTemplateSelector.RectangleDataTemplate>
-                        <selectors:SceneObjectTemplateSelector.RoundedRectangleDataTemplate>
-                            <DataTemplate DataType="{x:Type local:RoundedRectangleViewModel}">
-                                <sceneViews:RoundedRectangleView
-                                    Width="{Binding Path=Width}"
-                                    Height="{Binding Path=Height}"
-                                    FillColor="{Binding Path=FillColor}"
-                                    IsFilled="{Binding Path=IsFilled}"
-                                    IsSelected="{Binding Path=IsSelected}"
-                                    Location="{Binding Path=Location}"
-                                    RadiusX="{Binding Path=RadiusX}"
-                                    RadiusY="{Binding Path=RadiusY}"
-                                    Rotation="{Binding Path=Rotation,
-                                                       Converter={StaticResource RotationToFloatConverter}}"
-                                    StrokeColor="{Binding Path=StrokeColor}"
-                                    StrokeThickness="{Binding Path=StrokeThickness}"
-                                    StrokeThicknessType="{Binding Path=StrokeThicknessType}" />
-                            </DataTemplate>
-                        </selectors:SceneObjectTemplateSelector.RoundedRectangleDataTemplate>
-                        <selectors:SceneObjectTemplateSelector.EllipseDataTemplate>
-                            <DataTemplate DataType="{x:Type local:EllipseViewModel}">
-                                <sceneViews:EllipseView
-                                    FillColor="{Binding Path=FillColor}"
-                                    IsFilled="{Binding Path=IsFilled}"
-                                    IsSelected="{Binding Path=IsSelected}"
-                                    Location="{Binding Path=Location}"
-                                    RadiusX="{Binding Path=RadiusX}"
-                                    RadiusY="{Binding Path=RadiusY}"
-                                    Rotation="{Binding Path=Rotation,
-                                                       Converter={StaticResource RotationToFloatConverter}}"
-                                    StrokeColor="{Binding Path=StrokeColor}"
-                                    StrokeThickness="{Binding Path=StrokeThickness}"
-                                    StrokeThicknessType="{Binding Path=StrokeThicknessType}" />
-                            </DataTemplate>
-                        </selectors:SceneObjectTemplateSelector.EllipseDataTemplate>
-                        <selectors:SceneObjectTemplateSelector.BezierCurveDataTemplate>
-                            <DataTemplate DataType="{x:Type local:BezierCurveViewModel}">
-                                <sceneViews:BezierCurveView
-                                    IsSelected="{Binding Path=IsSelected}"
-                                    Location="{Binding Path=Location}"
-                                    Point1="{Binding Path=Point1}"
-                                    Point2="{Binding Path=Point2}"
-                                    Point3="{Binding Path=Point3}"
-                                    Rotation="{Binding Path=Rotation,
-                                                       Converter={StaticResource RotationToFloatConverter}}"
-                                    StrokeColor="{Binding Path=StrokeColor}"
-                                    StrokeThickness="{Binding Path=StrokeThickness}"
-                                    StrokeThicknessType="{Binding Path=StrokeThicknessType}" />
-                            </DataTemplate>
-                        </selectors:SceneObjectTemplateSelector.BezierCurveDataTemplate>
-                        <selectors:SceneObjectTemplateSelector.ArcDataTemplate>
-                            <DataTemplate DataType="{x:Type local:ArcViewModel}">
-                                <sceneViews:ArcView
-                                    EndAngle="{Binding Path=EndAngle}"
-                                    IsSelected="{Binding Path=IsSelected}"
-                                    Location="{Binding Path=Location}"
-                                    RadiusX="{Binding Path=RadiusX}"
-                                    RadiusY="{Binding Path=RadiusY}"
-                                    Rotation="{Binding Path=Rotation,
-                                                       Converter={StaticResource RotationToFloatConverter}}"
-                                    StartAngle="{Binding Path=StartAngle}"
-                                    StrokeColor="{Binding Path=StrokeColor}"
-                                    StrokeThickness="{Binding Path=StrokeThickness}"
-                                    StrokeThicknessType="{Binding Path=StrokeThicknessType}" />
-                            </DataTemplate>
-                        </selectors:SceneObjectTemplateSelector.ArcDataTemplate>
-                        <selectors:SceneObjectTemplateSelector.TextBlockDataTemplate>
-                            <DataTemplate DataType="{x:Type local:TextBlockViewModel}">
-                                <sceneViews:TextView
-                                    FontName="{Binding Path=FontName}"
-                                    FontSize="{Binding Path=FontSize}"
-                                    IsBold="{Binding Path=IsBold}"
-                                    IsCross="{Binding Path=IsCross}"
-                                    IsItalic="{Binding Path=IsItalic}"
-                                    IsSelected="{Binding Path=IsSelected}"
-                                    IsUnderlined="{Binding Path=IsUnderlined}"
-                                    Location="{Binding Path=Location}"
-                                    Rotation="{Binding Path=Rotation,
-                                                       Converter={StaticResource RotationToFloatConverter}}"
-                                    Text="{Binding Path=Text}"
-                                    TextColor="{Binding Path=TextColor}" />
-                            </DataTemplate>
-                        </selectors:SceneObjectTemplateSelector.TextBlockDataTemplate>
-                        <selectors:SceneObjectTemplateSelector.LineDataTemplate>
-                            <DataTemplate DataType="{x:Type local:LineViewModel}">
-                                <sceneViews:LineView
-                                    IsSelected="{Binding Path=IsSelected}"
-                                    Location="{Binding Path=Location}"
-                                    Rotation="{Binding Path=Rotation,
-                                                       Converter={StaticResource RotationToFloatConverter}}"
-                                    StrokeColor="{Binding Path=StrokeColor}"
-                                    StrokeThickness="{Binding Path=StrokeThickness}"
-                                    StrokeThicknessType="{Binding Path=StrokeThicknessType}"
-                                    Vertexes="{Binding Path=Vertexes}" />
-                            </DataTemplate>
-                        </selectors:SceneObjectTemplateSelector.LineDataTemplate>
-                        <selectors:SceneObjectTemplateSelector.InputGateDataTemplate>
-                            <DataTemplate DataType="{x:Type gates:InputGateViewModel}">
-                                <sceneViews:ObjectsGroupView
-                                    IsSelected="{Binding Path=IsSelected}"
-                                    Location="{Binding Path=Location}"
-                                    Rotation="{Binding Path=Rotation,
-                                                       Converter={StaticResource RotationToFloatConverter}}">
-                                    <sceneViews:PortView
-                                        IsSelected="{Binding Path=OutputPort.IsSelected}"
-                                        Label="{Binding Path=OutputPort.Name}"
-                                        Length="{Binding Path=OutputPort.Length}"
-                                        Location="{Binding Path=OutputPort.Location}"
-                                        Rotation="{Binding Path=OutputPort.Rotation,
-                                                           Converter={StaticResource RotationToFloatConverter}}"
-                                        State="{Binding Path=OutputPort.State}"
-                                        StrokeColor="{Binding Path=StrokeColor}"
-                                        StrokeThickness="{Binding Path=StrokeThickness}"
-                                        StrokeThicknessType="{Binding Path=StrokeThicknessType}" />
-                                    <sceneViews:GateView
-                                        Width="{Binding Path=Width}"
-                                        Height="{Binding Path=Height}"
-                                        FillColor="{Binding Path=FillColor}"
-                                        Geometry="M 0 0 L 25 0 L 40 15 L 25 30 L 0 30 Z"
-                                        SelectionPadding="10"
-                                        StrokeColor="{Binding Path=StrokeColor}"
-                                        StrokeThickness="{Binding Path=StrokeThickness}"
-                                        StrokeThicknessType="{Binding Path=StrokeThicknessType}" />
-                                </sceneViews:ObjectsGroupView>
-                            </DataTemplate>
-                        </selectors:SceneObjectTemplateSelector.InputGateDataTemplate>
-                        <selectors:SceneObjectTemplateSelector.OutputGateDataTemplate>
-                            <DataTemplate DataType="{x:Type gates:OutputGateViewModel}">
-                                <sceneViews:ObjectsGroupView
-                                    IsSelected="{Binding Path=IsSelected}"
-                                    Location="{Binding Path=Location}"
-                                    Rotation="{Binding Path=Rotation,
-                                                       Converter={StaticResource RotationToFloatConverter}}">
-                                    <sceneViews:PortView
-                                        IsSelected="{Binding Path=InputPort.IsSelected}"
-                                        Label="{Binding Path=InputPort.Name}"
-                                        Length="{Binding Path=InputPort.Length}"
-                                        Location="{Binding Path=InputPort.Location}"
-                                        Rotation="{Binding Path=InputPort.Rotation,
-                                                           Converter={StaticResource RotationToFloatConverter}}"
-                                        State="{Binding Path=InputPort.State}"
-                                        StrokeColor="{Binding Path=StrokeColor}"
-                                        StrokeThickness="{Binding Path=StrokeThickness}"
-                                        StrokeThicknessType="{Binding Path=StrokeThicknessType}" />
-                                    <sceneViews:GateView
-                                        Width="{Binding Path=Width}"
-                                        Height="{Binding Path=Height}"
-                                        FillColor="{Binding Path=FillColor}"
-                                        Geometry="M 40 30 L 15 30 L 0 15 L 15 0 L 40 0 Z"
-                                        SelectionPadding="10"
-                                        StrokeColor="{Binding Path=StrokeColor}"
-                                        StrokeThickness="{Binding Path=StrokeThickness}"
-                                        StrokeThicknessType="{Binding Path=StrokeThicknessType}" />
-                                </sceneViews:ObjectsGroupView>
-                            </DataTemplate>
-                        </selectors:SceneObjectTemplateSelector.OutputGateDataTemplate>
-                        <selectors:SceneObjectTemplateSelector.AndGateDataTemplate>
-                            <DataTemplate DataType="{x:Type gates:AndGateViewModel}">
-                                <sceneViews:ObjectsGroupView
-                                    IsSelected="{Binding Path=IsSelected}"
-                                    Location="{Binding Path=Location}"
-                                    Rotation="{Binding Path=Rotation,
-                                                       Converter={StaticResource RotationToFloatConverter}}">
-                                    <sceneViews:ObjectsGroupView ItemTemplateSelector="{StaticResource PortViewTemplateSelector}" ItemsSource="{Binding Path=InputPorts}" />
-                                    <sceneViews:PortView
-                                        IsSelected="{Binding Path=OutputPort.IsSelected}"
-                                        Label="{Binding Path=OutputPort.Name}"
-                                        Length="{Binding Path=OutputPort.Length}"
-                                        Location="{Binding Path=OutputPort.Location}"
-                                        Rotation="{Binding Path=OutputPort.Rotation,
-                                                           Converter={StaticResource RotationToFloatConverter}}"
-                                        State="{Binding Path=OutputPort.State}"
-                                        StrokeColor="{Binding Path=StrokeColor}"
-                                        StrokeThickness="{Binding Path=StrokeThickness}"
-                                        StrokeThicknessType="{Binding Path=StrokeThicknessType}" />
-                                    <sceneViews:GateView
-                                        Width="{Binding Path=Width}"
-                                        Height="{Binding Path=Height}"
-                                        FillColor="{Binding Path=FillColor}"
-                                        Geometry="M 0 0 L 40 0 A 12.5 12.5 90 0 1 40 80 L 0 80 Z"
-                                        SelectionPadding="10"
-                                        StrokeColor="{Binding Path=StrokeColor}"
-                                        StrokeThickness="{Binding Path=StrokeThickness}"
-                                        StrokeThicknessType="{Binding Path=StrokeThicknessType}" />
-                                </sceneViews:ObjectsGroupView>
-                            </DataTemplate>
-                        </selectors:SceneObjectTemplateSelector.AndGateDataTemplate>
-                        <selectors:SceneObjectTemplateSelector.WireDataTemplate>
-                            <DataTemplate DataType="{x:Type local:WireViewModel}">
-                                <sceneViews:LineView
-                                    IsSelected="{Binding Path=IsSelected}"
-                                    Location="{Binding Path=Location}"
-                                    Rotation="{Binding Path=Rotation,
-                                                       Converter={StaticResource RotationToFloatConverter}}"
-                                    StrokeColor="{Binding Path=StrokeColor}"
-                                    StrokeThickness="{Binding Path=StrokeThickness}"
-                                    StrokeThicknessType="{Binding Path=StrokeThicknessType}"
-                                    Vertexes="{Binding Path=Vertexes}" />
-                            </DataTemplate>
-                        </selectors:SceneObjectTemplateSelector.WireDataTemplate>
-                    </selectors:SceneObjectTemplateSelector>
-                </layers:ObjectsLayer.ObjectTemplateSelector>
+            <layers:ObjectsLayer
+                x:Name="ObjectsLayer"
+                ObjectTemplateSelector="{StaticResource SceneObjectTemplateSelector}"
+                Objects="{Binding Path=Objects}"
+                ViewportInWorldSpace="{Binding ElementName=Scene2D,
+                                               Path=ViewportInWorldSpace,
+                                               Mode=OneWay}">
                 <layers:ObjectsLayer.Renderer>
                     <renderers:ObjectsLayerRenderer />
                 </layers:ObjectsLayer.Renderer>

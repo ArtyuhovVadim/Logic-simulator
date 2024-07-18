@@ -13,14 +13,14 @@ namespace LogicSimulator.Scene.Views;
 
 public class EllipseView : EditableSceneObjectView, IStroked
 {
-    public static readonly IResource FillBrushResource =
-        ResourceCache.Register<EllipseView>((factory, user) => factory.CreateSolidColorBrush(user.FillColor.ToColor4()));
+    public static readonly IResource<EllipseView, SolidColorBrush> FillBrushResource =
+        ResourceCache.Register<EllipseView, SolidColorBrush>((factory, user) => factory.CreateSolidColorBrush(user.FillColor.ToColor4()));
 
-    public static readonly IResource StrokeBrushResource =
-        ResourceCache.Register<EllipseView>((factory, user) => factory.CreateSolidColorBrush(user.StrokeColor.ToColor4()));
+    public static readonly IResource<EllipseView, SolidColorBrush> StrokeBrushResource =
+        ResourceCache.Register<EllipseView, SolidColorBrush>((factory, user) => factory.CreateSolidColorBrush(user.StrokeColor.ToColor4()));
 
-    public static readonly IResource GeometryResource =
-        ResourceCache.Register<EllipseView>((factory, user) => factory.CreateEllipseGeometry(new Ellipse { RadiusX = user.RadiusX, RadiusY = user.RadiusY }));
+    public static readonly IResource<EllipseView, EllipseGeometry> GeometryResource =
+        ResourceCache.Register<EllipseView, EllipseGeometry>((factory, user) => factory.CreateEllipseGeometry(new Ellipse { RadiusX = user.RadiusX, RadiusY = user.RadiusY }));
 
     private static readonly AbstractNode[] AbstractNodes =
     [
@@ -143,9 +143,11 @@ public class EllipseView : EditableSceneObjectView, IStroked
 
     #endregion
 
+    protected override RectangleF OnWorldBoundsChanged() => Cache?.Get(this, GeometryResource).GetBounds(WorldTransformMatrix).ToRect() ?? RectangleF.Empty;
+
     public override bool HitTest(Vector2 pos, Matrix3x2 transform, float tolerance = 0.25f)
     {
-        var geometry = Cache.Get<EllipseGeometry>(this, GeometryResource);
+        var geometry = Cache.Get(this, GeometryResource);
 
         return IsFilled ?
             geometry.FillContainsPoint(pos, WorldTransformMatrix * transform, tolerance) :
@@ -154,7 +156,7 @@ public class EllipseView : EditableSceneObjectView, IStroked
 
     public override GeometryRelation HitTest(Geometry inputGeometry, Matrix3x2 transform, float tolerance = 0.25f)
     {
-        var geometry = Cache.Get<EllipseGeometry>(this, GeometryResource);
+        var geometry = Cache.Get(this, GeometryResource);
         return geometry.Compare(inputGeometry, Matrix3x2.Invert(WorldTransformMatrix * transform), tolerance);
     }
 
@@ -168,19 +170,19 @@ public class EllipseView : EditableSceneObjectView, IStroked
 
         if (IsFilled)
         {
-            var fillBrush = Cache.Get<SolidColorBrush>(this, FillBrushResource);
+            var fillBrush = Cache.Get(this, FillBrushResource);
             context.DrawingContext.FillEllipse(ellipse, fillBrush);
         }
 
-        var strokeBrush = Cache.Get<SolidColorBrush>(this, StrokeBrushResource);
+        var strokeBrush = Cache.Get(this, StrokeBrushResource);
 
         context.DrawingContext.DrawEllipse(ellipse, strokeBrush, this.GetStrokeThickness(scene));
     }
 
     protected override void OnRenderSelection(Scene2D scene, D2DContext context)
     {
-        var brush = Cache.Get<SolidColorBrush>(SelectionBrushStaticResource);
-        var style = Cache.Get<StrokeStyle>(SelectionStyleStaticResource);
+        var brush = Cache.Get(SelectionBrushStaticResource);
+        var style = Cache.Get(SelectionStyleStaticResource);
 
         var ellipse = new Ellipse
         {
@@ -191,6 +193,15 @@ public class EllipseView : EditableSceneObjectView, IStroked
         context.DrawingContext.DrawEllipse(ellipse, brush, 1f / scene.Scale, style);
     }
 
+    protected override void OnCacheChanged(ResourceCache cache)
+    {
+        base.OnCacheChanged(cache);
+        Cache.Update(this, GeometryResource);
+        Cache.Update(this, FillBrushResource);
+        Cache.Update(this, StrokeBrushResource);
+        WorldBoundsChanged();
+    }
+
     private static void OnGeometryChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
     {
         if (d is not EllipseView ellipseView) return;
@@ -198,6 +209,7 @@ public class EllipseView : EditableSceneObjectView, IStroked
         ellipseView.ThrowIfDisposed();
 
         ellipseView.Cache?.Update(ellipseView, GeometryResource);
+        ellipseView.WorldBoundsChanged();
 
         ellipseView.MakeDirty();
     }

@@ -1,7 +1,6 @@
 ﻿using LogicSimulator.Scene.DirectX;
 using LogicSimulator.Scene.Layers.Renderers.Base;
 using SharpDX;
-using SharpDX.Direct2D1;
 
 namespace LogicSimulator.Scene.Layers.Renderers;
 
@@ -12,9 +11,9 @@ public class GridLayerRenderer : BaseLayerRenderer<GridLayer>
         var strokeWidth = Layer.LineThickness / scene.Scale;
         var rect = new RectangleF(0, 0, Layer.Width, Layer.Height);
 
-        var backgroundBrush = Layer.Cache.Get<SolidColorBrush>(this, GridLayer.BackgroundBrushResource);
-        var lineBrush = Layer.Cache.Get<SolidColorBrush>(this, GridLayer.LineBrushResource);
-        var boldLineBrush = Layer.Cache.Get<SolidColorBrush>(this, GridLayer.BoldLineBrushResource);
+        var backgroundBrush = Layer.Cache.Get(this, GridLayer.BackgroundBrushResource);
+        var lineBrush = Layer.Cache.Get(this, GridLayer.LineBrushResource);
+        var boldLineBrush = Layer.Cache.Get(this, GridLayer.BoldLineBrushResource);
 
         context.DrawingContext.FillRectangle(rect, backgroundBrush);
 

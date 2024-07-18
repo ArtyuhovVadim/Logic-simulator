@@ -35,7 +35,7 @@ public class SceneViewsGenerator<T> : IDisposable where T : DependencyObject, IS
         }
     }
 
-    public IEnumerable<SceneObjectView> Views => _views;
+    public IReadOnlyList<SceneObjectView> Views => _views;
 
     public SceneObjectView? GetViewFromItem(object item) =>
         _views.FirstOrDefault(x => x.DataContext == item);

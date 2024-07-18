@@ -2,9 +2,11 @@
 
 namespace LogicSimulator.Scene.Cache;
 
-public interface IResource
+public interface IResource<in TUser, out TResource> 
+    where TUser : class, IResourceUser 
+    where TResource : class, IDisposable
 {
     long Id { get; }
 
-    IDisposable Update(D2DResourceFactory factory, IResourceUser user);
+    TResource Update(D2DResourceFactory factory, TUser user);
 }

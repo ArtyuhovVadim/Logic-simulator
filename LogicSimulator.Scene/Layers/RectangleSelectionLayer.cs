@@ -7,19 +7,21 @@ using LogicSimulator.Utils;
 using SharpDX;
 using Color = System.Windows.Media.Color;
 using RectangleGeometry = SharpDX.Direct2D1.RectangleGeometry;
+using SolidColorBrush = SharpDX.Direct2D1.SolidColorBrush;
+
 
 namespace LogicSimulator.Scene.Layers;
 
 public class RectangleSelectionLayer : BaseSceneLayer
 {
-    public static readonly IResource NormalBrushResource =
-        ResourceCache.Register<RectangleSelectionLayerRenderer>((factory, user) => factory.CreateSolidColorBrush(user.Layer.NormalColor.ToColor4()));
+    public static readonly IResource<RectangleSelectionLayerRenderer, SolidColorBrush> NormalBrushResource =
+        ResourceCache.Register<RectangleSelectionLayerRenderer, SolidColorBrush>((factory, user) => factory.CreateSolidColorBrush(user.Layer.NormalColor.ToColor4()));
 
-    public static readonly IResource SecantBrushResource =
-        ResourceCache.Register<RectangleSelectionLayerRenderer>((factory, user) => factory.CreateSolidColorBrush(user.Layer.SecantColor.ToColor4()));
+    public static readonly IResource<RectangleSelectionLayerRenderer, SolidColorBrush> SecantBrushResource =
+        ResourceCache.Register<RectangleSelectionLayerRenderer, SolidColorBrush>((factory, user) => factory.CreateSolidColorBrush(user.Layer.SecantColor.ToColor4()));
 
-    public static readonly IResource RectangleGeometryResource =
-        ResourceCache.Register<RectangleSelectionLayerRenderer>((factory, user) => factory.CreateRectangleGeometry(user.Layer.StartPosition, user.Layer.EndPosition));
+    public static readonly IResource<RectangleSelectionLayerRenderer, RectangleGeometry> RectangleGeometryResource =
+        ResourceCache.Register<RectangleSelectionLayerRenderer, RectangleGeometry>((factory, user) => factory.CreateRectangleGeometry(user.Layer.StartPosition, user.Layer.EndPosition));
 
     #region Geometry
 
@@ -49,7 +51,7 @@ public class RectangleSelectionLayer : BaseSceneLayer
     {
         if (d is not RectangleSelectionLayer layer) return;
 
-        layer.Cache?.Update(layer.Renderer, NormalBrushResource);
+        layer.Cache?.Update((RectangleSelectionLayerRenderer)layer.Renderer, NormalBrushResource);
 
         layer.MakeDirty();
     }
@@ -71,7 +73,7 @@ public class RectangleSelectionLayer : BaseSceneLayer
     {
         if (d is not RectangleSelectionLayer layer) return;
 
-        layer.Cache?.Update(layer.Renderer, SecantBrushResource);
+        layer.Cache?.Update((RectangleSelectionLayerRenderer)layer.Renderer, SecantBrushResource);
 
         layer.MakeDirty();
     }
@@ -110,9 +112,9 @@ public class RectangleSelectionLayer : BaseSceneLayer
 
         layer.ThrowIfDisposed();
 
-        layer.Cache?.Update(layer.Renderer, RectangleGeometryResource);
+        layer.Cache?.Update((RectangleSelectionLayerRenderer)layer.Renderer, RectangleGeometryResource);
 
-        layer.Geometry = layer.Cache?.Get<RectangleGeometry>(layer.Renderer, RectangleGeometryResource)!;
+        layer.Geometry = layer.Cache?.Get((RectangleSelectionLayerRenderer)layer.Renderer, RectangleGeometryResource)!;
 
         layer.MakeDirty();
     }

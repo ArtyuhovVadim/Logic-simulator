@@ -16,7 +16,7 @@ namespace LogicSimulator.Scene.Views;
 
 public class TextView : SceneObjectView
 {
-    public static readonly IResource TextFormatResource = ResourceCache.Register<TextView>((factory, user) =>
+    public static readonly IResource<TextView, TextFormat> TextFormatResource = ResourceCache.Register<TextView, TextFormat>((factory, user) =>
         factory.CreateTextFormat(
             user.FontName,
             user.IsBold ? FontWeight.Bold : FontWeight.Normal,
@@ -24,20 +24,20 @@ public class TextView : SceneObjectView
             FontStretch.Normal,
             user.FontSize));
 
-    public static readonly IResource TextLayoutResource =
-        ResourceCache.Register<TextView>((factory, user) => factory.CreateTextLayout(user.Text, user.Cache.Get<TextFormat>(user, TextFormatResource)));
+    public static readonly IResource<TextView, TextLayout> TextLayoutResource =
+        ResourceCache.Register<TextView, TextLayout>((factory, user) => factory.CreateTextLayout(user.Text, user.Cache.Get(user, TextFormatResource)));
 
-    public static readonly IResource GeometryResource = ResourceCache.Register<TextView>((factory, user) =>
+    public static readonly IResource<TextView, RectangleGeometry> GeometryResource = ResourceCache.Register<TextView, RectangleGeometry>((factory, user) =>
     {
-        var textLayout = user.Cache.Get<TextLayout>(user, TextLayoutResource);
+        var textLayout = user.Cache.Get(user, TextLayoutResource);
 
         var metrics = textLayout.Metrics;
 
         return factory.CreateRectangleGeometry(new RectangleF { Location = Vector2.Zero, Width = metrics.Width, Height = metrics.Height });
     });
 
-    public static readonly IResource TextBrushResource =
-        ResourceCache.Register<TextView>((factory, user) => factory.CreateSolidColorBrush(user.TextColor.ToColor4()));
+    public static readonly IResource<TextView, SolidColorBrush> TextBrushResource =
+        ResourceCache.Register<TextView, SolidColorBrush>((factory, user) => factory.CreateSolidColorBrush(user.TextColor.ToColor4()));
 
     #region Text
 
@@ -166,22 +166,24 @@ public class TextView : SceneObjectView
 
     #endregion
 
+    protected override RectangleF OnWorldBoundsChanged() => Cache?.Get(this, GeometryResource).GetBounds(WorldTransformMatrix).ToRect() ?? RectangleF.Empty;
+
     public override bool HitTest(Vector2 pos, Matrix3x2 transform, float tolerance = 0.25f)
     {
-        var geometry = Cache.Get<RectangleGeometry>(this, GeometryResource);
+        var geometry = Cache.Get(this, GeometryResource);
         return geometry.FillContainsPoint(pos, WorldTransformMatrix * transform, tolerance);
     }
 
     public override GeometryRelation HitTest(Geometry inputGeometry, Matrix3x2 transform, float tolerance = 0.25f)
     {
-        var geometry = Cache.Get<RectangleGeometry>(this, GeometryResource);
+        var geometry = Cache.Get(this, GeometryResource);
         return geometry.Compare(inputGeometry, Matrix3x2.Invert(WorldTransformMatrix * transform), tolerance);
     }
 
     protected override void OnRender(Scene2D scene, D2DContext context)
     {
-        var textLayout = Cache.Get<TextLayout>(this, TextLayoutResource);
-        var textBrush = Cache.Get<SolidColorBrush>(this, TextBrushResource);
+        var textLayout = Cache.Get(this, TextLayoutResource);
+        var textBrush = Cache.Get(this, TextBrushResource);
 
         textLayout.SetUnderline(IsUnderlined, new TextRange(0, Text.Length));
         textLayout.SetStrikethrough(IsCross, new TextRange(0, Text.Length));
@@ -191,10 +193,19 @@ public class TextView : SceneObjectView
 
     protected override void OnRenderSelection(Scene2D scene, D2DContext context)
     {
-        var brush = Cache.Get<SolidColorBrush>(SelectionBrushStaticResource);
-        var style = Cache.Get<StrokeStyle>(SelectionStyleStaticResource);
-        var geometry = Cache.Get<RectangleGeometry>(this, GeometryResource);
+        var brush = Cache.Get(SelectionBrushStaticResource);
+        var style = Cache.Get(SelectionStyleStaticResource);
+        var geometry = Cache.Get(this, GeometryResource);
         context.DrawingContext.DrawGeometry(geometry, brush, 1f / scene.Scale, style);
+    }
+
+    protected override void OnCacheChanged(ResourceCache cache)
+    {
+        base.OnCacheChanged(cache);
+        Cache.Update(this, GeometryResource);
+        Cache.Update(this, TextFormatResource);
+        Cache.Update(this, TextLayoutResource);
+        WorldBoundsChanged();
     }
 
     private static void OnTextLayoutChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
@@ -206,6 +217,7 @@ public class TextView : SceneObjectView
         textView.Cache?.Update(textView, TextFormatResource);
         textView.Cache?.Update(textView, TextLayoutResource);
         textView.Cache?.Update(textView, GeometryResource);
+        textView.WorldBoundsChanged();
 
         textView.MakeDirty();
     }

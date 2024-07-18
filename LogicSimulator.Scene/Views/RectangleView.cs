@@ -16,14 +16,14 @@ namespace LogicSimulator.Scene.Views;
 
 public class RectangleView : EditableSceneObjectView, IStroked
 {
-    public static readonly IResource FillBrushResource =
-        ResourceCache.Register<RectangleView>((factory, user) => factory.CreateSolidColorBrush(user.FillColor.ToColor4()));
+    public static readonly IResource<RectangleView, SolidColorBrush> FillBrushResource =
+        ResourceCache.Register<RectangleView, SolidColorBrush>((factory, user) => factory.CreateSolidColorBrush(user.FillColor.ToColor4()));
 
-    public static readonly IResource StrokeBrushResource =
-        ResourceCache.Register<RectangleView>((factory, user) => factory.CreateSolidColorBrush(user.StrokeColor.ToColor4()));
+    public static readonly IResource<RectangleView, SolidColorBrush> StrokeBrushResource =
+        ResourceCache.Register<RectangleView, SolidColorBrush>((factory, user) => factory.CreateSolidColorBrush(user.StrokeColor.ToColor4()));
 
-    public static readonly IResource GeometryResource =
-        ResourceCache.Register<RectangleView>((factory, user) => factory.CreateRectangleGeometry(user.Width, user.Height));
+    public static readonly IResource<RectangleView, RectangleGeometry> GeometryResource =
+        ResourceCache.Register<RectangleView, RectangleGeometry>((factory, user) => factory.CreateRectangleGeometry(user.Width, user.Height));
 
     private static readonly AbstractNode[] AbstractNodes =
     [
@@ -175,9 +175,11 @@ public class RectangleView : EditableSceneObjectView, IStroked
 
     #endregion
 
+    protected override RectangleF OnWorldBoundsChanged() => Cache?.Get(this, GeometryResource).GetBounds(WorldTransformMatrix).ToRect() ?? RectangleF.Empty;
+
     public override bool HitTest(Vector2 pos, Matrix3x2 transform, float tolerance = 0.25f)
     {
-        var geometry = Cache.Get<RectangleGeometry>(this, GeometryResource);
+        var geometry = Cache.Get(this, GeometryResource);
 
         return IsFilled ?
             geometry.FillContainsPoint(pos, WorldTransformMatrix * transform, tolerance) :
@@ -186,7 +188,7 @@ public class RectangleView : EditableSceneObjectView, IStroked
 
     public override GeometryRelation HitTest(Geometry inputGeometry, Matrix3x2 transform, float tolerance = 0.25f)
     {
-        var rectGeometry = Cache.Get<RectangleGeometry>(this, GeometryResource);
+        var rectGeometry = Cache.Get(this, GeometryResource);
         return rectGeometry.Compare(inputGeometry, Matrix3x2.Invert(WorldTransformMatrix * transform), tolerance);
     }
 
@@ -196,23 +198,32 @@ public class RectangleView : EditableSceneObjectView, IStroked
 
         if (IsFilled)
         {
-            var fillBrush = Cache.Get<SolidColorBrush>(this, FillBrushResource);
+            var fillBrush = Cache.Get(this, FillBrushResource);
             context.DrawingContext.FillRectangle(rect, fillBrush);
         }
 
-        var strokeBrush = Cache.Get<SolidColorBrush>(this, StrokeBrushResource);
-
+        var strokeBrush = Cache.Get(this, StrokeBrushResource);
+        
         context.DrawingContext.DrawRectangle(rect, strokeBrush, this.GetStrokeThickness(scene));
     }
 
     protected override void OnRenderSelection(Scene2D scene, D2DContext context)
     {
-        var brush = Cache.Get<SolidColorBrush>(SelectionBrushStaticResource);
-        var style = Cache.Get<StrokeStyle>(SelectionStyleStaticResource);
+        var brush = Cache.Get(SelectionBrushStaticResource);
+        var style = Cache.Get(SelectionStyleStaticResource);
 
         var rect = new RectangleF { Width = Width, Height = Height };
 
         context.DrawingContext.DrawRectangle(rect, brush, 1f / scene.Scale, style);
+    }
+
+    protected override void OnCacheChanged(ResourceCache cache)
+    {
+        base.OnCacheChanged(cache);
+        Cache.Update(this, GeometryResource);
+        Cache.Update(this, FillBrushResource);
+        Cache.Update(this, StrokeBrushResource);
+        WorldBoundsChanged();
     }
 
     private static void OnGeometryChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
@@ -222,6 +233,7 @@ public class RectangleView : EditableSceneObjectView, IStroked
         rectangleView.ThrowIfDisposed();
 
         rectangleView.Cache?.Update(rectangleView, GeometryResource);
+        rectangleView.WorldBoundsChanged();
 
         rectangleView.MakeDirty();
     }
