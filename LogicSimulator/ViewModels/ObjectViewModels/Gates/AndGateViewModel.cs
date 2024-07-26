@@ -6,6 +6,8 @@ namespace LogicSimulator.ViewModels.ObjectViewModels.Gates;
 
 public class AndGateViewModel : SimpleGateViewModel
 {
+    public AndGateViewModel() : this(new AndGateModel()) { }
+
     public AndGateViewModel(AndGateModel model) : base(model)
     {
         Model = model;

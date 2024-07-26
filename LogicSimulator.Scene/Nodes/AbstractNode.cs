@@ -1,15 +1,13 @@
-﻿using LogicSimulator.Scene.Views.Base;
+﻿using LogicSimulator.Shared;
 using SharpDX;
 
 namespace LogicSimulator.Scene.Nodes;
 
-public abstract class AbstractNode
+public abstract class AbstractNode : IEditableObjectNode
 {
-    public static readonly float NodeSize = 4f;
-
     public bool UseGridSnap { get; set; } = true;
 
-    public abstract Vector2 GetLocation(EditableSceneObjectView obj);
+    public abstract Vector2 GetLocation(IEditable obj);
 
-    public abstract void ApplyMove(EditableSceneObjectView obj, Vector2 pos);
+    public abstract void ApplyMove(IEditable obj, Vector2 pos);
 }

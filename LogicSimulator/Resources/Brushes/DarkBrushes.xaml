@@ -80,25 +80,6 @@
 
     <!--#endregion-->
 
-    <!--#region SchemeToolView-->
-
-    <SolidColorBrush
-        x:Key="{x:Static b:BrushesKeys+SchemeToolView.Background}"
-        o:Freeze="True"
-        Color="Transparent" />
-
-    <SolidColorBrush
-        x:Key="{x:Static b:BrushesKeys+SchemeToolView.MouseOverBackground}"
-        o:Freeze="True"
-        Color="#6283A2" />
-
-    <SolidColorBrush
-        x:Key="{x:Static b:BrushesKeys+SchemeToolView.ActiveBackground}"
-        o:Freeze="True"
-        Color="#6283A2" />
-
-    <!--#endregion-->
-
     <!--#region SchemeView-->
 
     <Color x:Key="{x:Static b:BrushesKeys+SchemeView.StartBackgroundColor}">

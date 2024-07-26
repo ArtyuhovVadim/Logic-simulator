@@ -1,13 +1,14 @@
 ﻿using System.Windows;
 using LogicSimulator.Scene.Cache;
 using LogicSimulator.Scene.DirectX;
+using LogicSimulator.Shared;
 using LogicSimulator.Utils;
 using SharpDX;
 using SharpDX.Direct2D1;
 
 namespace LogicSimulator.Scene.Views.Base;
 
-public abstract class SceneObjectView : DisposableFrameworkContentElement, IResourceUser, ICacheHost
+public abstract class SceneObjectView : DisposableFrameworkContentElement, IResourceUser, ICacheHost, ISelectable, IDraggable
 {
     private bool _isDirty;
 

@@ -4,15 +4,21 @@ using System.Windows.Controls;
 using LogicSimulator.Scene.Cache;
 using LogicSimulator.Scene.Layers.Base;
 using LogicSimulator.Scene.Views.Base;
+using LogicSimulator.Shared;
 using LogicSimulator.Utils;
 using SharpDX;
+using SharpDX.Direct2D1;
 
 namespace LogicSimulator.Scene.Layers;
 
-public class ObjectsLayer : BaseSceneLayer, ISceneViewsGeneratorHost
+public class ObjectsLayer : BaseSceneLayer, ISceneViewsGeneratorHost, IHitTester
 {
     private SceneViewsGenerator<ObjectsLayer>? _generator;
     private HashSet<SceneObjectView> _lastViewsInViewport = [];
+    private static RectangleF _hitTestGeometryResourceRect;
+
+    public static readonly IStaticResource<RectangleGeometry> HitTestGeometryResource = 
+        ResourceCache.RegisterStatic(factory => factory.CreateRectangleGeometry(_hitTestGeometryResourceRect));
 
     #region ObjectTemplateSelector
 
@@ -86,11 +92,46 @@ public class ObjectsLayer : BaseSceneLayer, ISceneViewsGeneratorHost
 
     #endregion
 
+    IEnumerable<IHitTestable> IHitTester.Objects => Views;
+
     public ObjectsLayer() => Loaded += OnLoaded;
 
     protected override IEnumerator LogicalChildren => Views.GetEnumerator();
 
     public SceneObjectView? GetViewFromItem(object item) => _generator?.GetViewFromItem(item);
+
+    public HitTestResult<T> HitTest<T>(Vector2 pos, float tolerance) where T : IHitTestable
+    {
+        var objects = Views.Where(objView => objView.WorldBounds.IntersectsInclusive(pos.RectangleRelativePointAsCenter(tolerance)) && objView.HitTest(pos, tolerance)).OfType<T>().ToList();
+        return new HitTestResult<T>(objects);
+    }
+
+    public RectHitTestResult<T> HitTest<T>(RectangleF rect) where T : IHitTestable
+    {
+        _hitTestGeometryResourceRect = rect;
+        Cache.UpdateStatic(HitTestGeometryResource);
+        var rectangleGeometry = Cache.Get(HitTestGeometryResource);
+        var result = new List<(GeometryRelation GeometryRelation, T Obj)>();
+        var objects = Views.Where(objView => objView.WorldBounds.IntersectsInclusive(rect));
+
+        foreach (var obj in objects)
+        {
+            if (obj is T objT)
+            {
+                result.Add((obj.HitTest(rectangleGeometry), objT));
+            }
+        }
+
+        return new RectHitTestResult<T>(result);
+    }
+
+    public HitTestResult<T> HitTest<T>(Vector2 pos) where T : IHitTestable => HitTest<T>(pos, 0.25f);
+
+    public HitTestResult<T> HitTestByBounds<T>(Vector2 pos) where T : IHitTestable
+    {
+        var objects = Views.Where(objView => objView.WorldBounds.Contains(pos)).OfType<T>().Reverse().ToList();
+        return new HitTestResult<T>(objects);
+    }
 
     protected override bool OnIsDirtyEvaluation()
     {
@@ -103,7 +144,7 @@ public class ObjectsLayer : BaseSceneLayer, ISceneViewsGeneratorHost
         _lastViewsInViewport.ExceptWith(viewsInViewport);
         var isDirty = _lastViewsInViewport.Any();
         _lastViewsInViewport = viewsInViewport;
-        
+
         return isDirty;
     }
 

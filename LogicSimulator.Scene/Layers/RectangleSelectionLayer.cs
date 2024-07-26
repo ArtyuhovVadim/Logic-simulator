@@ -6,9 +6,7 @@ using LogicSimulator.Scene.Layers.Renderers;
 using LogicSimulator.Utils;
 using SharpDX;
 using Color = System.Windows.Media.Color;
-using RectangleGeometry = SharpDX.Direct2D1.RectangleGeometry;
 using SolidColorBrush = SharpDX.Direct2D1.SolidColorBrush;
-
 
 namespace LogicSimulator.Scene.Layers;
 
@@ -19,22 +17,6 @@ public class RectangleSelectionLayer : BaseSceneLayer
 
     public static readonly IResource<RectangleSelectionLayerRenderer, SolidColorBrush> SecantBrushResource =
         ResourceCache.Register<RectangleSelectionLayerRenderer, SolidColorBrush>((factory, user) => factory.CreateSolidColorBrush(user.Layer.SecantColor.ToColor4()));
-
-    public static readonly IResource<RectangleSelectionLayerRenderer, RectangleGeometry> RectangleGeometryResource =
-        ResourceCache.Register<RectangleSelectionLayerRenderer, RectangleGeometry>((factory, user) => factory.CreateRectangleGeometry(user.Layer.StartPosition, user.Layer.EndPosition));
-
-    #region Geometry
-
-    public RectangleGeometry Geometry
-    {
-        get => (RectangleGeometry)GetValue(GeometryProperty);
-        set => SetValue(GeometryProperty, value);
-    }
-
-    public static readonly DependencyProperty GeometryProperty =
-        DependencyProperty.Register(nameof(Geometry), typeof(RectangleGeometry), typeof(RectangleSelectionLayer), new PropertyMetadata(default(RectangleGeometry)));
-
-    #endregion
 
     #region NormalColor
 
@@ -89,7 +71,7 @@ public class RectangleSelectionLayer : BaseSceneLayer
     }
 
     public static readonly DependencyProperty StartPositionProperty =
-        DependencyProperty.Register(nameof(StartPosition), typeof(Vector2), typeof(RectangleSelectionLayer), new PropertyMetadata(default(Vector2), OnPositionPropertyChanged));
+        DependencyProperty.Register(nameof(StartPosition), typeof(Vector2), typeof(RectangleSelectionLayer), new PropertyMetadata(default(Vector2), DefaultPropertyChangedHandler));
 
     #endregion
 
@@ -102,20 +84,7 @@ public class RectangleSelectionLayer : BaseSceneLayer
     }
 
     public static readonly DependencyProperty EndPositionProperty =
-        DependencyProperty.Register(nameof(EndPosition), typeof(Vector2), typeof(RectangleSelectionLayer), new PropertyMetadata(default(Vector2), OnPositionPropertyChanged));
+        DependencyProperty.Register(nameof(EndPosition), typeof(Vector2), typeof(RectangleSelectionLayer), new PropertyMetadata(default(Vector2), DefaultPropertyChangedHandler));
 
     #endregion
-
-    private static void OnPositionPropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
-    {
-        if (d is not RectangleSelectionLayer layer) return;
-
-        layer.ThrowIfDisposed();
-
-        layer.Cache?.Update((RectangleSelectionLayerRenderer)layer.Renderer, RectangleGeometryResource);
-
-        layer.Geometry = layer.Cache?.Get((RectangleSelectionLayerRenderer)layer.Renderer, RectangleGeometryResource)!;
-
-        layer.MakeDirty();
-    }
 }

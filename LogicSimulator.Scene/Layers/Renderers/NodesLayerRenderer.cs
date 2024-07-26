@@ -1,7 +1,7 @@
 ﻿using LogicSimulator.Scene.DirectX;
 using LogicSimulator.Scene.Layers.Renderers.Base;
-using LogicSimulator.Scene.Nodes;
 using LogicSimulator.Scene.Views.Base;
+using LogicSimulator.Shared;
 using LogicSimulator.Utils;
 
 namespace LogicSimulator.Scene.Layers.Renderers;
@@ -13,7 +13,7 @@ public class NodesLayerRenderer : BaseLayerRenderer<NodesLayer>
         var strokeBrush = Layer.Cache.Get(this, NodesLayer.StrokeBrushResource);
         var fillBrush = Layer.Cache.Get(this, NodesLayer.FillBrushResource);
 
-        var size = AbstractNode.NodeSize / scene.Scale;
+        var size = IEditableObjectNode.NodeSize / scene.Scale;
 
         foreach (var sceneObject in Layer.Views.OfType<EditableSceneObjectView>().Where(x => x is { IsSelected: true, IsDragging: false }))
         {

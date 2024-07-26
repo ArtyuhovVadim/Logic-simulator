@@ -51,4 +51,26 @@ public static class RectangleFExtensionMethods
         rect.Inflate(value, value);
         return rect;
     }
+
+    public static RectangleF Normalize(this RectangleF rect)
+    {
+        var x = rect.X;
+        var y = rect.Y;
+        var width = rect.Width;
+        var height = rect.Height;
+
+        if (width < 0)
+        {
+            width *= -1;
+            x -= width;
+        }
+
+        if (height < 0)
+        {
+            height *= -1;
+            y -= height;
+        }
+
+        return new RectangleF(x, y, width, height);
+    }
 }

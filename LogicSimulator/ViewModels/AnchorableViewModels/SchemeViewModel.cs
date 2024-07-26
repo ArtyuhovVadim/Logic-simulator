@@ -4,6 +4,7 @@ using LogicSimulator.Infrastructure.Factories.Interfaces;
 using LogicSimulator.Infrastructure.Services.Interfaces;
 using LogicSimulator.Models;
 using LogicSimulator.Models.Base;
+using LogicSimulator.Shared;
 using LogicSimulator.ViewModels.AnchorableViewModels.Base;
 using LogicSimulator.ViewModels.ObjectViewModels.Base;
 using LogicSimulator.ViewModels.StatusViewModels;
@@ -22,6 +23,7 @@ public class SchemeViewModel : DocumentViewModel, IModelBased<Scheme>, ICloseabl
     private readonly IEditorSelectionService _editorSelectionService;
     private readonly ISchemeSimulatorService _schemeSimulatorService;
     private readonly ISchemeBuilderService _schemeBuilderService;
+    private readonly IToolSwitcherService _toolSwitcherService;
     private readonly ILogger<SchemeViewModel> _logger;
 
     private List<BaseObjectViewModel> _selectedObjects = [];
@@ -33,6 +35,7 @@ public class SchemeViewModel : DocumentViewModel, IModelBased<Scheme>, ICloseabl
                            IEditorSelectionService editorSelectionService,
                            ISchemeSimulatorService schemeSimulatorService,
                            ISchemeBuilderService schemeBuilderService,
+                           IToolSwitcherService toolSwitcherService,
                            IMappedViewModelFactory<BaseObjectModel, BaseObjectViewModel> viewModelsFactory,
                            ILogger<SchemeViewModel> logger)
     {
@@ -41,19 +44,33 @@ public class SchemeViewModel : DocumentViewModel, IModelBased<Scheme>, ICloseabl
         _editorSelectionService = editorSelectionService;
         _schemeSimulatorService = schemeSimulatorService;
         _schemeBuilderService = schemeBuilderService;
+        _toolSwitcherService = toolSwitcherService;
         _logger = logger;
 
         _objects = new ObservableCollectionEx<BaseObjectViewModel, BaseObjectModel>(Model.Objects, viewModelsFactory.Create);
-
         _statusViewModel = new SchemeStatusViewModel(this);
-
         _objects.CollectionChanged += (_, _) => _statusViewModel.RaisedPropertyChanged(nameof(SchemeStatusViewModel.ObjectsCount));
+
+        ToolsViewModel = new SchemeToolsViewModel(this, _toolSwitcherService);
+        ToolsViewModel.DragTool.GridStep = GridStep;
 
         IconSource = new Uri("pack://application:,,,/Resources/Icons/scheme-icon16x16.png");
         base.Title = Model.FileInfo?.Name ?? throw new InvalidOperationException();
     }
 
     public event Action? Closed;
+
+    #region HitTester
+
+    private IHitTester _hitTester = null!;
+
+    public IHitTester HitTester
+    {
+        get => _hitTester;
+        set => Set(ref _hitTester, value);
+    }
+
+    #endregion
 
     #region Model
 
@@ -62,10 +79,8 @@ public class SchemeViewModel : DocumentViewModel, IModelBased<Scheme>, ICloseabl
     #endregion
 
     #region ToolsViewModel
-
-    private SchemeToolsViewModel? _toolsViewModel;
-
-    public SchemeToolsViewModel ToolsViewModel => _toolsViewModel ??= new SchemeToolsViewModel(this);
+    
+    public SchemeToolsViewModel ToolsViewModel { get; }
 
     #endregion
 
@@ -132,7 +147,13 @@ public class SchemeViewModel : DocumentViewModel, IModelBased<Scheme>, ICloseabl
     public float GridStep
     {
         get => _gridStep;
-        set => Set(ref _gridStep, value);
+        set
+        {
+            if (Set(ref _gridStep, value))
+            {
+                ToolsViewModel.DragTool.GridStep = value;
+            }
+        }
     }
 
     #endregion

@@ -7,6 +7,8 @@ namespace LogicSimulator.ViewModels.ObjectViewModels;
 
 public class EllipseViewModel : BaseObjectViewModel
 {
+    public EllipseViewModel() => Model = new EllipseModel();
+
     public EllipseViewModel(EllipseModel model) => Model = model;
 
     public override EllipseModel Model { get; }

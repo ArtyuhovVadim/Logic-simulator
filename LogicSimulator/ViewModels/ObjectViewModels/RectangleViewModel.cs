@@ -7,6 +7,8 @@ namespace LogicSimulator.ViewModels.ObjectViewModels;
 
 public class RectangleViewModel : BaseObjectViewModel
 {
+    public RectangleViewModel() => Model = new RectangleModel();
+
     public RectangleViewModel(RectangleModel model) => Model = model;
 
     public override RectangleModel Model { get; }

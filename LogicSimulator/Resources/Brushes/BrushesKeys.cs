@@ -39,15 +39,6 @@ public static class BrushesKeys
         public static readonly ComponentResourceKey SearchIconBrush = CreateInstance();
     }
 
-    public static class SchemeToolView
-    {
-        public static readonly ComponentResourceKey Background = CreateInstance();
-
-        public static readonly ComponentResourceKey MouseOverBackground = CreateInstance();
-
-        public static readonly ComponentResourceKey ActiveBackground = CreateInstance();
-    }
-
     public static class SchemeView
     {
         public static readonly ComponentResourceKey StartBackgroundColor = CreateInstance();

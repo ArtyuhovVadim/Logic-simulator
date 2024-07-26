@@ -1,14 +1,14 @@
-﻿using LogicSimulator.Models;
+﻿using LogicSimulator.Infrastructure.Tools;
+using LogicSimulator.Models;
 using LogicSimulator.Utils;
 using LogicSimulator.ViewModels.AnchorableViewModels;
 using LogicSimulator.ViewModels.ObjectViewModels.Base;
 using LogicSimulator.ViewModels.Tools.Base;
 using SharpDX;
-using WpfExtensions.Mvvm.Commands;
 
 namespace LogicSimulator.ViewModels.Tools;
 
-public class SegmentedObjectPlacingToolViewModel<T> : BasePlacingToolViewModel<T> where T : BaseObjectViewModel, ISegmentedObject
+public class SegmentedObjectPlacingToolViewModel<T> : BasePlacingToolViewModel<T> where T : BaseObjectViewModel, ISegmentedObject, new()
 {
     private int _currentVertexIndex = -1;
 
@@ -20,13 +20,9 @@ public class SegmentedObjectPlacingToolViewModel<T> : BasePlacingToolViewModel<T
         _addVertexStep = new PlacingStep<T>(EnterAddVertexStep, ExitAddVertexStep, UpdateVertexPosition, AddVertexStepTransition);
     }
 
-    #region ApplyCommand
+    public SegmentedObjectPlacingToolViewModel(SchemeViewModel scheme) : this(scheme, () => new T()) { }
 
-    private ICommand? _applyCommand;
-
-    public ICommand ApplyCommand => _applyCommand ??= new LambdaCommand(OnApply);
-
-    #endregion
+    protected override void OnMouseRightButtonUp(InputArgs args) => OnApply();
 
     protected override PlacingStep<T> FirstStep { get; }
 

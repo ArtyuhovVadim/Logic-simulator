@@ -1,5 +1,4 @@
-﻿using LogicSimulator.Models;
-using LogicSimulator.Utils;
+﻿using LogicSimulator.Utils;
 using LogicSimulator.ViewModels.AnchorableViewModels;
 using LogicSimulator.ViewModels.ObjectViewModels;
 using LogicSimulator.ViewModels.Tools.Base;
@@ -13,7 +12,7 @@ public class BezierCurvePlacingToolViewModel : BasePlacingToolViewModel<BezierCu
     private readonly PlacingStep<BezierCurveViewModel> _setSecondPointStep;
     private readonly PlacingStep<BezierCurveViewModel> _setThirdPointStep;
 
-    public BezierCurvePlacingToolViewModel(SchemeViewModel scheme) : base(scheme, () => new BezierCurveViewModel(new BezierCurveModel()))
+    public BezierCurvePlacingToolViewModel(SchemeViewModel scheme) : base(scheme)
     {
         FirstStep = new PlacingStep<BezierCurveViewModel>(UpdateLocation, null, UpdateLocation, LocationStepTransition);
         _setFirstPointStep = new PlacingStep<BezierCurveViewModel>(UpdateFirstPoint, null, UpdateFirstPoint, SetFirstPointStepTransition);
