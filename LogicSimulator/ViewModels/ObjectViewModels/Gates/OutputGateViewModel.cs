@@ -8,6 +8,8 @@ namespace LogicSimulator.ViewModels.ObjectViewModels.Gates;
 
 public class OutputGateViewModel : BaseGateViewModel
 {
+    public OutputGateViewModel() : this(new OutputGateModel()) { }
+
     public OutputGateViewModel(OutputGateModel model) : base(model)
     {
         Model = model;

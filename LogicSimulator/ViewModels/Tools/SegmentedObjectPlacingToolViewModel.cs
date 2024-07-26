@@ -8,7 +8,7 @@ using SharpDX;
 
 namespace LogicSimulator.ViewModels.Tools;
 
-public class SegmentedObjectPlacingToolViewModel<T> : BasePlacingToolViewModel<T> where T : BaseObjectViewModel, ISegmentedObject
+public class SegmentedObjectPlacingToolViewModel<T> : BasePlacingToolViewModel<T> where T : BaseObjectViewModel, ISegmentedObject, new()
 {
     private int _currentVertexIndex = -1;
 
@@ -19,6 +19,8 @@ public class SegmentedObjectPlacingToolViewModel<T> : BasePlacingToolViewModel<T
         FirstStep = new PlacingStep<T>(UpdateLocation, null, UpdateLocation, LocationStepTransition);
         _addVertexStep = new PlacingStep<T>(EnterAddVertexStep, ExitAddVertexStep, UpdateVertexPosition, AddVertexStepTransition);
     }
+
+    public SegmentedObjectPlacingToolViewModel(SchemeViewModel scheme) : this(scheme, () => new T()) { }
 
     protected override void OnMouseRightButtonUp(InputArgs args) => OnApply();
 

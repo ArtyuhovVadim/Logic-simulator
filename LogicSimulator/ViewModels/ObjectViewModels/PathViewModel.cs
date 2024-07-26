@@ -7,6 +7,8 @@ namespace LogicSimulator.ViewModels.ObjectViewModels;
 
 public class PathViewModel : BaseObjectViewModel
 {
+    public PathViewModel() => Model = new PathModel();
+
     public PathViewModel(PathModel model) => Model = model;
 
     public override PathModel Model { get; }

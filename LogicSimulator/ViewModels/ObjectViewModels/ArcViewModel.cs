@@ -7,6 +7,8 @@ namespace LogicSimulator.ViewModels.ObjectViewModels;
 
 public class ArcViewModel : BaseObjectViewModel
 {
+    public ArcViewModel() => Model = new ArcModel();
+
     public ArcViewModel(ArcModel model) => Model = model;
 
     public override ArcModel Model { get; }

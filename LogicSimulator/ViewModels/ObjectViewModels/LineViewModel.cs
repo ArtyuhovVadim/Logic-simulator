@@ -9,6 +9,8 @@ namespace LogicSimulator.ViewModels.ObjectViewModels;
 
 public class LineViewModel : BaseObjectViewModel, ISegmentedObject
 {
+    public LineViewModel() : this(new LineModel()) { }
+
     public LineViewModel(LineModel model)
     {
         Model = model;

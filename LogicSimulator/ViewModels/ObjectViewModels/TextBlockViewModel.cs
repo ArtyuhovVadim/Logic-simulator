@@ -6,6 +6,8 @@ namespace LogicSimulator.ViewModels.ObjectViewModels;
 
 public class TextBlockViewModel : BaseObjectViewModel
 {
+    public TextBlockViewModel() => Model = new TextBlockModel();
+
     public TextBlockViewModel(TextBlockModel model) => Model = model;
 
     public override TextBlockModel Model { get; }

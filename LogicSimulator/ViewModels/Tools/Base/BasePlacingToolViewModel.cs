@@ -5,10 +5,12 @@ using SharpDX;
 
 namespace LogicSimulator.ViewModels.Tools.Base;
 
-public abstract class BasePlacingToolViewModel<T> : BaseToolViewModel where T : BaseObjectViewModel
+public abstract class BasePlacingToolViewModel<T> : BaseToolViewModel where T : BaseObjectViewModel, new()
 {
     private readonly Func<T> _objectFactory;
     private PlacingStep<T>? _currentStep;
+
+    protected BasePlacingToolViewModel(SchemeViewModel scheme) : this(scheme, () => new T()) { }
 
     protected BasePlacingToolViewModel(SchemeViewModel scheme, Func<T> objectFactory)
     {

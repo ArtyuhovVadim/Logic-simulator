@@ -8,6 +8,8 @@ namespace LogicSimulator.ViewModels.ObjectViewModels;
 
 public class BezierCurveViewModel : BaseObjectViewModel
 {
+    public BezierCurveViewModel() => Model = new BezierCurveModel();
+
     public BezierCurveViewModel(BezierCurveModel model) => Model = model;
 
     public override BezierCurveModel Model { get; }

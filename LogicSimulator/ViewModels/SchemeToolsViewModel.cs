@@ -26,14 +26,16 @@ public class SchemeToolsViewModel : BindableBase
         var roundedRectanglePlacingToolViewModel = new RoundedRectanglePlacingToolViewModel(scheme) { Group = ToolGroup.BaseGeometryPlacing, Name = "Rounded rectangle placing tool" };
         var ellipsePlacingToolViewModel = new EllipsePlacingToolViewModel(scheme) { Group = ToolGroup.BaseGeometryPlacing, Name = "Ellipse placing tool" };
         var arcPlacingToolViewModel = new ArcPlacingToolViewModel(scheme) { Group = ToolGroup.BaseGeometryPlacing, Name = "Arc placing tool" };
-        var linePlacingToolViewModel = new SegmentedObjectPlacingToolViewModel<LineViewModel>(scheme, () => new LineViewModel(new LineModel())) { Group = ToolGroup.BaseGeometryPlacing, Name = "Line placing tool" };
+        var linePlacingToolViewModel = new SegmentedObjectPlacingToolViewModel<LineViewModel>(scheme) { Group = ToolGroup.BaseGeometryPlacing, Name = "Line placing tool" };
         var bezierCurvePlacingToolViewModel = new BezierCurvePlacingToolViewModel(scheme) { Group = ToolGroup.BaseGeometryPlacing, Name = "Bezier placing tool" };
         var pathPlacingToolViewModel = new ObjectPlacingToolViewModel<PathViewModel>(scheme, () => new PathViewModel(new PathModel { Geometry = "M 32 0 L 0 16 L 0 56 L 32 71 L 64 56 L 64 18 Z M 32 4 L 60 20 L 32 34 L 4 18 Z M 4 22 L 30 38 L 30 66 L 4 54 Z M 60 24 L 60 54 L 34 66 L 34 38 Z" })) { Group = ToolGroup.BaseGeometryPlacing, Name = "Path placing tool" };
-        var textBlockPlacingToolViewModel = new ObjectPlacingToolViewModel<TextBlockViewModel>(scheme, () => new TextBlockViewModel(new TextBlockModel())) { Group = ToolGroup.BaseGeometryPlacing, Name = "Text block placing tool" };
-        var inputGatePlacingToolViewModel = new ObjectPlacingToolViewModel<InputGateViewModel>(scheme, () => new InputGateViewModel(new InputGateModel())) { Group = ToolGroup.GatesPlacing, Name = "Input gate placing tool" };
-        var outputGatePlacingToolViewModel = new ObjectPlacingToolViewModel<OutputGateViewModel>(scheme, () => new OutputGateViewModel(new OutputGateModel())) { Group = ToolGroup.GatesPlacing, Name = "Output gate placing tool" };
-        var andGatePlacingToolViewModel = new ObjectPlacingToolViewModel<AndGateViewModel>(scheme, () => new AndGateViewModel(new AndGateModel())) { Group = ToolGroup.GatesPlacing, Name = "And gate placing tool" };
-        var wirePlacingToolViewModel = new SegmentedObjectPlacingToolViewModel<WireViewModel>(scheme, () => new WireViewModel(new WireModel())) { Group = ToolGroup.WirePlacing, Name = "Wire placing tool" };
+        var textBlockPlacingToolViewModel = new ObjectPlacingToolViewModel<TextBlockViewModel>(scheme) { Group = ToolGroup.BaseGeometryPlacing, Name = "Text block placing tool" };
+
+        var inputGatePlacingToolViewModel = new ObjectPlacingToolViewModel<InputGateViewModel>(scheme) { Group = ToolGroup.GatesPlacing, Name = "Input gate placing tool" };
+        var outputGatePlacingToolViewModel = new ObjectPlacingToolViewModel<OutputGateViewModel>(scheme) { Group = ToolGroup.GatesPlacing, Name = "Output gate placing tool" };
+        var andGatePlacingToolViewModel = new ObjectPlacingToolViewModel<AndGateViewModel>(scheme) { Group = ToolGroup.GatesPlacing, Name = "And gate placing tool" };
+
+        var wirePlacingToolViewModel = new SegmentedObjectPlacingToolViewModel<WireViewModel>(scheme) { Group = ToolGroup.WirePlacing, Name = "Wire placing tool" };
 
         _toolSwitcherService.ToolChanged += (_, _) => OnPropertyChanged(nameof(CurrentTool));
         _toolSwitcherService.DefaultTool = SelectionTool;

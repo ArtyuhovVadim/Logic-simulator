@@ -10,6 +10,9 @@ namespace LogicSimulator.ViewModels.ObjectViewModels;
 
 public class WireViewModel : BaseObjectViewModel, ISegmentedObject
 {
+    public WireViewModel() : this(new WireModel()) { }
+
+
     public WireViewModel(WireModel model)
     {
         Model = model;

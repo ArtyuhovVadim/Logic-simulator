@@ -1,5 +1,4 @@
-﻿using LogicSimulator.Models;
-using LogicSimulator.Utils;
+﻿using LogicSimulator.Utils;
 using LogicSimulator.ViewModels.AnchorableViewModels;
 using LogicSimulator.ViewModels.ObjectViewModels;
 using LogicSimulator.ViewModels.Tools.Base;
@@ -12,7 +11,7 @@ public class RoundedRectanglePlacingToolViewModel : BasePlacingToolViewModel<Rou
     private readonly PlacingStep<RoundedRectangleViewModel> _setSizeStep;
     private readonly PlacingStep<RoundedRectangleViewModel> _setRadiusStep;
 
-    public RoundedRectanglePlacingToolViewModel(SchemeViewModel scheme) : base(scheme, () => new RoundedRectangleViewModel(new RoundedRectangleModel()))
+    public RoundedRectanglePlacingToolViewModel(SchemeViewModel scheme) : base(scheme)
     {
         FirstStep = new PlacingStep<RoundedRectangleViewModel>(UpdateLocation, null, UpdateLocation, LocationStepTransition);
         _setSizeStep = new PlacingStep<RoundedRectangleViewModel>(UpdateSize, SizeStepTransition);

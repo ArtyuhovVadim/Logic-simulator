@@ -7,6 +7,8 @@ namespace LogicSimulator.ViewModels.ObjectViewModels;
 
 public class RoundedRectangleViewModel : BaseObjectViewModel
 {
+    public RoundedRectangleViewModel() => Model = new RoundedRectangleModel();
+
     public RoundedRectangleViewModel(RoundedRectangleModel model) => Model = model;
 
     public override RoundedRectangleModel Model { get; }
