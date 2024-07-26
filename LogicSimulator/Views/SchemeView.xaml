@@ -131,6 +131,9 @@
                 <StackPanel Orientation="Horizontal">
                     <StackPanel.Resources>
                         <Style BasedOn="{StaticResource {x:Type Button}}" TargetType="{x:Type Button}">
+                            <Style.Resources>
+                                <SolidColorBrush x:Key="{x:Static brushesEx:BrushesKeys+Button.DisabledBackground}" Color="Transparent" />
+                            </Style.Resources>
                             <Setter Property="Width" Value="{Binding Path=ActualHeight, RelativeSource={RelativeSource Self}}" />
                             <Setter Property="BorderThickness" Value="0" />
                             <Setter Property="Background" Value="Transparent" />
@@ -139,6 +142,11 @@
                             <Setter Property="Margin" Value="7" />
                             <Setter Property="SnapsToDevicePixels" Value="True" />
                             <Setter Property="UseLayoutRounding" Value="True" />
+                            <Style.Triggers>
+                                <Trigger Property="IsEnabled" Value="False">
+                                    <Setter Property="Opacity" Value="0.5" />
+                                </Trigger>
+                            </Style.Triggers>
                         </Style>
                     </StackPanel.Resources>
                     <Button Command="{Binding Path=StartSimulationCommand}">
