@@ -19,6 +19,7 @@ public class SchemeViewModelFactory : ISchemeViewModelFactory
     public SchemeViewModel Create(Scheme schemeModel) => new(
         schemeModel,
         _provider.GetRequiredService<DockingViewModel>(),
+        _provider.GetRequiredService<TimelineViewModel>(),
         _provider.GetRequiredService<IEditorSelectionService>(),
         _provider.GetRequiredService<ISchemeSimulatorService>(),
         _provider.GetRequiredService<ISchemeBuilderService>(),

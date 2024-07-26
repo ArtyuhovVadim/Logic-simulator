@@ -18,6 +18,7 @@ namespace LogicSimulator.ViewModels.AnchorableViewModels;
 public class SchemeViewModel : DocumentViewModel, IModelBased<Scheme>, ICloseable
 {
     private readonly DockingViewModel _dockingViewModel;
+    private readonly TimelineViewModel _timelineViewModel;
     private readonly SchemeStatusViewModel _statusViewModel;
 
     private readonly IEditorSelectionService _editorSelectionService;
@@ -32,6 +33,7 @@ public class SchemeViewModel : DocumentViewModel, IModelBased<Scheme>, ICloseabl
 
     public SchemeViewModel(Scheme scheme,
                            DockingViewModel dockingViewModel,
+                           TimelineViewModel timelineViewModel,
                            IEditorSelectionService editorSelectionService,
                            ISchemeSimulatorService schemeSimulatorService,
                            ISchemeBuilderService schemeBuilderService,
@@ -41,6 +43,7 @@ public class SchemeViewModel : DocumentViewModel, IModelBased<Scheme>, ICloseabl
     {
         Model = scheme;
         _dockingViewModel = dockingViewModel;
+        _timelineViewModel = timelineViewModel;
         _editorSelectionService = editorSelectionService;
         _schemeSimulatorService = schemeSimulatorService;
         _schemeBuilderService = schemeBuilderService;
@@ -79,7 +82,7 @@ public class SchemeViewModel : DocumentViewModel, IModelBased<Scheme>, ICloseabl
     #endregion
 
     #region ToolsViewModel
-    
+
     public SchemeToolsViewModel ToolsViewModel { get; }
 
     #endregion
@@ -305,8 +308,7 @@ public class SchemeViewModel : DocumentViewModel, IModelBased<Scheme>, ICloseabl
         {
             _schemeSimulatorService.PauseSimulation();
             _simulationResult = new ObservableCollection<TimelineRowViewModel>(_schemeSimulatorService.Result.Select(x => new TimelineRowViewModel(x.Value)));
-            //TODO:
-            _dockingViewModel.ToolViewModels.OfType<TimelineViewModel>().Single().Waves = _simulationResult;
+            _timelineViewModel.Waves = _simulationResult;
         }
         catch (Exception e)
         {
@@ -327,8 +329,7 @@ public class SchemeViewModel : DocumentViewModel, IModelBased<Scheme>, ICloseabl
         {
             _schemeSimulatorService.SimulateNextStep();
             _simulationResult = new ObservableCollection<TimelineRowViewModel>(_schemeSimulatorService.Result.Select(x => new TimelineRowViewModel(x.Value)));
-            //TODO:
-            _dockingViewModel.ToolViewModels.OfType<TimelineViewModel>().Single().Waves = _simulationResult;
+            _timelineViewModel.Waves = _simulationResult;
         }
         catch (Exception e)
         {
@@ -349,8 +350,7 @@ public class SchemeViewModel : DocumentViewModel, IModelBased<Scheme>, ICloseabl
         {
             _schemeSimulatorService.StopSimulation();
             _simulationResult = new ObservableCollection<TimelineRowViewModel>(_schemeSimulatorService.Result.Select(x => new TimelineRowViewModel(x.Value)));
-            //TODO:
-            _dockingViewModel.ToolViewModels.OfType<TimelineViewModel>().Single().Waves = _simulationResult;
+            _timelineViewModel.Waves = _simulationResult;
         }
         catch (Exception e)
         {
@@ -365,15 +365,13 @@ public class SchemeViewModel : DocumentViewModel, IModelBased<Scheme>, ICloseabl
     protected override void OnDocumentActivated()
     {
         OnSelectedObjectsChanged();
-        //TODO:
-        _dockingViewModel.ToolViewModels.OfType<TimelineViewModel>().Single().Waves = _simulationResult;
+        _timelineViewModel.Waves = _simulationResult;
     }
 
     protected override void OnDocumentDeactivated()
     {
         _editorSelectionService.SetEmptyEditor();
-        //TODO:
-        _dockingViewModel.ToolViewModels.OfType<TimelineViewModel>().Single().Waves = [];
+        _timelineViewModel.Waves = [];
     }
 
     protected override void OnClose(object? p)
