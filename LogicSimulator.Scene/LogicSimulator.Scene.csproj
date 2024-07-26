@@ -21,6 +21,7 @@
 
     <ItemGroup>
       <ProjectReference Include="..\LogicSimulator.Core\LogicSimulator.Core.csproj" />
+      <ProjectReference Include="..\LogicSimulator.Shared\LogicSimulator.Shared.csproj" />
       <ProjectReference Include="..\LogicSimulator.Utils\LogicSimulator.Utils.csproj" />
     </ItemGroup>
 

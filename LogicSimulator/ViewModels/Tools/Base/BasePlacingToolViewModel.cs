@@ -1,11 +1,11 @@
-﻿using LogicSimulator.ViewModels.AnchorableViewModels;
+﻿using LogicSimulator.Infrastructure.Tools;
+using LogicSimulator.ViewModels.AnchorableViewModels;
 using LogicSimulator.ViewModels.ObjectViewModels.Base;
 using SharpDX;
-using WpfExtensions.Mvvm.Commands;
 
 namespace LogicSimulator.ViewModels.Tools.Base;
 
-public abstract class BasePlacingToolViewModel<T> : BaseSchemeToolViewModel where T : BaseObjectViewModel
+public abstract class BasePlacingToolViewModel<T> : BaseToolViewModel where T : BaseObjectViewModel
 {
     private readonly Func<T> _objectFactory;
     private PlacingStep<T>? _currentStep;
@@ -22,29 +22,17 @@ public abstract class BasePlacingToolViewModel<T> : BaseSchemeToolViewModel wher
 
     protected abstract PlacingStep<T> FirstStep { get; }
 
-    #region ActionCommand
+    protected override void OnKeyDown(KeyInputArgs args)
+    {
+        if (args.Key != CanselKey) return;
+        OnReject();
+    }
 
-    private ICommand? _actionCommand;
+    protected override void OnMouseLeftButtonDown(InputArgs args) => OnAction(args.Position);
 
-    public ICommand ActionCommand => _actionCommand ??= new LambdaCommand<Vector2>(OnAction);
+    protected override void OnMouseMove(InputArgs args) => OnUpdate(args.Position);
 
-    #endregion
-
-    #region UpdateCommand
-
-    private ICommand? _updateCommand;
-
-    public ICommand UpdateCommand => _updateCommand ??= new LambdaCommand<Vector2>(OnUpdate);
-
-    #endregion
-
-    #region RejectCommand
-
-    private ICommand? _rejectCommand;
-
-    public ICommand RejectCommand => _rejectCommand ??= new LambdaCommand(OnReject);
-
-    #endregion
+    protected override void OnMouseRightButtonUp(InputArgs args) => OnReject();
 
     protected override void OnActivated()
     {

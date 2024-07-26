@@ -1,205 +1,110 @@
-﻿using LogicSimulator.Models;
+﻿using LogicSimulator.Infrastructure.Services.Interfaces;
+using LogicSimulator.Infrastructure.Tools;
+using LogicSimulator.Models;
 using LogicSimulator.ViewModels.AnchorableViewModels;
 using LogicSimulator.ViewModels.ObjectViewModels;
 using LogicSimulator.ViewModels.ObjectViewModels.Gates;
 using LogicSimulator.ViewModels.Tools;
-using LogicSimulator.ViewModels.Tools.Base;
 using WpfExtensions.Mvvm;
 
 namespace LogicSimulator.ViewModels;
 
 public class SchemeToolsViewModel : BindableBase
 {
-    public SchemeToolsViewModel(SchemeViewModel scheme)
+    private readonly IToolSwitcherService _toolSwitcherService;
+
+    public SchemeToolsViewModel(SchemeViewModel scheme, IToolSwitcherService toolSwitcherService)
     {
-        CurrentTool = SelectionTool;
+        _toolSwitcherService = toolSwitcherService;
 
-        SelectionTool.Name = "Selection tool";
-        SelectionTool.ToolSelected += OnToolSelected;
+        SelectionTool = new SelectionToolViewModel(scheme) { Name = "Selection tool" };
+        DragTool = new DragToolViewModel(scheme) { Name = "Drag tool" };
+        NodeDragTool = new NodeDragToolViewModel(scheme) { Name = "Node drag tool" };
+        RectangleSelectionTool = new RectangleSelectionToolViewModel(scheme) { Name = "Rectangle selection tool" };
 
-        DragTool.Name = "Drag tool";
-        DragTool.ToolSelected += OnToolSelected;
+        var rectanglePlacingToolViewModel = new RectanglePlacingToolViewModel(scheme) { Group = ToolGroup.BaseGeometryPlacing, Name = "Rectangle placing tool" };
+        var roundedRectanglePlacingToolViewModel = new RoundedRectanglePlacingToolViewModel(scheme) { Group = ToolGroup.BaseGeometryPlacing, Name = "Rounded rectangle placing tool" };
+        var ellipsePlacingToolViewModel = new EllipsePlacingToolViewModel(scheme) { Group = ToolGroup.BaseGeometryPlacing, Name = "Ellipse placing tool" };
+        var arcPlacingToolViewModel = new ArcPlacingToolViewModel(scheme) { Group = ToolGroup.BaseGeometryPlacing, Name = "Arc placing tool" };
+        var linePlacingToolViewModel = new SegmentedObjectPlacingToolViewModel<LineViewModel>(scheme, () => new LineViewModel(new LineModel())) { Group = ToolGroup.BaseGeometryPlacing, Name = "Line placing tool" };
+        var bezierCurvePlacingToolViewModel = new BezierCurvePlacingToolViewModel(scheme) { Group = ToolGroup.BaseGeometryPlacing, Name = "Bezier placing tool" };
+        var pathPlacingToolViewModel = new ObjectPlacingToolViewModel<PathViewModel>(scheme, () => new PathViewModel(new PathModel { Geometry = "M 32 0 L 0 16 L 0 56 L 32 71 L 64 56 L 64 18 Z M 32 4 L 60 20 L 32 34 L 4 18 Z M 4 22 L 30 38 L 30 66 L 4 54 Z M 60 24 L 60 54 L 34 66 L 34 38 Z" })) { Group = ToolGroup.BaseGeometryPlacing, Name = "Path placing tool" };
+        var textBlockPlacingToolViewModel = new ObjectPlacingToolViewModel<TextBlockViewModel>(scheme, () => new TextBlockViewModel(new TextBlockModel())) { Group = ToolGroup.BaseGeometryPlacing, Name = "Text block placing tool" };
+        var inputGatePlacingToolViewModel = new ObjectPlacingToolViewModel<InputGateViewModel>(scheme, () => new InputGateViewModel(new InputGateModel())) { Group = ToolGroup.GatesPlacing, Name = "Input gate placing tool" };
+        var outputGatePlacingToolViewModel = new ObjectPlacingToolViewModel<OutputGateViewModel>(scheme, () => new OutputGateViewModel(new OutputGateModel())) { Group = ToolGroup.GatesPlacing, Name = "Output gate placing tool" };
+        var andGatePlacingToolViewModel = new ObjectPlacingToolViewModel<AndGateViewModel>(scheme, () => new AndGateViewModel(new AndGateModel())) { Group = ToolGroup.GatesPlacing, Name = "And gate placing tool" };
+        var wirePlacingToolViewModel = new SegmentedObjectPlacingToolViewModel<WireViewModel>(scheme, () => new WireViewModel(new WireModel())) { Group = ToolGroup.WirePlacing, Name = "Wire placing tool" };
 
-        RectangleSelectionTool.Name = "Rectangle selection tool";
-        RectangleSelectionTool.ToolSelected += OnToolSelected;
+        _toolSwitcherService.ToolChanged += (_, _) => OnPropertyChanged(nameof(CurrentTool));
+        _toolSwitcherService.DefaultTool = SelectionTool;
 
-        NodeDragTool.Name = "Node drag tool";
-        NodeDragTool.ToolSelected += OnToolSelected;
+        _toolSwitcherService.AddTools(
+            SelectionTool,
+            DragTool,
+            RectangleSelectionTool,
+            NodeDragTool,
+            rectanglePlacingToolViewModel,
+            roundedRectanglePlacingToolViewModel,
+            ellipsePlacingToolViewModel,
+            arcPlacingToolViewModel,
+            linePlacingToolViewModel,
+            bezierCurvePlacingToolViewModel,
+            pathPlacingToolViewModel,
+            textBlockPlacingToolViewModel,
+            inputGatePlacingToolViewModel,
+            outputGatePlacingToolViewModel,
+            andGatePlacingToolViewModel,
+            wirePlacingToolViewModel);
 
-        RectanglePlacingTool = new RectanglePlacingToolViewModel(scheme) { Name = "Rectangle placing tool" };
-        RectanglePlacingTool.ToolSelected += OnToolSelected;
+        _toolSwitcherService.SwitchToDefaultTool(false);
 
-        RoundedRectanglePlacingTool = new RoundedRectanglePlacingToolViewModel(scheme) { Name = "Rounded rectangle placing tool" };
-        RoundedRectanglePlacingTool.ToolSelected += OnToolSelected;
-
-        EllipsePlacingTool = new EllipsePlacingToolViewModel(scheme) { Name = "Ellipse placing tool" };
-        EllipsePlacingTool.ToolSelected += OnToolSelected;
-
-        ArcPlacingTool = new ArcPlacingToolViewModel(scheme) { Name = "Arc placing tool" };
-        ArcPlacingTool.ToolSelected += OnToolSelected;
-
-        LinePlacingTool = new SegmentedObjectPlacingToolViewModel<LineViewModel>(scheme, () => new LineViewModel(new LineModel())) { Name = "Line placing tool" };
-        LinePlacingTool.ToolSelected += OnToolSelected;
-
-        BezierCurvePlacingTool = new BezierCurvePlacingToolViewModel(scheme) { Name = "Bezier curve placing tool" };
-        BezierCurvePlacingTool.ToolSelected += OnToolSelected;
-
-        TextPlacingTool = new ObjectPlacingToolViewModel<TextBlockViewModel>(scheme, () => new TextBlockViewModel(new TextBlockModel())) { Name = "Text placing tool" };
-        TextPlacingTool.ToolSelected += OnToolSelected;
-
-        InputGatePlacingTool = new ObjectPlacingToolViewModel<InputGateViewModel>(scheme, () => new InputGateViewModel(new InputGateModel())) { Name = "Input gate placing tool" };
-        InputGatePlacingTool.ToolSelected += OnToolSelected;
-
-        OutputGatePlacingTool = new ObjectPlacingToolViewModel<OutputGateViewModel>(scheme, () => new OutputGateViewModel(new OutputGateModel())) { Name = "Output gate placing tool" };
-        OutputGatePlacingTool.ToolSelected += OnToolSelected;
-
-        AndGatePlacingTool = new ObjectPlacingToolViewModel<AndGateViewModel>(scheme, () => new AndGateViewModel(new AndGateModel())) { Name = "And gate placing tool" };
-        AndGatePlacingTool.ToolSelected += OnToolSelected;
-
-        WirePlacingTool = new SegmentedObjectPlacingToolViewModel<WireViewModel>(scheme, () => new WireViewModel(new WireModel())) { Name = "Wire placing tool" };
-        WirePlacingTool.ToolSelected += OnToolSelected;
+        SelectionTool.SelectedObjectsChanged += scheme.SelectedObjectsChanged;
+        RectangleSelectionTool.SelectedObjectsChanged += scheme.SelectedObjectsChanged;
     }
 
-    public SchemeSelectionToolViewModel DefaultTool => SelectionTool;
+    #region Tools
 
-    #region IsDefaultToolSelected
-
-    public bool IsDefaultToolSelected => CurrentTool == DefaultTool;
+    public IEnumerable<ITool> Tools => _toolSwitcherService.Tools;
 
     #endregion
 
-    #region CurrentTool
+    #region CurrnetTool
 
-    private BaseSchemeToolViewModel? _currentTool;
-
-    public BaseSchemeToolViewModel? CurrentTool
+    public ITool? CurrentTool
     {
-        get => _currentTool;
-        set
-        {
-            var tmp = _currentTool;
-
-            if (!Set(ref _currentTool, value)) return;
-
-            if (tmp is not null)
-                tmp.IsActive = false;
-
-            if (_currentTool is not null)
-                _currentTool.IsActive = true;
-
-            OnPropertyChanged(nameof(IsDefaultToolSelected));
-        }
+        get => _toolSwitcherService.CurrentTool;
+        set => _toolSwitcherService.SwitchTool(value!.GetType(), false);
     }
+
+    #endregion
+
+    #region IsDefaultToolSelected
+
+    public bool IsDefaultToolSelected => CurrentTool == _toolSwitcherService.DefaultTool;
+
+    #endregion
+
+    #region DefaultTool
+
+    public ITool DefaultTool => _toolSwitcherService.DefaultTool!;
 
     #endregion
 
     #region IsCurrentToolLocked
 
-    private bool _isCurrentToolLocked;
-
     public bool IsCurrentToolLocked
     {
-        get => _isCurrentToolLocked;
-        set => Set(ref _isCurrentToolLocked, value);
+        get => _toolSwitcherService.IsCurrentToolLocked;
+        set => Set(_toolSwitcherService.IsCurrentToolLocked, value, _toolSwitcherService, (service, value) => service.IsCurrentToolLocked = value);
     }
 
     #endregion
 
-    #region SelectionTool
+    public SelectionToolViewModel SelectionTool { get; }
 
-    public SchemeSelectionToolViewModel SelectionTool { get; } = new();
+    public DragToolViewModel DragTool { get; }
 
-    #endregion
+    public NodeDragToolViewModel NodeDragTool { get; }
 
-    #region DragTool
-
-    public SchemeDragToolViewModel DragTool { get; } = new();
-
-    #endregion
-
-    #region RectangleSelectionTool
-
-    public SchemeRectangleSelectionToolViewModel RectangleSelectionTool { get; } = new();
-
-    #endregion
-
-    #region NodeDragTool
-
-    public SchemeNodeDragToolViewModel NodeDragTool { get; } = new();
-
-    #endregion
-
-    #region RectanglePlacingTool
-
-    public RectanglePlacingToolViewModel RectanglePlacingTool { get; }
-
-    #endregion
-
-    #region RoundedRectanglePlacingTool
-
-    public RoundedRectanglePlacingToolViewModel RoundedRectanglePlacingTool { get; }
-
-    #endregion
-
-    #region EllipsePlacingTool
-
-    public EllipsePlacingToolViewModel EllipsePlacingTool { get; }
-
-    #endregion
-
-    #region ArcPlacingTool
-
-    public ArcPlacingToolViewModel ArcPlacingTool { get; }
-
-    #endregion
-
-    #region LinePlacingTool
-
-    public SegmentedObjectPlacingToolViewModel<LineViewModel> LinePlacingTool { get; }
-
-    #endregion
-
-    #region BezierCurvePlacingTool
-
-    public BezierCurvePlacingToolViewModel BezierCurvePlacingTool { get; }
-
-    #endregion
-
-    #region TextPlacingTool
-
-    public ObjectPlacingToolViewModel<TextBlockViewModel> TextPlacingTool { get; }
-
-    #endregion
-
-    #region InputGatePlacingTool
-
-    public ObjectPlacingToolViewModel<InputGateViewModel> InputGatePlacingTool { get; }
-
-    #endregion
-
-    #region OutputGatePlacingTool
-
-    public ObjectPlacingToolViewModel<OutputGateViewModel> OutputGatePlacingTool { get; }
-
-    #endregion
-
-    #region AndGatePlacingTool
-
-    public ObjectPlacingToolViewModel<AndGateViewModel> AndGatePlacingTool { get; }
-
-    #endregion
-
-    #region WirePlacingTool
-
-    public SegmentedObjectPlacingToolViewModel<WireViewModel> WirePlacingTool { get; }
-
-    #endregion
-
-    private void OnToolSelected(BaseSchemeToolViewModel tool)
-    {
-        if (IsCurrentToolLocked)
-            return;
-
-        CurrentTool = tool;
-    }
+    public RectangleSelectionToolViewModel RectangleSelectionTool { get; }
 }
