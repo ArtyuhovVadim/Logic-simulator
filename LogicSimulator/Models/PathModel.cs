@@ -26,8 +26,6 @@ public class PathModel : BaseObjectModel
 
     public Color FillColor { get; set; } = Colors.White;
 
-    public float SelectionPadding { get; set; } = 10f;
-
     public bool IsAntiAliased { get; set; } = true;
 
     public bool IsStroked { get; set; } = true;

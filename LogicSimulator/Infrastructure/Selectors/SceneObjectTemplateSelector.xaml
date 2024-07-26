@@ -160,7 +160,7 @@
                     Rotation="{Binding Path=Rotation,
                                        Converter={StaticResource RotationToFloatConverter}}"
                     Scale="{Binding Path=Scale}"
-                    SelectionPadding="{Binding Path=SelectionPadding}"
+                    SelectionPadding="10"
                     Stretch="{Binding Path=Stretch}"
                     StrokeColor="{Binding Path=StrokeColor}"
                     StrokeThickness="{Binding Path=StrokeThickness}"

@@ -103,16 +103,6 @@ public class PathViewModel : BaseObjectViewModel
 
     #endregion
 
-    #region SelectionPadding
-
-    public float SelectionPadding
-    {
-        get => Model.SelectionPadding;
-        set => Set(Model.SelectionPadding, value, Model, (model, value) => model.SelectionPadding = value);
-    }
-
-    #endregion
-
     #region FillColor
 
     public Color FillColor
