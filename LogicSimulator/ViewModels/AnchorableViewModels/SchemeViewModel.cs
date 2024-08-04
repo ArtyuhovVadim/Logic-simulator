@@ -25,6 +25,7 @@ public class SchemeViewModel : DocumentViewModel, IModelBased<Scheme>, ICloseabl
     private readonly ISchemeSimulatorService _schemeSimulatorService;
     private readonly ISchemeBuilderService _schemeBuilderService;
     private readonly IToolSwitcherService _toolSwitcherService;
+    private readonly IOutputMessagesService _outputMessagesService;
     private readonly ILogger<SchemeViewModel> _logger;
 
     private List<BaseObjectViewModel> _selectedObjects = [];
@@ -39,6 +40,7 @@ public class SchemeViewModel : DocumentViewModel, IModelBased<Scheme>, ICloseabl
                            ISchemeBuilderService schemeBuilderService,
                            IToolSwitcherService toolSwitcherService,
                            IMappedViewModelFactory<BaseObjectModel, BaseObjectViewModel> viewModelsFactory,
+                           IOutputMessagesService outputMessagesService,
                            ILogger<SchemeViewModel> logger)
     {
         Model = scheme;
@@ -48,6 +50,7 @@ public class SchemeViewModel : DocumentViewModel, IModelBased<Scheme>, ICloseabl
         _schemeSimulatorService = schemeSimulatorService;
         _schemeBuilderService = schemeBuilderService;
         _toolSwitcherService = toolSwitcherService;
+        _outputMessagesService = outputMessagesService;
         _logger = logger;
 
         _objects = new ObservableCollectionEx<BaseObjectViewModel, BaseObjectModel>(Model.Objects, viewModelsFactory.Create);
@@ -342,9 +345,9 @@ public class SchemeViewModel : DocumentViewModel, IModelBased<Scheme>, ICloseabl
 
     #region StopSimulationCommandCommand
 
-    private ICommand? _stopSimulationCommandCommand;
+    private ICommand? _stopSimulationCommand;
 
-    public ICommand StopSimulationCommandCommand => _stopSimulationCommandCommand ??= new LambdaCommand(() =>
+    public ICommand StopSimulationCommand => _stopSimulationCommand ??= new LambdaCommand(() =>
     {
         try
         {

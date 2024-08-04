@@ -1,10 +1,35 @@
 ﻿using LogicSimulator.Infrastructure;
+using LogicSimulator.Models;
 using WpfExtensions.Mvvm;
 
 namespace LogicSimulator.ViewModels;
 
 public class OutputMessageViewModel : BindableBase
 {
+    #region Type
+
+    private MessageType _type = MessageType.Information;
+
+    public MessageType Type
+    {
+        get => _type;
+        set => Set(ref _type, value);
+    }
+
+    #endregion
+
+    #region Time
+
+    private DateTime _time;
+
+    public DateTime Time
+    {
+        get => _time;
+        set => Set(ref _time, value);
+    }
+
+    #endregion
+
     #region Text
 
     private string _text = string.Empty;
@@ -17,14 +42,14 @@ public class OutputMessageViewModel : BindableBase
 
     #endregion
 
-    #region Type
+    #region Source
 
-    private MessageType _type = MessageType.Information;
+    private IMessageSource? _source;
 
-    public MessageType Type
+    public IMessageSource? Source
     {
-        get => _type;
-        set => Set(ref _type, value);
+        get => _source;
+        set => Set(ref _source, value);
     }
 
     #endregion

@@ -1,6 +1,7 @@
 ﻿using System.ComponentModel;
 using System.Windows.Data;
 using LogicSimulator.Infrastructure;
+using LogicSimulator.Models;
 using LogicSimulator.ViewModels.AnchorableViewModels.Base;
 using WpfExtensions.Mvvm.Commands;
 
@@ -8,35 +9,19 @@ namespace LogicSimulator.ViewModels.AnchorableViewModels;
 
 public class MessagesOutputViewModel : ToolViewModel
 {
+    private readonly ICollectionView _messagesCollectionView;
+
     public override string Title => "Вывод";
 
     public MessagesOutputViewModel()
     {
-        MessagesCollectionView = CollectionViewSource.GetDefaultView(Messages);
-        MessagesCollectionView.Filter = OnFilterMessages;
-
-        _messages.Add(new OutputMessageViewModel { Type = MessageType.Information, Text = "Тестовое информационное сообщение" });
-        _messages.Add(new OutputMessageViewModel { Type = MessageType.Warning, Text = "Тестовое сообщение с предупреждением" });
-        _messages.Add(new OutputMessageViewModel { Type = MessageType.Error, Text = "Тестовое сообщение с ошибкой" });
-        _messages.Add(new OutputMessageViewModel { Type = MessageType.Information, Text = "Тестовое информационное сообщение" });
-        _messages.Add(new OutputMessageViewModel { Type = MessageType.Warning, Text = "Тестовое сообщение с предупреждением" });
-        _messages.Add(new OutputMessageViewModel { Type = MessageType.Error, Text = "Тестовое сообщение с ошибкой" });
-        _messages.Add(new OutputMessageViewModel { Type = MessageType.Information, Text = "Тестовое информационное сообщение" });
-        _messages.Add(new OutputMessageViewModel { Type = MessageType.Warning, Text = "Тестовое сообщение с предупреждением" });
-        _messages.Add(new OutputMessageViewModel { Type = MessageType.Error, Text = "Тестовое сообщение с ошибкой" });
+        _messagesCollectionView = CollectionViewSource.GetDefaultView(Messages);
+        _messagesCollectionView.Filter = OnFilterMessages;
     }
-
-    #region MessagesCollectionView
-
-    public ICollectionView MessagesCollectionView { get; }
-
-    #endregion
 
     #region Messages
 
-    private readonly ObservableCollection<OutputMessageViewModel> _messages = [];
-
-    public IEnumerable<OutputMessageViewModel> Messages => _messages;
+    public ObservableCollection<OutputMessageViewModel> Messages { get; } = [];
 
     #endregion
 
@@ -51,7 +36,7 @@ public class MessagesOutputViewModel : ToolViewModel
         {
             if (Set(ref _searchText, value))
             {
-                MessagesCollectionView.Refresh();
+                _messagesCollectionView.Refresh();
             }
         }
     }
@@ -69,7 +54,7 @@ public class MessagesOutputViewModel : ToolViewModel
         {
             if (Set(ref _isErrorMessagesVisible, value))
             {
-                MessagesCollectionView.Refresh();
+                _messagesCollectionView.Refresh();
             }
         }
     }
@@ -87,7 +72,7 @@ public class MessagesOutputViewModel : ToolViewModel
         {
             if (Set(ref _isWarningMessagesVisible, value))
             {
-                MessagesCollectionView.Refresh();
+                _messagesCollectionView.Refresh();
             }
         }
     }
@@ -105,7 +90,25 @@ public class MessagesOutputViewModel : ToolViewModel
         {
             if (Set(ref _isInformationMessagesVisible, value))
             {
-                MessagesCollectionView.Refresh();
+                _messagesCollectionView.Refresh();
+            }
+        }
+    }
+
+    #endregion
+
+    #region IsDebugMessagesVisible
+
+    private bool _isDebugMessagesVisible = true;
+
+    public bool IsDebugMessagesVisible
+    {
+        get => _isDebugMessagesVisible;
+        set
+        {
+            if (Set(ref _isDebugMessagesVisible, value))
+            {
+                _messagesCollectionView.Refresh();
             }
         }
     }
@@ -121,8 +124,25 @@ public class MessagesOutputViewModel : ToolViewModel
         IsErrorMessagesVisible = true;
         IsInformationMessagesVisible = true;
         IsWarningMessagesVisible = true;
+        IsDebugMessagesVisible = true;
         SearchText = string.Empty;
     });
+
+    #endregion
+
+    #region ClearMessagesCommand
+
+    private ICommand? _clearMessagesCommand;
+
+    public ICommand ClearMessagesCommand => _clearMessagesCommand ??= new LambdaCommand(Messages.Clear);
+
+    #endregion
+
+    #region GoToMessageSourceCommand
+
+    private ICommand? _goToMessageSourceCommand;
+
+    public ICommand GoToMessageSourceCommand => _goToMessageSourceCommand ??= new LambdaCommand<IMessageSource>(source => source?.GoTo(), source => source is not null);
 
     #endregion
 
@@ -140,6 +160,9 @@ public class MessagesOutputViewModel : ToolViewModel
             return true;
 
         if (IsInformationMessagesVisible && message.Type == MessageType.Information)
+            return true;
+
+        if (IsDebugMessagesVisible && message.Type == MessageType.Debug)
             return true;
 
         return false;

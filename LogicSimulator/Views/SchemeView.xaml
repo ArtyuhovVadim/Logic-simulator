@@ -174,7 +174,7 @@
                             Stroke="#E0E0E0"
                             StrokeThickness="1" />
                     </Button>
-                    <Button Command="{Binding Path=StopSimulationCommandCommand}">
+                    <Button Command="{Binding Path=StopSimulationCommand}">
                         <Path
                             Data="M 0 0 L 5 0 L 5 5 L 0 5 Z"
                             Fill="#C04048"

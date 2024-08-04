@@ -12,11 +12,13 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using LogicSimulator.Infrastructure.Factories;
 using LogicSimulator.Infrastructure.Factories.Interfaces;
+using LogicSimulator.Infrastructure.Logging;
 using LogicSimulator.Models;
 using LogicSimulator.Models.Base;
 using LogicSimulator.ViewModels.ObjectViewModels;
 using LogicSimulator.ViewModels.ObjectViewModels.Base;
 using LogicSimulator.ViewModels.ObjectViewModels.Gates;
+using Microsoft.Extensions.Logging;
 
 namespace LogicSimulator;
 
@@ -33,6 +35,16 @@ public partial class App
     public static Window? CurrentWindow => FocusedWindow ?? ActiveWindow;
 
     public static bool IsDesignMode { get; private set; } = true;
+
+#if DEBUG
+    public static bool IsDevelopment => true;
+
+    public static bool IsRelease => false;
+#else
+    public static bool IsDevelopment => false;
+
+    public static bool IsRelease => true;
+#endif
 
     public static string CurrentDirectory => IsDesignMode ? Path.GetDirectoryName(GetSourceCodePath())! : Environment.CurrentDirectory;
 
@@ -78,7 +90,8 @@ public partial class App
             .AddSingleton<ISchemeFileService, SchemeFileService>()
             .AddSingleton<IProjectFileService, ProjectFileService>()
             .AddSingleton<IEditorSelectionService, EditorSelectionService>()
-            
+            .AddSingleton<IOutputMessagesService, OutputMessagesService>()
+
             .AddTransient<ISchemeSimulatorService, SchemeSimulatorService>()
             .AddTransient<ISchemeBuilderService, SchemeBuilderService>()
             .AddTransient<IToolSwitcherService, ToolSwitcherService>()
@@ -103,6 +116,18 @@ public partial class App
                 factory.Register<WireModel>(model => new WireViewModel(model));
                 return factory;
             });
+    }
+
+    private static void ConfigureLogging(ILoggingBuilder builder)
+    {
+        builder
+            .ClearProviders()
+            .AddConsole()
+#if DEBUG
+            .AddDebug()
+            .Services.AddSingleton<ILoggerProvider, OutputMessagesLoggerProvider>()
+#endif
+            ;
     }
 
     private static void SetupGlobalExceptionHandling()
@@ -148,5 +173,6 @@ public partial class App
         .ConfigureAppConfiguration((_, cfg) => cfg
             .SetBasePath(CurrentDirectory)
             .AddJsonFile("app-settings.json", true, true))
+        .ConfigureLogging(ConfigureLogging)
         .ConfigureServices(ConfigureServices);
 }

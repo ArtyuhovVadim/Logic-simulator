@@ -25,5 +25,6 @@ public class SchemeViewModelFactory : ISchemeViewModelFactory
         _provider.GetRequiredService<ISchemeBuilderService>(),
         _provider.GetRequiredService<IToolSwitcherService>(),
         _provider.GetRequiredService<IMappedViewModelFactory<BaseObjectModel, BaseObjectViewModel>>(),
+        _provider.GetRequiredService<IOutputMessagesService>(),
         _provider.GetRequiredService<ILogger<SchemeViewModel>>());
 }
