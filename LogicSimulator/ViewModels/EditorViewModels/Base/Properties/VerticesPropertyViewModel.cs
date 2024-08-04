@@ -27,7 +27,7 @@ public class VerticesPropertyViewModel : SinglePropertyViewModel
 
     private ICommand? _addVertexCommand;
 
-    public ICommand AddVertexCommand => _addVertexCommand ??= new LambdaCommand(_ =>
+    public ICommand AddVertexCommand => _addVertexCommand ??= new LambdaCommand(() =>
     {
         var vertexes = GetValue<ObservableCollection<Vector2>>(_firstObject);
         vertexes.Insert(SelectedVertexIndex, _vertexes[SelectedVertexIndex].Position);
@@ -40,13 +40,13 @@ public class VerticesPropertyViewModel : SinglePropertyViewModel
 
     private ICommand? _removeVertexCommand;
 
-    public ICommand RemoveVertexCommand => _removeVertexCommand ??= new LambdaCommand(_ =>
+    public ICommand RemoveVertexCommand => _removeVertexCommand ??= new LambdaCommand(() =>
     {
         var tmpIndex = SelectedVertexIndex;
         var vertexes = GetValue<ObservableCollection<Vector2>>(_firstObject);
         vertexes.RemoveAt(SelectedVertexIndex);
         SelectedVertexIndex = tmpIndex == vertexes.Count ? tmpIndex - 1 : tmpIndex;
-    }, _ => SelectedVertexIndex != -1 && _vertexes.Count > 1 && SelectedVertexIndex < _vertexes.Count);
+    }, () => SelectedVertexIndex != -1 && _vertexes.Count > 1 && SelectedVertexIndex < _vertexes.Count);
 
     #endregion
 

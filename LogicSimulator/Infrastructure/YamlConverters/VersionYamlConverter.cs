@@ -10,7 +10,7 @@ public class VersionYamlConverter : IYamlTypeConverter
 {
     public bool Accepts(Type type) => type == typeof(Version);
 
-    public object ReadYaml(IParser parser, Type type)
+    public object ReadYaml(IParser parser, Type type, ObjectDeserializer rootDeserializer)
     {
         if (type != typeof(Version))
             throw new YamlException("Wrong type.");
@@ -18,7 +18,7 @@ public class VersionYamlConverter : IYamlTypeConverter
         return Version.Parse(parser.ConsumeScalarOrThrow());
     }
 
-    public void WriteYaml(IEmitter emitter, object? value, Type type)
+    public void WriteYaml(IEmitter emitter, object? value, Type type, ObjectSerializer serializer)
     {
         if (type != typeof(Version))
             throw new YamlException("Wrong type.");

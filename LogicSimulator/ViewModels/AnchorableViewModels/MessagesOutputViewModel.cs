@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel;
+using System.Windows.Controls;
 using System.Windows.Data;
 using LogicSimulator.Infrastructure;
 using LogicSimulator.Models;
@@ -126,6 +127,7 @@ public class MessagesOutputViewModel : ToolViewModel
         IsWarningMessagesVisible = true;
         IsDebugMessagesVisible = true;
         SearchText = string.Empty;
+        _messagesCollectionView.SortDescriptions.Clear();
     });
 
     #endregion

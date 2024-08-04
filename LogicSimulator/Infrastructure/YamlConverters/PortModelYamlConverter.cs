@@ -11,7 +11,7 @@ public class PortModelYamlConverter : IYamlTypeConverter
 {
     public bool Accepts(Type type) => type == typeof(PortModel);
 
-    public object ReadYaml(IParser parser, Type type)
+    public object ReadYaml(IParser parser, Type type, ObjectDeserializer rootDeserializer)
     {
         if (type != typeof(PortModel))
             throw new YamlException("Wrong type.");
@@ -26,7 +26,7 @@ public class PortModelYamlConverter : IYamlTypeConverter
         return new PortModel { Name = name, Length = (float)length };
     }
 
-    public void WriteYaml(IEmitter emitter, object? value, Type type)
+    public void WriteYaml(IEmitter emitter, object? value, Type type, ObjectSerializer serializer)
     {
         if (type != typeof(PortModel))
             throw new YamlException("Wrong type.");

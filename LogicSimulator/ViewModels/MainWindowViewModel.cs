@@ -91,7 +91,7 @@ public class MainWindowViewModel : BindableBase
 
     private ICommand? _openFileCommand;
 
-    public ICommand OpenFileCommand => _openFileCommand ??= new LambdaCommand(_ =>
+    public ICommand OpenFileCommand => _openFileCommand ??= new LambdaCommand(() =>
     {
         try
         {

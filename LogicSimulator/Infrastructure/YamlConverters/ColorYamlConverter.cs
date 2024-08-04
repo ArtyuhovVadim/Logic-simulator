@@ -11,7 +11,7 @@ public class ColorYamlConverter : IYamlTypeConverter
 {
     public bool Accepts(Type type) => type == typeof(Color);
 
-    public object ReadYaml(IParser parser, Type type)
+    public object ReadYaml(IParser parser, Type type, ObjectDeserializer rootDeserializer)
     {
         if (type != typeof(Color))
             throw new YamlException("Wrong type.");
@@ -27,7 +27,7 @@ public class ColorYamlConverter : IYamlTypeConverter
         return Color.FromRgb(r, g, b);
     }
 
-    public void WriteYaml(IEmitter emitter, object? value, Type type)
+    public void WriteYaml(IEmitter emitter, object? value, Type type, ObjectSerializer serializer)
     {
         if (type != typeof(Color))
             throw new YamlException("Wrong type.");

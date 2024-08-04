@@ -35,9 +35,9 @@ public abstract class DocumentViewModel : AnchorableViewModel
 
     #endregion
 
-    protected virtual bool OnCanClose(object? p) => true;
+    protected virtual bool OnCanClose() => true;
 
-    protected abstract void OnClose(object? p);
+    protected abstract void OnClose();
 
     protected virtual void OnDocumentActivated() { }
 

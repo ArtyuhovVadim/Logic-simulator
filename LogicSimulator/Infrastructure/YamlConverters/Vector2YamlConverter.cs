@@ -11,7 +11,7 @@ public class Vector2YamlConverter : IYamlTypeConverter
 {
     public bool Accepts(Type type) => type == typeof(Vector2);
 
-    public object ReadYaml(IParser parser, Type type)
+    public object ReadYaml(IParser parser, Type type, ObjectDeserializer rootDeserializer)
     {
         if (type != typeof(Vector2))
             throw new YamlException("Wrong type.");
@@ -26,7 +26,7 @@ public class Vector2YamlConverter : IYamlTypeConverter
         return new Vector2((float)x, (float)y);
     }
 
-    public void WriteYaml(IEmitter emitter, object? value, Type type)
+    public void WriteYaml(IEmitter emitter, object? value, Type type, ObjectSerializer serializer)
     {
         if (type != typeof(Vector2))
             throw new YamlException("Wrong type.");

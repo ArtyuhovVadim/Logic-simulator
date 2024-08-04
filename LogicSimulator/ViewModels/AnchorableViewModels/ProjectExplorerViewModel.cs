@@ -33,7 +33,7 @@ public class ProjectExplorerViewModel : ToolViewModel
 
     private ICommand? _openSchemeCommand;
 
-    public ICommand OpenSchemeCommand => _openSchemeCommand ??= new LambdaCommand(p =>
+    public ICommand OpenSchemeCommand => _openSchemeCommand ??= new LambdaCommand<object>(p =>
     {
         if (p is not SchemeViewModel schemeViewModel) return;
 

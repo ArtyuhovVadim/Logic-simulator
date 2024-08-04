@@ -377,7 +377,7 @@ public class SchemeViewModel : DocumentViewModel, IModelBased<Scheme>, ICloseabl
         _timelineViewModel.Waves = [];
     }
 
-    protected override void OnClose(object? p)
+    protected override void OnClose()
     {
         _dockingViewModel.CloseDocumentViewModel(this);
         Closed?.Invoke();
