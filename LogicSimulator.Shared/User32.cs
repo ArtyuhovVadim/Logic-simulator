@@ -1,0 +1,12 @@
+﻿using System.Runtime.InteropServices;
+
+namespace LogicSimulator.Shared;
+
+public static class User32
+{
+    private const string DllName = "user32.dll";
+
+    [DllImport(DllName)]
+    [return: MarshalAs(UnmanagedType.Bool)]
+    public static extern bool SetCursorPos(int x, int y);
+}

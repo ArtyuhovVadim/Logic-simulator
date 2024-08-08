@@ -1,6 +1,6 @@
-﻿using LogicSimulator.Models;
-using LogicSimulator.ViewModels.ObjectViewModels.Base;
-using LogicSimulator.ViewModels.ObjectViewModels.Gates;
+﻿using LogicSimulator.Models.Logic;
+using LogicSimulator.ViewModels.Logic.Gates;
+using LogicSimulator.ViewModels.Objects.Base;
 
 namespace LogicSimulator.Infrastructure.Services.Interfaces;
 

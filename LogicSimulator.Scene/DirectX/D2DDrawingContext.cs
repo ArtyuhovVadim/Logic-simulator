@@ -55,7 +55,7 @@ public class D2DDrawingContext
     public void PushAntialiasMode(AntialiasMode mode)
     {
         _antialiasModes.Push(mode);
-        if(mode == _context.D2DDeviceContext.AntialiasMode)
+        if (mode == _context.D2DDeviceContext.AntialiasMode)
             return;
         RenderDebugger.StartMethodCall();
         _context.D2DDeviceContext.AntialiasMode = mode;
@@ -80,7 +80,7 @@ public class D2DDrawingContext
         _transforms.Push(transform);
         if (transform == Matrix3x2.Identity)
             return;
-            RenderDebugger.StartMethodCall();
+        RenderDebugger.StartMethodCall();
         Transform = _transforms.Peek() * Transform;
         RenderDebugger.EndMethodCall();
     }

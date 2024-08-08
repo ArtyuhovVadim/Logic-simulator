@@ -1,0 +1,36 @@
+﻿<UserControl
+    x:Class="LogicSimulator.Views.Anchorable.ProjectExplorerView"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:vm="clr-namespace:LogicSimulator.ViewModels"
+    xmlns:avm="clr-namespace:LogicSimulator.ViewModels.Anchorable"
+    d:DataContext="{d:DesignInstance Type=avm:ProjectExplorerViewModel}"
+    d:DesignHeight="480"
+    d:DesignWidth="360"
+    mc:Ignorable="d">
+    <TreeView
+        Margin="6"
+        HorizontalContentAlignment="Stretch"
+        ItemsSource="{Binding Path=ProjectViewModels}">
+        <TreeView.ItemTemplate>
+            <HierarchicalDataTemplate DataType="{x:Type vm:ProjectViewModel}" ItemsSource="{Binding Path=Schemes}">
+                <TextBlock Text="{Binding Path=Name}" />
+                <HierarchicalDataTemplate.ItemTemplate>
+                    <HierarchicalDataTemplate DataType="{x:Type avm:SchemeViewModel}">
+                        <TextBlock Text="{Binding Path=Title}">
+                            <TextBlock.InputBindings>
+                                <MouseBinding
+                                    Command="{Binding Path=DataContext.OpenSchemeCommand,
+                                                      RelativeSource={RelativeSource AncestorType=UserControl}}"
+                                    CommandParameter="{Binding}"
+                                    MouseAction="LeftDoubleClick" />
+                            </TextBlock.InputBindings>
+                        </TextBlock>
+                    </HierarchicalDataTemplate>
+                </HierarchicalDataTemplate.ItemTemplate>
+            </HierarchicalDataTemplate>
+        </TreeView.ItemTemplate>
+    </TreeView>
+</UserControl>

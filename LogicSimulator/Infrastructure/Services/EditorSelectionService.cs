@@ -1,9 +1,10 @@
 ﻿using System.Reflection;
+using LogicSimulator.Infrastructure.Attributes;
 using LogicSimulator.Infrastructure.Services.Interfaces;
-using LogicSimulator.ViewModels.AnchorableViewModels;
-using LogicSimulator.ViewModels.EditorViewModels;
-using LogicSimulator.ViewModels.EditorViewModels.Base;
-using LogicSimulator.ViewModels.ObjectViewModels.Base;
+using LogicSimulator.ViewModels.Anchorable;
+using LogicSimulator.ViewModels.Editors;
+using LogicSimulator.ViewModels.Editors.Base;
+using LogicSimulator.ViewModels.Objects.Base;
 
 namespace LogicSimulator.Infrastructure.Services;
 

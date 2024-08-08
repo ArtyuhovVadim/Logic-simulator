@@ -2,6 +2,7 @@
 using System.Windows;
 using System.Windows.Data;
 using System.Windows.Markup;
+using LogicSimulator.Models.Common;
 using WpfExtensions.Converters.Base;
 
 namespace LogicSimulator.Infrastructure.Converters;

@@ -7,9 +7,10 @@
     xmlns:conv="clr-namespace:WpfExtensions.Converters;assembly=WpfExtensions"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    xmlns:svm="clr-namespace:LogicSimulator.ViewModels.StatusViewModels"
     xmlns:viewModels="clr-namespace:LogicSimulator.ViewModels"
     xmlns:views="clr-namespace:LogicSimulator.Views"
+    xmlns:svm="clr-namespace:LogicSimulator.ViewModels.Status"
+    xmlns:status="clr-namespace:LogicSimulator.Views.Status"
     Title="Logic-simulator"
     Width="1600"
     Height="900"
@@ -64,7 +65,7 @@
                 <ContentControl Content="{Binding Path=CurrentStatusViewModel, TargetNullValue=''}" Focusable="False">
                     <ContentControl.Resources>
                         <DataTemplate DataType="{x:Type svm:SchemeStatusViewModel}">
-                            <views:SchemeStatusBarView />
+                            <status:SchemeStatusBarView />
                         </DataTemplate>
                         <DataTemplate DataType="{x:Type svm:EmptyStatusViewModel}">
                             <TextBlock Text="Нет активных файлов" />

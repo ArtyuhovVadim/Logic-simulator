@@ -1,13 +1,14 @@
 ﻿using LogicSimulator.Core;
 using LogicSimulator.Core.Gates;
 using LogicSimulator.Core.Gates.Base;
-using LogicSimulator.ViewModels.ObjectViewModels.Gates.Base;
-using LogicSimulator.ViewModels.ObjectViewModels;
-using LogicSimulator.ViewModels.ObjectViewModels.Base;
-using LogicSimulator.ViewModels.ObjectViewModels.Gates;
 using Microsoft.Extensions.Logging;
 using LogicSimulator.Infrastructure.Services.Interfaces;
-using LogicSimulator.Models;
+using LogicSimulator.Models.Links;
+using LogicSimulator.Models.Logic;
+using LogicSimulator.ViewModels.Logic.Gates.Base;
+using LogicSimulator.ViewModels.Logic.Gates;
+using LogicSimulator.ViewModels.Logic;
+using LogicSimulator.ViewModels.Objects.Base;
 
 namespace LogicSimulator.Infrastructure.Services;
 

@@ -1,11 +1,11 @@
 ﻿using System.IO;
-using LogicSimulator.Infrastructure;
 using LogicSimulator.Infrastructure.Factories.Interfaces;
 using LogicSimulator.Infrastructure.Services.Interfaces;
 using LogicSimulator.Models;
-using LogicSimulator.ViewModels.AnchorableViewModels;
-using LogicSimulator.ViewModels.AnchorableViewModels.Base;
-using LogicSimulator.ViewModels.StatusViewModels.Base;
+using LogicSimulator.Models.Common;
+using LogicSimulator.ViewModels.Anchorable;
+using LogicSimulator.ViewModels.Anchorable.Base;
+using LogicSimulator.ViewModels.Status.Base;
 using WpfExtensions.Mvvm;
 using WpfExtensions.Mvvm.Commands;
 

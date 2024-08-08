@@ -4,8 +4,8 @@ using System.Windows.Controls;
 using LogicSimulator.Scene.Cache;
 using LogicSimulator.Scene.Layers.Base;
 using LogicSimulator.Scene.Views.Base;
-using LogicSimulator.Shared;
-using LogicSimulator.Utils;
+using LogicSimulator.Shared.ExtensionMethods;
+using LogicSimulator.Shared.Models.HitTest;
 using SharpDX;
 using SharpDX.Direct2D1;
 

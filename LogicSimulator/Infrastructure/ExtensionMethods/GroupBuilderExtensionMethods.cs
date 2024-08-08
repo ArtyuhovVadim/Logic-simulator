@@ -1,6 +1,6 @@
-﻿using LogicSimulator.ViewModels.EditorViewModels.Base;
-using LogicSimulator.ViewModels.EditorViewModels.Base.Properties;
-using LogicSimulator.ViewModels.EditorViewModels.Layout.Builders;
+﻿using LogicSimulator.Infrastructure.EditorLayout.Builders;
+using LogicSimulator.ViewModels.Editors.Base;
+using LogicSimulator.ViewModels.Editors.Base.Properties;
 
 namespace LogicSimulator.Infrastructure.ExtensionMethods;
 

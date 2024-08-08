@@ -1,5 +1,5 @@
 ﻿using LogicSimulator.Scene.Nodes;
-using LogicSimulator.Shared;
+using LogicSimulator.Shared.Models;
 
 namespace LogicSimulator.Scene.Views.Base;
 

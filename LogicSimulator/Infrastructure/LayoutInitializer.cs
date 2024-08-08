@@ -1,6 +1,6 @@
 ﻿using System.Windows.Markup;
 using AvalonDock.Layout;
-using LogicSimulator.ViewModels.AnchorableViewModels;
+using LogicSimulator.ViewModels.Anchorable;
 
 namespace LogicSimulator.Infrastructure;
 

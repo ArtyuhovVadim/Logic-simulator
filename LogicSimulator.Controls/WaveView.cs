@@ -2,7 +2,7 @@
 using System.Windows.Controls;
 using System.Windows.Media;
 using LogicSimulator.Core;
-using LogicSimulator.Shared;
+using LogicSimulator.Shared.Models;
 
 namespace LogicSimulator.Controls;
 

@@ -3,6 +3,9 @@ using System.Text;
 using LogicSimulator.Infrastructure.Services.Interfaces;
 using LogicSimulator.Infrastructure.YamlConverters;
 using LogicSimulator.Models;
+using LogicSimulator.Models.Logic;
+using LogicSimulator.Models.Logic.Gates;
+using LogicSimulator.Models.Objects;
 using YamlDotNet.Core;
 using YamlDotNet.Serialization;
 

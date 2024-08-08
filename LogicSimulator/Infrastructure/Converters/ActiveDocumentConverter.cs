@@ -1,7 +1,7 @@
 ﻿using System.Globalization;
 using System.Windows.Data;
 using System.Windows.Markup;
-using LogicSimulator.ViewModels.AnchorableViewModels.Base;
+using LogicSimulator.ViewModels.Anchorable.Base;
 using WpfExtensions.Converters.Base;
 
 namespace LogicSimulator.Infrastructure.Converters;

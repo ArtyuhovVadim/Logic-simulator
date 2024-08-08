@@ -4,13 +4,14 @@ using LogicSimulator.Scene.Cache;
 using LogicSimulator.Scene.DirectX;
 using LogicSimulator.Scene.Nodes;
 using LogicSimulator.Scene.Views.Base;
-using LogicSimulator.Utils;
+using LogicSimulator.Shared.ExtensionMethods;
 using SharpDX;
 using SharpDX.Direct2D1;
 using Color = System.Windows.Media.Color;
 using Geometry = SharpDX.Direct2D1.Geometry;
 using SolidColorBrush = SharpDX.Direct2D1.SolidColorBrush;
 using RectangleGeometry = SharpDX.Direct2D1.RectangleGeometry;
+using LogicSimulator.Scene.Models;
 
 namespace LogicSimulator.Scene.Views;
 

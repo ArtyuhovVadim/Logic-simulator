@@ -1,6 +1,6 @@
 ﻿using System.Windows;
 using System.Windows.Controls;
-using LogicSimulator.ViewModels.AnchorableViewModels.Base;
+using LogicSimulator.ViewModels.Anchorable.Base;
 
 namespace LogicSimulator.Infrastructure.Selectors;
 

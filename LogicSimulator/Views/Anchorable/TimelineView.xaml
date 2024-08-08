@@ -1,0 +1,188 @@
+﻿<UserControl
+    x:Class="LogicSimulator.Views.Anchorable.TimelineView"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:b="clr-namespace:LogicSimulator.Infrastructure.Behaviors"
+    xmlns:controls="clr-namespace:LogicSimulator.Controls;assembly=LogicSimulator.Controls"
+    xmlns:converters="clr-namespace:WpfExtensions.Converters;assembly=WpfExtensions"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:avm="clr-namespace:LogicSimulator.ViewModels.Anchorable"
+    xmlns:common="clr-namespace:LogicSimulator.ViewModels.Common"
+    d:DataContext="{d:DesignInstance Type=avm:TimelineViewModel,
+                                     IsDesignTimeCreatable=True}"
+    d:DesignHeight="720"
+    d:DesignWidth="1280"
+    mc:Ignorable="d">
+
+    <UserControl.Resources>
+        <converters:LinearConverter x:Key="MulMinusOne" K="-1" />
+    </UserControl.Resources>
+
+    <i:Interaction.Behaviors>
+        <b:TimelineScrollAndPanBehaviour
+            HorizontalOffset="{Binding Path=HorizontalOffset,
+                                       Mode=TwoWay}"
+            HorizontalPanKeyModifier="Shift"
+            HorizontalScrollBar="{Binding ElementName=HorizontalScrollBar}"
+            MaxSignalsTime="{Binding Path=MaxSignalsTime}"
+            Scale="{Binding Path=Scale,
+                            Mode=TwoWay}"
+            SignalHeight="{Binding Path=SignalHeight}"
+            SignalsScrollViewer="{Binding ElementName=SignalsScrollViewer}"
+            VerticalOffset="{Binding Path=VerticalOffset,
+                                     Mode=TwoWay}"
+            VerticalScrollBar="{Binding ElementName=VerticalScrollBar}"
+            WavesCount="{Binding Path=WavesCount}"
+            WavesScrollViewer="{Binding ElementName=TimelineRoot}"
+            ZoomKeyModifier="Control" />
+    </i:Interaction.Behaviors>
+
+    <Border
+        Margin="5"
+        Background="#3B3B3B"
+        BorderBrush="#222222"
+        BorderThickness="1"
+        ClipToBounds="False">
+        <Grid GridProps.ColumnDefinitionsEx="* 1 9* 1 auto" GridProps.RowDefinitionsEx="auto 1 * 1 auto">
+            <Border
+                Grid.Row="0"
+                Grid.Column="0"
+                Height="{Binding Path=SignalHeight}">
+                <TextBlock
+                    HorizontalAlignment="Center"
+                    VerticalAlignment="Center"
+                    Text="Сигналы" />
+            </Border>
+            <ScrollViewer
+                x:Name="SignalsScrollViewer"
+                Grid.Row="2"
+                Grid.RowSpan="3"
+                Grid.Column="0"
+                HorizontalScrollBarVisibility="Visible"
+                VerticalScrollBarVisibility="Hidden">
+
+                <i:Interaction.Behaviors>
+                    <b:ScrollViewerScrollToOffsetBehaviour VerticalOffset="{Binding Path=VerticalOffset, Mode=TwoWay}" />
+                </i:Interaction.Behaviors>
+
+                <ItemsControl Margin="0,0,0,1" ItemsSource="{Binding Path=Waves}">
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate DataType="{x:Type common:TimelineRowViewModel}">
+                            <Border
+                                Height="{Binding Path=DataContext.SignalHeight,
+                                                 RelativeSource={RelativeSource AncestorType=UserControl}}"
+                                BorderBrush="#222222"
+                                BorderThickness="0,0,0,1">
+                                <TextBlock
+                                    Margin="5,0"
+                                    VerticalAlignment="Center"
+                                    Text="{Binding Path=Label}" />
+                            </Border>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
+            </ScrollViewer>
+
+            <controls:TimelineRuler
+                Grid.Row="0"
+                Grid.RowSpan="3"
+                Grid.Column="2"
+                Margin="-1,0,0,0"
+                AlternationCount="{Binding Path=AlternationCount}"
+                ClipToBounds="True"
+                Frequency="{Binding Path=Frequency}"
+                Scale="{Binding Path=Scale}"
+                StrokeBrush="#222222"
+                StrokeThickness="1"
+                TickHeight="10"
+                TimeUnitSuffix="{Binding Path=TimeUnitSuffix}"
+                Offset="{Binding Path=HorizontalOffset}" />
+            <ScrollViewer
+                x:Name="TimelineRoot"
+                Grid.Row="2"
+                Grid.Column="2"
+                Margin="-1,0,0,0"
+                HorizontalScrollBarVisibility="Disabled"
+                VerticalScrollBarVisibility="Hidden">
+
+                <i:Interaction.Behaviors>
+                    <b:ScrollViewerScrollToOffsetBehaviour VerticalOffset="{Binding Path=VerticalOffset, Mode=TwoWay}" />
+                </i:Interaction.Behaviors>
+
+                <ItemsControl ItemsSource="{Binding Path=Waves}">
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate DataType="{x:Type common:TimelineRowViewModel}">
+                            <Border
+                                Height="{Binding Path=DataContext.SignalHeight,
+                                                 RelativeSource={RelativeSource AncestorType=UserControl}}"
+                                BorderBrush="#222222"
+                                BorderThickness="0,0,0,1">
+                                <controls:WaveView
+                                    Margin="0,2,0,3"
+                                    Scale="{Binding Path=Scale}"
+                                    Wave="{Binding Path=.}"
+                                    Offset="{Binding Path=Offset}" />
+                            </Border>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
+            </ScrollViewer>
+            <!-- TODO <controls:TimelineCursors />-->
+            <ScrollBar
+                x:Name="HorizontalScrollBar"
+                Grid.Row="4"
+                Grid.Column="2"
+                Orientation="Horizontal"
+                Value="{Binding Path=HorizontalOffset,
+                                Converter={StaticResource MulMinusOne}}" />
+
+            <ScrollBar
+                x:Name="VerticalScrollBar"
+                Grid.Row="0"
+                Grid.RowSpan="3"
+                Grid.Column="4"
+                Minimum="0"
+                Orientation="Vertical"
+                Value="{Binding Path=VerticalOffset}" />
+
+            <Separator
+                Grid.Row="0"
+                Grid.RowSpan="5"
+                Grid.Column="1"
+                Margin="0"
+                Background="#222222"
+                Style="{StaticResource VerticalSeparator}" />
+            <Separator
+                Grid.Row="0"
+                Grid.RowSpan="5"
+                Grid.Column="3"
+                Margin="0"
+                Background="#222222"
+                Style="{StaticResource VerticalSeparator}" />
+            <Separator
+                Grid.Row="1"
+                Grid.Column="0"
+                Grid.ColumnSpan="4"
+                Margin="0"
+                Background="#222222"
+                Style="{StaticResource HorizontalSeparator}" />
+            <Separator
+                Grid.Row="3"
+                Grid.Column="0"
+                Grid.ColumnSpan="5"
+                Margin="0"
+                Background="#222222"
+                Style="{StaticResource HorizontalSeparator}" />
+            <GridSplitter
+                Grid.Row="0"
+                Grid.RowSpan="5"
+                Grid.Column="1"
+                Width="3"
+                Margin="-1,0"
+                HorizontalAlignment="Center"
+                VerticalAlignment="Stretch" />
+        </Grid>
+    </Border>
+</UserControl>

@@ -1,5 +1,5 @@
 ﻿using System.Globalization;
-using LogicSimulator.Utils;
+using LogicSimulator.Shared.ExtensionMethods;
 using SharpDX;
 using YamlDotNet.Core;
 using YamlDotNet.Core.Events;

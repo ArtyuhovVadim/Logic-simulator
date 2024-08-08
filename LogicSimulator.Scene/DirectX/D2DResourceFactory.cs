@@ -1,5 +1,6 @@
 ﻿using System.Diagnostics.CodeAnalysis;
 using System.IO;
+using LogicSimulator.Shared;
 using SharpDX;
 using SharpDX.Direct2D1;
 using SharpDX.DirectWrite;

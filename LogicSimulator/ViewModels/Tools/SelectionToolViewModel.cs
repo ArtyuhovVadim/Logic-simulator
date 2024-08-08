@@ -1,7 +1,8 @@
 ﻿using LogicSimulator.Infrastructure.Tools;
-using LogicSimulator.Shared;
-using LogicSimulator.Utils;
-using LogicSimulator.ViewModels.AnchorableViewModels;
+using LogicSimulator.Shared.ExtensionMethods;
+using LogicSimulator.Shared.Models;
+using LogicSimulator.Shared.Models.HitTest;
+using LogicSimulator.ViewModels.Anchorable;
 
 namespace LogicSimulator.ViewModels.Tools;
 

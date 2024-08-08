@@ -1,4 +1,5 @@
-﻿using LogicSimulator.Models;
+﻿using LogicSimulator.Models.Logic;
+using LogicSimulator.Models.Simulation;
 
 namespace LogicSimulator.Infrastructure.Services.Interfaces;
 

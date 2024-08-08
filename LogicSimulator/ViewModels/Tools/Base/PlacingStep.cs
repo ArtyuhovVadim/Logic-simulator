@@ -1,4 +1,4 @@
-﻿using LogicSimulator.ViewModels.ObjectViewModels.Base;
+﻿using LogicSimulator.ViewModels.Objects.Base;
 using SharpDX;
 
 namespace LogicSimulator.ViewModels.Tools.Base;

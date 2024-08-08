@@ -1,6 +1,6 @@
 ﻿using LogicSimulator.Infrastructure.Factories.Interfaces;
-using LogicSimulator.Models.Base;
-using LogicSimulator.ViewModels.ObjectViewModels.Base;
+using LogicSimulator.Models.Objects.Base;
+using LogicSimulator.ViewModels.Objects.Base;
 
 namespace LogicSimulator.Infrastructure.Factories;
 

@@ -1,6 +1,6 @@
 ﻿using System.Globalization;
 using System.Windows.Media;
-using LogicSimulator.Utils;
+using LogicSimulator.Shared.ExtensionMethods;
 using YamlDotNet.Core;
 using YamlDotNet.Core.Events;
 using YamlDotNet.Serialization;

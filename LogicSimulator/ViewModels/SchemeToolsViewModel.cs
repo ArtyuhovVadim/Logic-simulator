@@ -1,9 +1,10 @@
 ﻿using LogicSimulator.Infrastructure.Services.Interfaces;
 using LogicSimulator.Infrastructure.Tools;
-using LogicSimulator.Models;
-using LogicSimulator.ViewModels.AnchorableViewModels;
-using LogicSimulator.ViewModels.ObjectViewModels;
-using LogicSimulator.ViewModels.ObjectViewModels.Gates;
+using LogicSimulator.Models.Objects;
+using LogicSimulator.ViewModels.Anchorable;
+using LogicSimulator.ViewModels.Logic;
+using LogicSimulator.ViewModels.Logic.Gates;
+using LogicSimulator.ViewModels.Objects;
 using LogicSimulator.ViewModels.Tools;
 using WpfExtensions.Mvvm;
 

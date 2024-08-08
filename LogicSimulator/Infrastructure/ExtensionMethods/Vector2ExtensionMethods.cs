@@ -1,4 +1,5 @@
-﻿using SharpDX;
+﻿using LogicSimulator.Models.Common;
+using SharpDX;
 
 namespace LogicSimulator.Infrastructure.ExtensionMethods;
 

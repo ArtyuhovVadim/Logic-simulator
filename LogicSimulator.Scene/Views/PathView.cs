@@ -2,14 +2,15 @@
 using System.Windows.Media;
 using LogicSimulator.Scene.Cache;
 using LogicSimulator.Scene.DirectX;
-using LogicSimulator.Utils;
 using SharpDX;
 using SharpDX.Direct2D1;
 using LogicSimulator.Scene.Views.Base;
+using LogicSimulator.Shared.ExtensionMethods;
 using Color = System.Windows.Media.Color;
 using Geometry = SharpDX.Direct2D1.Geometry;
 using PathGeometry = SharpDX.Direct2D1.PathGeometry;
 using SolidColorBrush = SharpDX.Direct2D1.SolidColorBrush;
+using LogicSimulator.Scene.Models;
 
 namespace LogicSimulator.Scene.Views;
 
@@ -120,7 +121,7 @@ public class PathView : SceneObjectView, IStroked
     }
 
     public static readonly DependencyProperty FillColorProperty =
-        DependencyProperty.Register(nameof(FillColor), typeof(Color), typeof(PathView), new FrameworkPropertyMetadata(System.Windows.Media.Colors.White, FrameworkPropertyMetadataOptions.BindsTwoWayByDefault, OnFillColorChanged));
+        DependencyProperty.Register(nameof(FillColor), typeof(Color), typeof(PathView), new FrameworkPropertyMetadata(Colors.White, FrameworkPropertyMetadataOptions.BindsTwoWayByDefault, OnFillColorChanged));
 
     private static void OnFillColorChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
     {
@@ -144,7 +145,7 @@ public class PathView : SceneObjectView, IStroked
     }
 
     public static readonly DependencyProperty StrokeColorProperty =
-        DependencyProperty.Register(nameof(StrokeColor), typeof(Color), typeof(PathView), new FrameworkPropertyMetadata(System.Windows.Media.Colors.Black, FrameworkPropertyMetadataOptions.BindsTwoWayByDefault, OnStrokeColorChanged));
+        DependencyProperty.Register(nameof(StrokeColor), typeof(Color), typeof(PathView), new FrameworkPropertyMetadata(Colors.Black, FrameworkPropertyMetadataOptions.BindsTwoWayByDefault, OnStrokeColorChanged));
 
     private static void OnStrokeColorChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
     {

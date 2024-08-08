@@ -1,8 +1,8 @@
 ﻿using System.Windows;
 using LogicSimulator.Infrastructure.Services.Interfaces;
-using LogicSimulator.Models;
-using LogicSimulator.ViewModels;
-using LogicSimulator.ViewModels.AnchorableViewModels;
+using LogicSimulator.Models.Common;
+using LogicSimulator.ViewModels.Anchorable;
+using LogicSimulator.ViewModels.Common;
 
 namespace LogicSimulator.Infrastructure.Services;
 

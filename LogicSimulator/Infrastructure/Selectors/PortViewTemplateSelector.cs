@@ -1,6 +1,6 @@
 ﻿using System.Windows;
 using System.Windows.Controls;
-using LogicSimulator.ViewModels.ObjectViewModels.Gates;
+using LogicSimulator.ViewModels.Logic;
 
 namespace LogicSimulator.Infrastructure.Selectors;
 

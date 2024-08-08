@@ -3,9 +3,9 @@ using LogicSimulator.Scene.Layers.Base;
 using LogicSimulator.Scene.Layers.Renderers;
 using System.Windows;
 using System.Windows.Media;
-using LogicSimulator.Utils;
 using SolidColorBrush = SharpDX.Direct2D1.SolidColorBrush;
 using LogicSimulator.Scene.Views.Base;
+using LogicSimulator.Shared.ExtensionMethods;
 
 namespace LogicSimulator.Scene.Layers;
 

@@ -1,5 +1,5 @@
-﻿using LogicSimulator.ViewModels.AnchorableViewModels;
-using LogicSimulator.ViewModels.ObjectViewModels.Base;
+﻿using LogicSimulator.ViewModels.Anchorable;
+using LogicSimulator.ViewModels.Objects.Base;
 
 namespace LogicSimulator.Infrastructure.Services.Interfaces;
 

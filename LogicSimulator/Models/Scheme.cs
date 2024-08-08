@@ -1,5 +1,5 @@
 ﻿using System.IO;
-using LogicSimulator.Models.Base;
+using LogicSimulator.Models.Objects.Base;
 using YamlDotNet.Serialization;
 
 namespace LogicSimulator.Models;

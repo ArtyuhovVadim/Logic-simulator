@@ -1,6 +1,7 @@
 ﻿using System.Windows;
 using LogicSimulator.Scene;
-using LogicSimulator.Utils;
+using LogicSimulator.Shared;
+using LogicSimulator.Shared.ExtensionMethods;
 using Microsoft.Xaml.Behaviors;
 using SharpDX;
 

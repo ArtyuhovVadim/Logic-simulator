@@ -1,5 +1,6 @@
 ﻿using System.Windows;
 using LogicSimulator.Infrastructure.Services.Interfaces;
+using LogicSimulator.Models.Common;
 using Microsoft.Win32;
 
 namespace LogicSimulator.Infrastructure.Services;

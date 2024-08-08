@@ -1,6 +1,6 @@
 ﻿using LogicSimulator.Infrastructure.Tools;
-using LogicSimulator.ViewModels.AnchorableViewModels;
-using LogicSimulator.ViewModels.ObjectViewModels.Base;
+using LogicSimulator.ViewModels.Anchorable;
+using LogicSimulator.ViewModels.Objects.Base;
 using SharpDX;
 
 namespace LogicSimulator.ViewModels.Tools.Base;

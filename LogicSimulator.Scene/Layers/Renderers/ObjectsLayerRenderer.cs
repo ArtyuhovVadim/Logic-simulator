@@ -1,6 +1,6 @@
 ﻿using LogicSimulator.Scene.DirectX;
 using LogicSimulator.Scene.Layers.Renderers.Base;
-using LogicSimulator.Utils;
+using LogicSimulator.Shared.ExtensionMethods;
 
 namespace LogicSimulator.Scene.Layers.Renderers;
 

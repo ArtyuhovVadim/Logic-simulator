@@ -1,7 +1,7 @@
 ﻿using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
-using LogicSimulator.Views;
+using LogicSimulator.Views.Anchorable;
 using Microsoft.Xaml.Behaviors;
 
 namespace LogicSimulator.Infrastructure.Behaviors;

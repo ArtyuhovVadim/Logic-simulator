@@ -1,0 +1,267 @@
+﻿<UserControl
+    x:Class="LogicSimulator.Views.Anchorable.SchemeView"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:avm="clr-namespace:LogicSimulator.ViewModels.Anchorable"
+    xmlns:b="http://schemas.microsoft.com/xaml/behaviors"
+    xmlns:behaviors="clr-namespace:LogicSimulator.Infrastructure.Behaviors"
+    xmlns:brushes="clr-namespace:LogicSimulator.Resources.Brushes"
+    xmlns:brushesEx="clr-namespace:WpfExtensions.Controls.Resources.Brushes;assembly=WpfExtensions.Controls"
+    xmlns:converters="clr-namespace:WpfExtensions.Converters;assembly=WpfExtensions"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:layers="clr-namespace:LogicSimulator.Scene.Layers;assembly=LogicSimulator.Scene"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:renderers="clr-namespace:LogicSimulator.Scene.Layers.Renderers;assembly=LogicSimulator.Scene"
+    xmlns:scene="clr-namespace:LogicSimulator.Scene;assembly=LogicSimulator.Scene"
+    xmlns:tools="clr-namespace:LogicSimulator.ViewModels.Tools"
+    d:DataContext="{d:DesignInstance Type=avm:SchemeViewModel}"
+    mc:Ignorable="d">
+
+    <UserControl.InputBindings>
+        <KeyBinding Key="Space" Command="{Binding Path=RotateSelectedObjectsClockwiseCommand}" />
+        <KeyBinding
+            Key="Space"
+            Command="{Binding Path=RotateSelectedObjectsCounterclockwiseCommand}"
+            Modifiers="Shift" />
+        <KeyBinding Key="Delete" Command="{Binding Path=DeleteSelectedObjectsCommand}" />
+        <KeyBinding
+            Key="A"
+            Command="{Binding Path=SelectAllObjectsCommand}"
+            Modifiers="Control" />
+    </UserControl.InputBindings>
+
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="/Infrastructure/Selectors/SceneObjectTemplateSelector.xaml" />
+                <ResourceDictionary Source="/Infrastructure/Selectors/ToolViewTemplateSelector.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </UserControl.Resources>
+
+    <Grid>
+        <scene:Scene2D
+            x:Name="Scene2D"
+            FocusVisualStyle="{x:Null}"
+            Scale="{Binding Path=Scale,
+                            Mode=TwoWay}"
+            Translation="{Binding Path=Translation,
+                                  Mode=TwoWay}">
+
+            <DataPiping.DataPipes>
+                <DataPipe Source="{Binding ElementName=Scene2D, Path=MousePosition}" Target="{Binding Path=MousePosition, Mode=OneWayToSource}" />
+                <DataPipe Source="{Binding ElementName=ObjectsLayer}" Target="{Binding Path=HitTester, Mode=OneWayToSource}" />
+            </DataPiping.DataPipes>
+
+            <b:Interaction.Behaviors>
+                <behaviors:SceneTransformBehaviour MinScale="0.2" />
+                <behaviors:SceneToolEventProviderBehaviour CurrentTool="{Binding Path=ToolsViewModel.CurrentTool}" />
+            </b:Interaction.Behaviors>
+
+            <layers:GradientClearLayer
+                EndColor="{DynamicResource {x:Static brushes:BrushesKeys+SchemeView.EndBackgroundColor}}"
+                PixelSize="{Binding ElementName=Scene2D,
+                                    Path=PixelSize,
+                                    Mode=OneWay}"
+                StartColor="{DynamicResource {x:Static brushes:BrushesKeys+SchemeView.StartBackgroundColor}}">
+                <layers:GradientClearLayer.Renderer>
+                    <renderers:GradientClearRenderer />
+                </layers:GradientClearLayer.Renderer>
+            </layers:GradientClearLayer>
+            <layers:GridLayer
+                Width="{Binding Path=GridWidth}"
+                Height="{Binding Path=GridHeight}"
+                Background="{DynamicResource {x:Static brushes:BrushesKeys+SchemeView.GridBackgroundColor}}"
+                BoldLineColor="{DynamicResource {x:Static brushes:BrushesKeys+SchemeView.GridBoldLineColor}}"
+                CellSize="{Binding Path=GridStep}"
+                LineColor="{DynamicResource {x:Static brushes:BrushesKeys+SchemeView.GridLineColor}}">
+                <layers:GridLayer.Renderer>
+                    <renderers:GridLayerRenderer />
+                </layers:GridLayer.Renderer>
+            </layers:GridLayer>
+            <layers:ObjectsLayer
+                x:Name="ObjectsLayer"
+                ObjectTemplateSelector="{StaticResource SceneObjectTemplateSelector}"
+                Objects="{Binding Path=Objects}"
+                ViewportInWorldSpace="{Binding ElementName=Scene2D,
+                                               Path=ViewportInWorldSpace,
+                                               Mode=OneWay}">
+                <layers:ObjectsLayer.Renderer>
+                    <renderers:ObjectsLayerRenderer />
+                </layers:ObjectsLayer.Renderer>
+            </layers:ObjectsLayer>
+            <layers:ObjectsSelectionLayer Views="{Binding ElementName=ObjectsLayer, Path=Views, Mode=OneWay}">
+                <layers:ObjectsSelectionLayer.Renderer>
+                    <renderers:ObjectsSelectionLayerRenderer />
+                </layers:ObjectsSelectionLayer.Renderer>
+            </layers:ObjectsSelectionLayer>
+            <layers:NodesLayer
+                FillColor="{DynamicResource {x:Static brushes:BrushesKeys+SchemeView.NodeFillColor}}"
+                StrokeColor="{DynamicResource {x:Static brushes:BrushesKeys+SchemeView.NodeStrokeColor}}"
+                Views="{Binding ElementName=ObjectsLayer,
+                                Path=Views}">
+                <layers:NodesLayer.Renderer>
+                    <renderers:NodesLayerRenderer />
+                </layers:NodesLayer.Renderer>
+            </layers:NodesLayer>
+            <layers:RectangleSelectionLayer
+                EndPosition="{Binding Path=ToolsViewModel.RectangleSelectionTool.EndPosition}"
+                IsVisible="{Binding Path=ToolsViewModel.RectangleSelectionTool.IsSelectionStarted}"
+                NormalColor="{DynamicResource {x:Static brushes:BrushesKeys+SchemeView.RectangleSelectionNormalColor}}"
+                SecantColor="{DynamicResource {x:Static brushes:BrushesKeys+SchemeView.RectangleSelectionSecantColor}}"
+                StartPosition="{Binding Path=ToolsViewModel.RectangleSelectionTool.StartPosition}">
+                <layers:RectangleSelectionLayer.Renderer>
+                    <renderers:RectangleSelectionLayerRenderer />
+                </layers:RectangleSelectionLayer.Renderer>
+            </layers:RectangleSelectionLayer>
+        </scene:Scene2D>
+
+        <StackPanelEx
+            Height="28"
+            Margin="5"
+            HorizontalAlignment="Center"
+            VerticalAlignment="Top"
+            Gap="10"
+            Orientation="Horizontal">
+            <ClippingBorder
+                Background="{DynamicResource {x:Static brushes:BrushesKeys+SchemeView.ToolsPanelBackground}}"
+                CornerRadius="5"
+                SnapsToDevicePixels="True"
+                UseLayoutRounding="True">
+                <StackPanel Orientation="Horizontal">
+                    <StackPanel.Resources>
+                        <Style BasedOn="{StaticResource {x:Type Button}}" TargetType="{x:Type Button}">
+                            <Style.Resources>
+                                <SolidColorBrush x:Key="{x:Static brushesEx:BrushesKeys+Button.DisabledBackground}" Color="Transparent" />
+                            </Style.Resources>
+                            <Setter Property="Width" Value="{Binding Path=ActualHeight, RelativeSource={RelativeSource Self}}" />
+                            <Setter Property="BorderThickness" Value="0" />
+                            <Setter Property="Background" Value="Transparent" />
+                        </Style>
+                        <Style TargetType="{x:Type Path}">
+                            <Setter Property="Margin" Value="7" />
+                            <Setter Property="SnapsToDevicePixels" Value="True" />
+                            <Setter Property="UseLayoutRounding" Value="True" />
+                            <Style.Triggers>
+                                <Trigger Property="IsEnabled" Value="False">
+                                    <Setter Property="Opacity" Value="0.5" />
+                                </Trigger>
+                            </Style.Triggers>
+                        </Style>
+                    </StackPanel.Resources>
+                    <Button Command="{Binding Path=StartSimulationCommand}">
+                        <Path
+                            Data="M 0 0 L 4 2 L 0 4 Z"
+                            Fill="#8AE28A"
+                            Stretch="Uniform"
+                            Stroke="#8AE28A"
+                            StrokeThickness="1" />
+                    </Button>
+                    <Button Command="{Binding Path=PauseSimulationCommand}">
+                        <Path
+                            Data="M 0 0 L 3 0 L 3 10 L 0 10 Z M 7 0 L 10 0 L 10 10 L 7 10 Z"
+                            Fill="#B0B0B0"
+                            RenderOptions.EdgeMode="Aliased"
+                            Stretch="Uniform"
+                            Stroke="#E0E0E0"
+                            StrokeThickness="1" />
+                    </Button>
+                    <Button Command="{Binding Path=NextSimulationStepCommand}">
+                        <Path
+                            Data="M 0 0 L 7 5 L 0 10 Z M 8 0 L 10 0 L 10 10 L 8 10 Z"
+                            Fill="#B0B0B0"
+                            Stretch="Uniform"
+                            Stroke="#E0E0E0"
+                            StrokeThickness="1" />
+                    </Button>
+                    <Button Command="{Binding Path=StopSimulationCommand}">
+                        <Path
+                            Data="M 0 0 L 5 0 L 5 5 L 0 5 Z"
+                            Fill="#C04048"
+                            Stretch="Uniform"
+                            Stroke="#F44B56"
+                            StrokeThickness="1" />
+                    </Button>
+                </StackPanel>
+            </ClippingBorder>
+            <ClippingBorder
+                Background="{DynamicResource {x:Static brushes:BrushesKeys+SchemeView.ToolsPanelBackground}}"
+                CornerRadius="5"
+                IsEnabled="{Binding Path=ToolsViewModel.IsCurrentToolLocked,
+                                    Converter={converters:NotConverter}}"
+                SnapsToDevicePixels="True"
+                UseLayoutRounding="True">
+                <ClippingBorder.Resources>
+                    <CollectionViewSource x:Key="ToolsCollectionViewSource" Source="{Binding Path=ToolsViewModel.Tools}">
+                        <CollectionViewSource.GroupDescriptions>
+                            <PropertyGroupDescription PropertyName="Group" />
+                        </CollectionViewSource.GroupDescriptions>
+                    </CollectionViewSource>
+                </ClippingBorder.Resources>
+                <ListBox
+                    Background="Transparent"
+                    BorderThickness="0"
+                    ItemsSource="{Binding Source={StaticResource ToolsCollectionViewSource}}"
+                    SelectedItem="{Binding Path=ToolsViewModel.CurrentTool}">
+                    <ListBox.Resources>
+                        <SolidColorBrush x:Key="{x:Static brushesEx:BrushesKeys+ListBoxItem.InactiveSelectedBackground}" Color="{Binding Path=Color, Source={StaticResource {x:Static brushesEx:BrushesKeys+ListBoxItem.SelectedBackground}}}" />
+                        <Style BasedOn="{StaticResource {x:Type ListBoxItem}}" TargetType="{x:Type ListBoxItem}">
+                            <Setter Property="Padding" Value="0" />
+                        </Style>
+                    </ListBox.Resources>
+                    <ListBox.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <StackPanel Orientation="Horizontal" />
+                        </ItemsPanelTemplate>
+                    </ListBox.ItemsPanel>
+                    <ListBox.ItemTemplate>
+                        <DataTemplate DataType="{x:Type tools:BaseToolViewModel}">
+                            <Border
+                                Width="{Binding Path=ActualHeight,
+                                                RelativeSource={RelativeSource Self}}"
+                                Height="28"
+                                Background="Transparent"
+                                ToolTip="{Binding Path=Name}">
+                                <ContentControl
+                                    Margin="7"
+                                    Content="{Binding Path=.}"
+                                    ContentTemplateSelector="{StaticResource ToolViewTemplateSelector}" />
+                            </Border>
+                        </DataTemplate>
+                    </ListBox.ItemTemplate>
+                    <ListBox.GroupStyle>
+                        <GroupStyle>
+                            <GroupStyle.Panel>
+                                <ItemsPanelTemplate>
+                                    <StackPanel Orientation="Horizontal" />
+                                </ItemsPanelTemplate>
+                            </GroupStyle.Panel>
+                            <GroupStyle.ContainerStyle>
+                                <Style TargetType="{x:Type GroupItem}">
+                                    <Setter Property="Template">
+                                        <Setter.Value>
+                                            <ControlTemplate TargetType="{x:Type GroupItem}">
+                                                <StackPanel Orientation="Horizontal">
+                                                    <b:Interaction.Behaviors>
+                                                        <behaviors:GroupItemIndexingPropsProvider x:Name="PropsProvider" />
+                                                    </b:Interaction.Behaviors>
+                                                    <ItemsPresenter />
+                                                    <Separator x:Name="Separator" Style="{StaticResource VerticalSeparator}" />
+                                                </StackPanel>
+                                                <ControlTemplate.Triggers>
+                                                    <DataTrigger Binding="{Binding ElementName=PropsProvider, Path=IsLastGroup}" Value="True">
+                                                        <Setter TargetName="Separator" Property="Visibility" Value="Collapsed" />
+                                                    </DataTrigger>
+                                                </ControlTemplate.Triggers>
+                                            </ControlTemplate>
+                                        </Setter.Value>
+                                    </Setter>
+                                </Style>
+                            </GroupStyle.ContainerStyle>
+                        </GroupStyle>
+                    </ListBox.GroupStyle>
+                </ListBox>
+            </ClippingBorder>
+        </StackPanelEx>
+    </Grid>
+</UserControl>

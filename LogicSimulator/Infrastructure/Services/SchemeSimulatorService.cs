@@ -1,6 +1,7 @@
 ﻿using LogicSimulator.Core;
 using LogicSimulator.Infrastructure.Services.Interfaces;
-using LogicSimulator.Models;
+using LogicSimulator.Models.Logic;
+using LogicSimulator.Models.Simulation;
 using Microsoft.Extensions.Logging;
 
 namespace LogicSimulator.Infrastructure.Services;

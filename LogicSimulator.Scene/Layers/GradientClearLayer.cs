@@ -3,7 +3,7 @@ using System.Windows.Media;
 using LogicSimulator.Scene.Cache;
 using LogicSimulator.Scene.Layers.Base;
 using LogicSimulator.Scene.Layers.Renderers;
-using LogicSimulator.Utils;
+using LogicSimulator.Shared.ExtensionMethods;
 using SharpDX;
 using SharpDX.Direct2D1;
 using Color = System.Windows.Media.Color;

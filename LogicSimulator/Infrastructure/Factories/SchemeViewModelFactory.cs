@@ -1,10 +1,10 @@
 ﻿using LogicSimulator.Infrastructure.Factories.Interfaces;
 using LogicSimulator.Infrastructure.Services.Interfaces;
 using LogicSimulator.Models;
-using LogicSimulator.Models.Base;
+using LogicSimulator.Models.Objects.Base;
 using LogicSimulator.ViewModels;
-using LogicSimulator.ViewModels.AnchorableViewModels;
-using LogicSimulator.ViewModels.ObjectViewModels.Base;
+using LogicSimulator.ViewModels.Anchorable;
+using LogicSimulator.ViewModels.Objects.Base;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 

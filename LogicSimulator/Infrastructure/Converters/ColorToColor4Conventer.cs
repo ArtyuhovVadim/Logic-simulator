@@ -1,7 +1,7 @@
 ﻿using System.Globalization;
 using System.Windows.Data;
 using System.Windows.Markup;
-using LogicSimulator.Utils;
+using LogicSimulator.Shared.ExtensionMethods;
 using SharpDX;
 using WpfExtensions.Converters.Base;
 using Color = System.Windows.Media.Color;

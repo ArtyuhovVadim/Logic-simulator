@@ -1,8 +1,8 @@
 ﻿using System.Windows;
 using LogicSimulator.Scene.Cache;
 using LogicSimulator.Scene.DirectX;
-using LogicSimulator.Shared;
-using LogicSimulator.Utils;
+using LogicSimulator.Shared.ExtensionMethods;
+using LogicSimulator.Shared.Models;
 using SharpDX;
 using SharpDX.Direct2D1;
 

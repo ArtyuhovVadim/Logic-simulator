@@ -1,17 +1,19 @@
 ﻿<ResourceDictionary
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:baseVm="clr-namespace:LogicSimulator.ViewModels.Objects.Base"
     xmlns:converters="clr-namespace:LogicSimulator.Infrastructure.Converters"
-    xmlns:gates="clr-namespace:LogicSimulator.ViewModels.ObjectViewModels.Gates"
+    xmlns:gates="clr-namespace:LogicSimulator.ViewModels.Logic.Gates"
+    xmlns:logic="clr-namespace:LogicSimulator.ViewModels.Logic"
     xmlns:selectors="clr-namespace:LogicSimulator.Infrastructure.Selectors"
     xmlns:views="clr-namespace:LogicSimulator.Scene.Views;assembly=LogicSimulator.Scene"
-    xmlns:vm="clr-namespace:LogicSimulator.ViewModels.ObjectViewModels">
+    xmlns:vm="clr-namespace:LogicSimulator.ViewModels.Objects">
 
     <converters:RotationToFloatConverter x:Key="RotationToFloatConverter" />
 
     <selectors:PortViewTemplateSelector x:Key="PortViewTemplateSelector">
         <selectors:PortViewTemplateSelector.PortDataTemplate>
-            <DataTemplate DataType="{x:Type gates:PortViewModel}">
+            <DataTemplate DataType="{x:Type logic:PortViewModel}">
                 <views:PortView
                     IsSelected="{Binding Path=IsSelected}"
                     Label="{Binding Path=Name}"
@@ -29,7 +31,7 @@
 
     <selectors:SceneObjectTemplateSelector x:Key="SceneObjectTemplateSelector">
         <selectors:SceneObjectTemplateSelector.UnknownObjectDataTemplate>
-            <DataTemplate xmlns:baseVm="clr-namespace:LogicSimulator.ViewModels.ObjectViewModels.Base" DataType="{x:Type baseVm:BaseObjectViewModel}">
+            <DataTemplate DataType="{x:Type baseVm:BaseObjectViewModel}">
                 <views:UnknownObjectView Location="{Binding Path=Location}" Rotation="{Binding Path=Rotation, Converter={StaticResource RotationToFloatConverter}}" />
             </DataTemplate>
         </selectors:SceneObjectTemplateSelector.UnknownObjectDataTemplate>
@@ -262,7 +264,7 @@
             </DataTemplate>
         </selectors:SceneObjectTemplateSelector.AndGateDataTemplate>
         <selectors:SceneObjectTemplateSelector.WireDataTemplate>
-            <DataTemplate DataType="{x:Type vm:WireViewModel}">
+            <DataTemplate DataType="{x:Type logic:WireViewModel}">
                 <views:LineView
                     IsSelected="{Binding Path=IsSelected}"
                     Location="{Binding Path=Location}"

@@ -1,5 +1,5 @@
 ﻿using LogicSimulator.Scene.Views.Base;
-using LogicSimulator.Shared;
+using LogicSimulator.Shared.Models;
 using SharpDX;
 
 namespace LogicSimulator.Scene.Nodes;

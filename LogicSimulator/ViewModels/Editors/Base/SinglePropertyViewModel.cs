@@ -1,0 +1,42 @@
+﻿using LogicSimulator.Infrastructure.EditorLayout;
+
+namespace LogicSimulator.ViewModels.Editors.Base;
+
+public abstract class SinglePropertyViewModel : PropertyViewModel
+{
+    public string PropertyName { get; init; } = string.Empty;
+
+    #region Value
+
+    public object Value
+    {
+        get => GetPropertyValue(EditorViewModel.Objects);
+        set
+        {
+            SetPropertyValue(EditorViewModel.Objects, value);
+            OnPropertyChanged();
+        }
+    }
+
+    #endregion
+
+    public override void ProvidePropertyChanged(string propName)
+    {
+        if (PropertyName == propName)
+        {
+            OnPropertyChanged(nameof(Value));
+        }
+    }
+
+    protected abstract object GetPropertyValue(IReadOnlyCollection<object> objects);
+
+    protected abstract void SetPropertyValue(IReadOnlyCollection<object> objects, object value);
+
+    protected TProperty GetValue<TProperty>(object obj) => (TProperty)GettersAndSettersCache.GetGetter(PropertyName, obj)(obj);
+
+    protected void SetValue<TProperty>(object obj, TProperty value) => GettersAndSettersCache.GetSetter<TProperty>(PropertyName, obj)(obj, value!);
+    
+    protected void SetValue(object obj, object value, Type valueType) => GettersAndSettersCache.GetSetter(PropertyName, obj, valueType)(obj, value);
+
+    public override void RaisePropertyChanged() => OnPropertyChanged(nameof(Value));
+}

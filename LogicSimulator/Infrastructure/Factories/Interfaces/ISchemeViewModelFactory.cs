@@ -1,5 +1,5 @@
 ﻿using LogicSimulator.Models;
-using LogicSimulator.ViewModels.AnchorableViewModels;
+using LogicSimulator.ViewModels.Anchorable;
 
 namespace LogicSimulator.Infrastructure.Factories.Interfaces;
 

@@ -1,6 +1,6 @@
 ﻿using System.Windows;
 using AvalonDock.Controls;
-using LogicSimulator.Views;
+using LogicSimulator.Views.Anchorable;
 using Microsoft.Xaml.Behaviors;
 using WpfExtensions.Utils;
 

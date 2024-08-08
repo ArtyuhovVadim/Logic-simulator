@@ -1,7 +1,8 @@
-﻿using LogicSimulator.Infrastructure;
+﻿using LogicSimulator.Infrastructure.Collections;
 using LogicSimulator.Infrastructure.Factories.Interfaces;
 using LogicSimulator.Models;
-using LogicSimulator.ViewModels.AnchorableViewModels;
+using LogicSimulator.Models.Common;
+using LogicSimulator.ViewModels.Anchorable;
 using WpfExtensions.Mvvm;
 
 namespace LogicSimulator.ViewModels;

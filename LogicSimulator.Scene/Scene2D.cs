@@ -10,14 +10,14 @@ using System.Windows.Markup;
 using System.Windows.Media;
 using LogicSimulator.Scene.DirectX;
 using LogicSimulator.Scene.Layers.Base;
-using LogicSimulator.Utils;
+using LogicSimulator.Shared.ExtensionMethods;
 using SharpDX;
 using Point = System.Windows.Point;
 
 namespace LogicSimulator.Scene;
 
 [ContentProperty(nameof(Layers))]
-public class Scene2D : FrameworkElement, IDisposable
+public class Scene2D : FrameworkElement, ITransformable, IDisposable
 {
     private bool _isRenderRequested;
 
