@@ -22,6 +22,7 @@ using LogicSimulator.ViewModels.Logic;
 using LogicSimulator.ViewModels.Logic.Gates;
 using LogicSimulator.ViewModels.Objects;
 using LogicSimulator.ViewModels.Objects.Base;
+using WpfExtensions.Mvvm.Messaging;
 
 namespace LogicSimulator;
 
@@ -94,6 +95,7 @@ public partial class App
             .AddSingleton<IProjectFileService, ProjectFileService>()
             .AddSingleton<IEditorSelectionService, EditorSelectionService>()
             .AddSingleton<IOutputMessagesService, OutputMessagesService>()
+            .AddSingleton<IMessageBus, MessageBus>()
 
             .AddTransient<ISchemeSimulatorService, SchemeSimulatorService>()
             .AddTransient<ISchemeBuilderService, SchemeBuilderService>()

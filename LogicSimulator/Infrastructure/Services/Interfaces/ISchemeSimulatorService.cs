@@ -3,9 +3,11 @@ using LogicSimulator.Models.Simulation;
 
 namespace LogicSimulator.Infrastructure.Services.Interfaces;
 
+public delegate void SimulationStateChanged(SimulationState oldState, SimulationState newState);
+
 public interface ISchemeSimulatorService
 {
-    IReadOnlyDictionary<string, PortSimulationResult> Result { get; }
+    event SimulationStateChanged? SimulationStateChanged;
 
     SimulatorSettings Settings { get; }
 
@@ -30,4 +32,6 @@ public interface ISchemeSimulatorService
     void PauseSimulation();
 
     void StopSimulation();
+
+    Dictionary<string, PortSimulationResult> GetSimulationResult();
 }

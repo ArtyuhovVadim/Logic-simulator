@@ -1,6 +1,7 @@
 ﻿using LogicSimulator.Core;
 using LogicSimulator.Infrastructure.Collections;
 using LogicSimulator.Infrastructure.Factories.Interfaces;
+using LogicSimulator.Infrastructure.Messages;
 using LogicSimulator.Infrastructure.Services.Interfaces;
 using LogicSimulator.Models;
 using LogicSimulator.Models.Common;
@@ -9,20 +10,18 @@ using LogicSimulator.Models.Objects.Base;
 using LogicSimulator.Models.Simulation;
 using LogicSimulator.Shared.Models.HitTest;
 using LogicSimulator.ViewModels.Anchorable.Base;
-using LogicSimulator.ViewModels.Common;
 using LogicSimulator.ViewModels.Objects.Base;
 using LogicSimulator.ViewModels.Status;
 using LogicSimulator.ViewModels.Status.Base;
 using Microsoft.Extensions.Logging;
 using SharpDX;
 using WpfExtensions.Mvvm.Commands;
+using WpfExtensions.Mvvm.Messaging;
 
 namespace LogicSimulator.ViewModels.Anchorable;
 
 public class SchemeViewModel : DocumentViewModel, IModelBased<Scheme>, ICloseable
 {
-    private readonly DockingViewModel _dockingViewModel;
-    private readonly TimelineViewModel _timelineViewModel;
     private readonly SchemeStatusViewModel _statusViewModel;
 
     private readonly IEditorSelectionService _editorSelectionService;
@@ -30,31 +29,29 @@ public class SchemeViewModel : DocumentViewModel, IModelBased<Scheme>, ICloseabl
     private readonly ISchemeBuilderService _schemeBuilderService;
     private readonly IToolSwitcherService _toolSwitcherService;
     private readonly IOutputMessagesService _outputMessagesService;
+    private readonly IMessageBus _messageBus;
     private readonly ILogger<SchemeViewModel> _logger;
 
     private List<BaseObjectViewModel> _selectedObjects = [];
     private LogicScheme? _currentScheme;
-    private ObservableCollection<TimelineRowViewModel> _simulationResult = [];
 
     public SchemeViewModel(Scheme scheme,
-                           DockingViewModel dockingViewModel,
-                           TimelineViewModel timelineViewModel,
                            IEditorSelectionService editorSelectionService,
                            ISchemeSimulatorService schemeSimulatorService,
                            ISchemeBuilderService schemeBuilderService,
                            IToolSwitcherService toolSwitcherService,
                            IMappedViewModelFactory<BaseObjectModel, BaseObjectViewModel> viewModelsFactory,
                            IOutputMessagesService outputMessagesService,
+                           IMessageBus messageBus,
                            ILogger<SchemeViewModel> logger)
     {
         Model = scheme;
-        _dockingViewModel = dockingViewModel;
-        _timelineViewModel = timelineViewModel;
         _editorSelectionService = editorSelectionService;
         _schemeSimulatorService = schemeSimulatorService;
         _schemeBuilderService = schemeBuilderService;
         _toolSwitcherService = toolSwitcherService;
         _outputMessagesService = outputMessagesService;
+        _messageBus = messageBus;
         _logger = logger;
 
         _objects = new ObservableCollectionEx<BaseObjectViewModel, BaseObjectModel>(Model.Objects, viewModelsFactory.Create);
@@ -66,6 +63,8 @@ public class SchemeViewModel : DocumentViewModel, IModelBased<Scheme>, ICloseabl
 
         IconSource = new Uri("pack://application:,,,/Resources/Icons/scheme-icon16x16.png");
         base.Title = Model.FileInfo?.Name ?? throw new InvalidOperationException();
+
+        _schemeSimulatorService.SimulationStateChanged += OnSimulationStateChanged;
     }
 
     public event Action? Closed;
@@ -314,8 +313,6 @@ public class SchemeViewModel : DocumentViewModel, IModelBased<Scheme>, ICloseabl
         try
         {
             _schemeSimulatorService.PauseSimulation();
-            _simulationResult = new ObservableCollection<TimelineRowViewModel>(_schemeSimulatorService.Result.Select(x => new TimelineRowViewModel(x.Value)));
-            _timelineViewModel.Waves = _simulationResult;
         }
         catch (Exception e)
         {
@@ -334,9 +331,9 @@ public class SchemeViewModel : DocumentViewModel, IModelBased<Scheme>, ICloseabl
     {
         try
         {
+            var oldState = _schemeSimulatorService.State;
             _schemeSimulatorService.SimulateNextStep();
-            _simulationResult = new ObservableCollection<TimelineRowViewModel>(_schemeSimulatorService.Result.Select(x => new TimelineRowViewModel(x.Value)));
-            _timelineViewModel.Waves = _simulationResult;
+            _messageBus.Send(new SimulationStateChangedMessage(this, oldState, _schemeSimulatorService.State, _schemeSimulatorService.GetSimulationResult()));
         }
         catch (Exception e)
         {
@@ -356,8 +353,6 @@ public class SchemeViewModel : DocumentViewModel, IModelBased<Scheme>, ICloseabl
         try
         {
             _schemeSimulatorService.StopSimulation();
-            _simulationResult = new ObservableCollection<TimelineRowViewModel>(_schemeSimulatorService.Result.Select(x => new TimelineRowViewModel(x.Value)));
-            _timelineViewModel.Waves = _simulationResult;
         }
         catch (Exception e)
         {
@@ -367,25 +362,30 @@ public class SchemeViewModel : DocumentViewModel, IModelBased<Scheme>, ICloseabl
 
     #endregion
 
+    public Dictionary<string, PortSimulationResult> GetSimulationResult() => _schemeSimulatorService.GetSimulationResult();
+
     public void SelectedObjectsChanged() => OnSelectedObjectsChanged();
 
     protected override void OnDocumentActivated()
     {
+        _messageBus.Send(new DocumentActivatedMessage(this));
         OnSelectedObjectsChanged();
-        _timelineViewModel.Waves = _simulationResult;
     }
 
     protected override void OnDocumentDeactivated()
     {
+        _messageBus.Send(new DocumentDeactivatedMessage(this));
         _editorSelectionService.SetEmptyEditor();
-        _timelineViewModel.Waves = [];
     }
 
     protected override void OnClose()
     {
-        _dockingViewModel.CloseDocumentViewModel(this);
+        _messageBus.Send(new DocumentClosingMessage(this));
         Closed?.Invoke();
     }
+
+    private void OnSimulationStateChanged(SimulationState oldState, SimulationState newState) =>
+        _messageBus.Send(new SimulationStateChangedMessage(this, oldState, newState, _schemeSimulatorService.GetSimulationResult()));
 
     private void OnSelectedObjectsChanged()
     {

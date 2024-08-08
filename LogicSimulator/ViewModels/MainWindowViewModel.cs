@@ -1,5 +1,6 @@
 ﻿using System.IO;
 using LogicSimulator.Infrastructure.Factories.Interfaces;
+using LogicSimulator.Infrastructure.Messages;
 using LogicSimulator.Infrastructure.Services.Interfaces;
 using LogicSimulator.Models;
 using LogicSimulator.Models.Common;
@@ -8,15 +9,17 @@ using LogicSimulator.ViewModels.Anchorable.Base;
 using LogicSimulator.ViewModels.Status.Base;
 using WpfExtensions.Mvvm;
 using WpfExtensions.Mvvm.Commands;
+using WpfExtensions.Mvvm.Messaging;
 
 namespace LogicSimulator.ViewModels;
 
-public class MainWindowViewModel : BindableBase
+public class MainWindowViewModel : BindableBase, IRecipient<DocumentClosingMessage>
 {
     private readonly IUserDialogService _userDialogService;
     private readonly IProjectFileService _projectFileService;
     private readonly ISchemeFileService _schemeFileService;
     private readonly IProjectViewModelFactory _projectFactory;
+    private readonly IMessageBus _messageBus;
 
     private readonly DockingViewModel _dockingViewModel;
 
@@ -30,6 +33,7 @@ public class MainWindowViewModel : BindableBase
         IProjectFileService projectFileService,
         ISchemeFileService schemeFileService,
         IProjectViewModelFactory projectFactory,
+        IMessageBus messageBus,
         DockingViewModel dockingViewModel,
         PropertiesViewModel propertiesViewModel,
         ProjectExplorerViewModel projectExplorerViewModel,
@@ -40,6 +44,7 @@ public class MainWindowViewModel : BindableBase
         _projectFileService = projectFileService;
         _schemeFileService = schemeFileService;
         _projectFactory = projectFactory;
+        _messageBus = messageBus;
 
         _dockingViewModel = dockingViewModel;
         _propertiesViewModel = propertiesViewModel;
@@ -55,6 +60,8 @@ public class MainWindowViewModel : BindableBase
         _dockingViewModel.AddToolViewModel(_messagesOutputViewModel, true);
 
         _dockingViewModel.ActiveDocumentViewModelChanged += OnActiveDocumentViewModelChanged;
+
+        _messageBus.RegisterHandler(this, RefType.Strong);
     }
 
     #region ActiveProjectViewModel
@@ -172,6 +179,8 @@ public class MainWindowViewModel : BindableBase
     }, () => ActiveProjectViewModel is not null);
 
     #endregion
+
+    public void Receive(DocumentClosingMessage message) => _dockingViewModel.CloseDocumentViewModel(message.Document);
 
     private void OnSchemeOpened(SchemeViewModel scheme) => _dockingViewModel.AddOrSelectDocumentViewModel(scheme);
 

@@ -1,10 +1,27 @@
-﻿using LogicSimulator.ViewModels.Anchorable.Base;
+﻿using LogicSimulator.Infrastructure.Messages;
+using LogicSimulator.ViewModels.Anchorable.Base;
 using LogicSimulator.ViewModels.Common;
+using WpfExtensions.Mvvm.Messaging;
 
 namespace LogicSimulator.ViewModels.Anchorable;
 
-public class TimelineViewModel : ToolViewModel
+public class TimelineViewModel :
+    ToolViewModel,
+    IRecipient<SimulationStateChangedMessage>,
+    IRecipient<DocumentActivatedMessage>,
+    IRecipient<DocumentDeactivatedMessage>
 {
+    private readonly IMessageBus _messageBus;
+
+    public TimelineViewModel(IMessageBus messageBus)
+    {
+        _messageBus = messageBus;
+
+        _messageBus.RegisterHandler<SimulationStateChangedMessage>(this);
+        _messageBus.RegisterHandler<DocumentActivatedMessage>(this);
+        _messageBus.RegisterHandler<DocumentDeactivatedMessage>(this);
+    }
+
     public override string Title => "Таймлайн";
 
     #region HorizontalOffset
@@ -152,5 +169,22 @@ public class TimelineViewModel : ToolViewModel
             model.Scale = Scale;
             model.Offset = HorizontalOffset;
         }
+    }
+
+    public void Receive(SimulationStateChangedMessage message)
+    {
+        Waves = new ObservableCollection<TimelineRowViewModel>(message.SimulationResult.Select(x => new TimelineRowViewModel(x.Value)));
+    }
+
+    public void Receive(DocumentActivatedMessage message)
+    {
+        if (message.Document is not SchemeViewModel scheme) return;
+
+        Waves = new ObservableCollection<TimelineRowViewModel>(scheme.GetSimulationResult().Select(x => new TimelineRowViewModel(x.Value)));
+    }
+
+    public void Receive(DocumentDeactivatedMessage message)
+    {
+        Waves = [];
     }
 }
