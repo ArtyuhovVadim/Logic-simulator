@@ -58,6 +58,7 @@ public class TextView : SceneObjectView
 
         textView.Cache?.Update(textView, TextLayoutResource);
         textView.Cache?.Update(textView, GeometryResource);
+        textView.WorldBoundsChanged();
 
         textView.MakeDirty();
     }
