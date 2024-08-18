@@ -97,8 +97,10 @@ public partial class App
             .AddSingleton<IOutputMessagesService, OutputMessagesService>()
             .AddSingleton<IMessageBus, MessageBus>()
 
-            .AddTransient<ISchemeSimulatorService, SchemeSimulatorService>()
+            .AddTransient<ISchemePreprocessorService, SchemePreprocessorService>()
+            .AddTransient<ISchemeValidationService, SchemeValidationService>()
             .AddTransient<ISchemeBuilderService, SchemeBuilderService>()
+            .AddTransient<ISchemeSimulatorService, SchemeSimulatorService>()
             .AddTransient<IToolSwitcherService, ToolSwitcherService>()
 
             .AddSingleton<ISchemeViewModelFactory, SchemeViewModelFactory>()

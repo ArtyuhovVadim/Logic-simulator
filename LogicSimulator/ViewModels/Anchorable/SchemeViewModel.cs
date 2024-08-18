@@ -2,6 +2,7 @@
 using LogicSimulator.Infrastructure.Collections;
 using LogicSimulator.Infrastructure.Factories.Interfaces;
 using LogicSimulator.Infrastructure.Messages;
+using LogicSimulator.Infrastructure.SchemeValidation;
 using LogicSimulator.Infrastructure.Services.Interfaces;
 using LogicSimulator.Models;
 using LogicSimulator.Models.Common;
@@ -65,6 +66,10 @@ public class SchemeViewModel : DocumentViewModel, IModelBased<Scheme>, ICloseabl
         base.Title = Model.FileInfo?.Name ?? throw new InvalidOperationException();
 
         _schemeSimulatorService.SimulationStateChanged += OnSimulationStateChanged;
+
+        _schemeBuilderService.AddValidationRule(new GateNamesMustBeUniqueAndNotEmptyValidationRule());
+        _schemeBuilderService.AddValidationRule(new PortMustBeConnectedValidationRule());
+        _schemeBuilderService.AddValidationRule(new MoreThenOneOutputPortConnectedValidationRule());
     }
 
     public event Action? Closed;
@@ -286,12 +291,34 @@ public class SchemeViewModel : DocumentViewModel, IModelBased<Scheme>, ICloseabl
         {
             if (_schemeSimulatorService.State is SimulationState.Stopped)
             {
-                _currentScheme = _schemeBuilderService.BuildFromViewModels(Objects);
+                _outputMessagesService.ClearMessages();
+
+                var scheme = _schemeBuilderService.BuildFromSchemeViewModel(this);
+
+                foreach (var validationResult in scheme.ValidationResults)
+                {
+                    if (!validationResult.IsValid)
+                    {
+                        foreach (var message in validationResult.Messages)
+                        {
+                            _outputMessagesService.AddMessage(message);
+                        }
+                    }
+                }
+
+                if (!scheme.IsValid)
+                {
+                    //TODO: MessageSource
+                    _outputMessagesService.AddErrorMessage("Обнаружены ошибки, симуляция не может быть запущена.");
+                    return;
+                }
+
+                _currentScheme = scheme;
 
                 //TODO: Test
-                foreach (var gate in _currentScheme.InputGates)
+                foreach (var gate in _currentScheme.InputGateLogicModels)
                     gate.State = SignalType.High;
-                _currentScheme.InputGates.First().State = SignalType.Low;
+                _currentScheme.InputGateLogicModels.First().State = SignalType.Low;
 
                 _schemeSimulatorService.StartSimulation(_currentScheme, new SimulatorSettings { IsPauseSupported = true, IsPausedOnStart = true, AdditionalSimulationTime = 10 });
             }
