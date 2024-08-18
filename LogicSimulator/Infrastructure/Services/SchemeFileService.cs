@@ -5,6 +5,7 @@ using LogicSimulator.Infrastructure.YamlConverters;
 using LogicSimulator.Models;
 using LogicSimulator.Models.Logic;
 using LogicSimulator.Models.Logic.Gates;
+using LogicSimulator.Models.Logic.Gates.Base;
 using LogicSimulator.Models.Objects;
 using YamlDotNet.Core;
 using YamlDotNet.Serialization;
@@ -101,6 +102,14 @@ public class SchemeFileService : ISchemeFileService
             using var streamReader = new StreamReader(path, Encoding.Default, false, _fileReadStreamOptions);
             scheme = _deserializer.Deserialize<Scheme>(streamReader);
             scheme.FileInfo = new FileInfo(path);
+
+            foreach (var gate in scheme.Objects.OfType<BaseGateModel>())
+            {
+                foreach (var port in gate.Ports)
+                {
+                    port.Parent = gate;
+                }
+            }
 
             if (scheme.Version > App.Version)
                 throw new InvalidOperationException($"Can not load scheme of {scheme.Version} version.");
