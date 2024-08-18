@@ -161,6 +161,7 @@ public class SchemeViewModel : DocumentViewModel, IModelBased<Scheme>, ICloseabl
             if (Set(ref _gridStep, value))
             {
                 ToolsViewModel.DragTool.GridStep = value;
+                ToolsViewModel.NodeDragTool.GridStep = value;
             }
         }
     }
