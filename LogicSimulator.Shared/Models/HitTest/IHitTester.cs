@@ -6,6 +6,8 @@ public interface IHitTester
 {
     IEnumerable<IHitTestable> Objects { get; }
 
+    IHitTestable? GetFromContext(object context);
+
     HitTestResult<T> HitTest<T>(Vector2 pos, float tolerance) where T : IHitTestable;
 
     RectHitTestResult<T> HitTest<T>(RectangleF rect) where T : IHitTestable;

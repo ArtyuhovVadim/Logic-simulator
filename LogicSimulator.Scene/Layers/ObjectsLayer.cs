@@ -100,6 +100,8 @@ public class ObjectsLayer : BaseSceneLayer, ISceneViewsGeneratorHost, IHitTester
 
     public SceneObjectView? GetViewFromItem(object item) => _generator?.GetViewFromItem(item);
 
+    public IHitTestable? GetFromContext(object context) => GetViewFromItem(context);
+
     public HitTestResult<T> HitTest<T>(Vector2 pos, float tolerance) where T : IHitTestable
     {
         var objects = Views.Where(objView => objView.WorldBounds.IntersectsInclusive(pos.RectangleRelativePointAsCenter(tolerance)) && objView.HitTest(pos, tolerance)).OfType<T>().ToList();
