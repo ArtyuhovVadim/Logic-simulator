@@ -1,7 +1,7 @@
 ﻿using LogicSimulator.Infrastructure.Collections;
 using LogicSimulator.Models.Common;
 using LogicSimulator.Models.Objects;
-using LogicSimulator.Scene.Models;
+using LogicSimulator.Shared.Models;
 using LogicSimulator.ViewModels.Objects.Base;
 using SharpDX;
 using Color = System.Windows.Media.Color;

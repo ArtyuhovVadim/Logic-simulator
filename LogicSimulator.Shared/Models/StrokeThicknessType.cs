@@ -1,4 +1,4 @@
-﻿namespace LogicSimulator.Scene.Models;
+﻿namespace LogicSimulator.Shared.Models;
 
 public enum StrokeThicknessType
 {

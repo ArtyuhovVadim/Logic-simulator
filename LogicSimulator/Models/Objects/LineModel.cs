@@ -1,6 +1,6 @@
 ﻿using System.Windows.Media;
 using LogicSimulator.Models.Objects.Base;
-using LogicSimulator.Scene.Models;
+using LogicSimulator.Shared.Models;
 using SharpDX;
 using Color = System.Windows.Media.Color;
 

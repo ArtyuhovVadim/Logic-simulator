@@ -1,7 +1,6 @@
 ﻿using System.Windows.Media;
 using LogicSimulator.Models.Objects.Base;
-using LogicSimulator.Scene;
-using LogicSimulator.Scene.Models;
+using LogicSimulator.Shared.Models;
 
 namespace LogicSimulator.Models.Objects;
 

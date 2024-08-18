@@ -1,7 +1,7 @@
 ﻿using System.Windows.Media;
 using SharpDX;
 
-namespace LogicSimulator.Scene;
+namespace LogicSimulator.Shared.ExtensionMethods;
 
 public static class StretchExtensionMethods
 {

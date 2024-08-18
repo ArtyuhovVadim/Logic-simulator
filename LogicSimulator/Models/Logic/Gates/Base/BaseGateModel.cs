@@ -1,7 +1,7 @@
 ﻿using LogicSimulator.Infrastructure.Services.Interfaces;
 using LogicSimulator.Models.Objects.Base;
-using LogicSimulator.Scene.Models;
 using System.Windows.Media;
+using LogicSimulator.Shared.Models;
 using YamlDotNet.Serialization;
 
 namespace LogicSimulator.Models.Logic.Gates.Base;

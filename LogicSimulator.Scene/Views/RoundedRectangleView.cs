@@ -5,13 +5,13 @@ using System.Windows.Media;
 using LogicSimulator.Scene.DirectX;
 using LogicSimulator.Scene.Nodes;
 using LogicSimulator.Shared.ExtensionMethods;
+using LogicSimulator.Shared.Models;
 using SharpDX;
 using SharpDX.Direct2D1;
 using Color = System.Windows.Media.Color;
 using Geometry = SharpDX.Direct2D1.Geometry;
 using RectangleGeometry = SharpDX.Direct2D1.RectangleGeometry;
 using SolidColorBrush = SharpDX.Direct2D1.SolidColorBrush;
-using LogicSimulator.Scene.Models;
 
 namespace LogicSimulator.Scene.Views;
 

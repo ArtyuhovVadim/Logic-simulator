@@ -11,6 +11,7 @@ using System.Windows.Media;
 using LogicSimulator.Scene.DirectX;
 using LogicSimulator.Scene.Layers.Base;
 using LogicSimulator.Shared.ExtensionMethods;
+using LogicSimulator.Shared.Models;
 using SharpDX;
 using Point = System.Windows.Point;
 

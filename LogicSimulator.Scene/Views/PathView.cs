@@ -6,11 +6,11 @@ using SharpDX;
 using SharpDX.Direct2D1;
 using LogicSimulator.Scene.Views.Base;
 using LogicSimulator.Shared.ExtensionMethods;
+using LogicSimulator.Shared.Models;
 using Color = System.Windows.Media.Color;
 using Geometry = SharpDX.Direct2D1.Geometry;
 using PathGeometry = SharpDX.Direct2D1.PathGeometry;
 using SolidColorBrush = SharpDX.Direct2D1.SolidColorBrush;
-using LogicSimulator.Scene.Models;
 
 namespace LogicSimulator.Scene.Views;
 

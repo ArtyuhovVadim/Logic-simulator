@@ -1,6 +1,6 @@
 ﻿using System.Windows.Media;
 using LogicSimulator.Models.Logic.Gates.Base;
-using LogicSimulator.Scene.Models;
+using LogicSimulator.Shared.Models;
 using LogicSimulator.ViewModels.Objects.Base;
 
 namespace LogicSimulator.ViewModels.Logic.Gates.Base;

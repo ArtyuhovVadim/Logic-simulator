@@ -1,6 +1,6 @@
 ﻿using SharpDX;
 
-namespace LogicSimulator.Scene;
+namespace LogicSimulator.Shared.Models;
 
 public interface ITransformable
 {

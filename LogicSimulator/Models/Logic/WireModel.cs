@@ -2,7 +2,7 @@
 using LogicSimulator.Infrastructure.ExtensionMethods;
 using LogicSimulator.Models.Common;
 using LogicSimulator.Models.Objects.Base;
-using LogicSimulator.Scene.Models;
+using LogicSimulator.Shared.Models;
 using SharpDX;
 using YamlDotNet.Serialization;
 using Color = System.Windows.Media.Color;

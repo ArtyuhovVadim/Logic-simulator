@@ -1,6 +1,7 @@
-﻿using SharpDX;
+﻿using LogicSimulator.Shared.Models;
+using SharpDX;
 
-namespace LogicSimulator.Scene;
+namespace LogicSimulator.Shared.ExtensionMethods;
 
 public static class OriginPositionExtensionMethods
 {

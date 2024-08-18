@@ -1,4 +1,4 @@
-﻿namespace LogicSimulator.Scene;
+﻿namespace LogicSimulator.Shared.Models;
 
 public enum OriginPosition
 {

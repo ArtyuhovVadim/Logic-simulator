@@ -1,5 +1,4 @@
-﻿using LogicSimulator.Scene;
-using LogicSimulator.Scene.Models;
+﻿using LogicSimulator.Shared.Models;
 
 namespace LogicSimulator.Shared.ExtensionMethods;
 
