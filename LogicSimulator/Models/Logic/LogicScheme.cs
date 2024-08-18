@@ -1,28 +1,46 @@
 ﻿using LogicSimulator.Core;
 using LogicSimulator.Core.Gates;
-using LogicSimulator.Core.Gates.Base;
-using LogicSimulator.Models.Links;
+using LogicSimulator.Infrastructure.SchemeValidation.Base;
+using LogicSimulator.Models.Logic.Gates;
+using LogicSimulator.Models.SchemeGraph;
+using LogicSimulator.Models.SchemeGraph.Base;
 
 namespace LogicSimulator.Models.Logic;
 
 public class LogicScheme
 {
-    public LogicScheme(List<BaseGate> gates, List<InputGate> inputGates, List<OutputGate> outputGates, List<Connection> connections, Dictionary<BaseGate, GateLogicModelToViewModelLink> gatesMap)
+    private readonly IPreprocessedLogicScheme _preprocessedLogicScheme;
+    private readonly List<SchemeValidationResult> _validationResults;
+    private readonly List<Connection> _connections = [];
+
+    public LogicScheme(IPreprocessedLogicScheme preprocessedLogicScheme, IEnumerable<SchemeValidationResult> validationResults)
     {
-        Gates = gates;
-        InputGates = inputGates;
-        OutputGates = outputGates;
-        Connections = connections;
-        GatesMap = gatesMap;
+        _preprocessedLogicScheme = preprocessedLogicScheme;
+        _validationResults = [.. validationResults];
+        IsValid = false;
     }
 
-    public List<BaseGate> Gates { get; set; }
+    public LogicScheme(IPreprocessedLogicScheme preprocessedLogicScheme, List<Connection> connections, IReadOnlyList<SchemeValidationResult> validationResults)
+    {
+        _preprocessedLogicScheme = preprocessedLogicScheme;
+        _connections = [.. connections];
+        _validationResults = [.. validationResults];
+        IsValid = true;
+    }
 
-    public List<InputGate> InputGates { get; set; }
+    public bool IsValid { get; }
 
-    public List<OutputGate> OutputGates { get; set; }
+    public IReadOnlyList<SchemeValidationResult> ValidationResults => _validationResults;
 
-    public List<Connection> Connections { get; set; }
+    public IEnumerable<ISchemeGraphGateNode> GateNodes => _preprocessedLogicScheme.Nodes;
 
-    public Dictionary<BaseGate, GateLogicModelToViewModelLink> GatesMap { get; set; }
+    public IEnumerable<ISchemeGraphGateNode<InputGate, InputGateModel>> InputGateNodes => _preprocessedLogicScheme.Nodes.Where(x => x.LogicModel is InputGate).Select(x => new SchemeGraphGateNode<InputGate, InputGateModel>(x));
+
+    public IEnumerable<ISchemeGraphGateNode<OutputGate, OutputGateModel>> OutputGateNodes => _preprocessedLogicScheme.Nodes.Where(x => x.LogicModel is OutputGate).Select(x => new SchemeGraphGateNode<OutputGate, OutputGateModel>(x));
+
+    public IEnumerable<Connection> Connections => _connections;
+
+    public IEnumerable<InputGate> InputGateLogicModels => GateNodes.Select(x => x.LogicModel).OfType<InputGate>();
+
+    public IEnumerable<OutputGate> OutputGateLogicModels => GateNodes.Select(x => x.LogicModel).OfType<OutputGate>();
 }

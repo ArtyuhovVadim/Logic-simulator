@@ -1,136 +1,69 @@
-﻿using LogicSimulator.Core;
-using LogicSimulator.Core.Gates;
-using LogicSimulator.Core.Gates.Base;
+﻿using System.Diagnostics;
+using LogicSimulator.Core;
+using LogicSimulator.Infrastructure.SchemeValidation.Base;
 using Microsoft.Extensions.Logging;
 using LogicSimulator.Infrastructure.Services.Interfaces;
-using LogicSimulator.Models.Links;
 using LogicSimulator.Models.Logic;
-using LogicSimulator.ViewModels.Logic.Gates.Base;
-using LogicSimulator.ViewModels.Logic.Gates;
-using LogicSimulator.ViewModels.Logic;
-using LogicSimulator.ViewModels.Objects.Base;
+using LogicSimulator.ViewModels.Anchorable;
 
 namespace LogicSimulator.Infrastructure.Services;
 
 public class SchemeBuilderService : ISchemeBuilderService
 {
     private readonly ILogger<SchemeBuilderService> _logger;
-    private readonly List<Connection> _connections = [];
-    private readonly Dictionary<BaseGate, GateLogicModelToViewModelLink> _logicModelsMap = [];
+    private readonly ISchemePreprocessorService _preprocessorService;
+    private readonly ISchemeValidationService _schemeValidationService;
 
-    public SchemeBuilderService(ILogger<SchemeBuilderService> logger) => _logger = logger;
+    public SchemeBuilderService(ISchemePreprocessorService preprocessorService, ISchemeValidationService schemeValidationService, ILogger<SchemeBuilderService> logger)
+    {
+        _preprocessorService = preprocessorService;
+        _schemeValidationService = schemeValidationService;
+        _logger = logger;
+    }
 
-    public LogicScheme BuildFromViewModels(IEnumerable<BaseObjectViewModel> objects)
+    public void AddValidationRule(ISchemeValidationRule rule) => _schemeValidationService.AddValidationRule(rule);
+
+    public LogicScheme BuildFromSchemeViewModel(SchemeViewModel scheme)
     {
         try
         {
-            _connections.Clear();
-            _logicModelsMap.Clear();
+            var sw = Stopwatch.StartNew();
+            _logger.LogInformation("Scheme building has been started.");
 
-            var objectsList = objects.ToList();
-            var gates = objectsList.OfType<BaseGateViewModel>().ToList();
-            var wires = objectsList.OfType<WireViewModel>().ToList();
+            var objectModels = scheme.Objects.Select(x => x.Model).ToList();
+            var preprocessedLogicScheme = _preprocessorService.Process(objectModels);
+            var validationResults = _schemeValidationService.Validate(scheme, preprocessedLogicScheme);
 
-            foreach (var gate in gates)
-                gate.AcceptSchemeBuilder(this);
-
-            foreach (var port in gates.SelectMany(x => x.Ports))
-                port.State = SignalType.Undefined;
-
-            var connectionPoints = wires.Select(x => (First: x.AbsoluteVertexes.First(), Last: x.AbsoluteVertexes.Last())).ToList();
-
-            foreach (var connectionPoint in connectionPoints)
+            if (validationResults.Any(x => x.IsCritical))
             {
-                List<BasePort> firstPorts = [];
-                List<BasePort> lastPorts = [];
-
-                foreach (var (gateModel, gateLink) in _logicModelsMap)
-                {
-                    foreach (var (portModel, portLink) in gateLink.PortsMap)
-                    {
-                        if (connectionPoint.First == portLink.ViewModel.AbsoluteLocation)
-                        {
-                            firstPorts.Add(portModel);
-                        }
-                        else if (connectionPoint.Last == portLink.ViewModel.AbsoluteLocation)
-                        {
-                            lastPorts.Add(portModel);
-                        }
-                    }
-                }
-
-                if (firstPorts.Count != 1)
-                    throw new InvalidOperationException();
-
-                if (lastPorts.Count != 1)
-                    throw new InvalidOperationException();
-
-                InputPort inputPort;
-                OutputPort outputPort;
-
-                if (firstPorts[0] is InputPort inputPort0 && lastPorts[0] is OutputPort outputPort0)
-                {
-                    inputPort = inputPort0;
-                    outputPort = outputPort0;
-                }
-                else if (firstPorts[0] is OutputPort outputPort1 && lastPorts[0] is InputPort inputPort1)
-                {
-                    inputPort = inputPort1;
-                    outputPort = outputPort1;
-                }
-                else
-                {
-                    throw new InvalidOperationException();
-                }
-
-                var connection = new Connection(outputPort, inputPort);
-                _connections.Add(connection);
+                _logger.LogError("Scheme building has been stopped because of errors.");
+                return new LogicScheme(preprocessedLogicScheme, validationResults);
             }
 
-            var gateModels = _logicModelsMap.Keys.ToList();
+            if (validationResults.Any(x => x.Level == ValidationRuleLevel.Warning))
+            {
+                _logger.LogWarning("Scheme has been validated with some warnings.");
+            }
 
-            return new LogicScheme(gateModels, gateModels.OfType<InputGate>().ToList(), gateModels.OfType<OutputGate>().ToList(), [.. _connections], _logicModelsMap.ToDictionary());
+            var connections = new List<Connection>();
+
+            foreach (var group in preprocessedLogicScheme.Edges.GroupBy(x => x.Source))
+            {
+                var outputPort = (OutputPort)group.Key.LogicModel;
+                var inputPorts = group.Select(x => x.Recipient.LogicModel).Cast<InputPort>();
+                var connection = new Connection(outputPort, inputPorts);
+                connections.Add(connection);
+            }
+
+            sw.Stop();
+            _logger.LogInformation("Scheme has been successfully built in {ms:0.000} ms.", sw.Elapsed.TotalMilliseconds);
+
+            return new LogicScheme(preprocessedLogicScheme, connections, validationResults);
         }
         catch (Exception e)
         {
-            _logger.LogError("Error occupied while building scheme:\n{e}", e);
+            _logger.LogError("Unexpected error while building scheme:\n{e}", e);
             throw;
         }
-    }
-
-    public void CreateLogicModelFrom(InputGateViewModel gate)
-    {
-        var logicModel = new InputGate { Delay = gate.Delay };
-        var link = new GateLogicModelToViewModelLink(logicModel, gate, new Dictionary<BasePort, PortLogicModelToViewModelLink>
-        {
-            [logicModel.Output] = new(logicModel.Output, gate.OutputPort)
-        });
-        _logicModelsMap[logicModel] = link;
-    }
-
-    public void CreateLogicModelFrom(OutputGateViewModel gate)
-    {
-        var logicModel = new OutputGate { Delay = gate.Delay };
-        var link = new GateLogicModelToViewModelLink(logicModel, gate, new Dictionary<BasePort, PortLogicModelToViewModelLink>
-        {
-            [logicModel.Input] = new(logicModel.Input, gate.InputPort)
-        });
-        _logicModelsMap[logicModel] = link;
-    }
-
-    public void CreateLogicModelFrom(AndGateViewModel gate)
-    {
-        var logicModel = new AndGate { InputPortsCount = gate.InputPorts.Count(), Delay = gate.Delay };
-        var link = new GateLogicModelToViewModelLink(logicModel, gate, []);
-        var inputPorts = gate.InputPorts.ToList();
-
-        for (var i = 0; i < inputPorts.Count; i++)
-        {
-            link.PortsMap[logicModel.Inputs[i]] = new PortLogicModelToViewModelLink(logicModel.Inputs[i], inputPorts[i]);
-        }
-
-        link.PortsMap[logicModel.Output] = new PortLogicModelToViewModelLink(logicModel.Output, gate.OutputPort);
-
-        _logicModelsMap[logicModel] = link;
     }
 }

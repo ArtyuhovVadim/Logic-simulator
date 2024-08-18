@@ -76,45 +76,7 @@ public class SchemeSimulatorService : ISchemeSimulatorService
         _additionalSimulationTime = settings.AdditionalSimulationTime;
         _simulationResult = [];
 
-        _simulationTask = Task.Run(() =>
-        {
-            try
-            {
-                _simulator.Reset();
-                _simulator.InvalidateInputs(scheme.InputGates);
-
-                while (!token.IsCancellationRequested)
-                {
-                    while ((_simulator.EventsCount > 0 || _additionalSimulationTime > 0) &&
-                           _simulator.CurrentTime < _settings.MaxTime)
-                    {
-                        if (_settings.IsPauseSupported)
-                            _simulationStepResetEvent.Wait(token);
-
-                        token.ThrowIfCancellationRequested();
-                        _simulator.SimulateStep();
-
-                        if (_simulator.EventsCount == 0)
-                            _additionalSimulationTime--;
-                    }
-
-                    token.ThrowIfCancellationRequested();
-                    _logger.LogInformation("Simulation thread is waiting... (CurrentTime: {CurrentTime})", _simulator.CurrentTime);
-                    _simulationResetEvent.Wait(token);
-                    _simulationResetEvent.Reset();
-                }
-            }
-            catch (OperationCanceledException)
-            {
-                _logger.LogInformation("Simulation cancelled (CurrentTime: {CurrentTime})", _simulator.CurrentTime);
-            }
-            catch (Exception e)
-            {
-                _logger.LogError("Simulation error (CurrentTime: {CurrentTime}):\n{e}", _simulator.CurrentTime, e);
-                throw;
-            }
-        }, token);
-
+        _simulationTask = Task.Run(() => SimulationTaskAction(scheme, token), token);
         State = settings.IsPausedOnStart ? SimulationState.Paused : SimulationState.Started;
     }
 
@@ -189,37 +151,78 @@ public class SchemeSimulatorService : ISchemeSimulatorService
         }
     }
 
+    private void SimulationTaskAction(LogicScheme scheme, CancellationToken token)
+    {
+        try
+        {
+            _simulator.Reset();
+            _simulator.InvalidateInputs(scheme.InputGateLogicModels);
+
+            while (!token.IsCancellationRequested)
+            {
+                while ((_simulator.EventsCount > 0 || _additionalSimulationTime > 0) &&
+                       _simulator.CurrentTime < _settings.MaxTime)
+                {
+                    if (_settings.IsPauseSupported)
+                        _simulationStepResetEvent.Wait(token);
+
+                    token.ThrowIfCancellationRequested();
+                    _simulator.SimulateStep();
+
+                    if (_simulator.EventsCount == 0)
+                        _additionalSimulationTime--;
+                }
+
+                token.ThrowIfCancellationRequested();
+                _logger.LogInformation("Simulation thread is waiting... (CurrentTime: {CurrentTime})", _simulator.CurrentTime);
+                _simulationResetEvent.Wait(token);
+                _simulationResetEvent.Reset();
+            }
+        }
+        catch (OperationCanceledException)
+        {
+            _logger.LogInformation("Simulation cancelled (CurrentTime: {CurrentTime})", _simulator.CurrentTime);
+        }
+        catch (Exception e)
+        {
+            _logger.LogError("Simulation error (CurrentTime: {CurrentTime}):\n{e}", _simulator.CurrentTime, e);
+            throw;
+        }
+    }
+
     private void AddCurrentStatesToResultIfNotPresent()
     {
         _lockSlim.EnterWriteLock();
         try
         {
-            foreach (var inputGate in _scheme!.InputGates)
+            foreach (var inputGate in _scheme!.InputGateNodes)
             {
-                var inputGateViewModel = _scheme.GatesMap[inputGate].ViewModel;
+                var inputGateModel = inputGate.GateModel;
+                var inputGateLogicModel = inputGate.LogicModel;
 
-                if (!_simulationResult.TryGetValue(inputGateViewModel.Name, out var result))
+                if (!_simulationResult.TryGetValue(inputGateModel.Name, out var result))
                 {
-                    result = new PortSimulationResult(inputGateViewModel.Name);
-                    _simulationResult[inputGateViewModel.Name] = result;
+                    result = new PortSimulationResult(inputGateModel.Name);
+                    _simulationResult[inputGateModel.Name] = result;
                 }
 
-                if (result.States.Count == 0 || result.States.Last().State != inputGate.Output.State)
-                    result.States.Add(new PortState(_simulator.CurrentTime, inputGate.Output.State));
+                if (result.States.Count == 0 || result.States.Last().State != inputGateLogicModel.Output.State)
+                    result.States.Add(new PortState(_simulator.CurrentTime, inputGateLogicModel.Output.State));
             }
 
-            foreach (var outputGate in _scheme.OutputGates)
+            foreach (var outputGate in _scheme.OutputGateNodes)
             {
-                var outputGateViewModel = _scheme.GatesMap[outputGate].ViewModel;
+                var outputGateModel = outputGate.GateModel;
+                var outputGateLogicModel = outputGate.LogicModel;
 
-                if (!_simulationResult.TryGetValue(outputGateViewModel.Name, out var result))
+                if (!_simulationResult.TryGetValue(outputGateModel.Name, out var result))
                 {
-                    result = new PortSimulationResult(outputGateViewModel.Name);
-                    _simulationResult[outputGateViewModel.Name] = result;
+                    result = new PortSimulationResult(outputGateModel.Name);
+                    _simulationResult[outputGateModel.Name] = result;
                 }
 
-                if (result.States.Count == 0 || result.States.Last().State != outputGate.Input.State)
-                    result.States.Add(new PortState(_simulator.CurrentTime, outputGate.Input.State));
+                if (result.States.Count == 0 || result.States.Last().State != outputGateLogicModel.Input.State)
+                    result.States.Add(new PortState(_simulator.CurrentTime, outputGateLogicModel.Input.State));
             }
         }
         finally
@@ -233,37 +236,39 @@ public class SchemeSimulatorService : ISchemeSimulatorService
         _lockSlim.EnterWriteLock();
         try
         {
-            foreach (var inputGate in _scheme!.InputGates)
+            foreach (var inputGate in _scheme!.InputGateNodes)
             {
-                var inputGateViewModel = _scheme.GatesMap[inputGate].ViewModel;
+                var inputGateModel = inputGate.GateModel;
+                var inputGateLogicModel = inputGate.LogicModel;
 
-                if (!_simulationResult.TryGetValue(inputGateViewModel.Name, out var result))
+                if (!_simulationResult.TryGetValue(inputGateModel.Name, out var result))
                 {
-                    result = new PortSimulationResult(inputGateViewModel.Name);
-                    _simulationResult[inputGateViewModel.Name] = result;
+                    result = new PortSimulationResult(inputGateModel.Name);
+                    _simulationResult[inputGateModel.Name] = result;
                 }
 
-                var newState = new PortState(_simulator.CurrentTime, inputGate.Output.State);
+                var newState = new PortState(_simulator.CurrentTime, inputGateLogicModel.Output.State);
 
-                if (result.States.Count > 1 && result.States[^2].State == inputGate.Output.State)
+                if (result.States.Count > 1 && result.States[^2].State == inputGateLogicModel.Output.State)
                     result.States[^1] = newState;
                 else
                     result.States.Add(newState);
             }
 
-            foreach (var outputGate in _scheme.OutputGates)
+            foreach (var outputGate in _scheme.OutputGateNodes)
             {
-                var outputGateViewModel = _scheme.GatesMap[outputGate].ViewModel;
+                var outputGateModel = outputGate.GateModel;
+                var outputGateLogicModel = outputGate.LogicModel;
 
-                if (!_simulationResult.TryGetValue(outputGateViewModel.Name, out var result))
+                if (!_simulationResult.TryGetValue(outputGateModel.Name, out var result))
                 {
-                    result = new PortSimulationResult(outputGateViewModel.Name);
-                    _simulationResult[outputGateViewModel.Name] = result;
+                    result = new PortSimulationResult(outputGateModel.Name);
+                    _simulationResult[outputGateModel.Name] = result;
                 }
 
-                var newState = new PortState(_simulator.CurrentTime, outputGate.Input.State);
+                var newState = new PortState(_simulator.CurrentTime, outputGateLogicModel.Input.State);
 
-                if (result.States.Count > 1 && result.States[^2].State == outputGate.Input.State)
+                if (result.States.Count > 1 && result.States[^2].State == outputGateLogicModel.Input.State)
                     result.States[^1] = newState;
                 else
                     result.States.Add(newState);

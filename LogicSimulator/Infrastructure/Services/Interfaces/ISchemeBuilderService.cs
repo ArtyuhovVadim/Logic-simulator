@@ -1,16 +1,12 @@
-﻿using LogicSimulator.Models.Logic;
-using LogicSimulator.ViewModels.Logic.Gates;
-using LogicSimulator.ViewModels.Objects.Base;
+﻿using LogicSimulator.Infrastructure.SchemeValidation.Base;
+using LogicSimulator.Models.Logic;
+using LogicSimulator.ViewModels.Anchorable;
 
 namespace LogicSimulator.Infrastructure.Services.Interfaces;
 
 public interface ISchemeBuilderService
 {
-    LogicScheme BuildFromViewModels(IEnumerable<BaseObjectViewModel> objects);
+    void AddValidationRule(ISchemeValidationRule rule);
 
-    void CreateLogicModelFrom(InputGateViewModel gate);
-
-    void CreateLogicModelFrom(OutputGateViewModel gate);
-
-    void CreateLogicModelFrom(AndGateViewModel gate);
+    LogicScheme BuildFromSchemeViewModel(SchemeViewModel scheme);
 }
