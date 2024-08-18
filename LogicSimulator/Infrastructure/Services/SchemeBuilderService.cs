@@ -40,7 +40,7 @@ public class SchemeBuilderService : ISchemeBuilderService
                 return new LogicScheme(preprocessedLogicScheme, validationResults);
             }
 
-            if (validationResults.Any(x => x.Level == ValidationRuleLevel.Warning))
+            if (validationResults.Any(x => x is { Level: ValidationRuleLevel.Warning, IsValid: false }))
             {
                 _logger.LogWarning("Scheme has been validated with some warnings.");
             }
