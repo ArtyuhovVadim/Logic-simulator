@@ -49,6 +49,7 @@
                                   Mode=TwoWay}">
 
             <DataPiping.DataPipes>
+                <DataPipe Source="{Binding ElementName=Scene2D, Path=PixelSize}" Target="{Binding Path=ViewportSize, Mode=OneWayToSource}" />
                 <DataPipe Source="{Binding ElementName=Scene2D, Path=MousePosition}" Target="{Binding Path=MousePosition, Mode=OneWayToSource}" />
                 <DataPipe Source="{Binding ElementName=ObjectsLayer}" Target="{Binding Path=HitTester, Mode=OneWayToSource}" />
             </DataPiping.DataPipes>

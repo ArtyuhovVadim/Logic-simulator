@@ -131,6 +131,18 @@ public class SchemeViewModel : DocumentViewModel, IModelBased<Scheme>, ICloseabl
 
     #endregion
 
+    #region ViewportSize
+
+    private Size2F _viewportSize;
+
+    public Size2F ViewportSize
+    {
+        get => _viewportSize;
+        set => Set(ref _viewportSize, value);
+    }
+
+    #endregion
+
     #region MousePosition
 
     private Vector2 _mousePosition = Vector2.Zero;
@@ -232,15 +244,7 @@ public class SchemeViewModel : DocumentViewModel, IModelBased<Scheme>, ICloseabl
 
     private ICommand? _selectAllObjectsCommand;
 
-    public ICommand SelectAllObjectsCommand => _selectAllObjectsCommand ??= new LambdaCommand(() =>
-    {
-        foreach (var obj in Objects)
-        {
-            obj.IsSelected = true;
-        }
-
-        SelectedObjectsChanged();
-    }, () => ToolsViewModel.IsDefaultToolSelected);
+    public ICommand SelectAllObjectsCommand => _selectAllObjectsCommand ??= new LambdaCommand(SelectAllObjects, () => ToolsViewModel.IsDefaultToolSelected);
 
     #endregion
 
@@ -364,6 +368,75 @@ public class SchemeViewModel : DocumentViewModel, IModelBased<Scheme>, ICloseabl
     #endregion
 
     public Dictionary<string, PortSimulationResult> GetSimulationResult() => _schemeSimulatorService.GetSimulationResult();
+
+    public void PanToObjectsAndSelect(ICollection<BaseObjectViewModel> objects)
+    {
+        var bounds = objects.Select(HitTester.GetFromContext).ToArray();
+
+        if (bounds.Length == 0 || bounds.Any(x => x is null))
+            return;
+
+        var point = bounds.Length switch
+        {
+            1 => bounds[0]!.WorldBounds.Center,
+            _ => bounds.Aggregate(bounds[0]!.WorldBounds, (rect, obj) => RectangleF.Union(rect, obj!.WorldBounds)).Center
+        };
+
+        SetViewportCenterPoint(point);
+
+        DeselectAllObjects();
+        foreach (var obj in objects)
+            obj.IsSelected = true;
+        SelectedObjectsChanged();
+    }
+
+    public void PanToObjectsAndSelect(ICollection<BaseObjectModel> objects)
+    {
+        var objectsMap = Objects.ToDictionary(x => x.Model);
+        PanToObjectsAndSelect(objects.Select(obj => objectsMap[obj]).ToArray());
+    }
+
+    public void PanToObjectAndSelect(BaseObjectViewModel obj)
+    {
+        var hitTestable = HitTester.GetFromContext(obj);
+
+        if (hitTestable is null)
+            return;
+
+        SetViewportCenterPoint(hitTestable.WorldBounds.Center);
+
+        DeselectAllObjects();
+        obj.IsSelected = true;
+        SelectedObjectsChanged();
+    }
+
+    public void PanToObjectAndSelect(BaseObjectModel obj)
+    {
+        var viewModel = Objects.First(x => x.Model == obj);
+        PanToObjectAndSelect(viewModel);
+    }
+
+    public void SetViewportCenterPoint(Vector2 point)
+    {
+        var viewportSize = new Vector2(ViewportSize.Width, ViewportSize.Height);
+        Translation = viewportSize / 2f - point * Scale;
+    }
+
+    public void SelectAllObjects()
+    {
+        foreach (var obj in Objects)
+            obj.IsSelected = true;
+
+        SelectedObjectsChanged();
+    }
+
+    public void DeselectAllObjects()
+    {
+        foreach (var obj in Objects)
+            obj.IsSelected = false;
+
+        SelectedObjectsChanged();
+    }
 
     public void SelectedObjectsChanged() => OnSelectedObjectsChanged();
 
