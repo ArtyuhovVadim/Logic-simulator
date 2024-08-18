@@ -1,4 +1,4 @@
-﻿namespace LogicSimulator.Models.Common;
+﻿namespace LogicSimulator.Models.MessageSources;
 
 public class CommonMessageSource : IMessageSource
 {
@@ -6,7 +6,7 @@ public class CommonMessageSource : IMessageSource
 
     public CommonMessageSource(string name) => Name = name;
 
-    public CommonMessageSource(Action goToFunc, string name) : this(name) => _goToFunc = goToFunc;
+    public CommonMessageSource(string name, Action goToFunc) : this(name) => _goToFunc = goToFunc;
 
     public string Name { get; }
 

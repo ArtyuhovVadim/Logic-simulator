@@ -2,16 +2,16 @@
     x:Class="LogicSimulator.Views.Anchorable.MessagesOutputView"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:avm="clr-namespace:LogicSimulator.ViewModels.Anchorable"
     xmlns:b="http://schemas.microsoft.com/xaml/behaviors"
     xmlns:behaviors="clr-namespace:LogicSimulator.Infrastructure.Behaviors"
     xmlns:brushes="clr-namespace:WpfExtensions.Controls.Resources.Brushes;assembly=WpfExtensions.Controls"
     xmlns:commands="clr-namespace:LogicSimulator.Infrastructure.Commands"
+    xmlns:common="clr-namespace:LogicSimulator.ViewModels.Common"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:logicSimulator="clr-namespace:LogicSimulator"
     xmlns:lsbk="clr-namespace:LogicSimulator.Resources.Brushes"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    xmlns:avm="clr-namespace:LogicSimulator.ViewModels.Anchorable"
-    xmlns:common="clr-namespace:LogicSimulator.ViewModels.Common"
     d:DataContext="{d:DesignInstance Type=avm:MessagesOutputViewModel}"
     d:DesignHeight="450"
     d:DesignWidth="800"
@@ -66,7 +66,7 @@
                     <ToggleButton.Content>
                         <StackPanelEx Gap="5" Orientation="Horizontal">
                             <Grid>
-                                <Rectangle Margin="5,2,5,2" Fill="{DynamicResource {x:Static lsbk:BrushesKeys+MessagesOutputView.BackgroundIconBrush}}" />
+                                <Rectangle Margin="5,4,5,2" Fill="{DynamicResource {x:Static lsbk:BrushesKeys+MessagesOutputView.BackgroundIconBrush}}" />
                                 <Path Data="{StaticResource ExclamationTriangleIcon}" Fill="{DynamicResource {x:Static lsbk:BrushesKeys+MessagesOutputView.WarningIconBrush}}" />
                             </Grid>
                             <TextBlock Text="Предупреждения" />
@@ -78,7 +78,7 @@
                     <ToggleButton.Content>
                         <StackPanelEx Gap="5" Orientation="Horizontal">
                             <Grid>
-                                <Rectangle Margin="5,2,5,2" Fill="{DynamicResource {x:Static lsbk:BrushesKeys+MessagesOutputView.BackgroundIconBrush}}" />
+                                <Rectangle Margin="3" Fill="{DynamicResource {x:Static lsbk:BrushesKeys+MessagesOutputView.BackgroundIconBrush}}" />
                                 <Path Data="{StaticResource InfoCircleIcon}" Fill="{DynamicResource {x:Static lsbk:BrushesKeys+MessagesOutputView.InformationIconBrush}}" />
                             </Grid>
                             <TextBlock Text="Сообщения" />
@@ -202,14 +202,11 @@
                     SortMemberPath="Type">
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate DataType="{x:Type common:OutputMessageViewModel}">
-                            <Grid Margin="3">
-                                <Ellipse
-                                    x:Name="Ellipse"
-                                    Width="10"
-                                    Height="10"
-                                    HorizontalAlignment="Center"
-                                    VerticalAlignment="Center"
-                                    Fill="{DynamicResource {x:Static lsbk:BrushesKeys+MessagesOutputView.BackgroundIconBrush}}" />
+                            <Grid
+                                Margin="3"
+                                HorizontalAlignment="Center"
+                                VerticalAlignment="Center">
+                                <Rectangle x:Name="Rectangle" Fill="{DynamicResource {x:Static lsbk:BrushesKeys+MessagesOutputView.BackgroundIconBrush}}" />
                                 <Path
                                     x:Name="Path"
                                     Width="13"
@@ -222,20 +219,22 @@
                                 <DataTrigger Binding="{Binding Path=Type}" Value="Information">
                                     <Setter TargetName="Path" Property="Data" Value="{StaticResource InfoCircleIcon}" />
                                     <Setter TargetName="Path" Property="Fill" Value="{DynamicResource {x:Static lsbk:BrushesKeys+MessagesOutputView.InformationIconBrush}}" />
+                                    <Setter TargetName="Rectangle" Property="Margin" Value="3,2" />
                                 </DataTrigger>
                                 <DataTrigger Binding="{Binding Path=Type}" Value="Warning">
                                     <Setter TargetName="Path" Property="Data" Value="{StaticResource ExclamationTriangleIcon}" />
                                     <Setter TargetName="Path" Property="Fill" Value="{DynamicResource {x:Static lsbk:BrushesKeys+MessagesOutputView.WarningIconBrush}}" />
-                                    <Setter TargetName="Ellipse" Property="Margin" Value="4,3,4,2" />
+                                    <Setter TargetName="Rectangle" Property="Margin" Value="5,4,5,2" />
                                 </DataTrigger>
                                 <DataTrigger Binding="{Binding Path=Type}" Value="Error">
                                     <Setter TargetName="Path" Property="Data" Value="{StaticResource ErrorIcon}" />
                                     <Setter TargetName="Path" Property="Fill" Value="{DynamicResource {x:Static lsbk:BrushesKeys+MessagesOutputView.ErrorIconBrush}}" />
+                                    <Setter TargetName="Rectangle" Property="Margin" Value="3" />
                                 </DataTrigger>
                                 <DataTrigger Binding="{Binding Path=Type}" Value="Debug">
                                     <Setter TargetName="Path" Property="Data" Value="{StaticResource DebugIcon}" />
                                     <Setter TargetName="Path" Property="Fill" Value="#EDAE27" />
-                                    <Setter TargetName="Ellipse" Property="Visibility" Value="Collapsed" />
+                                    <Setter TargetName="Rectangle" Property="Visibility" Value="Collapsed" />
                                 </DataTrigger>
                             </DataTemplate.Triggers>
                         </DataTemplate>
@@ -292,7 +291,7 @@
 
                 <DataGridTemplateColumn
                     Width="Auto"
-                    CanUserSort="True"
+                    CanUserSort="False"
                     Header="Источник"
                     IsReadOnly="True"
                     SortMemberPath="Source">

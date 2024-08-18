@@ -1,6 +1,7 @@
 ﻿using System.Windows;
 using LogicSimulator.Infrastructure.Services.Interfaces;
 using LogicSimulator.Models.Common;
+using LogicSimulator.Models.MessageSources;
 using LogicSimulator.ViewModels.Anchorable;
 using LogicSimulator.ViewModels.Common;
 
@@ -12,6 +13,10 @@ public class OutputMessagesService : IOutputMessagesService
 
     public OutputMessagesService(MessagesOutputViewModel messagesOutputViewModel) => _messagesOutputViewModel = messagesOutputViewModel;
 
+    public void AddMessage(OutputMessageViewModel message) => Application.Current.Dispatcher.BeginInvoke(() => _messagesOutputViewModel.Messages.Add(message));
+
+    public void AddMessage(string text, MessageType messageType) => AddMessage(text, messageType, null);
+
     public void AddErrorMessage(string text) => AddErrorMessage(text, null);
 
     public void AddWarningMessage(string text) => AddWarningMessage(text, null);
@@ -19,6 +24,8 @@ public class OutputMessagesService : IOutputMessagesService
     public void AddInfoMessage(string text) => AddInfoMessage(text, null);
 
     public void AddDebugMessage(string text) => AddDebugMessage(text, null);
+
+    public void AddMessage(string text, MessageType messageType, IMessageSource? source) => AddMessage(new OutputMessageViewModel { Text = text, Type = messageType, Time = DateTime.Now, Source = source });
 
     public void AddErrorMessage(string text, IMessageSource? source) => AddMessage(new OutputMessageViewModel { Text = text, Type = MessageType.Error, Time = DateTime.Now, Source = source });
 
@@ -34,6 +41,4 @@ public class OutputMessagesService : IOutputMessagesService
     }
 
     public void ClearMessages() => Application.Current.Dispatcher.BeginInvoke(() => _messagesOutputViewModel.Messages.Clear());
-
-    private void AddMessage(OutputMessageViewModel message) => Application.Current.Dispatcher.BeginInvoke(() => _messagesOutputViewModel.Messages.Add(message));
 }

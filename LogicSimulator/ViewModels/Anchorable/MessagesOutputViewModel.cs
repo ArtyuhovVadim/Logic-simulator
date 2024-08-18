@@ -1,6 +1,7 @@
 ﻿using System.ComponentModel;
 using System.Windows.Data;
 using LogicSimulator.Models.Common;
+using LogicSimulator.Models.MessageSources;
 using LogicSimulator.ViewModels.Anchorable.Base;
 using LogicSimulator.ViewModels.Common;
 using WpfExtensions.Mvvm.Commands;

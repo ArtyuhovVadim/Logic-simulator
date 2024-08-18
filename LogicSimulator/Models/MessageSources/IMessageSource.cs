@@ -1,4 +1,4 @@
-﻿namespace LogicSimulator.Models.Common;
+﻿namespace LogicSimulator.Models.MessageSources;
 
 public interface IMessageSource
 {

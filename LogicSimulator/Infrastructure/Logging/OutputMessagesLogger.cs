@@ -1,5 +1,5 @@
 ﻿using LogicSimulator.Infrastructure.Services.Interfaces;
-using LogicSimulator.Models.Common;
+using LogicSimulator.Models.MessageSources;
 using Microsoft.Extensions.Logging;
 
 namespace LogicSimulator.Infrastructure.Logging;

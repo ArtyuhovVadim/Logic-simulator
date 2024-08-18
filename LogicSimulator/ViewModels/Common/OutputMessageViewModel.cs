@@ -1,10 +1,27 @@
-﻿using LogicSimulator.Models.Common;
+﻿using LogicSimulator.Infrastructure.ExtensionMethods;
+using LogicSimulator.Infrastructure.SchemeValidation.Base;
+using LogicSimulator.Models.Common;
+using LogicSimulator.Models.MessageSources;
 using WpfExtensions.Mvvm;
 
 namespace LogicSimulator.ViewModels.Common;
 
 public class OutputMessageViewModel : BindableBase
 {
+    public OutputMessageViewModel() { }
+
+    public OutputMessageViewModel(string text, ValidationRuleLevel level, IMessageSource? source) : this(text, level.ToMessageType(), DateTime.Now, source) { }
+
+    public OutputMessageViewModel(string text, MessageType type, IMessageSource? source) : this(text, type, DateTime.Now, source) { }
+
+    public OutputMessageViewModel(string text, MessageType type, DateTime time, IMessageSource? source)
+    {
+        _text = text;
+        _type = type;
+        _time = time;
+        _source = source;
+    }
+
     #region Type
 
     private MessageType _type = MessageType.Information;
