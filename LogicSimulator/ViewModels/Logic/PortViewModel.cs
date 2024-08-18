@@ -1,5 +1,4 @@
 ﻿using LogicSimulator.Core;
-using LogicSimulator.Infrastructure.ExtensionMethods;
 using LogicSimulator.Models.Common;
 using LogicSimulator.Models.Logic;
 using LogicSimulator.ViewModels.Logic.Gates.Base;
@@ -20,7 +19,7 @@ public class PortViewModel : BaseObjectViewModel, IModelBased<PortModel>
 
     public BaseGateViewModel Parent { get; }
 
-    public Vector2 AbsoluteLocation => Parent.Location + (Location + new Vector2(Length, 0).Transform(Rotation)).Transform(Parent.Rotation);
+    public Vector2 AbsoluteLocation => Model.AbsoluteLocation;
 
     #region Name
 

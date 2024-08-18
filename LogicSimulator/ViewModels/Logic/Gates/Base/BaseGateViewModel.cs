@@ -1,5 +1,4 @@
 ﻿using System.Windows.Media;
-using LogicSimulator.Infrastructure.Services;
 using LogicSimulator.Models.Logic.Gates.Base;
 using LogicSimulator.Scene.Models;
 using LogicSimulator.ViewModels.Objects.Base;
@@ -125,8 +124,6 @@ public abstract class BaseGateViewModel : BaseObjectViewModel
     }
 
     #endregion
-
-    public abstract void AcceptSchemeBuilder(SchemeBuilderService builder);
 
     protected abstract void OnSizeChanged();
 }

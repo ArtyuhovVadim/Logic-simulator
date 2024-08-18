@@ -1,5 +1,4 @@
 ﻿using LogicSimulator.Infrastructure.Collections;
-using LogicSimulator.Infrastructure.ExtensionMethods;
 using LogicSimulator.Models.Common;
 using LogicSimulator.Models.Logic;
 using LogicSimulator.Scene.Models;
@@ -22,7 +21,7 @@ public class WireViewModel : BaseObjectViewModel, ISegmentedObject
 
     public override WireModel Model { get; }
 
-    public IEnumerable<Vector2> AbsoluteVertexes => [Location, .. Vertexes.Select(x => Location + x.Transform(Rotation))];
+    public IReadOnlyList<Vector2> AbsoluteVertexes => Model.AbsoluteVertexes;
 
     #region Vertexes
 

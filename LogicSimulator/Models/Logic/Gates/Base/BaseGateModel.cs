@@ -1,6 +1,8 @@
-﻿using LogicSimulator.Models.Objects.Base;
+﻿using LogicSimulator.Infrastructure.Services.Interfaces;
+using LogicSimulator.Models.Objects.Base;
 using LogicSimulator.Scene.Models;
 using System.Windows.Media;
+using YamlDotNet.Serialization;
 
 namespace LogicSimulator.Models.Logic.Gates.Base;
 
@@ -19,4 +21,15 @@ public abstract class BaseGateModel : BaseObjectModel
     public ulong Delay { get; set; }
 
     public float Scale { get; set; } = 1f;
+
+    [YamlIgnore]
+    public IEnumerable<PortModel> Ports => InputPorts.Concat(OutputPorts);
+
+    [YamlIgnore]
+    public virtual IEnumerable<PortModel> InputPorts => [];
+
+    [YamlIgnore]
+    public virtual IEnumerable<PortModel> OutputPorts => [];
+
+    public abstract void Accept(IGateModelVisitor visitor);
 }

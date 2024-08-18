@@ -15,7 +15,7 @@ public abstract class SimpleGateViewModel : BaseGateViewModel
     {
         _model = model;
         OutputPort = new PortViewModel(model.OutputPort, this);
-        _inputPorts = new ObservableCollectionEx<PortViewModel, PortModel>(model.InputPorts, portModel => new PortViewModel(portModel, this));
+        _inputPorts = new ObservableCollectionEx<PortViewModel, PortModel>(model.InputPortsList, portModel => new PortViewModel(portModel, this));
         _inputPorts.CollectionChanged += OnInputPortsCollectionChanged;
     }
 
@@ -42,7 +42,7 @@ public abstract class SimpleGateViewModel : BaseGateViewModel
                 {
                     for (var i = 0; i < value - tmp; i++)
                     {
-                        _inputPorts.Add(new PortModel());
+                        _inputPorts.Add(new PortModel(Model));
                     }
                 }
                 else
@@ -52,6 +52,12 @@ public abstract class SimpleGateViewModel : BaseGateViewModel
                         _inputPorts.RemoveAt(_inputPorts.Count - 1);
                     }
                 }
+
+                for (var i = 0; i < _inputPorts.Count; i++)
+                {
+                    _inputPorts[i].Name = $"IN{i}";
+                }
+
                 OnPropertyChanged();
             }
         }
