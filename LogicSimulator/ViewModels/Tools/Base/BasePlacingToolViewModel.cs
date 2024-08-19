@@ -1,4 +1,4 @@
-﻿using LogicSimulator.Infrastructure.Tools;
+﻿using LogicSimulator.Models.Input;
 using LogicSimulator.ViewModels.Anchorable;
 using LogicSimulator.ViewModels.Objects.Base;
 using SharpDX;

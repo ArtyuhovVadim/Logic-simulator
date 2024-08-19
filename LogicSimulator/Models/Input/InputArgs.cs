@@ -1,5 +1,5 @@
 ﻿using SharpDX;
 
-namespace LogicSimulator.Infrastructure.Tools;
+namespace LogicSimulator.Models.Input;
 
 public record InputArgs(Vector2 Position);

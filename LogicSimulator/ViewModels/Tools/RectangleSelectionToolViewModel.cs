@@ -1,4 +1,4 @@
-﻿using LogicSimulator.Infrastructure.Tools;
+﻿using LogicSimulator.Models.Input;
 using LogicSimulator.Shared.ExtensionMethods;
 using LogicSimulator.Shared.Models;
 using LogicSimulator.ViewModels.Anchorable;

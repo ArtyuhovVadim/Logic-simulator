@@ -1,5 +1,5 @@
 ﻿using System.Windows;
-using LogicSimulator.Infrastructure.Tools;
+using LogicSimulator.Models.Input;
 using LogicSimulator.Scene;
 using Microsoft.Xaml.Behaviors;
 using SharpDX;

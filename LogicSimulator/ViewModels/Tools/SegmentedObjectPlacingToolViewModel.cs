@@ -1,5 +1,5 @@
-﻿using LogicSimulator.Infrastructure.Tools;
-using LogicSimulator.Models.Common;
+﻿using LogicSimulator.Models.Common;
+using LogicSimulator.Models.Input;
 using LogicSimulator.Shared.ExtensionMethods;
 using LogicSimulator.ViewModels.Anchorable;
 using LogicSimulator.ViewModels.Objects.Base;

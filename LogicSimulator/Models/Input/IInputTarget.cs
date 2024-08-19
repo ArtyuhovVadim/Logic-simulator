@@ -1,18 +1,7 @@
-﻿using LogicSimulator.Infrastructure.Services.Interfaces;
-using LogicSimulator.ViewModels.Tools;
+﻿namespace LogicSimulator.Models.Input;
 
-namespace LogicSimulator.Infrastructure.Tools;
-
-public interface ITool
+public interface IInputTarget
 {
-    string Name { get; }
-
-    ToolGroup Group { get; }
-
-    void Activate(IToolSwitcherService toolSwitcher, bool activatedFromOtherTool);
-
-    void Deactivate();
-
     void MouseLeftButtonDown(InputArgs args);
 
     void MouseLeftButtonDragged(DragInputArgs args);

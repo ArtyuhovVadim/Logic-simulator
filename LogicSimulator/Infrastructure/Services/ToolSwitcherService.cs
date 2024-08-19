@@ -1,5 +1,5 @@
 ﻿using LogicSimulator.Infrastructure.Services.Interfaces;
-using LogicSimulator.Infrastructure.Tools;
+using LogicSimulator.Models.Input;
 
 namespace LogicSimulator.Infrastructure.Services;
 

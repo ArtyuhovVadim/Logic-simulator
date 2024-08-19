@@ -1,5 +1,5 @@
 ﻿using SharpDX;
 
-namespace LogicSimulator.Infrastructure.Tools;
+namespace LogicSimulator.Models.Input;
 
 public record WheelInputArgs(Vector2 Position, float Delta) : InputArgs(Position);
