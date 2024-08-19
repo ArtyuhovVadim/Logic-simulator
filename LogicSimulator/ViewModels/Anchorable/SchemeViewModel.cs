@@ -62,6 +62,7 @@ public class SchemeViewModel : DocumentViewModel, IModelBased<Scheme>, ICloseabl
 
         ToolsViewModel = new SchemeToolsViewModel(this, _toolSwitcherService);
         ToolsViewModel.DragTool.GridStep = GridStep;
+        ToolsViewModel.NodeDragTool.GridStep = GridStep;
 
         IconSource = new Uri("pack://application:,,,/Resources/Icons/scheme-icon16x16.png");
         base.Title = Model.FileInfo?.Name ?? throw new InvalidOperationException();
