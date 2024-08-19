@@ -13,4 +13,12 @@ public static class Vector2ExtensionMethods
         Rotation.Degrees270 => new Vector2(vector.Y, -vector.X),
         _ => throw new ArgumentOutOfRangeException(nameof(rotation), rotation, null)
     };
+
+    public static string ToStrInMm(this Vector2 vector)
+    {
+        const double factor = Constants.MillimetreToPixelFactor;
+        const string suffix = Constants.MillimetreSuffix;
+
+        return $"X:{vector.X / factor}{suffix}, Y:{vector.Y / factor}{suffix}";
+    }
 }

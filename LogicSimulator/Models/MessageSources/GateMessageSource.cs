@@ -1,4 +1,5 @@
-﻿using LogicSimulator.Models.Logic.Gates.Base;
+﻿using LogicSimulator.Infrastructure.ExtensionMethods;
+using LogicSimulator.Models.Logic.Gates.Base;
 using LogicSimulator.Shared.ExtensionMethods;
 using LogicSimulator.ViewModels.Anchorable;
 
@@ -15,7 +16,7 @@ public class GateMessageSource : IMessageSource
         _gate = gate;
     }
 
-    public string Name => $"Вентиль{_gate.Name.ReturnIfNotEmpty()}с позицией ({_gate.Location})";
+    public string Name => $"Вентиль{_gate.Name.ReturnIfNotEmpty()}с позицией ({_gate.Location.ToStrInMm()})";
 
     public void GoTo() => _scheme.PanToObjectAndSelect(_gate);
 }
