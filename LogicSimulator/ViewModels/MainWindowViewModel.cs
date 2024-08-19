@@ -13,7 +13,7 @@ using WpfExtensions.Mvvm.Messaging;
 
 namespace LogicSimulator.ViewModels;
 
-public class MainWindowViewModel : BindableBase, IRecipient<DocumentClosingMessage>
+public class MainWindowViewModel : BindableBase, IRecipient<DocumentClosingMessage>, IRecipient<DocumentOpenedMessage>
 {
     private readonly IUserDialogService _userDialogService;
     private readonly IProjectFileService _projectFileService;
@@ -22,11 +22,6 @@ public class MainWindowViewModel : BindableBase, IRecipient<DocumentClosingMessa
     private readonly IMessageBus _messageBus;
 
     private readonly DockingViewModel _dockingViewModel;
-
-    private readonly PropertiesViewModel _propertiesViewModel;
-    private readonly ProjectExplorerViewModel _projectExplorerViewModel;
-    private readonly MessagesOutputViewModel _messagesOutputViewModel;
-    private readonly TimelineViewModel _timelineViewModel;
 
     public MainWindowViewModel(
         IUserDialogService userDialogService,
@@ -47,21 +42,16 @@ public class MainWindowViewModel : BindableBase, IRecipient<DocumentClosingMessa
         _messageBus = messageBus;
 
         _dockingViewModel = dockingViewModel;
-        _propertiesViewModel = propertiesViewModel;
-        _projectExplorerViewModel = projectExplorerViewModel;
-        _messagesOutputViewModel = messagesOutputViewModel;
-        _timelineViewModel = timelineViewModel;
 
-        projectExplorerViewModel.SchemeOpened += OnSchemeOpened;
-
-        _dockingViewModel.AddToolViewModel(_propertiesViewModel, true);
-        _dockingViewModel.AddToolViewModel(_projectExplorerViewModel, true);
-        _dockingViewModel.AddToolViewModel(_timelineViewModel, true);
-        _dockingViewModel.AddToolViewModel(_messagesOutputViewModel, true);
+        _dockingViewModel.AddToolViewModel(propertiesViewModel, true);
+        _dockingViewModel.AddToolViewModel(projectExplorerViewModel, true);
+        _dockingViewModel.AddToolViewModel(timelineViewModel, true);
+        _dockingViewModel.AddToolViewModel(messagesOutputViewModel, true);
 
         _dockingViewModel.ActiveDocumentViewModelChanged += OnActiveDocumentViewModelChanged;
 
-        _messageBus.RegisterHandler(this, RefType.Strong);
+        _messageBus.RegisterHandler<DocumentOpenedMessage>(this, RefType.Strong);
+        _messageBus.RegisterHandler<DocumentClosingMessage>(this, RefType.Strong);
     }
 
     #region ActiveProjectViewModel
@@ -71,13 +61,7 @@ public class MainWindowViewModel : BindableBase, IRecipient<DocumentClosingMessa
     public ProjectViewModel? ActiveProjectViewModel
     {
         get => _activeProjectViewModel;
-        set
-        {
-            if (Set(ref _activeProjectViewModel, value))
-            {
-                _projectExplorerViewModel.ProjectViewModel = value;
-            }
-        }
+        set => Set(ref _activeProjectViewModel, value);
     }
 
     #endregion
@@ -94,7 +78,7 @@ public class MainWindowViewModel : BindableBase, IRecipient<DocumentClosingMessa
 
     #endregion
 
-    #region LoadExampleCommand
+    #region OpenFileCommand
 
     private ICommand? _openFileCommand;
 
@@ -132,6 +116,7 @@ public class MainWindowViewModel : BindableBase, IRecipient<DocumentClosingMessa
             _dockingViewModel.CloseAllDocumentsViewModel();
 
             ActiveProjectViewModel = projectViewModel;
+            _messageBus.Send(new ProjectLoadedMessage(projectViewModel));
         }
         catch (Exception e)
         {
@@ -180,9 +165,9 @@ public class MainWindowViewModel : BindableBase, IRecipient<DocumentClosingMessa
 
     #endregion
 
-    public void Receive(DocumentClosingMessage message) => _dockingViewModel.CloseDocumentViewModel(message.Document);
+    public void Receive(DocumentOpenedMessage message) => _dockingViewModel.AddOrSelectDocumentViewModel(message.Document);
 
-    private void OnSchemeOpened(SchemeViewModel scheme) => _dockingViewModel.AddOrSelectDocumentViewModel(scheme);
+    public void Receive(DocumentClosingMessage message) => _dockingViewModel.CloseDocumentViewModel(message.Document);
 
     private void OnActiveDocumentViewModelChanged(DocumentViewModel? oldDocument, DocumentViewModel? newDocument) => OnPropertyChanged(nameof(CurrentStatusViewModel));
 }

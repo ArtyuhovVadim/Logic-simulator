@@ -1,11 +1,19 @@
-﻿using LogicSimulator.ViewModels.Anchorable.Base;
+﻿using LogicSimulator.Infrastructure.Messages;
+using LogicSimulator.ViewModels.Anchorable.Base;
 using WpfExtensions.Mvvm.Commands;
+using WpfExtensions.Mvvm.Messaging;
 
 namespace LogicSimulator.ViewModels.Anchorable;
 
-public class ProjectExplorerViewModel : ToolViewModel
+public class ProjectExplorerViewModel : ToolViewModel, IRecipient<ProjectLoadedMessage>
 {
-    public event Action<SchemeViewModel>? SchemeOpened;
+    private readonly IMessageBus _messageBus;
+
+    public ProjectExplorerViewModel(IMessageBus messageBus)
+    {
+        _messageBus = messageBus;
+        _messageBus.RegisterHandler(this);
+    }
 
     public override string Title => "Обозреватель проекта";
 
@@ -16,18 +24,10 @@ public class ProjectExplorerViewModel : ToolViewModel
     public ProjectViewModel? ProjectViewModel
     {
         get => _projectViewModel;
-        set
-        {
-            if (Set(ref _projectViewModel, value))
-            {
-                OnPropertyChanged(nameof(ProjectViewModels));
-            }
-        }
+        private set => Set(ref _projectViewModel, value);
     }
 
     #endregion
-
-    public IEnumerable<ProjectViewModel> ProjectViewModels => [ProjectViewModel!];
 
     #region OpenSchemeCommand
 
@@ -36,9 +36,10 @@ public class ProjectExplorerViewModel : ToolViewModel
     public ICommand OpenSchemeCommand => _openSchemeCommand ??= new LambdaCommand<object>(p =>
     {
         if (p is not SchemeViewModel schemeViewModel) return;
-
-        SchemeOpened?.Invoke(schemeViewModel);
+        _messageBus.Send(new DocumentOpenedMessage(schemeViewModel));
     });
 
     #endregion
+
+    public void Receive(ProjectLoadedMessage message) => ProjectViewModel = message.Project;
 }

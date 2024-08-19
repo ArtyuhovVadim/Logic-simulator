@@ -2,10 +2,11 @@
     x:Class="LogicSimulator.Views.Anchorable.ProjectExplorerView"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:avm="clr-namespace:LogicSimulator.ViewModels.Anchorable"
+    xmlns:converters="clr-namespace:LogicSimulator.Infrastructure.Converters"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:vm="clr-namespace:LogicSimulator.ViewModels"
-    xmlns:avm="clr-namespace:LogicSimulator.ViewModels.Anchorable"
     d:DataContext="{d:DesignInstance Type=avm:ProjectExplorerViewModel}"
     d:DesignHeight="480"
     d:DesignWidth="360"
@@ -13,7 +14,8 @@
     <TreeView
         Margin="6"
         HorizontalContentAlignment="Stretch"
-        ItemsSource="{Binding Path=ProjectViewModels}">
+        ItemsSource="{Binding Path=ProjectViewModel,
+                              Converter={converters:ObjectToEnumerableConverter}}">
         <TreeView.ItemTemplate>
             <HierarchicalDataTemplate DataType="{x:Type vm:ProjectViewModel}" ItemsSource="{Binding Path=Schemes}">
                 <TextBlock Text="{Binding Path=Name}" />
