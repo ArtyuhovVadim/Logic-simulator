@@ -1,9 +1,7 @@
-﻿using LogicSimulator.Core;
-using LogicSimulator.Models.Common;
+﻿using LogicSimulator.Models.Common;
 using LogicSimulator.Models.Logic;
 using LogicSimulator.ViewModels.Logic.Gates.Base;
 using LogicSimulator.ViewModels.Objects.Base;
-using SharpDX;
 
 namespace LogicSimulator.ViewModels.Logic;
 
@@ -18,8 +16,6 @@ public class PortViewModel : BaseObjectViewModel, IModelBased<PortModel>
     public override PortModel Model { get; }
 
     public BaseGateViewModel Parent { get; }
-
-    public Vector2 AbsoluteLocation => Model.AbsoluteLocation;
 
     #region Name
 
@@ -37,18 +33,6 @@ public class PortViewModel : BaseObjectViewModel, IModelBased<PortModel>
     {
         get => Model.Length;
         set => Set(Model.Length, value, Model, (model, value) => model.Length = value);
-    }
-
-    #endregion
-
-    #region State
-
-    private SignalType _state = SignalType.Undefined;
-
-    public SignalType State
-    {
-        get => _state;
-        set => Set(ref _state, value);
     }
 
     #endregion

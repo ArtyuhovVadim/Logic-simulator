@@ -21,7 +21,6 @@
                     Location="{Binding Path=Location}"
                     Rotation="{Binding Path=Rotation,
                                        Converter={StaticResource RotationToFloatConverter}}"
-                    State="{Binding Path=State}"
                     StrokeColor="{Binding Path=Parent.StrokeColor}"
                     StrokeThickness="{Binding Path=Parent.StrokeThickness}"
                     StrokeThicknessType="{Binding Path=Parent.StrokeThicknessType}" />
@@ -183,7 +182,6 @@
                         Location="{Binding Path=OutputPort.Location}"
                         Rotation="{Binding Path=OutputPort.Rotation,
                                            Converter={StaticResource RotationToFloatConverter}}"
-                        State="{Binding Path=OutputPort.State}"
                         StrokeColor="{Binding Path=StrokeColor}"
                         StrokeThickness="{Binding Path=StrokeThickness}"
                         StrokeThicknessType="{Binding Path=StrokeThicknessType}" />
@@ -214,7 +212,6 @@
                         Location="{Binding Path=InputPort.Location}"
                         Rotation="{Binding Path=InputPort.Rotation,
                                            Converter={StaticResource RotationToFloatConverter}}"
-                        State="{Binding Path=InputPort.State}"
                         StrokeColor="{Binding Path=StrokeColor}"
                         StrokeThickness="{Binding Path=StrokeThickness}"
                         StrokeThicknessType="{Binding Path=StrokeThicknessType}" />
@@ -246,7 +243,6 @@
                         Location="{Binding Path=OutputPort.Location}"
                         Rotation="{Binding Path=OutputPort.Rotation,
                                            Converter={StaticResource RotationToFloatConverter}}"
-                        State="{Binding Path=OutputPort.State}"
                         StrokeColor="{Binding Path=StrokeColor}"
                         StrokeThickness="{Binding Path=StrokeThickness}"
                         StrokeThicknessType="{Binding Path=StrokeThicknessType}" />
