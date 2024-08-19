@@ -7,6 +7,7 @@ using LogicSimulator.Infrastructure.Services.Interfaces;
 using LogicSimulator.Models;
 using LogicSimulator.Models.Common;
 using LogicSimulator.Models.Logic;
+using LogicSimulator.Models.MessageSources;
 using LogicSimulator.Models.Objects.Base;
 using LogicSimulator.Models.Simulation;
 using LogicSimulator.Shared.Models.HitTest;
@@ -308,8 +309,7 @@ public class SchemeViewModel : DocumentViewModel, IModelBased<Scheme>, ICloseabl
 
                 if (!scheme.IsValid)
                 {
-                    //TODO: MessageSource
-                    _outputMessagesService.AddErrorMessage("Обнаружены ошибки, симуляция не может быть запущена.");
+                    _outputMessagesService.AddErrorMessage("Обнаружены ошибки, симуляция не может быть запущена.", new DocumentMessageSource(_messageBus, this));
                     return;
                 }
 
