@@ -69,6 +69,7 @@ public class SchemeViewModel : DocumentViewModel, IModelBased<Scheme>, ICloseabl
         _schemeSimulatorService.SimulationStateChanged += OnSimulationStateChanged;
 
         _schemeBuilderService.AddValidationRule(new GateNamesMustBeUniqueAndNotEmptyValidationRule());
+        _schemeBuilderService.AddValidationRule(new PortNamesMustBeUniqueAndNotEmptyValidationRule());
         _schemeBuilderService.AddValidationRule(new PortMustBeConnectedValidationRule());
         _schemeBuilderService.AddValidationRule(new MoreThenOneOutputPortConnectedValidationRule());
         _schemeBuilderService.AddValidationRule(new WireMustBeConnectedToSomethingValidationRule());
