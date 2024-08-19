@@ -10,6 +10,7 @@ using LogicSimulator.Models.Logic;
 using LogicSimulator.Models.MessageSources;
 using LogicSimulator.Models.Objects.Base;
 using LogicSimulator.Models.Simulation;
+using LogicSimulator.Shared.ExtensionMethods;
 using LogicSimulator.Shared.Models.HitTest;
 using LogicSimulator.ViewModels.Anchorable.Base;
 using LogicSimulator.ViewModels.Objects.Base;
@@ -410,14 +411,8 @@ public class SchemeViewModel : DocumentViewModel, IModelBased<Scheme>, ICloseabl
         if (bounds.Length == 0 || bounds.Any(x => x is null))
             return;
 
-        var point = bounds.Length switch
-        {
-            1 => bounds[0]!.WorldBounds.Center,
-            _ => bounds.Aggregate(bounds[0]!.WorldBounds, (rect, obj) => RectangleF.Union(rect, obj!.WorldBounds)).Center
-        };
-
-        SetViewportCenterPoint(point);
-
+        SetViewportCenterPoint(bounds.Select(x => x!.WorldBounds).GeometryUnion().Center);
+        
         DeselectAllObjects();
         foreach (var obj in objects)
             obj.IsSelected = true;

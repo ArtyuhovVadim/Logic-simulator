@@ -70,12 +70,7 @@ public class ObjectsGroupView : SceneObjectView, ISceneViewsGeneratorHost
 
     public List<SceneObjectView> Items { get; } = [];
 
-    protected override RectangleF OnWorldBoundsChanged() => ItemsInternal.Count switch
-    {
-        0 => RectangleF.Empty,
-        1 => ItemsInternal[0].WorldBounds,
-        _ => ItemsInternal.Skip(1).Aggregate(ItemsInternal[0].WorldBounds, (current, item) => RectangleF.Union(current, item.WorldBounds)).Transform(WorldTransformMatrix)
-    };
+    protected override RectangleF OnWorldBoundsChanged() => ItemsInternal.Select(x => x.WorldBounds).GeometryUnion().Transform(WorldTransformMatrix);
 
     public override bool HitTest(Vector2 pos, Matrix3x2 transform, float tolerance = 0.25f)
     {
