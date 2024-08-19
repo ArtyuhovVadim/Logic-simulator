@@ -23,12 +23,12 @@ public class MoreThenOneOutputPortConnectedValidationRule : ISchemeValidationRul
 
     public class Result : SchemeValidationResult
     {
-        public IReadOnlyList<IWiresGroup> InvalidWiresGroups { get; }
-
         public Result(ValidationContext context, List<IWiresGroup> invalidWiresGroups, bool isValid, ValidationRuleLevel level) : base(isValid, level)
         {
             InvalidWiresGroups = invalidWiresGroups;
             Messages = InvalidWiresGroups.Select(x => new OutputMessageViewModel("Более одного выходного порта объединены в цепь.", Level, new WiresMessageSource(context.Scheme, x.Wires)));
         }
+
+        public IReadOnlyList<IWiresGroup> InvalidWiresGroups { get; }
     }
 }
