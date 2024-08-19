@@ -4,13 +4,14 @@ using LogicSimulator.Shared;
 using LogicSimulator.Shared.ExtensionMethods;
 using Microsoft.Xaml.Behaviors;
 using SharpDX;
+using Point = System.Windows.Point;
 
 namespace LogicSimulator.Infrastructure.Behaviors;
 
 public class SceneTransformBehaviour : Behavior<Scene2D>
 {
     private Vector2 _lastMiddleButtonDownPosWithDpi;
-    private System.Windows.Point _lastMiddleButtonDownPos;
+    private Point _lastMiddleButtonDownPos;
 
     private Vector2 _lastRightButtonDownSceneTranslate;
     private Vector2 _lastRightButtonDownPos;

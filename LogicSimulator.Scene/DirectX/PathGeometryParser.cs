@@ -1,7 +1,7 @@
-﻿using SharpDX.Direct2D1;
-using System.Globalization;
-using SharpDX;
+﻿using System.Globalization;
 using System.Text.RegularExpressions;
+using SharpDX;
+using SharpDX.Direct2D1;
 
 namespace LogicSimulator.Scene.DirectX;
 

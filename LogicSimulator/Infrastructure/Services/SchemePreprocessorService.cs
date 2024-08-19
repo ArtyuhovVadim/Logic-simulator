@@ -1,10 +1,10 @@
 ﻿using LogicSimulator.Core.Gates;
+using LogicSimulator.Infrastructure.Services.Interfaces;
+using LogicSimulator.Models.Common;
 using LogicSimulator.Models.Logic;
 using LogicSimulator.Models.Logic.Gates;
 using LogicSimulator.Models.Logic.Gates.Base;
 using LogicSimulator.Models.Objects.Base;
-using LogicSimulator.Infrastructure.Services.Interfaces;
-using LogicSimulator.Models.Common;
 using LogicSimulator.Models.SchemeGraph;
 
 namespace LogicSimulator.Infrastructure.Services;

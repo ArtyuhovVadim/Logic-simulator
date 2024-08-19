@@ -1,11 +1,11 @@
-﻿using LogicSimulator.Scene.Cache;
+﻿using System.Windows;
+using System.Windows.Media;
+using LogicSimulator.Scene.Cache;
 using LogicSimulator.Scene.Layers.Base;
 using LogicSimulator.Scene.Layers.Renderers;
-using System.Windows;
-using System.Windows.Media;
-using SolidColorBrush = SharpDX.Direct2D1.SolidColorBrush;
 using LogicSimulator.Scene.Views.Base;
 using LogicSimulator.Shared.ExtensionMethods;
+using SolidColorBrush = SharpDX.Direct2D1.SolidColorBrush;
 
 namespace LogicSimulator.Scene.Layers;
 

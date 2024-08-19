@@ -1,8 +1,8 @@
-﻿using Microsoft.Xaml.Behaviors;
-using WpfExtensions.Utils;
+﻿using LogicSimulator.Models.Common;
 using LogicSimulator.Scene;
-using LogicSimulator.Models.Common;
 using LogicSimulator.Views.Anchorable;
+using Microsoft.Xaml.Behaviors;
+using WpfExtensions.Utils;
 
 namespace LogicSimulator.Infrastructure.Behaviors;
 

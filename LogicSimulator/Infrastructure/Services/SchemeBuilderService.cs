@@ -1,10 +1,10 @@
 ﻿using System.Diagnostics;
 using LogicSimulator.Core;
 using LogicSimulator.Infrastructure.SchemeValidation.Base;
-using Microsoft.Extensions.Logging;
 using LogicSimulator.Infrastructure.Services.Interfaces;
 using LogicSimulator.Models.Logic;
 using LogicSimulator.ViewModels.Anchorable;
+using Microsoft.Extensions.Logging;
 
 namespace LogicSimulator.Infrastructure.Services;
 

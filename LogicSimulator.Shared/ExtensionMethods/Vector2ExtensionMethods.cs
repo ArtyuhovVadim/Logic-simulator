@@ -1,5 +1,6 @@
 ﻿using SharpDX;
 using SharpDX.Mathematics.Interop;
+using Point = System.Windows.Point;
 
 namespace LogicSimulator.Shared.ExtensionMethods;
 
@@ -23,7 +24,7 @@ public static class Vector2ExtensionMethods
     public static Vector2 DpiCorrect(this in Vector2 vector, float dpi) =>
         vector / (96f / dpi);
 
-    public static System.Windows.Point ToPoint(this in Vector2 vector) =>
+    public static Point ToPoint(this in Vector2 vector) =>
         new(vector.X, vector.Y);
 
     public static bool IsInRectangle(this in Vector2 vector, RawRectangleF rect) =>

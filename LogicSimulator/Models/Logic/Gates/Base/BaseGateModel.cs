@@ -1,6 +1,6 @@
-﻿using LogicSimulator.Infrastructure.Services.Interfaces;
+﻿using System.Windows.Media;
+using LogicSimulator.Infrastructure.Services.Interfaces;
 using LogicSimulator.Models.Objects.Base;
-using System.Windows.Media;
 using LogicSimulator.Shared.Models;
 using YamlDotNet.Serialization;
 

@@ -1,4 +1,5 @@
 ﻿using System.Windows;
+using System.Windows.Media;
 using LogicSimulator.Core;
 using LogicSimulator.Scene.Cache;
 using LogicSimulator.Scene.DirectX;
@@ -7,8 +8,12 @@ using LogicSimulator.Shared.ExtensionMethods;
 using LogicSimulator.Shared.Models;
 using SharpDX;
 using SharpDX.Direct2D1;
+using Brush = SharpDX.Direct2D1.Brush;
 using Color = System.Windows.Media.Color;
 using DxColor = SharpDX.Color;
+using Geometry = SharpDX.Direct2D1.Geometry;
+using RectangleGeometry = SharpDX.Direct2D1.RectangleGeometry;
+using SolidColorBrush = SharpDX.Direct2D1.SolidColorBrush;
 
 namespace LogicSimulator.Scene.Views;
 
@@ -95,7 +100,7 @@ public class PortView : SceneObjectView, IStroked
     }
 
     public static readonly DependencyProperty StrokeColorProperty =
-        DependencyProperty.Register(nameof(StrokeColor), typeof(Color), typeof(PortView), new FrameworkPropertyMetadata(System.Windows.Media.Colors.Black, FrameworkPropertyMetadataOptions.BindsTwoWayByDefault, OnStrokeColorChanged));
+        DependencyProperty.Register(nameof(StrokeColor), typeof(Color), typeof(PortView), new FrameworkPropertyMetadata(Colors.Black, FrameworkPropertyMetadataOptions.BindsTwoWayByDefault, OnStrokeColorChanged));
 
     private static void OnStrokeColorChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
     {

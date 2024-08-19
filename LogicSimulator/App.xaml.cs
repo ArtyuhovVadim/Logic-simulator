@@ -2,26 +2,26 @@
 using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Windows;
-using LogicSimulator.Infrastructure.Services;
-using LogicSimulator.Infrastructure.Services.Interfaces;
-using LogicSimulator.ViewModels;
-using LogicSimulator.Views.Windows;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
 using LogicSimulator.Infrastructure.Factories;
 using LogicSimulator.Infrastructure.Factories.Interfaces;
 using LogicSimulator.Infrastructure.Logging;
-using Microsoft.Extensions.Logging;
-using LogicSimulator.Models.Objects.Base;
-using LogicSimulator.Models.Logic.Gates;
+using LogicSimulator.Infrastructure.Services;
+using LogicSimulator.Infrastructure.Services.Interfaces;
 using LogicSimulator.Models.Logic;
+using LogicSimulator.Models.Logic.Gates;
 using LogicSimulator.Models.Objects;
+using LogicSimulator.Models.Objects.Base;
+using LogicSimulator.ViewModels;
 using LogicSimulator.ViewModels.Anchorable;
 using LogicSimulator.ViewModels.Logic;
 using LogicSimulator.ViewModels.Logic.Gates;
 using LogicSimulator.ViewModels.Objects;
 using LogicSimulator.ViewModels.Objects.Base;
+using LogicSimulator.Views.Windows;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Logging;
 using WpfExtensions.Mvvm.Messaging;
 
 namespace LogicSimulator;
@@ -175,11 +175,11 @@ public partial class App
     private static string GetSourceCodePath([CallerFilePath] string? path = null) => path!;
 
     private static IHostBuilder CreateHostBuilder(string[] args) => Microsoft.Extensions.Hosting.Host
-        .CreateDefaultBuilder(args)
-        .UseContentRoot(CurrentDirectory)
-        .ConfigureAppConfiguration((_, cfg) => cfg
-            .SetBasePath(CurrentDirectory)
-            .AddJsonFile("app-settings.json", true, true))
-        .ConfigureLogging(ConfigureLogging)
-        .ConfigureServices(ConfigureServices);
+                                                                             .CreateDefaultBuilder(args)
+                                                                             .UseContentRoot(CurrentDirectory)
+                                                                             .ConfigureAppConfiguration((_, cfg) => cfg
+                                                                                                                    .SetBasePath(CurrentDirectory)
+                                                                                                                    .AddJsonFile("app-settings.json", true, true))
+                                                                             .ConfigureLogging(ConfigureLogging)
+                                                                             .ConfigureServices(ConfigureServices);
 }

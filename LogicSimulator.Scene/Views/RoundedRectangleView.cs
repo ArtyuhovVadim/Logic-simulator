@@ -1,9 +1,9 @@
-﻿using LogicSimulator.Scene.Cache;
-using LogicSimulator.Scene.Views.Base;
-using System.Windows;
+﻿using System.Windows;
 using System.Windows.Media;
+using LogicSimulator.Scene.Cache;
 using LogicSimulator.Scene.DirectX;
 using LogicSimulator.Scene.Nodes;
+using LogicSimulator.Scene.Views.Base;
 using LogicSimulator.Shared.ExtensionMethods;
 using LogicSimulator.Shared.Models;
 using SharpDX;
