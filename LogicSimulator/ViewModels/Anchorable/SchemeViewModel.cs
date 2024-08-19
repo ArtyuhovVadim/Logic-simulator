@@ -74,6 +74,7 @@ public class SchemeViewModel : DocumentViewModel, IModelBased<Scheme>, ICloseabl
         _schemeBuilderService.AddValidationRule(new MoreThenOneOutputPortConnectedValidationRule());
         _schemeBuilderService.AddValidationRule(new WireMustBeConnectedToSomethingValidationRule());
         _schemeBuilderService.AddValidationRule(new OnlyInputPortsConnectedValidationRule());
+        _schemeBuilderService.AddValidationRule(new OnlyOutputPortConnectedValidationRule());
     }
 
     public event Action? Closed;
