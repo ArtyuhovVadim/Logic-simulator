@@ -32,46 +32,23 @@ public class ProjectFileService : IProjectFileService
         _fileReadStreamOptions = new FileStreamOptions { Access = FileAccess.Read, Mode = FileMode.Open };
     }
 
-    public bool SaveToFile(string path, Project project)
+    public async Task SaveToFileAsync(string path, Project project)
     {
-        try
-        {
-            using var streamWriter = new StreamWriter(path, Encoding.Default, _fileWriteStreamOptions);
-
-            project.Version = App.Version;
-            var serializedProject = _serializer.Serialize(project);
-            streamWriter.Write(serializedProject);
-
-            return true;
-        }
-        catch
-        {
-            return false;
-        }
+        await using var streamWriter = new StreamWriter(path, Encoding.Default, _fileWriteStreamOptions);
+        project.Version = App.Version;
+        var serializedProject = _serializer.Serialize(project);
+        await streamWriter.WriteAsync(serializedProject);
     }
 
-    public bool ReadFromFile(string path, out Project? project)
+    public async Task<Project> ReadFromFileAsync(string path)
     {
-        project = null;
+        using var streamReader = new StreamReader(path, Encoding.Default, false, _fileReadStreamOptions);
+        var project = _deserializer.Deserialize<Project>(await streamReader.ReadToEndAsync());
+        project.FileInfo = new FileInfo(path);
 
-        if (!File.Exists(path) || Path.GetExtension(path) != Project.Extension)
-            return false;
+        if (project.Version > App.Version)
+            throw new InvalidOperationException($"Can not load project of {project.Version} version.");
 
-        try
-        {
-            using var streamReader = new StreamReader(path, Encoding.Default, false, _fileReadStreamOptions);
-
-            project = _deserializer.Deserialize<Project>(streamReader);
-            project.FileInfo = new FileInfo(path);
-
-            if (project.Version > App.Version)
-                throw new InvalidOperationException($"Can not load project of {project.Version} version.");
-
-            return true;
-        }
-        catch
-        {
-            return false;
-        }
+        return project;
     }
 }

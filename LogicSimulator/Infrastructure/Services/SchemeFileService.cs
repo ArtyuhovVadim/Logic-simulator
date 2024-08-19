@@ -72,53 +72,31 @@ public class SchemeFileService : ISchemeFileService
         _fileReadStreamOptions = new FileStreamOptions { Access = FileAccess.Read, Mode = FileMode.Open };
     }
 
-    public bool SaveToFile(string path, Scheme scheme)
+    public async Task SaveToFileAsync(string path, Scheme scheme)
     {
-        try
-        {
-            using var streamWriter = new StreamWriter(path, Encoding.Default, _fileWriteStreamOptions);
-
-            scheme.Version = App.Version;
-            var serializedScheme = _serializer.Serialize(scheme);
-            streamWriter.Write(serializedScheme);
-
-            return true;
-        }
-        catch
-        {
-            return false;
-        }
+        await using var streamWriter = new StreamWriter(path, Encoding.Default, _fileWriteStreamOptions);
+        scheme.Version = App.Version;
+        var serializedScheme = _serializer.Serialize(scheme);
+        await streamWriter.WriteAsync(serializedScheme);
     }
 
-    public bool ReadFromFile(string path, out Scheme? scheme)
+    public async Task<Scheme> ReadFromFileAsync(string path)
     {
-        scheme = null;
+        using var streamReader = new StreamReader(path, Encoding.Default, false, _fileReadStreamOptions);
+        var scheme = _deserializer.Deserialize<Scheme>(await streamReader.ReadToEndAsync());
+        scheme.FileInfo = new FileInfo(path);
 
-        if (!File.Exists(path))
-            return false;
-
-        try
+        foreach (var gate in scheme.Objects.OfType<BaseGateModel>())
         {
-            using var streamReader = new StreamReader(path, Encoding.Default, false, _fileReadStreamOptions);
-            scheme = _deserializer.Deserialize<Scheme>(streamReader);
-            scheme.FileInfo = new FileInfo(path);
-
-            foreach (var gate in scheme.Objects.OfType<BaseGateModel>())
+            foreach (var port in gate.Ports)
             {
-                foreach (var port in gate.Ports)
-                {
-                    port.Parent = gate;
-                }
+                port.Parent = gate;
             }
-
-            if (scheme.Version > App.Version)
-                throw new InvalidOperationException($"Can not load scheme of {scheme.Version} version.");
-
-            return true;
         }
-        catch
-        {
-            return false;
-        }
+
+        if (scheme.Version > App.Version)
+            throw new InvalidOperationException($"Can not load scheme of {scheme.Version} version.");
+
+        return scheme;
     }
 }

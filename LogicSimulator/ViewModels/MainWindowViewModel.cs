@@ -7,6 +7,7 @@ using LogicSimulator.Models.Common;
 using LogicSimulator.ViewModels.Anchorable;
 using LogicSimulator.ViewModels.Anchorable.Base;
 using LogicSimulator.ViewModels.Status.Base;
+using Microsoft.Extensions.Logging;
 using WpfExtensions.Mvvm;
 using WpfExtensions.Mvvm.Commands;
 using WpfExtensions.Mvvm.Messaging;
@@ -15,6 +16,7 @@ namespace LogicSimulator.ViewModels;
 
 public class MainWindowViewModel : BindableBase, IRecipient<DocumentClosingMessage>, IRecipient<DocumentOpenedMessage>
 {
+    private readonly ILogger<MainWindowViewModel> _logger;
     private readonly IUserDialogService _userDialogService;
     private readonly IProjectFileService _projectFileService;
     private readonly ISchemeFileService _schemeFileService;
@@ -24,6 +26,7 @@ public class MainWindowViewModel : BindableBase, IRecipient<DocumentClosingMessa
     private readonly DockingViewModel _dockingViewModel;
 
     public MainWindowViewModel(
+        ILogger<MainWindowViewModel> logger,
         IUserDialogService userDialogService,
         IProjectFileService projectFileService,
         ISchemeFileService schemeFileService,
@@ -35,6 +38,7 @@ public class MainWindowViewModel : BindableBase, IRecipient<DocumentClosingMessa
         MessagesOutputViewModel messagesOutputViewModel,
         TimelineViewModel timelineViewModel)
     {
+        _logger = logger;
         _userDialogService = userDialogService;
         _projectFileService = projectFileService;
         _schemeFileService = schemeFileService;
@@ -82,34 +86,49 @@ public class MainWindowViewModel : BindableBase, IRecipient<DocumentClosingMessa
 
     private ICommand? _openFileCommand;
 
-    public ICommand OpenFileCommand => _openFileCommand ??= new LambdaCommand(() =>
+    public ICommand OpenFileCommand => _openFileCommand ??= new AsyncLambdaCommand(async () =>
     {
         try
         {
             if (_userDialogService.OpenFileDialog("Выберите файл", [("Проект", $"*{Project.Extension}")], out var projectPath) == UserDialogResult.Cancel)
                 return;
 
-            if (!_projectFileService.ReadFromFile(projectPath, out var project))
+            _logger.LogInformation("Project loading has started.");
+
+            Project project;
+
+            try
             {
-                _userDialogService.ShowErrorMessage("Ошибка загрузки проекта", $"Не удалось загрузить файл по пути: {projectPath}");
+                project = await _projectFileService.ReadFromFileAsync(projectPath);
+                _logger.LogInformation("Project file ({projectName}) has been loaded successfully.", project.FileInfo!.Name);
+            }
+            catch (Exception e)
+            {
+                _logger.LogError("Can not load project file: {projectPath}\nInternal error:\n{e}", projectPath, e);
+                _userDialogService.ShowErrorMessage("Ошибка загрузки проекта", $"Не удалось загрузить файл по пути: {projectPath}\nВнутренняя ошибка:\n{e}");
                 return;
             }
 
-            var schemeFiles = project!.FileInfo!.Directory!.GetFiles($"*{Scheme.Extension}");
+            var schemeFiles = project.FileInfo!.Directory!.GetFiles($"*{Scheme.Extension}");
             var schemes = new List<Scheme>();
 
             foreach (var schemeFile in schemeFiles)
             {
-                if (!_schemeFileService.ReadFromFile(schemeFile.FullName, out var scheme))
+                try
                 {
-                    _userDialogService.ShowErrorMessage("Ошибка загрузки схемы", $"Не удалось загрузить файл по пути: {schemeFile.FullName}");
-                    continue;
+                    schemes.Add(await _schemeFileService.ReadFromFileAsync(schemeFile.FullName));
+                    _logger.LogInformation("Scheme file ({schemeFile}) has been loaded successfully.", schemeFile.Name);
                 }
-
-                schemes.Add(scheme!);
+                catch (Exception e)
+                {
+                    _logger.LogError("Can not load scheme file: {schemePath}\nInternal error:\n{e}", schemeFile.FullName, e);
+                    _userDialogService.ShowErrorMessage("Ошибка загрузки схемы", $"Не удалось загрузить файл по пути: {schemeFile.FullName}\nВнутренняя ошибка:\n{e}");
+                }
             }
 
             project.Schemes = schemes;
+
+            _logger.LogInformation("Project has been loaded successfully.");
 
             var projectViewModel = _projectFactory.Create(project);
 
@@ -120,6 +139,7 @@ public class MainWindowViewModel : BindableBase, IRecipient<DocumentClosingMessa
         }
         catch (Exception e)
         {
+            _logger.LogInformation("Unexpected error while loading project:\n{e}", e);
             _userDialogService.ShowErrorMessage("Непредвиденная ошибка", e.Message);
         }
     });
@@ -130,35 +150,49 @@ public class MainWindowViewModel : BindableBase, IRecipient<DocumentClosingMessa
 
     private ICommand? _saveFileCommand;
 
-    public ICommand SaveFileCommand => _saveFileCommand ??= new LambdaCommand(() =>
+    public ICommand SaveFileCommand => _saveFileCommand ??= new AsyncLambdaCommand(async () =>
     {
         try
         {
             if (_userDialogService.OpenFolderDialog("Выберите файл", out var projectDirPath) == UserDialogResult.Cancel)
                 return;
 
+            _logger.LogInformation("Project saving has started.");
+
             var project = ActiveProjectViewModel!.Model;
             var projectPath = Path.Combine(projectDirPath, project.FileInfo!.Name);
 
-            if (!_projectFileService.SaveToFile(projectPath, project))
+            try
             {
-                _userDialogService.ShowErrorMessage("Ошибка сохранения проекта", $"Не удалось сохранить файл по пути: {projectPath}");
+                await _projectFileService.SaveToFileAsync(projectPath, project);
+                _logger.LogInformation("Project file ({projectName}) has been saved successfully.", project.FileInfo!.Name);
+            }
+            catch (Exception e)
+            {
+                _logger.LogError("Can not save project file: {projectPath}\nInternal error:\n{e}", projectPath, e);
+                _userDialogService.ShowErrorMessage("Ошибка сохранения проекта", $"Не удалось сохранить файл по пути: {projectPath}\nВнутренняя ошибка:\n{e}");
                 return;
             }
 
             foreach (var scheme in project.Schemes)
             {
-                var schemePath = Path.Combine(projectDirPath, scheme.FileInfo!.Name);
-
-                if (!_schemeFileService.SaveToFile(schemePath, scheme))
+                try
                 {
-                    _userDialogService.ShowErrorMessage("Ошибка сохранения схемы", $"Не удалось сохранить файл по пути: {scheme.FileInfo.FullName}");
-                    return;
+                    await _schemeFileService.SaveToFileAsync(Path.Combine(projectDirPath, scheme.FileInfo!.Name), scheme);
+                    _logger.LogInformation("Scheme file ({schemeFile}) has been saved successfully.", scheme.FileInfo.Name);
+                }
+                catch (Exception e)
+                {
+                    _logger.LogError("Can not save scheme file: {schemePath}\nInternal error:\n{e}", scheme.FileInfo!.FullName, e);
+                    _userDialogService.ShowErrorMessage("Ошибка сохранения схемы", $"Не удалось сохранить файл по пути: {scheme.FileInfo!.FullName}\nВнутренняя ошибка:\n{e}");
                 }
             }
+
+            _logger.LogInformation("Project has been saved successfully.");
         }
         catch (Exception e)
         {
+            _logger.LogInformation("Unexpected error while saving project:\n{e}", e);
             _userDialogService.ShowErrorMessage("Непредвиденная ошибка", e.Message);
         }
     }, () => ActiveProjectViewModel is not null);
