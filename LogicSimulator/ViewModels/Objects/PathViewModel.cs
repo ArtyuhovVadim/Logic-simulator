@@ -143,5 +143,5 @@ public class PathViewModel : BaseObjectViewModel
 
     #endregion
 
-    public override PathViewModel MakeClone() => new(Model);
+    public override PathViewModel MakeClone() => new(Model.MakeClone());
 }

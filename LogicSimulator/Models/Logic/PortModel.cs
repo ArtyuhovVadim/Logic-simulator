@@ -22,5 +22,17 @@ public class PortModel : BaseObjectModel
     [YamlIgnore]
     public BaseGateModel Parent { get; set; } = null!;
 
-    public override PortModel MakeClone() => (PortModel)MemberwiseClone();
+    public PortModel MakeClone(BaseGateModel parent)
+    {
+        var clone = MakeClone();
+        clone.Parent = parent;
+        return clone;
+    }
+
+    public override PortModel MakeClone()
+    {
+        var port = (PortModel)MemberwiseClone();
+        port.Parent = null!;
+        return port;
+    }
 }

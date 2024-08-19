@@ -10,7 +10,8 @@ public class AndGateModel : SimpleGateModel
     public override AndGateModel MakeClone()
     {
         var model = (AndGateModel)MemberwiseClone();
-        model.OutputPort = OutputPort.MakeClone();
+        model.InputPortsList = InputPortsList.Select(x => x.MakeClone(model)).ToList();
+        model.OutputPort = OutputPort.MakeClone(model);
         return model;
     }
 }

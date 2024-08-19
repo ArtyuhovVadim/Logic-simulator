@@ -19,7 +19,7 @@ public class OutputGateModel : BaseGateModel
     public override OutputGateModel MakeClone()
     {
         var model = (OutputGateModel)MemberwiseClone();
-        model.InputPort = InputPort.MakeClone();
+        model.InputPort = InputPort.MakeClone(model);
         return model;
     }
 }

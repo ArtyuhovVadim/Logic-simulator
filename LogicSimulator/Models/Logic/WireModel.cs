@@ -54,5 +54,10 @@ public class WireModel : BaseObjectModel
 
     public bool IsWireConnectedWith(WireModel other) => IsWiresConnected(this, other);
 
-    public override WireModel MakeClone() => (WireModel)MemberwiseClone();
+    public override WireModel MakeClone()
+    {
+        var model = (WireModel)MemberwiseClone();
+        model.Vertexes = [.. Vertexes];
+        return model;
+    }
 }
