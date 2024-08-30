@@ -105,18 +105,18 @@ public class SceneTransformBehaviour : Behavior<Scene2D>
 
     protected override void OnAttached()
     {
-        AssociatedObject.MouseDown += OnSceneMouseDown;
-        AssociatedObject.MouseUp += OnSceneMouseUp;
-        AssociatedObject.MouseWheel += OnSceneMouseWheel;
-        AssociatedObject.MouseMove += OnSceneMouseMove;
+        AssociatedObject.PreviewMouseDown += OnSceneMouseDown;
+        AssociatedObject.PreviewMouseUp += OnSceneMouseUp;
+        AssociatedObject.PreviewMouseWheel += OnSceneMouseWheel;
+        AssociatedObject.PreviewMouseMove += OnSceneMouseMove;
     }
 
     protected override void OnDetaching()
     {
-        AssociatedObject.MouseDown -= OnSceneMouseDown;
-        AssociatedObject.MouseUp -= OnSceneMouseUp;
-        AssociatedObject.MouseWheel -= OnSceneMouseWheel;
-        AssociatedObject.MouseMove -= OnSceneMouseMove;
+        AssociatedObject.PreviewMouseDown -= OnSceneMouseDown;
+        AssociatedObject.PreviewMouseUp -= OnSceneMouseUp;
+        AssociatedObject.PreviewMouseWheel -= OnSceneMouseWheel;
+        AssociatedObject.PreviewMouseMove -= OnSceneMouseMove;
     }
 
     private void OnSceneMouseDown(object sender, MouseButtonEventArgs e)
