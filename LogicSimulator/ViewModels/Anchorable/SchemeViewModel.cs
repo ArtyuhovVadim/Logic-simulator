@@ -6,6 +6,7 @@ using LogicSimulator.Infrastructure.SchemeValidation;
 using LogicSimulator.Infrastructure.Services.Interfaces;
 using LogicSimulator.Models;
 using LogicSimulator.Models.Common;
+using LogicSimulator.Models.Input;
 using LogicSimulator.Models.Logic;
 using LogicSimulator.Models.MessageSources;
 using LogicSimulator.Models.Objects.Base;
@@ -32,10 +33,14 @@ public class SchemeViewModel : DocumentViewModel, IModelBased<Scheme>, ICloseabl
     private readonly ISchemeBuilderService _schemeBuilderService;
     private readonly IToolSwitcherService _toolSwitcherService;
     private readonly IOutputMessagesService _outputMessagesService;
+    private readonly IClipboardService _clipboardService;
     private readonly IMessageBus _messageBus;
     private readonly ILogger<SchemeViewModel> _logger;
 
-    private List<BaseObjectViewModel> _selectedObjects = [];
+    private ITool? _lastSelectedTool;
+    private List<(Vector2 Offset, BaseObjectViewModel Object)> _cursorFollowingObjects = [];
+
+
     private LogicScheme? _currentScheme;
 
     public SchemeViewModel(Scheme scheme,
@@ -45,6 +50,7 @@ public class SchemeViewModel : DocumentViewModel, IModelBased<Scheme>, ICloseabl
                            IToolSwitcherService toolSwitcherService,
                            IMappedViewModelFactory<BaseObjectModel, BaseObjectViewModel> viewModelsFactory,
                            IOutputMessagesService outputMessagesService,
+                           IClipboardService clipboardService,
                            IMessageBus messageBus,
                            ILogger<SchemeViewModel> logger)
     {
@@ -54,6 +60,7 @@ public class SchemeViewModel : DocumentViewModel, IModelBased<Scheme>, ICloseabl
         _schemeBuilderService = schemeBuilderService;
         _toolSwitcherService = toolSwitcherService;
         _outputMessagesService = outputMessagesService;
+        _clipboardService = clipboardService;
         _messageBus = messageBus;
         _logger = logger;
 
@@ -83,6 +90,12 @@ public class SchemeViewModel : DocumentViewModel, IModelBased<Scheme>, ICloseabl
 
     public event Action? Closed;
 
+    #region Model
+
+    public Scheme Model { get; }
+
+    #endregion
+
     #region HitTester
 
     private IHitTester _hitTester = null!;
@@ -92,12 +105,6 @@ public class SchemeViewModel : DocumentViewModel, IModelBased<Scheme>, ICloseabl
         get => _hitTester;
         set => Set(ref _hitTester, value);
     }
-
-    #endregion
-
-    #region Model
-
-    public Scheme Model { get; }
 
     #endregion
 
@@ -112,6 +119,18 @@ public class SchemeViewModel : DocumentViewModel, IModelBased<Scheme>, ICloseabl
     private readonly ObservableCollectionEx<BaseObjectViewModel, BaseObjectModel> _objects;
 
     public ObservableCollection<BaseObjectViewModel> Objects => _objects;
+
+    #endregion
+
+    #region SelectedObjects
+
+    public IReadOnlyList<BaseObjectViewModel> SelectedObjects => Objects.Where(x => x.IsSelected).ToList();
+
+    #endregion
+
+    #region HasCursorFollowingObjects
+
+    public bool HasCursorFollowingObjects => _cursorFollowingObjects.Count > 0;
 
     #endregion
 
@@ -218,23 +237,9 @@ public class SchemeViewModel : DocumentViewModel, IModelBased<Scheme>, ICloseabl
 
     #endregion
 
-    #region SelectedObjects
-
-    public IReadOnlyList<BaseObjectViewModel> SelectedObjects => _selectedObjects;
-
-    #endregion
-
     #region StatusViewModel
 
     public override BaseStatusViewModel StatusViewModel => _statusViewModel;
-
-    #endregion
-
-    #region ObjectSelectedCommand
-
-    private ICommand? _objectSelectedCommand;
-
-    public ICommand ObjectSelectedCommand => _objectSelectedCommand ??= new LambdaCommand(OnSelectedObjectsChanged);
 
     #endregion
 
@@ -244,7 +249,7 @@ public class SchemeViewModel : DocumentViewModel, IModelBased<Scheme>, ICloseabl
 
     public ICommand DeleteSelectedObjectsCommand => _deleteSelectedObjectsCommand ??= new LambdaCommand(() =>
     {
-        foreach (var selectedObject in _selectedObjects)
+        foreach (var selectedObject in SelectedObjects)
         {
             Objects.Remove(selectedObject);
         }
@@ -262,13 +267,94 @@ public class SchemeViewModel : DocumentViewModel, IModelBased<Scheme>, ICloseabl
 
     #endregion
 
+    #region CopyCommand
+
+    private ICommand? _copyCommand;
+
+    public ICommand CopyCommand => _copyCommand ??= new LambdaCommand(() =>
+    {
+        _clipboardService.Copy(SelectedObjects);
+    }, () => ToolsViewModel.IsDefaultToolSelected && SelectedObjects.Count > 0);
+
+    #endregion
+
+    #region PasteCommand
+
+    private ICommand? _pasteCommand;
+
+    public ICommand PasteCommand => _pasteCommand ??= new LambdaCommand(() =>
+    {
+        var objects = _clipboardService.Paste();
+        _objects.AddRange(objects);
+        StartFollowCursor(objects);
+        UpdateCursorFollowingObjectsLocation();
+    }, () => ToolsViewModel.IsDefaultToolSelected && _clipboardService.HasCopiedObjects);
+
+    #endregion
+
+    #region CutCommand
+
+    private ICommand? _cutCommand;
+
+    public ICommand CutCommand => _cutCommand ??= new LambdaCommand(() =>
+    {
+        _clipboardService.Copy(SelectedObjects);
+        _objects.RemoveAll(x => x.IsSelected);
+        SelectedObjectsChanged();
+    }, () => ToolsViewModel.IsDefaultToolSelected && SelectedObjects.Count > 0);
+
+    #endregion
+
+    #region DuplicateCommand
+
+    private ICommand? _duplicateCommand;
+
+    public ICommand DuplicateCommand => _duplicateCommand ??= new LambdaCommand(() =>
+    {
+        var objects = _clipboardService.Duplicate(SelectedObjects);
+        _objects.AddRange(objects);
+        StartFollowCursor(objects);
+        UpdateCursorFollowingObjectsLocation();
+    }, () => ToolsViewModel.IsDefaultToolSelected && SelectedObjects.Count > 0);
+
+    #endregion
+
+    #region MouseLeftButtonDownCommand
+
+    private ICommand? _acceptCursorFollowingObjectsPositionCommand;
+
+    public ICommand AcceptCursorFollowingObjectsPositionCommand => _acceptCursorFollowingObjectsPositionCommand ??= new LambdaCommand(StopFollowCursor, () => HasCursorFollowingObjects);
+
+    #endregion
+
+    #region MouseMoveCommand
+
+    private ICommand? _updateCursorFollowingObjectsLocationCommand;
+
+    public ICommand UpdateCursorFollowingObjectsLocationCommand => _updateCursorFollowingObjectsLocationCommand ??= new LambdaCommand(UpdateCursorFollowingObjectsLocation, () => HasCursorFollowingObjects);
+
+    #endregion
+
+    #region CancelCommand
+
+    private ICommand? _removeCursorFollowingObjectsCommand;
+
+    public ICommand RemoveCursorFollowingObjectsCommand => _removeCursorFollowingObjectsCommand ??= new LambdaCommand(() =>
+    {
+        var cursorFollowingSet = _cursorFollowingObjects.Select(x => x.Object).ToHashSet();
+        _objects.RemoveAll(cursorFollowingSet.Contains);
+        StopFollowCursor();
+    }, () => HasCursorFollowingObjects);
+
+    #endregion
+
     #region RotateSelectedObjectsClockwiseCommand
 
     private ICommand? _rotateSelectedObjectsClockwiseCommand;
 
     public ICommand RotateSelectedObjectsClockwiseCommand => _rotateSelectedObjectsClockwiseCommand ??= new LambdaCommand(() =>
     {
-        foreach (var obj in _selectedObjects)
+        foreach (var obj in SelectedObjects)
         {
             obj.RotateClockwise();
         }
@@ -282,7 +368,7 @@ public class SchemeViewModel : DocumentViewModel, IModelBased<Scheme>, ICloseabl
 
     public ICommand RotateSelectedObjectsCounterclockwiseCommand => _rotateSelectedObjectsCounterclockwiseCommand ??= new LambdaCommand(() =>
     {
-        foreach (var obj in _selectedObjects)
+        foreach (var obj in SelectedObjects)
         {
             obj.RotateCounterclockwise();
         }
@@ -412,7 +498,7 @@ public class SchemeViewModel : DocumentViewModel, IModelBased<Scheme>, ICloseabl
             return;
 
         SetViewportCenterPoint(bounds.Select(x => x!.WorldBounds).GeometryUnion().Center);
-        
+
         DeselectAllObjects();
         foreach (var obj in objects)
             obj.IsSelected = true;
@@ -487,22 +573,57 @@ public class SchemeViewModel : DocumentViewModel, IModelBased<Scheme>, ICloseabl
         Closed?.Invoke();
     }
 
+    private void UpdateCursorFollowingObjectsLocation()
+    {
+        foreach (var (offset, obj) in _cursorFollowingObjects)
+            obj.Location = (MousePosition - offset).ApplyGrid(GridStep);
+    }
+
+    private void StartFollowCursor(List<BaseObjectViewModel> objects)
+    {
+        var startPos = CalculateObjectsCenterPoint(objects);
+        _cursorFollowingObjects = objects.Select(x => (startPos - x.Location, x)).ToList();
+        _lastSelectedTool = _toolSwitcherService.CurrentTool;
+        _toolSwitcherService.SwitchToEmptyTool();
+        _toolSwitcherService.IsCurrentToolLocked = true;
+        OnPropertyChanged(nameof(HasCursorFollowingObjects));
+    }
+
+    private void StopFollowCursor()
+    {
+        _cursorFollowingObjects.Clear();
+        _toolSwitcherService.IsCurrentToolLocked = false;
+        _toolSwitcherService.SwitchTool(_lastSelectedTool, false);
+        _lastSelectedTool = null;
+        OnPropertyChanged(nameof(HasCursorFollowingObjects));
+    }
+
+    private Vector2 CalculateObjectsCenterPoint(List<BaseObjectViewModel> objects)
+    {
+        var hitTestables = objects.Select(HitTester.GetFromContext).ToArray();
+
+        if (hitTestables.All(x => x is { IsMeasured: true }))
+            return hitTestables.Select(x => x!.WorldBounds).GeometryUnion().Center;
+
+        return objects.Select(x => x.Location).Aggregate((a, b) => a + b) / objects.Count;
+    }
+
     private void OnSimulationStateChanged(SimulationState oldState, SimulationState newState) =>
         _messageBus.Send(new SimulationStateChangedMessage(this, oldState, newState, _schemeSimulatorService.GetSimulationResult()));
 
     private void OnSelectedObjectsChanged()
     {
-        _selectedObjects = Objects.Where(x => x.IsSelected).ToList();
+        var selectedObjects = SelectedObjects.ToList();
 
         _statusViewModel.RaisedPropertyChanged(nameof(SchemeStatusViewModel.SelectedObjectsCount));
 
-        if (_selectedObjects.Count == 0)
+        if (selectedObjects.Count == 0)
         {
             _editorSelectionService.SetSchemeEditor(this);
             return;
         }
 
-        _editorSelectionService.SetObjectsEditor(_selectedObjects);
+        _editorSelectionService.SetObjectsEditor(selectedObjects);
 
         OnPropertyChanged(nameof(SelectedObjects));
     }

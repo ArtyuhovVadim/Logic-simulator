@@ -17,19 +17,6 @@
     d:DataContext="{d:DesignInstance Type=avm:SchemeViewModel}"
     mc:Ignorable="d">
 
-    <UserControl.InputBindings>
-        <KeyBinding Key="Space" Command="{Binding Path=RotateSelectedObjectsClockwiseCommand}" />
-        <KeyBinding
-            Key="Space"
-            Command="{Binding Path=RotateSelectedObjectsCounterclockwiseCommand}"
-            Modifiers="Shift" />
-        <KeyBinding Key="Delete" Command="{Binding Path=DeleteSelectedObjectsCommand}" />
-        <KeyBinding
-            Key="A"
-            Command="{Binding Path=SelectAllObjectsCommand}"
-            Modifiers="Control" />
-    </UserControl.InputBindings>
-
     <UserControl.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
@@ -54,10 +41,52 @@
                 <DataPipe Source="{Binding ElementName=ObjectsLayer}" Target="{Binding Path=HitTester, Mode=OneWayToSource}" />
             </DataPiping.DataPipes>
 
+            <scene:Scene2D.InputBindings>
+                <KeyBinding Key="Space" Command="{Binding Path=RotateSelectedObjectsClockwiseCommand}" />
+                <KeyBinding
+                    Key="Space"
+                    Command="{Binding Path=RotateSelectedObjectsCounterclockwiseCommand}"
+                    Modifiers="Shift" />
+                <KeyBinding Key="Delete" Command="{Binding Path=DeleteSelectedObjectsCommand}" />
+                <KeyBinding
+                    Key="A"
+                    Command="{Binding Path=SelectAllObjectsCommand}"
+                    Modifiers="Control" />
+                <KeyBinding
+                    Key="C"
+                    Command="{Binding Path=CopyCommand}"
+                    Modifiers="Control" />
+                <KeyBinding
+                    Key="V"
+                    Command="{Binding Path=PasteCommand}"
+                    Modifiers="Control" />
+                <KeyBinding
+                    Key="X"
+                    Command="{Binding Path=CutCommand}"
+                    Modifiers="Control" />
+                <KeyBinding
+                    Key="D"
+                    Command="{Binding Path=DuplicateCommand}"
+                    Modifiers="Control" />
+                <KeyBinding Key="Escape" Command="{Binding Path=RemoveCursorFollowingObjectsCommand}" />
+            </scene:Scene2D.InputBindings>
+
             <b:Interaction.Behaviors>
                 <behaviors:SceneTransformBehaviour MinScale="0.2" />
-                <behaviors:SceneToolEventProviderBehaviour CurrentTool="{Binding Path=ToolsViewModel.CurrentTool}" />
+                <behaviors:SceneInputTargetEventProviderBehaviour InputTarget="{Binding Path=ToolsViewModel.CurrentTool}" />
             </b:Interaction.Behaviors>
+
+            <b:Interaction.Triggers>
+                <b:EventTrigger EventName="MouseLeftButtonUp">
+                    <b:InvokeCommandAction Command="{Binding Path=AcceptCursorFollowingObjectsPositionCommand}" />
+                </b:EventTrigger>
+                <b:EventTrigger EventName="MouseRightButtonUp">
+                    <b:InvokeCommandAction Command="{Binding Path=RemoveCursorFollowingObjectsCommand}" />
+                </b:EventTrigger>
+                <b:EventTrigger EventName="MouseMove">
+                    <b:InvokeCommandAction Command="{Binding Path=UpdateCursorFollowingObjectsLocationCommand}" />
+                </b:EventTrigger>
+            </b:Interaction.Triggers>
 
             <layers:GradientClearLayer
                 EndColor="{DynamicResource {x:Static brushes:BrushesKeys+SchemeView.EndBackgroundColor}}"

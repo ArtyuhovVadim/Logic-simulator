@@ -95,6 +95,7 @@ public partial class App
             .AddSingleton<IProjectFileService, ProjectFileService>()
             .AddSingleton<IEditorSelectionService, EditorSelectionService>()
             .AddSingleton<IOutputMessagesService, OutputMessagesService>()
+            .AddSingleton<IClipboardService, ClipboardService>()
             .AddSingleton<IMessageBus, MessageBus>()
 
             .AddTransient<ISchemePreprocessorService, SchemePreprocessorService>()
