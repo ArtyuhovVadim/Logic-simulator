@@ -38,7 +38,14 @@ public class SchemeToolsViewModel : BindableBase
 
         var wirePlacingToolViewModel = new SegmentedObjectPlacingToolViewModel<WireViewModel>(scheme) { Group = ToolGroup.WirePlacing, Name = "Wire placing tool" };
 
-        _toolSwitcherService.ToolChanged += (_, _) => OnPropertyChanged(nameof(CurrentTool));
+        _toolSwitcherService.ToolChanged += (_, _) =>
+        {
+            OnPropertyChanged(nameof(CurrentTool));
+            OnPropertyChanged(nameof(IsDefaultToolSelected));
+        };
+
+        _toolSwitcherService.ToolLocked += () => OnPropertyChanged(nameof(IsCurrentToolLocked));
+
         _toolSwitcherService.DefaultTool = SelectionTool;
 
         _toolSwitcherService.AddTools(
@@ -76,7 +83,13 @@ public class SchemeToolsViewModel : BindableBase
     public ITool? CurrentTool
     {
         get => _toolSwitcherService.CurrentTool;
-        set => _toolSwitcherService.SwitchTool(value!.GetType(), false);
+        set
+        {
+            if (value is null)
+                _toolSwitcherService.SwitchToEmptyTool();
+            else
+                _toolSwitcherService.SwitchTool(value.GetType(), false);
+        }
     }
 
     #endregion

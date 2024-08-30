@@ -5,9 +5,12 @@ namespace LogicSimulator.Infrastructure.Services;
 
 public class ToolSwitcherService : IToolSwitcherService
 {
+    private bool _isCurrentToolLocked;
     private readonly Dictionary<Type, ITool> _toolsMap = [];
 
     public event ToolChanged? ToolChanged;
+
+    public event Action? ToolLocked;
 
     public IEnumerable<ITool> Tools => _toolsMap.Values;
 
@@ -15,7 +18,16 @@ public class ToolSwitcherService : IToolSwitcherService
 
     public ITool? DefaultTool { get; set; }
 
-    public bool IsCurrentToolLocked { get; set; }
+    public bool IsCurrentToolLocked
+    {
+        get => _isCurrentToolLocked;
+        set
+        {
+            if (_isCurrentToolLocked == value) return;
+            _isCurrentToolLocked = value;
+            ToolLocked?.Invoke();
+        }
+    }
 
     public void AddTool(ITool tool)
     {
@@ -31,6 +43,19 @@ public class ToolSwitcherService : IToolSwitcherService
         {
             AddTool(tool);
         }
+    }
+
+    public void SwitchToEmptyTool() => ChangeTool(null, false);
+
+    public bool SwitchTool(ITool? tool, bool isActivatedFromAnotherTool, Action<ITool>? actionToNextToolAfterActivating = null)
+    {
+        if (tool is null)
+        {
+            SwitchToEmptyTool();
+            return true;
+        }
+
+        return SwitchTool(tool.GetType(), isActivatedFromAnotherTool, actionToNextToolAfterActivating);
     }
 
     public bool SwitchTool<T>(bool isActivatedFromAnotherTool, Action<T>? actionToNextToolAfterActivating = null) where T : ITool
@@ -58,7 +83,7 @@ public class ToolSwitcherService : IToolSwitcherService
             return false;
 
         var res = ChangeTool(nextTool, isActivatedFromAnotherTool);
-        if(res)
+        if (res)
             actionToNextToolAfterActivating?.Invoke(nextTool);
         return res;
     }

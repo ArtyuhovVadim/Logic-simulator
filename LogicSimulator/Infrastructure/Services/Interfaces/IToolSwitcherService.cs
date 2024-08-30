@@ -6,6 +6,8 @@ public interface IToolSwitcherService
 {
     event ToolChanged? ToolChanged;
 
+    event Action? ToolLocked;
+
     IEnumerable<ITool> Tools { get; }
 
     ITool? CurrentTool { get; }
@@ -17,6 +19,10 @@ public interface IToolSwitcherService
     void AddTool(ITool tool);
 
     void AddTools(params ITool[] tools);
+
+    void SwitchToEmptyTool();
+
+    bool SwitchTool(ITool? tool, bool isActivatedFromAnotherTool, Action<ITool>? actionToNextToolAfterActivating = null);
 
     bool SwitchTool(Type toolType, bool isActivatedFromAnotherTool, Action<ITool>? actionToNextToolAfterActivating = null);
 
