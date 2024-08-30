@@ -1,5 +1,5 @@
 ﻿using System.Collections.Specialized;
-using System.Windows.Automation;
+using System.ComponentModel;
 
 namespace LogicSimulator.Infrastructure.Collections;
 
@@ -8,7 +8,7 @@ public class SynchronizedObservableCollection<TSourceItem, TRecipientItem> : Obs
     private readonly IList<TRecipientItem> _collectionToSynchronize;
     private readonly Func<TRecipientItem, TSourceItem> _recipientToSourceItem;
     private readonly Func<TSourceItem, TRecipientItem> _sourceToRecipientItem;
-    private readonly bool _suppressCollectionChanged;
+    private bool _suppressCollectionChanged;
 
     public SynchronizedObservableCollection(IList<TRecipientItem> collectionToSynchronize, Func<TRecipientItem, TSourceItem> recipientToSourceItem, Func<TSourceItem, TRecipientItem> sourceToRecipientItem)
     {
@@ -23,6 +23,46 @@ public class SynchronizedObservableCollection<TSourceItem, TRecipientItem> : Obs
     }
 
     public void Add(TRecipientItem item) => Add(_recipientToSourceItem(item));
+
+    public void AddRange(IEnumerable<TSourceItem> items)
+    {
+        var count = Count;
+        _suppressCollectionChanged = true;
+        var itemsList = items.ToList();
+        foreach (var item in itemsList)
+            Add(item);
+        _suppressCollectionChanged = false;
+        OnCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Add, itemsList, count));
+        OnPropertyChanged(new PropertyChangedEventArgs(nameof(Count)));
+    }
+
+    public void AddRange(IEnumerable<TRecipientItem> items)
+    {
+        var count = Count;
+        _suppressCollectionChanged = true;
+        var itemsList = items.Select(_recipientToSourceItem).ToList();
+        foreach (var item in itemsList)
+            Add(item);
+        _suppressCollectionChanged = false;
+        OnCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Add, itemsList, count));
+        OnPropertyChanged(new PropertyChangedEventArgs(nameof(Count)));
+    }
+
+    public int RemoveAll(Predicate<TSourceItem> predicate)
+    {
+        var removed = 0;
+
+        for (var i = Items.Count - 1; i >= 0; i--)
+        {
+            if (predicate(Items[i]))
+            {
+                RemoveAt(i);
+                removed++;
+            }
+        }
+
+        return removed;
+    }
 
     protected override void OnCollectionChanged(NotifyCollectionChangedEventArgs args)
     {
@@ -44,18 +84,23 @@ public class SynchronizedObservableCollection<TSourceItem, TRecipientItem> : Obs
 
     private void HandleAdd(NotifyCollectionChangedEventArgs args)
     {
-        if (args.NewItems!.Count > 1)
-            throw new InvalidOperationException();
-
         if (args.NewStartingIndex == Count - 1)
         {
             // Add to end of collection
-            _collectionToSynchronize.Add(_sourceToRecipientItem((TSourceItem)args.NewItems[0]!));
+            foreach (var item in args.NewItems!.Cast<TSourceItem>())
+            {
+                _collectionToSynchronize.Add(_sourceToRecipientItem(item));
+            }
         }
         else
         {
             // Add to 'args.NewStartingIndex' index of collection
-            _collectionToSynchronize.Insert(args.NewStartingIndex, _sourceToRecipientItem((TSourceItem)args.NewItems[0]!));
+            var i = 0;
+            foreach (var item in args.NewItems!.Cast<TSourceItem>())
+            {
+                _collectionToSynchronize.Insert(args.NewStartingIndex + i, _sourceToRecipientItem(item));
+                i++;
+            }
         }
     }
 
@@ -65,7 +110,7 @@ public class SynchronizedObservableCollection<TSourceItem, TRecipientItem> : Obs
             throw new InvalidOperationException();
 
         if (!_collectionToSynchronize.Remove(_sourceToRecipientItem((TSourceItem)args.OldItems[0]!)))
-            throw new ElementNotAvailableException("Item not found.");
+            throw new InvalidOperationException("Item not found.");
     }
 
     private void HandleReplace(NotifyCollectionChangedEventArgs args)
@@ -84,14 +129,10 @@ public class SynchronizedObservableCollection<TSourceItem, TRecipientItem> : Obs
         var model = _sourceToRecipientItem((TSourceItem)args.NewItems[0]!);
 
         if (!_collectionToSynchronize.Remove(model))
-            throw new ElementNotAvailableException("Item not found.");
+            throw new InvalidOperationException("Item not found.");
 
         _collectionToSynchronize.Insert(args.NewStartingIndex, model);
-
     }
 
-    private void HandleReset()
-    {
-        _collectionToSynchronize.Clear();
-    }
+    private void HandleReset() => _collectionToSynchronize.Clear();
 }
