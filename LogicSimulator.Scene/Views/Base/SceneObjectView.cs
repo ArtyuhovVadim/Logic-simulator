@@ -90,6 +90,8 @@ public abstract class SceneObjectView : DisposableFrameworkContentElement, IReso
 
     public RectangleF WorldBounds { get; private set; }
 
+    public bool IsMeasured => IsLoaded;
+
     public void Select()
     {
         if (IsSelected) return;
