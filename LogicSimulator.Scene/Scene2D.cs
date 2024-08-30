@@ -206,10 +206,7 @@ public class Scene2D : FrameworkElement, ITransformable, IDisposable
         _renderer.RequestRender();
     }
 
-    protected override void OnMouseMove(MouseEventArgs e)
-    {
-        MousePosition = e.GetPosition(this).ToVector2().DpiCorrect(Dpi).InvertAndTransform(Transform);
-    }
+    protected override void OnMouseMove(MouseEventArgs e) => MousePosition = PointFromControlToSceneSpace(e.GetPosition(this));
 
     private void OnLayersCollectionChanged(object? sender, NotifyCollectionChangedEventArgs args)
     {
