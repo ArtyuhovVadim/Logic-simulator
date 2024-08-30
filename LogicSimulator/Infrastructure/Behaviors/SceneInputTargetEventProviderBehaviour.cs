@@ -6,7 +6,7 @@ using SharpDX;
 
 namespace LogicSimulator.Infrastructure.Behaviors;
 
-public class SceneToolEventProviderBehaviour : Behavior<Scene2D>
+public class SceneInputTargetEventProviderBehaviour : Behavior<Scene2D>
 {
     private bool _isMouseLeftButtonPressedOnScene;
     private bool _isMouseRightButtonPressedOnScene;
@@ -16,37 +16,37 @@ public class SceneToolEventProviderBehaviour : Behavior<Scene2D>
     private Vector2 _lastMouseRightButtonPosition;
     private Vector2 _lastMouseMiddleButtonPosition;
 
-    #region CurrentTool
+    #region InputTarget
 
-    public ITool? CurrentTool
+    public IInputTarget? InputTarget
     {
-        get => (ITool?)GetValue(CurrentToolProperty);
-        set => SetValue(CurrentToolProperty, value);
+        get => (IInputTarget?)GetValue(InputTargetProperty);
+        set => SetValue(InputTargetProperty, value);
     }
 
-    public static readonly DependencyProperty CurrentToolProperty =
-        DependencyProperty.Register(nameof(CurrentTool), typeof(ITool), typeof(SceneToolEventProviderBehaviour), new PropertyMetadata(default(ITool?)));
+    public static readonly DependencyProperty InputTargetProperty =
+        DependencyProperty.Register(nameof(InputTarget), typeof(IInputTarget), typeof(SceneInputTargetEventProviderBehaviour), new PropertyMetadata(default(IInputTarget?)));
 
     #endregion
 
     protected override void OnAttached()
     {
-        AssociatedObject.MouseDown += OnSceneMouseDown;
-        AssociatedObject.MouseMove += OnSceneMouseMove;
-        AssociatedObject.MouseUp += OnSceneMouseUp;
-        AssociatedObject.MouseWheel += OnSceneMouseWheel;
-        AssociatedObject.KeyDown += OnSceneKeyDown;
-        AssociatedObject.KeyUp += OnSceneKeyUp;
+        AssociatedObject.PreviewMouseDown += OnSceneMouseDown;
+        AssociatedObject.PreviewMouseMove += OnSceneMouseMove;
+        AssociatedObject.PreviewMouseUp += OnSceneMouseUp;
+        AssociatedObject.PreviewMouseWheel += OnSceneMouseWheel;
+        AssociatedObject.PreviewKeyDown += OnSceneKeyDown;
+        AssociatedObject.PreviewKeyUp += OnSceneKeyUp;
     }
 
     protected override void OnDetaching()
     {
-        AssociatedObject.MouseDown -= OnSceneMouseDown;
-        AssociatedObject.MouseMove -= OnSceneMouseMove;
-        AssociatedObject.MouseUp -= OnSceneMouseUp;
-        AssociatedObject.MouseWheel -= OnSceneMouseWheel;
-        AssociatedObject.KeyDown -= OnSceneKeyDown;
-        AssociatedObject.KeyUp -= OnSceneKeyUp;
+        AssociatedObject.PreviewMouseDown -= OnSceneMouseDown;
+        AssociatedObject.PreviewMouseMove -= OnSceneMouseMove;
+        AssociatedObject.PreviewMouseUp -= OnSceneMouseUp;
+        AssociatedObject.PreviewMouseWheel -= OnSceneMouseWheel;
+        AssociatedObject.PreviewKeyDown -= OnSceneKeyDown;
+        AssociatedObject.PreviewKeyUp -= OnSceneKeyUp;
     }
 
     private void OnSceneMouseDown(object sender, MouseButtonEventArgs e)
@@ -59,17 +59,17 @@ public class SceneToolEventProviderBehaviour : Behavior<Scene2D>
             case MouseButton.Left:
                 _isMouseLeftButtonPressedOnScene = true;
                 _lastMouseLeftButtonPosition = pos;
-                CurrentTool?.MouseLeftButtonDown(args);
+                InputTarget?.MouseLeftButtonDown(args);
                 break;
             case MouseButton.Right:
                 _isMouseRightButtonPressedOnScene = true;
                 _lastMouseRightButtonPosition = pos;
-                CurrentTool?.MouseRightButtonDown(args);
+                InputTarget?.MouseRightButtonDown(args);
                 break;
             case MouseButton.Middle:
                 _isMouseMiddleButtonPressedOnScene = true;
                 _lastMouseMiddleButtonPosition = pos;
-                CurrentTool?.MouseMiddleButtonDown(args);
+                InputTarget?.MouseMiddleButtonDown(args);
                 break;
         }
 
@@ -82,15 +82,15 @@ public class SceneToolEventProviderBehaviour : Behavior<Scene2D>
         var pos = GetMousePos(e);
 
         if (e.LeftButton == MouseButtonState.Pressed && _isMouseLeftButtonPressedOnScene)
-            CurrentTool?.MouseLeftButtonDragged(new DragInputArgs(_lastMouseLeftButtonPosition, pos, pos - _lastMouseLeftButtonPosition));
+            InputTarget?.MouseLeftButtonDragged(new DragInputArgs(_lastMouseLeftButtonPosition, pos, pos - _lastMouseLeftButtonPosition));
 
         if (e.RightButton == MouseButtonState.Pressed && _isMouseRightButtonPressedOnScene)
-            CurrentTool?.MouseRightButtonDragged(new DragInputArgs(_lastMouseRightButtonPosition, pos, pos - _lastMouseRightButtonPosition));
+            InputTarget?.MouseRightButtonDragged(new DragInputArgs(_lastMouseRightButtonPosition, pos, pos - _lastMouseRightButtonPosition));
 
         if (e.MiddleButton == MouseButtonState.Pressed && _isMouseMiddleButtonPressedOnScene)
-            CurrentTool?.MouseMiddleButtonDragged(new DragInputArgs(_lastMouseMiddleButtonPosition, pos, pos - _lastMouseMiddleButtonPosition));
+            InputTarget?.MouseMiddleButtonDragged(new DragInputArgs(_lastMouseMiddleButtonPosition, pos, pos - _lastMouseMiddleButtonPosition));
 
-        CurrentTool?.MouseMove(new InputArgs(pos));
+        InputTarget?.MouseMove(new InputArgs(pos));
     }
 
     private void OnSceneMouseUp(object sender, MouseButtonEventArgs e)
@@ -101,15 +101,15 @@ public class SceneToolEventProviderBehaviour : Behavior<Scene2D>
         switch (e.ChangedButton)
         {
             case MouseButton.Left:
-                if (_isMouseLeftButtonPressedOnScene) CurrentTool?.MouseLeftButtonUp(args);
+                if (_isMouseLeftButtonPressedOnScene) InputTarget?.MouseLeftButtonUp(args);
                 _isMouseLeftButtonPressedOnScene = false;
                 break;
             case MouseButton.Right:
-                if (_isMouseRightButtonPressedOnScene) CurrentTool?.MouseRightButtonUp(args);
+                if (_isMouseRightButtonPressedOnScene) InputTarget?.MouseRightButtonUp(args);
                 _isMouseRightButtonPressedOnScene = false;
                 break;
             case MouseButton.Middle:
-                if (_isMouseMiddleButtonPressedOnScene) CurrentTool?.MouseMiddleButtonUp(args);
+                if (_isMouseMiddleButtonPressedOnScene) InputTarget?.MouseMiddleButtonUp(args);
                 _isMouseMiddleButtonPressedOnScene = false;
                 break;
         }
@@ -122,21 +122,21 @@ public class SceneToolEventProviderBehaviour : Behavior<Scene2D>
         var pos = GetMousePos(e);
         var args = new WheelInputArgs(pos, e.Delta);
 
-        CurrentTool?.MouseWheel(args);
+        InputTarget?.MouseWheel(args);
     }
 
     private void OnSceneKeyDown(object sender, KeyEventArgs e)
     {
         var pos = AssociatedObject.PointFromControlToSceneSpace(Mouse.GetPosition(AssociatedObject));
         var args = new KeyInputArgs(e.Key, Keyboard.Modifiers, pos);
-        CurrentTool?.KeyDown(args);
+        InputTarget?.KeyDown(args);
     }
 
     private void OnSceneKeyUp(object sender, KeyEventArgs e)
     {
         var pos = AssociatedObject.PointFromControlToSceneSpace(Mouse.GetPosition(AssociatedObject));
         var args = new KeyInputArgs(e.Key, Keyboard.Modifiers, pos);
-        CurrentTool?.KeyUp(args);
+        InputTarget?.KeyUp(args);
     }
 
     private Vector2 GetMousePos(MouseEventArgs e) =>
