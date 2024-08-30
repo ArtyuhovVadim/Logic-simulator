@@ -17,7 +17,7 @@ public class ObjectsLayer : BaseSceneLayer, ISceneViewsGeneratorHost, IHitTester
     private HashSet<SceneObjectView> _lastViewsInViewport = [];
     private static RectangleF _hitTestGeometryResourceRect;
 
-    public static readonly IStaticResource<RectangleGeometry> HitTestGeometryResource = 
+    public static readonly IStaticResource<RectangleGeometry> HitTestGeometryResource =
         ResourceCache.RegisterStatic(factory => factory.CreateRectangleGeometry(_hitTestGeometryResourceRect));
 
     #region ObjectTemplateSelector
@@ -104,7 +104,7 @@ public class ObjectsLayer : BaseSceneLayer, ISceneViewsGeneratorHost, IHitTester
 
     public HitTestResult<T> HitTest<T>(Vector2 pos, float tolerance) where T : IHitTestable
     {
-        var objects = Views.Where(objView => objView.WorldBounds.IntersectsInclusive(pos.RectangleRelativePointAsCenter(tolerance)) && objView.HitTest(pos, tolerance)).OfType<T>().ToList();
+        var objects = Views.Where(objView => objView.WorldBounds.IntersectsInclusive(pos.RectangleRelativePointAsCenter(tolerance)) && objView.HitTest(pos, tolerance)).OfType<T>().Reverse().ToList();
         return new HitTestResult<T>(objects);
     }
 
