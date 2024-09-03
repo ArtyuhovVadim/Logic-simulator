@@ -7,10 +7,10 @@
     xmlns:conv="clr-namespace:WpfExtensions.Converters;assembly=WpfExtensions"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:status="clr-namespace:LogicSimulator.Views.Status"
+    xmlns:svm="clr-namespace:LogicSimulator.ViewModels.Status"
     xmlns:viewModels="clr-namespace:LogicSimulator.ViewModels"
     xmlns:views="clr-namespace:LogicSimulator.Views"
-    xmlns:svm="clr-namespace:LogicSimulator.ViewModels.Status"
-    xmlns:status="clr-namespace:LogicSimulator.Views.Status"
     Title="Logic-simulator"
     Width="1600"
     Height="900"
@@ -31,6 +31,58 @@
                     <MenuItem Command="{Binding Path=SaveFileCommand}" Header="Сохранить" />
                     <Separator />
                     <MenuItem Command="{StaticResource AppExitCommand}" Header="Выход" />
+                </MenuItem>
+                <MenuItem Header="Правка">
+                    <MenuItem
+                        Command="{Binding Path=ActiveSchemeViewModel.CutCommand}"
+                        Header="Вырезать"
+                        InputGestureText="Ctrl+X"
+                        IsEnabled="{Binding Path=ActiveSchemeViewModel,
+                                            Converter={conv:IsNotNullConverter}}" />
+                    <MenuItem
+                        Command="{Binding Path=ActiveSchemeViewModel.CopyCommand}"
+                        Header="Копировать"
+                        InputGestureText="Ctrl+C"
+                        IsEnabled="{Binding Path=ActiveSchemeViewModel,
+                                            Converter={conv:IsNotNullConverter}}" />
+                    <MenuItem
+                        Command="{Binding Path=ActiveSchemeViewModel.PasteCommand}"
+                        Header="Вставить"
+                        InputGestureText="Ctrl+V"
+                        IsEnabled="{Binding Path=ActiveSchemeViewModel,
+                                            Converter={conv:IsNotNullConverter}}" />
+                    <MenuItem
+                        Command="{Binding Path=ActiveSchemeViewModel.DuplicateCommand}"
+                        Header="Дублировать"
+                        InputGestureText="Ctrl+D"
+                        IsEnabled="{Binding Path=ActiveSchemeViewModel,
+                                            Converter={conv:IsNotNullConverter}}" />
+                    <Separator />
+                    <MenuItem
+                        Command="{Binding Path=ActiveSchemeViewModel.RotateSelectedObjectsClockwiseCommand}"
+                        Header="Повернуть по часовой"
+                        InputGestureText="Space"
+                        IsEnabled="{Binding Path=ActiveSchemeViewModel,
+                                            Converter={conv:IsNotNullConverter}}" />
+                    <MenuItem
+                        Command="{Binding Path=ActiveSchemeViewModel.RotateSelectedObjectsCounterclockwiseCommand}"
+                        Header="Повернуть против часовой"
+                        InputGestureText="Ctrl + Space"
+                        IsEnabled="{Binding Path=ActiveSchemeViewModel,
+                                            Converter={conv:IsNotNullConverter}}" />
+                    <Separator />
+                    <MenuItem
+                        Command="{Binding Path=ActiveSchemeViewModel.DeleteSelectedObjectsCommand}"
+                        Header="Удалить выделенные"
+                        InputGestureText="Delete"
+                        IsEnabled="{Binding Path=ActiveSchemeViewModel,
+                                            Converter={conv:IsNotNullConverter}}" />
+                    <MenuItem
+                        Command="{Binding Path=ActiveSchemeViewModel.SelectAllObjectsCommand}"
+                        Header="Выбрать все"
+                        InputGestureText="Ctrl + A"
+                        IsEnabled="{Binding Path=ActiveSchemeViewModel,
+                                            Converter={conv:IsNotNullConverter}}" />
                 </MenuItem>
             </Menu>
 
