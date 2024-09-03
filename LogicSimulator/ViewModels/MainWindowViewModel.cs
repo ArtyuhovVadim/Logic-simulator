@@ -70,6 +70,12 @@ public class MainWindowViewModel : BindableBase, IRecipient<DocumentClosingMessa
 
     #endregion
 
+    #region ActiveSchemeViewModel
+
+    public SchemeViewModel? ActiveSchemeViewModel => DockingViewModel.ActiveDocumentViewModel as SchemeViewModel;
+
+    #endregion
+
     #region CurrentStatusViewModel
 
     public BaseStatusViewModel? CurrentStatusViewModel => _dockingViewModel.ActiveDocumentViewModel?.StatusViewModel;
@@ -203,5 +209,9 @@ public class MainWindowViewModel : BindableBase, IRecipient<DocumentClosingMessa
 
     public void Receive(DocumentClosingMessage message) => _dockingViewModel.CloseDocumentViewModel(message.Document);
 
-    private void OnActiveDocumentViewModelChanged(DocumentViewModel? oldDocument, DocumentViewModel? newDocument) => OnPropertyChanged(nameof(CurrentStatusViewModel));
+    private void OnActiveDocumentViewModelChanged(DocumentViewModel? oldDocument, DocumentViewModel? newDocument)
+    {
+        OnPropertyChanged(nameof(ActiveSchemeViewModel));
+        OnPropertyChanged(nameof(CurrentStatusViewModel));
+    }
 }
