@@ -128,6 +128,12 @@ public class SchemeViewModel : DocumentViewModel, IModelBased<Scheme>, ICloseabl
 
     #endregion
 
+    #region HasSelectedObjects
+
+    public bool HasSelectedObjects => Objects.Any(x => x.IsSelected);
+
+    #endregion
+
     #region HasCursorFollowingObjects
 
     public bool HasCursorFollowingObjects => _cursorFollowingObjects.Count > 0;
@@ -255,7 +261,7 @@ public class SchemeViewModel : DocumentViewModel, IModelBased<Scheme>, ICloseabl
         }
 
         SelectedObjectsChanged();
-    }, () => ToolsViewModel.IsDefaultToolSelected);
+    }, () => ToolsViewModel.IsDefaultToolSelected && HasSelectedObjects);
 
     #endregion
 
@@ -274,7 +280,7 @@ public class SchemeViewModel : DocumentViewModel, IModelBased<Scheme>, ICloseabl
     public ICommand CopyCommand => _copyCommand ??= new LambdaCommand(() =>
     {
         _clipboardService.Copy(SelectedObjects);
-    }, () => ToolsViewModel.IsDefaultToolSelected && SelectedObjects.Count > 0);
+    }, () => ToolsViewModel.IsDefaultToolSelected && HasSelectedObjects);
 
     #endregion
 
@@ -301,7 +307,7 @@ public class SchemeViewModel : DocumentViewModel, IModelBased<Scheme>, ICloseabl
         _clipboardService.Copy(SelectedObjects);
         _objects.RemoveAll(x => x.IsSelected);
         SelectedObjectsChanged();
-    }, () => ToolsViewModel.IsDefaultToolSelected && SelectedObjects.Count > 0);
+    }, () => ToolsViewModel.IsDefaultToolSelected && HasSelectedObjects);
 
     #endregion
 
@@ -315,11 +321,11 @@ public class SchemeViewModel : DocumentViewModel, IModelBased<Scheme>, ICloseabl
         _objects.AddRange(objects);
         StartFollowCursor(objects);
         UpdateCursorFollowingObjectsLocation();
-    }, () => ToolsViewModel.IsDefaultToolSelected && SelectedObjects.Count > 0);
+    }, () => ToolsViewModel.IsDefaultToolSelected && HasSelectedObjects);
 
     #endregion
 
-    #region MouseLeftButtonDownCommand
+    #region AcceptCursorFollowingObjectsPositionCommand
 
     private ICommand? _acceptCursorFollowingObjectsPositionCommand;
 
@@ -327,7 +333,7 @@ public class SchemeViewModel : DocumentViewModel, IModelBased<Scheme>, ICloseabl
 
     #endregion
 
-    #region MouseMoveCommand
+    #region UpdateCursorFollowingObjectsLocationCommand
 
     private ICommand? _updateCursorFollowingObjectsLocationCommand;
 
@@ -335,7 +341,7 @@ public class SchemeViewModel : DocumentViewModel, IModelBased<Scheme>, ICloseabl
 
     #endregion
 
-    #region CancelCommand
+    #region RemoveCursorFollowingObjectsCommand
 
     private ICommand? _removeCursorFollowingObjectsCommand;
 
@@ -358,7 +364,7 @@ public class SchemeViewModel : DocumentViewModel, IModelBased<Scheme>, ICloseabl
         {
             obj.RotateClockwise();
         }
-    }, () => ToolsViewModel.IsDefaultToolSelected);
+    }, () => ToolsViewModel.IsDefaultToolSelected && HasSelectedObjects);
 
     #endregion
 
@@ -372,7 +378,7 @@ public class SchemeViewModel : DocumentViewModel, IModelBased<Scheme>, ICloseabl
         {
             obj.RotateCounterclockwise();
         }
-    }, () => ToolsViewModel.IsDefaultToolSelected);
+    }, () => ToolsViewModel.IsDefaultToolSelected && HasSelectedObjects);
 
     #endregion
 
