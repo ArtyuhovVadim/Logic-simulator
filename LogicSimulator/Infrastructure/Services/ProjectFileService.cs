@@ -44,7 +44,7 @@ public class ProjectFileService : IProjectFileService
     {
         using var streamReader = new StreamReader(path, Encoding.Default, false, _fileReadStreamOptions);
         var project = _deserializer.Deserialize<Project>(await streamReader.ReadToEndAsync());
-        project.FileInfo = new FileInfo(path);
+        project.Name = Path.GetFileName(path);
 
         if (project.Version > App.Version)
             throw new InvalidOperationException($"Can not load project of {project.Version} version.");

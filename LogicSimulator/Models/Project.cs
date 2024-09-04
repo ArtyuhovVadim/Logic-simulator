@@ -1,5 +1,4 @@
-﻿using System.IO;
-using YamlDotNet.Serialization;
+﻿using YamlDotNet.Serialization;
 
 namespace LogicSimulator.Models;
 
@@ -7,10 +6,10 @@ public class Project
 {
     public const string Extension = ".lsproj";
 
-    public Version Version { get; set; } = Version.Parse("0.0.0.0");
-
     [YamlIgnore]
-    public FileInfo? FileInfo { get; set; }
+    public string Name { get; set; } = string.Empty;
+
+    public Version Version { get; set; } = Version.Parse("0.0.0.0");
 
     [YamlIgnore]
     public List<Scheme> Schemes { get; set; } = [];

@@ -76,7 +76,7 @@ public class SchemeFileService : ISchemeFileService
     {
         using var streamReader = new StreamReader(path, Encoding.Default, false, _fileReadStreamOptions);
         var scheme = _deserializer.Deserialize<Scheme>(await streamReader.ReadToEndAsync());
-        scheme.FileInfo = new FileInfo(path);
+        scheme.Name = Path.GetFileName(path);
 
         foreach (var gate in scheme.Objects.OfType<BaseGateModel>())
         {

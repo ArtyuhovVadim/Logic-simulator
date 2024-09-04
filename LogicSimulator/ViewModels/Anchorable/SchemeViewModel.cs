@@ -73,7 +73,6 @@ public class SchemeViewModel : DocumentViewModel, IModelBased<Scheme>, ICloseabl
         ToolsViewModel.NodeDragTool.GridStep = GridStep;
 
         IconSource = new Uri("pack://application:,,,/Resources/Icons/scheme-icon16x16.png");
-        base.Title = Model.FileInfo?.Name ?? throw new InvalidOperationException();
 
         _schemeSimulatorService.SimulationStateChanged += OnSimulationStateChanged;
 
@@ -89,6 +88,16 @@ public class SchemeViewModel : DocumentViewModel, IModelBased<Scheme>, ICloseabl
     }
 
     public event Action? Closed;
+
+    #region Title
+
+    public override string Title
+    {
+        get => Model.Name;
+        set => Set(Model.Name, value, Model, (model, value) => model.Name = value);
+    }
+
+    #endregion
 
     #region Model
 

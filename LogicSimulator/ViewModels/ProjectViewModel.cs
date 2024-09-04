@@ -20,10 +20,14 @@ public class ProjectViewModel : BindableBase, IModelBased<Project>
     public Project Model { get; }
 
     #endregion
-    
+
     #region Name
 
-    public string Name => Model.FileInfo?.Name ?? throw new InvalidOperationException();
+    public string Name
+    {
+        get => Model.Name;
+        set => Set(Model.Name, value, Model, (model, value) => model.Name = value);
+    }
 
     #endregion
 

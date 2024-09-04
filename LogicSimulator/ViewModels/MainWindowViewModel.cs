@@ -107,7 +107,7 @@ public class MainWindowViewModel : BindableBase, IRecipient<DocumentClosingMessa
             try
             {
                 project = await _projectFileService.ReadFromFileAsync(projectPath);
-                _logger.LogInformation("Project file ({projectName}) has been loaded successfully.", project.FileInfo!.Name);
+                _logger.LogInformation("Project file ({projectName}) has been loaded successfully.", project.Name);
             }
             catch (Exception e)
             {
@@ -116,7 +116,9 @@ public class MainWindowViewModel : BindableBase, IRecipient<DocumentClosingMessa
                 return;
             }
 
-            var schemeFiles = project.FileInfo!.Directory!.GetFiles($"*{Scheme.Extension}");
+            var projectFileInfo = new FileInfo(projectPath);
+
+            var schemeFiles = projectFileInfo.Directory!.GetFiles($"*{Scheme.Extension}");
             var schemes = new List<Scheme>();
 
             foreach (var schemeFile in schemeFiles)
@@ -167,12 +169,12 @@ public class MainWindowViewModel : BindableBase, IRecipient<DocumentClosingMessa
             _logger.LogInformation("Project saving has started.");
 
             var project = ActiveProjectViewModel!.Model;
-            var projectPath = Path.Combine(projectDirPath, project.FileInfo!.Name);
+            var projectPath = Path.Combine(projectDirPath, project.Name);
 
             try
             {
                 await _projectFileService.SaveToFileAsync(projectPath, project);
-                _logger.LogInformation("Project file ({projectName}) has been saved successfully.", project.FileInfo!.Name);
+                _logger.LogInformation("Project file ({projectName}) has been saved successfully.", project.Name);
             }
             catch (Exception e)
             {
@@ -183,15 +185,17 @@ public class MainWindowViewModel : BindableBase, IRecipient<DocumentClosingMessa
 
             foreach (var scheme in project.Schemes)
             {
+                var schemeFilePath = Path.Combine(projectDirPath, scheme.Name);
+
                 try
                 {
-                    await _schemeFileService.SaveToFileAsync(Path.Combine(projectDirPath, scheme.FileInfo!.Name), scheme);
-                    _logger.LogInformation("Scheme file ({schemeFile}) has been saved successfully.", scheme.FileInfo.Name);
+                    await _schemeFileService.SaveToFileAsync(schemeFilePath, scheme);
+                    _logger.LogInformation("Scheme file ({schemeFile}) has been saved successfully.", scheme.Name);
                 }
                 catch (Exception e)
                 {
-                    _logger.LogError("Can not save scheme file: {schemePath}\nInternal error:\n{e}", scheme.FileInfo!.FullName, e);
-                    _userDialogService.ShowErrorMessage("Ошибка сохранения схемы", $"Не удалось сохранить файл по пути: {scheme.FileInfo!.FullName}\nВнутренняя ошибка:\n{e}");
+                    _logger.LogError("Can not save scheme file: {schemePath}\nInternal error:\n{e}", schemeFilePath, e);
+                    _userDialogService.ShowErrorMessage("Ошибка сохранения схемы", $"Не удалось сохранить файл по пути: {schemeFilePath}\nВнутренняя ошибка:\n{e}");
                 }
             }
 
