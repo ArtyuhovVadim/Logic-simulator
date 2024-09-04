@@ -1,41 +1,36 @@
 ﻿using System.Windows;
 using LogicSimulator.Infrastructure.Services.Interfaces;
 using LogicSimulator.Models.Common;
+using LogicSimulator.ViewModels.Dialog.Base;
+using LogicSimulator.Views.Windows;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Win32;
 
 namespace LogicSimulator.Infrastructure.Services;
 
-public class DefaultUserDialogService : IUserDialogService
+public class UserDialogService : IUserDialogService
 {
-    public UserDialogResult ShowInfoMessage(string title, string message)
-    {
-        var result = MessageBox.Show(message, title, MessageBoxButton.OK, MessageBoxImage.Information);
-        return result == MessageBoxResult.OK ? UserDialogResult.Ok : UserDialogResult.None;
-    }
+    private readonly IServiceProvider _provider;
 
-    public UserDialogResult ShowErrorMessage(string title, string message)
-    {
-        var result = MessageBox.Show(message, title, MessageBoxButton.OK, MessageBoxImage.Error);
-        return result == MessageBoxResult.OK ? UserDialogResult.Ok : UserDialogResult.None;
-    }
+    public UserDialogService(IServiceProvider provider) => _provider = provider;
 
-    public UserDialogResult ShowWarningMessage(string title, string message)
-    {
-        var result = MessageBox.Show(message, title, MessageBoxButton.OK, MessageBoxImage.Warning);
-        return result == MessageBoxResult.OK ? UserDialogResult.Ok : UserDialogResult.None;
-    }
+    public T ShowDialog<T>() where T : BaseDialogViewModel => ShowDialogInternal<T>(null);
 
-    public UserDialogResult ShowQuestionMessage(string title, string message)
-    {
-        var result = MessageBox.Show(message, title, MessageBoxButton.OK, MessageBoxImage.Question);
+    public T ShowDialog<T>(Action<T> configure) where T : BaseDialogViewModel => ShowDialogInternal(configure);
 
-        return result switch
-        {
-            MessageBoxResult.Yes => UserDialogResult.Yes,
-            MessageBoxResult.No => UserDialogResult.No,
-            _ => UserDialogResult.None
-        };
-    }
+    private T ShowDialogInternal<T>(Action<T>? configure) where T : BaseDialogViewModel => Application.Current.Dispatcher.Invoke(() =>
+    {
+        var dataContext = _provider.GetRequiredService<T>();
+        configure?.Invoke(dataContext);
+
+        var window = new DialogWindow { DataContext = dataContext, Owner = Application.Current.MainWindow };
+
+        dataContext.Completed += () => window.Close();
+
+        window.ShowDialog();
+
+        return dataContext;
+    });
 
     public UserDialogResult OpenFileDialog(string title, IEnumerable<(string name, string pattern)> filters, out string path)
     {

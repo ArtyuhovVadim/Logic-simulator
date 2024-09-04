@@ -1,16 +1,13 @@
 ﻿using LogicSimulator.Models.Common;
+using LogicSimulator.ViewModels.Dialog.Base;
 
 namespace LogicSimulator.Infrastructure.Services.Interfaces;
 
 public interface IUserDialogService
 {
-    UserDialogResult ShowInfoMessage(string title, string message);
+    T ShowDialog<T>() where T : BaseDialogViewModel;
 
-    UserDialogResult ShowErrorMessage(string title, string message);
-
-    UserDialogResult ShowWarningMessage(string title, string message);
-
-    UserDialogResult ShowQuestionMessage(string title, string message);
+    T ShowDialog<T>(Action<T> configure) where T : BaseDialogViewModel;
 
     UserDialogResult OpenFileDialog(string title, IEnumerable<(string name, string pattern)> filters, out string path);
 
