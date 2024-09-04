@@ -103,6 +103,15 @@
                     StrokeThickness="2" />
             </DataTemplate>
         </selectors:ToolViewTemplateSelector.BezierCurvePlacingToolTemplate>
+        <selectors:ToolViewTemplateSelector.PathPlacingToolTemplate>
+            <DataTemplate DataType="{x:Type tools:BaseToolViewModel}">
+                <Path
+                    Data="{StaticResource PathPlacingToolIcon}"
+                    Stretch="Uniform"
+                    Stroke="{DynamicResource {x:Static brushes:BrushesKeys+SchemeView.ToolIconBrush}}"
+                    StrokeThickness="1.5" />
+            </DataTemplate>
+        </selectors:ToolViewTemplateSelector.PathPlacingToolTemplate>
         <selectors:ToolViewTemplateSelector.TextPlacingToolTemplate>
             <DataTemplate DataType="{x:Type tools:BaseToolViewModel}">
                 <Path
@@ -113,34 +122,43 @@
         </selectors:ToolViewTemplateSelector.TextPlacingToolTemplate>
         <selectors:ToolViewTemplateSelector.InputGatePlacingToolTemplate>
             <DataTemplate DataType="{x:Type tools:BaseToolViewModel}">
-                <TextBlock
-                    HorizontalAlignment="Center"
-                    VerticalAlignment="Center"
-                    Text="I" />
+                <Path
+                    Margin="-1.5"
+                    Data="{StaticResource InputGatePlacingToolIcon}"
+                    Fill="{DynamicResource {x:Static brushes:BrushesKeys+SchemeView.ToolIconBrush}}"
+                    Stretch="Uniform"
+                    Stroke="{DynamicResource {x:Static brushes:BrushesKeys+SchemeView.ToolIconBrush}}"
+                    StrokeThickness="1" />
             </DataTemplate>
         </selectors:ToolViewTemplateSelector.InputGatePlacingToolTemplate>
         <selectors:ToolViewTemplateSelector.OutputGatePlacingToolTemplate>
             <DataTemplate DataType="{x:Type tools:BaseToolViewModel}">
-                <TextBlock
-                    HorizontalAlignment="Center"
-                    VerticalAlignment="Center"
-                    Text="O" />
+                <Path
+                    Margin="-1.5"
+                    Data="{StaticResource OutputGatePlacingToolIcon}"
+                    Fill="{DynamicResource {x:Static brushes:BrushesKeys+SchemeView.ToolIconBrush}}"
+                    Stretch="Uniform"
+                    Stroke="{DynamicResource {x:Static brushes:BrushesKeys+SchemeView.ToolIconBrush}}"
+                    StrokeThickness="1" />
             </DataTemplate>
         </selectors:ToolViewTemplateSelector.OutputGatePlacingToolTemplate>
         <selectors:ToolViewTemplateSelector.AndGatePlacingToolTemplate>
             <DataTemplate DataType="{x:Type tools:BaseToolViewModel}">
-                <TextBlock
-                    HorizontalAlignment="Center"
-                    VerticalAlignment="Center"
-                    Text="&amp;" />
+                <Path
+                    Margin="-2.5"
+                    Data="{StaticResource AndGatePlacingToolIcon}"
+                    Fill="{DynamicResource {x:Static brushes:BrushesKeys+SchemeView.ToolIconBrush}}"
+                    Stretch="Uniform"
+                    Stroke="{DynamicResource {x:Static brushes:BrushesKeys+SchemeView.ToolIconBrush}}"
+                    StrokeThickness="1" />
             </DataTemplate>
         </selectors:ToolViewTemplateSelector.AndGatePlacingToolTemplate>
         <selectors:ToolViewTemplateSelector.WirePlacingToolTemplate>
             <DataTemplate DataType="{x:Type tools:BaseToolViewModel}">
-                <TextBlock
-                    HorizontalAlignment="Center"
-                    VerticalAlignment="Center"
-                    Text="W" />
+                <Path
+                    Data="{StaticResource WirePlacingToolIcon}"
+                    Fill="{DynamicResource {x:Static brushes:BrushesKeys+SchemeView.ToolIconBrush}}"
+                    Stretch="Uniform" />
             </DataTemplate>
         </selectors:ToolViewTemplateSelector.WirePlacingToolTemplate>
     </selectors:ToolViewTemplateSelector>
