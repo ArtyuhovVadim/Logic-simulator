@@ -1,4 +1,5 @@
 ﻿using System.IO;
+using LogicSimulator.Infrastructure.ExtensionMethods;
 using LogicSimulator.Infrastructure.Factories.Interfaces;
 using LogicSimulator.Infrastructure.Messages;
 using LogicSimulator.Infrastructure.Services.Interfaces;

@@ -13,6 +13,7 @@ using LogicSimulator.Models.Objects;
 using LogicSimulator.Models.Objects.Base;
 using LogicSimulator.ViewModels;
 using LogicSimulator.ViewModels.Anchorable;
+using LogicSimulator.ViewModels.Dialog;
 using LogicSimulator.ViewModels.Logic;
 using LogicSimulator.ViewModels.Logic.Gates;
 using LogicSimulator.ViewModels.Objects;
@@ -88,9 +89,12 @@ public partial class App
             .AddSingleton<MessagesOutputViewModel>()
             .AddSingleton<TimelineViewModel>()
 
+            .AddTransient<InfoDialogViewModel>()
+            .AddTransient<ErrorDialogViewModel>()
+
             .AddSingleton<MainWindow>(serviceProvider => new MainWindow { DataContext = serviceProvider.GetRequiredService<MainWindowViewModel>() })
 
-            .AddSingleton<IUserDialogService, DefaultUserDialogService>()
+            .AddSingleton<IUserDialogService, UserDialogService>()
             .AddSingleton<ISchemeFileService, SchemeFileService>()
             .AddSingleton<IProjectFileService, ProjectFileService>()
             .AddSingleton<IEditorSelectionService, EditorSelectionService>()
