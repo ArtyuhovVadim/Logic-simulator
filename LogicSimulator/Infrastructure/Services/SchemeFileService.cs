@@ -1,12 +1,12 @@
 ﻿using System.IO;
+using System.Reflection;
 using System.Text;
 using LogicSimulator.Infrastructure.Services.Interfaces;
 using LogicSimulator.Infrastructure.YamlConverters;
 using LogicSimulator.Models;
-using LogicSimulator.Models.Logic;
-using LogicSimulator.Models.Logic.Gates;
 using LogicSimulator.Models.Logic.Gates.Base;
-using LogicSimulator.Models.Objects;
+using LogicSimulator.Models.Objects.Base;
+using Microsoft.Extensions.Logging;
 using YamlDotNet.Core;
 using YamlDotNet.Serialization;
 
@@ -14,36 +14,29 @@ namespace LogicSimulator.Infrastructure.Services;
 
 public class SchemeFileService : ISchemeFileService
 {
+    private readonly ILogger<SchemeFileService> _logger;
     private readonly ISerializer _serializer;
     private readonly IDeserializer _deserializer;
 
     private readonly FileStreamOptions _fileWriteStreamOptions;
     private readonly FileStreamOptions _fileReadStreamOptions;
 
-    public SchemeFileService()
+    public SchemeFileService(ILogger<SchemeFileService> logger)
     {
+        _logger = logger;
+
         var vector2Converter = new Vector2YamlConverter();
         var color4Converter = new ColorYamlConverter();
         var versionConverter = new VersionYamlConverter();
         var portModelConverter = new PortModelYamlConverter();
+
+        var schemeObjectTypes = Assembly.GetEntryAssembly()!.DefinedTypes.Where(type => type.IsSubclassOf(typeof(BaseObjectModel)) && !type.IsAbstract).ToArray();
 
         var serializerBuilder = new SerializerBuilder()
             .WithTypeConverter(vector2Converter)
             .WithTypeConverter(color4Converter)
             .WithTypeConverter(versionConverter)
             .WithTypeConverter(portModelConverter)
-            .WithTagMapping(new TagName("!Rectangle"), typeof(RectangleModel))
-            .WithTagMapping(new TagName("!RoundedRectangle"), typeof(RoundedRectangleModel))
-            .WithTagMapping(new TagName("!Ellipse"), typeof(EllipseModel))
-            .WithTagMapping(new TagName("!Line"), typeof(LineModel))
-            .WithTagMapping(new TagName("!BezierCurve"), typeof(BezierCurveModel))
-            .WithTagMapping(new TagName("!TextBlock"), typeof(TextBlockModel))
-            .WithTagMapping(new TagName("!Arc"), typeof(ArcModel))
-            .WithTagMapping(new TagName("!Path"), typeof(PathModel))
-            .WithTagMapping(new TagName("!InputGate"), typeof(InputGateModel))
-            .WithTagMapping(new TagName("!OutputGate"), typeof(OutputGateModel))
-            .WithTagMapping(new TagName("!AndGate"), typeof(AndGateModel))
-            .WithTagMapping(new TagName("!Wire"), typeof(WireModel))
             ;
 
         var deserializerBuilder = new DeserializerBuilder()
@@ -51,19 +44,18 @@ public class SchemeFileService : ISchemeFileService
             .WithTypeConverter(color4Converter)
             .WithTypeConverter(versionConverter)
             .WithTypeConverter(portModelConverter)
-            .WithTagMapping(new TagName("!Rectangle"), typeof(RectangleModel))
-            .WithTagMapping(new TagName("!RoundedRectangle"), typeof(RoundedRectangleModel))
-            .WithTagMapping(new TagName("!Ellipse"), typeof(EllipseModel))
-            .WithTagMapping(new TagName("!Line"), typeof(LineModel))
-            .WithTagMapping(new TagName("!BezierCurve"), typeof(BezierCurveModel))
-            .WithTagMapping(new TagName("!TextBlock"), typeof(TextBlockModel))
-            .WithTagMapping(new TagName("!Arc"), typeof(ArcModel))
-            .WithTagMapping(new TagName("!Path"), typeof(PathModel))
-            .WithTagMapping(new TagName("!InputGate"), typeof(InputGateModel))
-            .WithTagMapping(new TagName("!OutputGate"), typeof(OutputGateModel))
-            .WithTagMapping(new TagName("!AndGate"), typeof(AndGateModel))
-            .WithTagMapping(new TagName("!Wire"), typeof(WireModel))
             ;
+
+        foreach (var type in schemeObjectTypes)
+        {
+            var name = type.Name;
+            var tagName = $"!{(name.EndsWith("Model") ? name[..^5] : name)}";
+
+            serializerBuilder.WithTagMapping(new TagName(tagName), type);
+            deserializerBuilder.WithTagMapping(new TagName(tagName), type);
+
+            _logger.LogInformation("{type} scheme type registered.", type.Name);
+        }
 
         _serializer = serializerBuilder.Build();
         _deserializer = deserializerBuilder.Build();
